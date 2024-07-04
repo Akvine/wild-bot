@@ -16,7 +16,6 @@ import ru.akvine.marketspace.bot.utils.UUIDGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +26,6 @@ public class AdvertService {
     private int length;
 
     private final AdvertRepository advertRepository;
-    private final Random random = new Random();
 
     public void saveAll(List<AdvertDto> adverts) {
         Preconditions.checkNotNull(adverts, "loadedAdverts is null");
@@ -86,7 +84,7 @@ public class AdvertService {
         return updatedAdvert;
     }
 
-    public AdvertBean randomlyGetAdvert(String categoryId) {
+    public AdvertBean getFirst(String categoryId) {
         Preconditions.checkNotNull(categoryId, "categoryId is null");
 
         List<AdvertBean> advertBeans = advertRepository
@@ -95,24 +93,22 @@ public class AdvertService {
                         categoryId)
                 .stream()
                 .map(AdvertBean::new)
-                .collect(Collectors.toList());
+                .toList();
 
         List<AdvertBean> pauseAdvertBeans = advertBeans
                 .stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.PAUSE))
-                .collect(Collectors.toList());
+                .toList();
         if (!pauseAdvertBeans.isEmpty()) {
-            int size = pauseAdvertBeans.size();
-            return pauseAdvertBeans.get(random.nextInt(size));
+            return pauseAdvertBeans.getFirst();
         }
 
         List<AdvertBean> readyForStartAdvertBeans = advertBeans
                 .stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.READY_FOR_START))
-                .collect(Collectors.toList());
+                .toList();
         if (!readyForStartAdvertBeans.isEmpty()) {
-            int size = pauseAdvertBeans.size();
-            return readyForStartAdvertBeans.get(random.nextInt(size));
+            return readyForStartAdvertBeans.getFirst();
         }
 
         String errorMessage = String.format(

@@ -40,7 +40,7 @@ public class AdvertStartController {
     }
 
     public SendMessage startAdvert(String chatId) {
-        AdvertBean advertBean = advertStartService.startRandomly();
+        AdvertBean advertBean = advertStartService.start();
         return startConverter.buildStartAdvert(chatId, advertBean);
     }
 }

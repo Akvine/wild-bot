@@ -52,10 +52,10 @@ public class AdvertStartService {
         return startInternal(new AdvertBean(advertEntity));
     }
 
-    public AdvertBean startRandomly() {
+    public AdvertBean start() {
         String categoryId = Objects.requireNonNull(ClientDataContext.get()).getCategoryId();
         logger.info("Try to start advert randomly with category id = {}", categoryId);
-        AdvertBean advertToStart = advertService.randomlyGetAdvert(categoryId);
+        AdvertBean advertToStart = advertService.getFirst(categoryId);
         return startInternal(advertToStart);
     }
 
