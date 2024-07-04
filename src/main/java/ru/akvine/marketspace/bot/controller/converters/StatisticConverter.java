@@ -27,7 +27,9 @@ public class StatisticConverter {
         StringBuilder sb = new StringBuilder();
         sb.append("Количество запущенных рекламных кампаний: ")
                 .append(runningAdverts.size()).append(" / ").append(maxRunningAdvertsLimit).append(NEW_LINE);
-        sb.append("=======================").append(NEW_LINE);
+        if (!runningAdverts.isEmpty()) {
+            sb.append("=======================").append(NEW_LINE);
+        }
 
         runningAdverts.forEach(advert -> {
             sb.append("Advert ID: ").append(advert.getAdvertId()).append(NEW_LINE);

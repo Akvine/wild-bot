@@ -22,9 +22,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.akvine.marketspace.bot.utils.DateUtils.DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS;
-import static ru.akvine.marketspace.bot.utils.DateUtils.formatLocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -87,7 +84,7 @@ public class AdvertStartService {
             wildberriesIntegrationService.changeAdvertCpm(request);
         }
 
-        String advertStartName = "Bot:" + formatLocalDateTime(LocalDateTime.now(), DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS) + ":" + advertId;
+        String advertStartName = "Bot:" + DateUtils.formatLocalDateTime(LocalDateTime.now(), DateUtils.DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS) + ":" + advertId;
         wildberriesIntegrationService.renameAdvert(advertId, advertStartName);
 
         AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()

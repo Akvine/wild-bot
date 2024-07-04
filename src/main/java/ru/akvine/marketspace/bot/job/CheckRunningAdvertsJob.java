@@ -66,6 +66,7 @@ public class CheckRunningAdvertsJob {
                                 .setAmount(0)
                                 .setSku(cardEntity.getBarcode())));
                 wildberriesIntegrationService.changeStocks(request);
+                
                 advert.setStatus(AdvertStatus.getByCode(PAUSE_STATUS_ADVERT_CODE));
                 advert.setOrdinalStatus(PAUSE_STATUS_ADVERT_CODE);
                 advert.setUpdatedDate(LocalDateTime.now());
@@ -75,9 +76,10 @@ public class CheckRunningAdvertsJob {
                 iterationsCounterService.delete(advertId);
                 continue;
             }
+            long seconds = checkMilliseconds / 1000;
             if (iterationsCounterService.check(advertId, maxIterationsBeforeIncreaseCpm)) {
                 logger.info("Increase cpm for advert with id = {}", advertId);
-                long seconds = checkMilliseconds / 1000;
+
                 int newCpm = advert.getCpm() + defaultIncreaseCpmSum;
                 AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
                         .setCpm(newCpm)
@@ -86,13 +88,13 @@ public class CheckRunningAdvertsJob {
                         .setType(advert.getOrdinalType());
                 wildberriesIntegrationService.changeAdvertCpm(request);
 
-                advert.setUpdatedDate(LocalDateTime.now());
                 advert.setCpm(newCpm);
                 advert.setCheckBudgetSum(currentBudgetSum);
-                advert.setNextCheckDateTime(startCheckDateTime.plusSeconds(seconds));
-                advertRepository.save(advert);
             }
             iterationsCounterService.increase(advertId);
+            advert.setNextCheckDateTime(startCheckDateTime.plusSeconds(seconds));
+            advert.setUpdatedDate(LocalDateTime.now());
+            advertRepository.save(advert);
         }
         logger.info("Successful end check running adverts...");
     }
