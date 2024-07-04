@@ -28,6 +28,7 @@ public class AdvertStartService {
     private final AdvertService advertService;
     private final CardService cardService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
+    private final IterationsCounterService iterationsCounterService;
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
@@ -110,6 +111,8 @@ public class AdvertStartService {
         advertToStart.setStatus(AdvertStatus.RUNNING);
         advertToStart.setName(advertStartName);
         AdvertBean updatedAdvert = advertService.update(advertToStart);
+
+        iterationsCounterService.add(advertToStart.getAdvertId());
 
         logger.info("Successful start advert = [{}]", updatedAdvert);
         return advertToStart;

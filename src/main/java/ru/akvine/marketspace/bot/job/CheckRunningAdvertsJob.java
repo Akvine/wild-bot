@@ -11,6 +11,7 @@ import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.services.CardService;
+import ru.akvine.marketspace.bot.services.IterationsCounterService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticDatesDto;
@@ -29,6 +30,7 @@ public class CheckRunningAdvertsJob {
     private final CardService cardService;
     private final AdvertStatisticRepository advertStatisticRepository;
     private final WildberriesIntegrationService wildberriesIntegrationService;
+    private final IterationsCounterService iterationsCounterService;
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
@@ -36,6 +38,8 @@ public class CheckRunningAdvertsJob {
     private int maxStartSumDifference;
     @Value("${default.increase.cpm.sum}")
     private int defaultIncreaseCpmSum;
+    @Value("${check.advert.iterations.before.increase}")
+    private int maxIterationsBeforeIncreaseCpm;
 
     private final static int PAUSE_STATUS_ADVERT_CODE = 11;
 
@@ -68,22 +72,27 @@ public class CheckRunningAdvertsJob {
                 advert.setNextCheckDateTime(null);
                 advert.setCheckBudgetSum(null);
                 advertRepository.save(advert);
+                iterationsCounterService.delete(advertId);
                 continue;
             }
-            logger.info("Increase cpm for advert with id = {}", advertId);
-            long seconds = checkMilliseconds / 1000;
-            int newCpm = advert.getCpm() + defaultIncreaseCpmSum;
-            AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
-                    .setCpm(newCpm)
-                    .setAdvertId(Integer.parseInt(advertId))
-                    .setParam(Integer.parseInt(advert.getCategoryId()))
-                    .setType(advert.getOrdinalType());
-            wildberriesIntegrationService.changeAdvertCpm(request);
-            advert.setUpdatedDate(LocalDateTime.now());
-            advert.setCpm(newCpm);
-            advert.setCheckBudgetSum(currentBudgetSum);
-            advert.setNextCheckDateTime(startCheckDateTime.plusSeconds(seconds));
-            advertRepository.save(advert);
+            if (iterationsCounterService.check(advertId, maxIterationsBeforeIncreaseCpm)) {
+                logger.info("Increase cpm for advert with id = {}", advertId);
+                long seconds = checkMilliseconds / 1000;
+                int newCpm = advert.getCpm() + defaultIncreaseCpmSum;
+                AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
+                        .setCpm(newCpm)
+                        .setAdvertId(Integer.parseInt(advertId))
+                        .setParam(Integer.parseInt(advert.getCategoryId()))
+                        .setType(advert.getOrdinalType());
+                wildberriesIntegrationService.changeAdvertCpm(request);
+
+                advert.setUpdatedDate(LocalDateTime.now());
+                advert.setCpm(newCpm);
+                advert.setCheckBudgetSum(currentBudgetSum);
+                advert.setNextCheckDateTime(startCheckDateTime.plusSeconds(seconds));
+                advertRepository.save(advert);
+            }
+            iterationsCounterService.increase(advertId);
         }
         logger.info("Successful end check running adverts...");
     }
