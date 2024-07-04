@@ -26,13 +26,13 @@ public class IterationsCounterService {
     private void init() {
         logger.debug("Start init IterationsCounterService...");
         List<AdvertBean> runningAdverts = advertService.getAdvertsByStatuses(List.of(AdvertStatus.RUNNING));
-        logger.debug("Initializing running adverts in size = {}", runningAdverts.size());
+        logger.info("Initializing running adverts in size = {}", runningAdverts.size());
         runningAdverts.forEach(advert -> counters.put(advert.getAdvertId(), ONE_COUNT_INIT));
     }
 
     public void add(String advertId) {
         counters.put(advertId, ONE_COUNT_INIT);
-        logger.debug("Init counter for advert with id = {}", advertId);
+        logger.info("Init counter for advert with id = {}", advertId);
     }
 
     public void increase(String advertId) {
@@ -40,13 +40,13 @@ public class IterationsCounterService {
         int advertCounter = counters.get(advertId);
         advertCounter += 1;
         counters.replace(advertId, advertCounter);
-        logger.debug("Increase counter for advert with id = {}, total = {}", advertId, counters.get(advertId));
+        logger.info("Increase counter for advert with id = {}, total = {}", advertId, counters.get(advertId));
     }
 
     public void delete(String advertId) {
         validateExists(advertId);
         counters.remove(advertId);
-        logger.debug("Remove counter for advert with id = {}", advertId);
+        logger.info("Remove counter for advert with id = {}", advertId);
     }
 
     public boolean check(String advertId, int maxCountBeforeIncrease) {
