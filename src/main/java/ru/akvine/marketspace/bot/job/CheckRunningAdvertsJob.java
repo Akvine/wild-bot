@@ -66,7 +66,7 @@ public class CheckRunningAdvertsJob {
                                 .setAmount(0)
                                 .setSku(cardEntity.getBarcode())));
                 wildberriesIntegrationService.changeStocks(request);
-                
+
                 advert.setStatus(AdvertStatus.getByCode(PAUSE_STATUS_ADVERT_CODE));
                 advert.setOrdinalStatus(PAUSE_STATUS_ADVERT_CODE);
                 advert.setUpdatedDate(LocalDateTime.now());
@@ -89,9 +89,9 @@ public class CheckRunningAdvertsJob {
                 wildberriesIntegrationService.changeAdvertCpm(request);
 
                 advert.setCpm(newCpm);
-                advert.setCheckBudgetSum(currentBudgetSum);
             }
             iterationsCounterService.increase(advertId);
+            advert.setCheckBudgetSum(currentBudgetSum);
             advert.setNextCheckDateTime(startCheckDateTime.plusSeconds(seconds));
             advert.setUpdatedDate(LocalDateTime.now());
             advertRepository.save(advert);
