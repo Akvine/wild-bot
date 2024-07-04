@@ -11,7 +11,8 @@ import java.util.Date;
 
 @UtilityClass
 public class DateUtils {
-    private final static DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    public final static DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    public final static DateTimeFormatter DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public long getMinutes(LocalDateTime fromDate, LocalDateTime toDate) {
         return ChronoUnit.MINUTES.between(fromDate, toDate);

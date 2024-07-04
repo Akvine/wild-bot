@@ -16,10 +16,14 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.Adv
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertUploadPhotoRequest;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SkuDto;
+import ru.akvine.marketspace.bot.utils.DateUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+
+import static ru.akvine.marketspace.bot.utils.DateUtils.DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS;
+import static ru.akvine.marketspace.bot.utils.DateUtils.formatLocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +87,7 @@ public class AdvertStartService {
             wildberriesIntegrationService.changeAdvertCpm(request);
         }
 
-        String advertStartName = "Bot:" + LocalDateTime.now() + ":" + advertId;
+        String advertStartName = "Bot:" + formatLocalDateTime(LocalDateTime.now(), DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS) + ":" + advertId;
         wildberriesIntegrationService.renameAdvert(advertId, advertStartName);
 
         AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()

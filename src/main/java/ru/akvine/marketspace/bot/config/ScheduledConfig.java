@@ -12,6 +12,7 @@ import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.repositories.CardRepository;
 import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.CardService;
+import ru.akvine.marketspace.bot.services.IterationsCounterService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 
 @Configuration
@@ -40,7 +41,13 @@ public class ScheduledConfig {
     public CheckRunningAdvertsJob checkRunningAdvertsJob(AdvertRepository advertRepository,
                                                          AdvertStatisticRepository advertStatisticRepository,
                                                          WildberriesIntegrationService wildberriesIntegrationService,
-                                                         CardService cardService) {
-        return new CheckRunningAdvertsJob(advertRepository, cardService, advertStatisticRepository, wildberriesIntegrationService);
+                                                         CardService cardService,
+                                                         IterationsCounterService iterationsCounterService) {
+        return new CheckRunningAdvertsJob(
+                advertRepository,
+                cardService,
+                advertStatisticRepository,
+                wildberriesIntegrationService,
+                iterationsCounterService);
     }
 }
