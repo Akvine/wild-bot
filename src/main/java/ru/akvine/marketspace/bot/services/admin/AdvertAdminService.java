@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.services.AdvertService;
+import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
@@ -24,10 +26,11 @@ import java.util.List;
 public class AdvertAdminService {
     private final AdvertService advertService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
+    private final AdvertStatisticService advertStatisticService;
 
     private final static int ADVERT_PAUSE_STATUS_CODE = 11;
 
-    public void pauseAdvert(PauseAdvert pauseAdvert) {
+    public AdvertStatisticBean pauseAdvert(PauseAdvert pauseAdvert) {
         Preconditions.checkNotNull(pauseAdvert, "pauseAdvert is null");
         logger.info("Pause advert by [{}]", pauseAdvert);
 
@@ -47,7 +50,7 @@ public class AdvertAdminService {
                     advertId);
             throw new IllegalStateException(errorMessage);
         }
-        AdvertDto advertDto = advertsInfo.get(0);
+        AdvertDto advertDto = advertsInfo.getFirst();
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
             wildberriesIntegrationService.pauseAdvert(advertEntity.getAdvertId());
         }
@@ -55,8 +58,10 @@ public class AdvertAdminService {
         advertEntity.setStatus(AdvertStatus.PAUSE);
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
         AdvertBean updatedAdvert = advertService.update(new AdvertBean(advertEntity));
+        AdvertStatisticBean advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
 
         logger.info("Successful pause advert = [{}]", updatedAdvert);
+        return advertStatisticBean;
     }
 
     public List<AdvertBean> listAdvert(ListAdvert listAdvert) {

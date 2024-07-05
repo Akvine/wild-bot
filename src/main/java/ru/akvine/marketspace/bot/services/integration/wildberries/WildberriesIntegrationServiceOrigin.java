@@ -356,7 +356,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
     @Override
     @RateLimiter(name = "wb-get-adverts-full-statistic")
     public AdvertFullStatisticResponse[] getAdvertsFullStatistic(List<AdvertFullStatisticDatesDto> request) {
-        logger.info("Get advert full statistic for advert with id = {}", request.getFirst().getId());
+        logger.info("Get advert full statistic by request = [{}]", request);
         HttpHeaders headers = buildHttpHeaders();
         HttpEntity<List<AdvertFullStatisticDatesDto>> httpEntity = new HttpEntity<>(request, headers);
 
@@ -371,6 +371,11 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     "Error while calling wb api method = [%s]. Message = %s",
                     WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC, exception.getMessage());
             throw new IntegrationException(errorMessage);
+        }
+
+        AdvertFullStatisticResponse[] responses = response.getBody();
+        if (responses == null || responses.length == 0) {
+            throw new IntegrationException("Full statistic responses is null or empty");
         }
         return response.getBody();
     }

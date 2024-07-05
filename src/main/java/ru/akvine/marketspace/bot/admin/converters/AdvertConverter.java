@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.akvine.marketspace.bot.admin.dto.advert.*;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
@@ -28,6 +29,24 @@ public class AdvertConverter {
                 .collect(Collectors.toList());
         return new ListAdvert()
                 .setStatuses(statuses);
+    }
+
+    public PauseAdvertResponse convertToPauseAdvert(AdvertStatisticBean advertStatisticBean) {
+        return new PauseAdvertResponse()
+                .setAdvertId(advertStatisticBean.getAdvertBean().getAdvertId())
+                .setAdvertStatistic(new AdvertStatisticDto()
+                        .setAtbs(advertStatisticBean.getAtbs())
+                        .setCr(advertStatisticBean.getCr())
+                        .setSum(advertStatisticBean.getSum())
+                        .setCpc(advertStatisticBean.getCpc())
+                        .setCtr(advertStatisticBean.getCtr())
+                        .setShks(advertStatisticBean.getShks())
+                        .setViews(advertStatisticBean.getViews())
+                        .setSum(advertStatisticBean.getSum())
+                        .setSumPrice(advertStatisticBean.getSumPrice())
+                        .setOrders(advertStatisticBean.getOrders())
+                        .setClicks(advertStatisticBean.getClicks())
+                );
     }
 
     public ListAdvertResponse convertToAdvertListResponse(List<AdvertBean> adverts) {

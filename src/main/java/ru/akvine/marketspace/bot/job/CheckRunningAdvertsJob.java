@@ -5,21 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
-import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
+import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.CardService;
 import ru.akvine.marketspace.bot.services.IterationsCounterService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticDatesDto;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticResponse;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SkuDto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,6 +28,7 @@ public class CheckRunningAdvertsJob {
     private final AdvertStatisticRepository advertStatisticRepository;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final IterationsCounterService iterationsCounterService;
+    private final AdvertStatisticService advertStatisticService;
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
@@ -56,7 +54,7 @@ public class CheckRunningAdvertsJob {
 
             if (currentBudgetSum == 0 || differenceBudgetSum >= maxStartSumDifference) {
                 logger.info("Get statistic and pause advert with id = {}", advertId);
-                getAdvertStatisticAndSave(advert);
+                advertStatisticService.getAndSave(advert);
                 if (currentBudgetSum != 0) {
                     wildberriesIntegrationService.pauseAdvert(advertId);
                 }
@@ -97,32 +95,5 @@ public class CheckRunningAdvertsJob {
             advertRepository.save(advert);
         }
         logger.info("Successful end check running adverts...");
-    }
-
-    private void getAdvertStatisticAndSave(AdvertEntity advertEntity) {
-        List<AdvertFullStatisticDatesDto> request = List.of(
-                new AdvertFullStatisticDatesDto()
-                        .setId(Integer.parseInt(advertEntity.getAdvertId()))
-                        .setDates(List.of(LocalDate.now().toString()))
-        );
-        AdvertFullStatisticResponse[] response = wildberriesIntegrationService.getAdvertsFullStatistic(request);
-        if (response != null && response.length != 0) {
-            AdvertFullStatisticResponse firstPositionResponse = response[0];
-            AdvertStatisticEntity advertStatisticEntity = new AdvertStatisticEntity()
-                    .setViews(firstPositionResponse.getViews())
-                    .setClicks(firstPositionResponse.getClicks())
-                    .setCtr(firstPositionResponse.getCtr())
-                    .setCpc(firstPositionResponse.getCpc())
-                    .setSum(firstPositionResponse.getSum())
-                    .setAtbs(firstPositionResponse.getAtbs())
-                    .setOrders(firstPositionResponse.getOrders())
-                    .setCr(firstPositionResponse.getCr())
-                    .setShks(firstPositionResponse.getShks())
-                    .setSumPrice(firstPositionResponse.getSumPrice())
-                    .setAdvertEntity(advertEntity);
-            advertStatisticRepository.save(advertStatisticEntity);
-        } else {
-            logger.error("Can't get full statistic for advert with id = {}", advertEntity.getAdvertId());
-        }
     }
 }

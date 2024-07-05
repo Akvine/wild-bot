@@ -13,6 +13,7 @@ import ru.akvine.marketspace.bot.admin.meta.AdvertControllerMeta;
 import ru.akvine.marketspace.bot.admin.validator.AdvertValidator;
 import ru.akvine.marketspace.bot.services.admin.AdvertAdminService;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
@@ -30,8 +31,8 @@ public class AdvertController implements AdvertControllerMeta {
     public Response pause(@Valid PauseAdvertRequest request) {
         advertValidator.verifyPauseAdvertRequest(request);
         PauseAdvert pauseAdvert = advertConverter.convertToPauseAdvert(request);
-        advertAdminService.pauseAdvert(pauseAdvert);
-        return new SuccessfulResponse();
+        AdvertStatisticBean advertStatisticBean = advertAdminService.pauseAdvert(pauseAdvert);
+        return advertConverter.convertToPauseAdvert(advertStatisticBean);
     }
 
     @Override
