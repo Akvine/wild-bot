@@ -86,7 +86,7 @@ public class AdvertStartService {
             wildberriesIntegrationService.changeAdvertCpm(request);
         }
 
-        String advertStartName = "Bot:" + DateUtils.formatLocalDateTime(LocalDateTime.now(), DateUtils.DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS) + ":" + advertId;
+        String advertStartName = "Bot:" + DateUtils.formatLocalDateTime(LocalDateTime.now()) + ":" + advertId;
         wildberriesIntegrationService.renameAdvert(advertId, advertStartName);
 
         AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()

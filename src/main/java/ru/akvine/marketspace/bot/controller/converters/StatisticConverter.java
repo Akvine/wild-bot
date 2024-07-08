@@ -10,8 +10,6 @@ import ru.akvine.marketspace.bot.utils.DateUtils;
 
 import java.util.List;
 
-import static ru.akvine.marketspace.bot.utils.DateUtils.DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS;
-
 @Component
 @RequiredArgsConstructor
 public class StatisticConverter {
@@ -35,13 +33,13 @@ public class StatisticConverter {
             sb.append("Advert ID: ").append(advert.getAdvertId()).append(NEW_LINE);
             sb.append("Название: ").append(advert.getName()).append(NEW_LINE);
             sb.append("Дата запуска РК: ")
-                    .append(DateUtils.formatLocalDateTime(advert.getStartCheckDateTime(), DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS))
+                    .append(DateUtils.formatLocalDateTime(advert.getStartCheckDateTime()))
                     .append(NEW_LINE);
             sb.append("Начальный бюджет: ").append(advert.getStartBudgetSum()).append(NEW_LINE);
             sb.append("Бюджет на момент проверки РК: ").append(advert.getCheckBudgetSum()).append(NEW_LINE);
             sb.append("CPM: ").append(advert.getCpm()).append(NEW_LINE);
             sb.append("Дата следующей проверки: ")
-                    .append(DateUtils.formatLocalDateTime(advert.getNextCheckDateTime(), DATE_TIME_FORMATTER_WITHOUT_MILLISECONDS))
+                    .append(DateUtils.formatLocalDateTime(advert.getNextCheckDateTime()))
                     .append(NEW_LINE);
             sb.append("=======================").append(NEW_LINE);
         });
