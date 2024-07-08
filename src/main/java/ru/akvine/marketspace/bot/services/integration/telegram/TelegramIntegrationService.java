@@ -20,6 +20,15 @@ public interface TelegramIntegrationService {
     void sendFile(InputStream file, String fileName, String chatId);
 
     /**
+     *  Отправка сообщения конкретному пользователю
+     * @param chatId идентификатор чата пользователя
+     * @param message сообщение
+     */
+    default void sendMessage(String chatId, String message) {
+        sendMessage(List.of(chatId), message);
+    }
+
+    /**
      * Отправка сообщения пользователям
      * @param chatIds идентификаторы чатов пользователей
      * @param message сообщение

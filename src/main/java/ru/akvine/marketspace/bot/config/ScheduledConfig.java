@@ -14,6 +14,7 @@ import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.CardService;
 import ru.akvine.marketspace.bot.services.IterationsCounterService;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 
 @Configuration
@@ -40,17 +41,18 @@ public class ScheduledConfig {
 
     @Bean
     public CheckRunningAdvertsJob checkRunningAdvertsJob(AdvertRepository advertRepository,
-                                                         AdvertStatisticRepository advertStatisticRepository,
                                                          WildberriesIntegrationService wildberriesIntegrationService,
                                                          CardService cardService,
                                                          IterationsCounterService iterationsCounterService,
-                                                         AdvertStatisticService advertStatisticService) {
+                                                         AdvertStatisticService advertStatisticService,
+                                                         TelegramIntegrationService telegramIntegrationService) {
         return new CheckRunningAdvertsJob(
                 advertRepository,
                 cardService,
-                advertStatisticRepository,
+                telegramIntegrationService,
                 wildberriesIntegrationService,
                 iterationsCounterService,
-                advertStatisticService);
+                advertStatisticService
+        );
     }
 }

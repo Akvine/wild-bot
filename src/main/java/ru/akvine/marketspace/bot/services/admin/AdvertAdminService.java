@@ -14,6 +14,7 @@ import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
@@ -26,6 +27,7 @@ import java.util.List;
 public class AdvertAdminService {
     private final AdvertService advertService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
+    private final TelegramIntegrationService telegramIntegrationService;
     private final AdvertStatisticService advertStatisticService;
 
     private final static int ADVERT_PAUSE_STATUS_CODE = 11;
@@ -60,6 +62,11 @@ public class AdvertAdminService {
         AdvertBean updatedAdvert = advertService.update(new AdvertBean(advertEntity));
         AdvertStatisticBean advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
 
+        String finishedTestMessage = String.format(
+                "Тест с advert id = %s успешно завершился.\n Введите команду /report для просмотра отчета",
+                advertId
+        );
+        telegramIntegrationService.sendMessage(advertEntity.getClient().getChatId(), finishedTestMessage);
         logger.info("Successful pause advert = [{}]", updatedAdvert);
         return advertStatisticBean;
     }

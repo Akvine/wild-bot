@@ -8,10 +8,10 @@ import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
-import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.CardService;
 import ru.akvine.marketspace.bot.services.IterationsCounterService;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
@@ -25,7 +25,7 @@ import java.util.List;
 public class CheckRunningAdvertsJob {
     private final AdvertRepository advertRepository;
     private final CardService cardService;
-    private final AdvertStatisticRepository advertStatisticRepository;
+    private final TelegramIntegrationService telegramIntegrationService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final IterationsCounterService iterationsCounterService;
     private final AdvertStatisticService advertStatisticService;
@@ -72,6 +72,12 @@ public class CheckRunningAdvertsJob {
                 advert.setCheckBudgetSum(null);
                 advertRepository.save(advert);
                 iterationsCounterService.delete(advertId);
+
+                String finishedTestMessage = String.format(
+                        "Тест с advert id = %s успешно завершился.\n Введите команду /report для просмотра отчета",
+                        advertId
+                );
+                telegramIntegrationService.sendMessage(advert.getClient().getChatId(), finishedTestMessage);
                 continue;
             }
             long seconds = checkMilliseconds / 1000;
