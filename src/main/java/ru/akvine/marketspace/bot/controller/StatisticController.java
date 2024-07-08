@@ -17,7 +17,7 @@ public class StatisticController {
     private final AdvertService advertService;
 
     public SendMessage getStatistic(String chatId) {
-        List<AdvertBean> runningAdverts = advertService.getAdvertsByStatuses(List.of(AdvertStatus.RUNNING));
+        List<AdvertBean> runningAdverts = advertService.getAdvertsByChatIdAndStatuses(chatId, List.of(AdvertStatus.RUNNING));
         return statisticConverter.convertToStatistic(chatId, runningAdverts);
     }
 }

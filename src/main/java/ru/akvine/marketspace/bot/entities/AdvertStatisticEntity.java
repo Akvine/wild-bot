@@ -52,4 +52,8 @@ public class AdvertStatisticEntity extends SoftBaseEntity {
     @ManyToOne
     @JoinColumn(name = "ADVERT_ID")
     private AdvertEntity advertEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "CLIENT_ID", nullable = false)
+    private ClientEntity client;
 }

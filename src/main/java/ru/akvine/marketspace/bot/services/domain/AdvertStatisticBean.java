@@ -20,6 +20,7 @@ public class AdvertStatisticBean extends SoftBean {
     private String shks;
     private String sumPrice;
     private AdvertBean advertBean;
+    private ClientBean client;
 
     public AdvertStatisticBean(AdvertStatisticEntity advertStatisticEntity) {
         this.id = advertStatisticEntity.getId();
@@ -34,6 +35,7 @@ public class AdvertStatisticBean extends SoftBean {
         this.shks = advertStatisticEntity.getShks();
         this.sumPrice = advertStatisticEntity.getSumPrice();
         this.advertBean = new AdvertBean(advertStatisticEntity.getAdvertEntity());
+        this.client = new ClientBean(advertStatisticEntity.getClient());
 
         this.createdDate = advertStatisticEntity.getCreatedDate();
         this.updatedDate = advertStatisticEntity.getUpdatedDate();

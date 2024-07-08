@@ -3,7 +3,6 @@ package ru.akvine.marketspace.bot.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -27,6 +26,7 @@ public class ReportService {
     private final AdvertStatisticRepository advertStatisticRepository;
     private final CardService cardService;
     private final CardPhotoRepository cardPhotoRepository;
+    private final ClientService clientService;
 
     private final static String SHEET_NAME = "sheet";
     private final static String MAIN_PHOTO_URL_PATTERN = "1.";
@@ -36,7 +36,8 @@ public class ReportService {
         logger.info("Generate report for chat id = {}", chatId);
 
         // TODO : N + 1 - достаем по очереди карточки вместо пачки
-        List<AdvertStatisticEntity> advertStatistics = advertStatisticRepository.findAll();
+        Long clientId = clientService.verifyExistsByChatId(chatId).getId();
+        List<AdvertStatisticEntity> advertStatistics = advertStatisticRepository.findByClientId(clientId);
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet(SHEET_NAME);
         createHeaders(sheet);

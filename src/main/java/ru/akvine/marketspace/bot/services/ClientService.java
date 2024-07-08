@@ -52,6 +52,11 @@ public class ClientService {
         return clientRepository.findByUuid(clientUuid).orElseThrow(() -> new ClientNotFoundException("Client has no with uuid = [" + clientUuid + "]!"));
     }
 
+    public ClientBean getByChatId(String chatId) {
+        Preconditions.checkNotNull(chatId, "chatId is null");
+        return new ClientBean(verifyExistsByChatId(chatId));
+    }
+
     public ClientEntity verifyExistsByChatId(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         return clientRepository.findByChatId(chatId).orElseThrow(() -> new ClientNotFoundException("Client has no with chatId = [" + chatId + "]!"));

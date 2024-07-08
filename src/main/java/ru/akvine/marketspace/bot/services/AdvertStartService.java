@@ -43,23 +43,25 @@ public class AdvertStartService {
 
     private final static int CARD_MAIN_PHOTO_POSITION = 1;
 
-    public AdvertBean startByAdvertId(String advertId) {
+    public AdvertBean startByAdvertId(String chatId, String advertId) {
+        Preconditions.checkNotNull(chatId, "chatId is null");
         Preconditions.checkNotNull(advertId, "advertId is null");
         String categoryId = Objects.requireNonNull(ClientDataContext.get()).getCategoryId();
         logger.info("Try to start advert advert with id = {} and category with id = {}", advertId, categoryId);
 
         AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
-        return startInternal(new AdvertBean(advertEntity));
+        return startInternal(chatId, new AdvertBean(advertEntity));
     }
 
-    public AdvertBean start() {
+    public AdvertBean start(String chatId) {
+        Preconditions.checkNotNull(chatId, "chatId is null");
         String categoryId = Objects.requireNonNull(ClientDataContext.get()).getCategoryId();
-        logger.info("Try to start advert randomly with category id = {}", categoryId);
+        logger.info("Try to start first one advert with category id = {}", categoryId);
         AdvertBean advertToStart = advertService.getFirst(categoryId);
-        return startInternal(advertToStart);
+        return startInternal(chatId, advertToStart);
     }
 
-    private AdvertBean startInternal(AdvertBean advertToStart) {
+    private AdvertBean startInternal(String chatId, AdvertBean advertToStart) {
         CardEntity card = cardService.verifyExistsByItemId(advertToStart.getItemId());
 
         String advertId = advertToStart.getAdvertId();
@@ -111,6 +113,7 @@ public class AdvertStartService {
         advertToStart.setStartCheckDateTime(startDateTime);
         advertToStart.setStatus(AdvertStatus.RUNNING);
         advertToStart.setName(advertStartName);
+        advertToStart.setChatId(chatId);
         AdvertBean updatedAdvert = advertService.update(advertToStart);
 
         iterationsCounterService.add(advertToStart.getAdvertId());

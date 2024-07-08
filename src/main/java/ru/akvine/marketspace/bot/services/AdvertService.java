@@ -1,11 +1,13 @@
 package ru.akvine.marketspace.bot.services;
 
 import com.google.common.base.Preconditions;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
+import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.enums.AdvertType;
 import ru.akvine.marketspace.bot.exceptions.AdvertNotFoundException;
@@ -26,6 +28,7 @@ public class AdvertService {
     private int length;
 
     private final AdvertRepository advertRepository;
+    private final ClientService clientService;
 
     public void saveAll(List<AdvertDto> adverts) {
         Preconditions.checkNotNull(adverts, "loadedAdverts is null");
@@ -59,6 +62,18 @@ public class AdvertService {
                 .collect(Collectors.toList());
     }
 
+    public List<AdvertBean> getAdvertsByChatIdAndStatuses(String chatId, List<AdvertStatus> statuses) {
+        Preconditions.checkNotNull(chatId, "chatId is null");
+        Preconditions.checkNotNull(statuses, "advertStatuses is null");
+        Long clientId = clientService.verifyExistsByChatId(chatId).getId();
+        return advertRepository
+                .findByClientIdAndStatuses(clientId, statuses)
+                .stream()
+                .map(AdvertBean::new)
+                .toList();
+
+    }
+
     public AdvertBean update(AdvertBean advertBean) {
         logger.info("Update advert by bean = [{}]", advertBean);
         Preconditions.checkNotNull(advertBean, "advertBean is null");
@@ -66,6 +81,10 @@ public class AdvertService {
         AdvertEntity advertEntity = advertRepository
                 .findByUuid(advertBean.getUuid())
                 .orElseThrow(() -> new AdvertNotFoundException("Advert with uuid = [" + advertBean.getUuid() + "] not found!"));
+        if (StringUtils.isNotBlank(advertBean.getChatId())) {
+            ClientEntity client = clientService.verifyExistsByChatId(advertBean.getChatId());
+            advertEntity.setClient(client);
+        }
         advertEntity
                 .setStartBudgetSum(advertBean.getStartBudgetSum())
                 .setNextCheckDateTime(advertBean.getNextCheckDateTime())

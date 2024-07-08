@@ -35,12 +35,12 @@ public class AdvertStartController {
     }
 
     public SendMessage startAdvertById(String chatId) {
-        AdvertBean advertBean = advertStartService.startByAdvertId(testAdvertId);
+        AdvertBean advertBean = advertStartService.startByAdvertId(chatId, testAdvertId);
         return startConverter.buildStartAdvert(chatId, advertBean);
     }
 
     public SendMessage startAdvert(String chatId) {
-        AdvertBean advertBean = advertStartService.start();
+        AdvertBean advertBean = advertStartService.start(chatId);
         return startConverter.buildStartAdvert(chatId, advertBean);
     }
 }

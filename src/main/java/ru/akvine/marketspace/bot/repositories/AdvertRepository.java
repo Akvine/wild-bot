@@ -23,6 +23,13 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
     List<AdvertEntity> findByStatusesAndCategoryId(@Param("statuses") List<AdvertStatus> states,
                                                    @Param("categoryId") String categoryId);
 
+    @Query("from AdvertEntity ae join ae.client c where ae.status in :statuses " +
+            "and " +
+            "c.id = :id " +
+            "and " +
+            "ae.deleted = false")
+    List<AdvertEntity> findByClientIdAndStatuses(@Param("id") Long clientId, List<AdvertStatus> statuses);
+
     @Query("from AdvertEntity ae where ae.uuid = :uuid and ae.deletedDate is null and ae.deleted = false")
     Optional<AdvertEntity> findByUuid(@Param("uuid") String uuid);
 

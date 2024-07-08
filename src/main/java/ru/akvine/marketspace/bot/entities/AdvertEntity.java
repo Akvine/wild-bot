@@ -69,4 +69,8 @@ public class AdvertEntity extends SoftBaseEntity {
 
     @Column(name = "CHECK_BUDGET_SUM")
     private Integer checkBudgetSum;
+
+    @OneToOne
+    @JoinColumn(name = "LAUNCHED_BY_CLIENT_ID")
+    private ClientEntity client;
 }

@@ -18,6 +18,8 @@ public class AdvertBean extends SoftBean {
     private String uuid;
     private String name;
     private String advertId;
+    @Nullable
+    private String chatId;
     private Date changeTime;
     private AdvertStatus status;
     private AdvertType type;
