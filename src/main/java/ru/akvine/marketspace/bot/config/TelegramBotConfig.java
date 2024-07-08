@@ -74,7 +74,7 @@ public class TelegramBotConfig {
                 new BotCommand("/statistic", "Получить статистику по запущенным рекламным кампаниям"),
                 new BotCommand("/report", "Сгенерировать отчет о тестах"),
                 new BotCommand("/help", "Получение списка доступных команд"),
-                new BotCommand("/stop", "Отменить запуск рекламной кампании")
+                new BotCommand("/cancel", "Отменить запуск рекламной кампании")
         );
     }
 }

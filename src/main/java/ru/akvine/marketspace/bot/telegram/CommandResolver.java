@@ -17,8 +17,8 @@ public class CommandResolver {
         return Command.COMMAND_REPORT.getCommandName().equals(command);
     }
 
-    public boolean isStopCommand(String command) {
-        return Command.COMMAND_STOP.getCommandName().equals(command);
+    public boolean isCancelCommand(String command) {
+        return Command.COMMAND_CANCEL.getCommandName().equals(command);
     }
 
     public boolean isHelpCommand(String command) {

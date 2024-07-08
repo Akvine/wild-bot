@@ -80,7 +80,7 @@ public class MessageDispatcherOrigin implements MessageDispatcher {
         String clientUuid = clientBean.getUuid();
 
         if (telegramClientStateResolver.containsState(clientUuid)) {
-            if (commandResolver.isStopCommand(text)) {
+            if (commandResolver.isCancelCommand(text)) {
                 telegramClientStateResolver.removeState(clientUuid);
                 return new SendMessage(chatId, DEFAULT_OUTPUT_MESSAGE);
             }
@@ -143,7 +143,7 @@ public class MessageDispatcherOrigin implements MessageDispatcher {
                 .append("/statistic - вывести статистику по запущенным кампаниям \n")
                 .append("/report - генерирует отчет с тестами \n")
                 .append("/help - список доступных команд \n")
-                .append("/stop - отменить запуск кампании")
+                .append("/cancel - отменить запуск кампании")
                 .toString();
     }
 }

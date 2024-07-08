@@ -10,7 +10,7 @@ public enum Command {
     COMMAND_START("/start"),
     COMMAND_STATISTIC("/statistic"),
     COMMAND_REPORT("/report"),
-    COMMAND_STOP("/stop"),
+    COMMAND_CANCEL("/cancel"),
     COMMAND_HELP("/help");
 
     private final String commandName;
