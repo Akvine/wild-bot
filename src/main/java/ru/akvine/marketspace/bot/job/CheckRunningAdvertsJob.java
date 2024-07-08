@@ -74,7 +74,7 @@ public class CheckRunningAdvertsJob {
                 iterationsCounterService.delete(advertId);
 
                 String finishedTestMessage = String.format(
-                        "Тест с advert id = %s успешно завершился.\n Введите команду /report для просмотра отчета",
+                        "Тест с advert id = %s успешно завершился.\nВведите команду /report для просмотра отчета",
                         advertId
                 );
                 telegramIntegrationService.sendMessage(advert.getClient().getChatId(), finishedTestMessage);

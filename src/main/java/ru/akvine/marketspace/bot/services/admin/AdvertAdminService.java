@@ -63,7 +63,7 @@ public class AdvertAdminService {
         AdvertStatisticBean advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
 
         String finishedTestMessage = String.format(
-                "Тест с advert id = %s успешно завершился.\n Введите команду /report для просмотра отчета",
+                "Тест с advert id = %s успешно завершился.\nВведите команду /report для просмотра отчета",
                 advertId
         );
         telegramIntegrationService.sendMessage(advertEntity.getClient().getChatId(), finishedTestMessage);
