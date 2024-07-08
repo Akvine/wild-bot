@@ -32,12 +32,12 @@ public class StatisticConverter {
         runningAdverts.forEach(advert -> {
             sb.append("Advert ID: ").append(advert.getAdvertId()).append(NEW_LINE);
             sb.append("Название: ").append(advert.getName()).append(NEW_LINE);
-            sb.append("Дата запуска РК: ")
+            sb.append("Дата запуска теста по РК: ")
                     .append(DateUtils.formatLocalDateTime(advert.getStartCheckDateTime()))
                     .append(NEW_LINE);
-            sb.append("Начальный бюджет: ").append(advert.getStartBudgetSum()).append(NEW_LINE);
-            sb.append("Бюджет на момент проверки РК: ").append(advert.getCheckBudgetSum()).append(NEW_LINE);
-            sb.append("CPM: ").append(advert.getCpm()).append(NEW_LINE);
+            sb.append("Начальный бюджет: ").append(advert.getStartBudgetSum()).append(" руб.").append(NEW_LINE);
+            sb.append("Бюджет на момент проверки РК: ").append(advert.getCheckBudgetSum()).append(" руб.").append(NEW_LINE);
+            sb.append("Текущий CPM: ").append(advert.getCpm()).append(NEW_LINE);
             sb.append("Дата следующей проверки: ")
                     .append(DateUtils.formatLocalDateTime(advert.getNextCheckDateTime()))
                     .append(NEW_LINE);

@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
 import ru.akvine.marketspace.bot.services.dto.AggregateCard;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,12 +38,19 @@ public class StartConverter {
     }
 
     public SendMessage buildStartAdvert(String chatId, AdvertBean startAdvertBean) {
+        String advertId = startAdvertBean.getAdvertId();
+        int startCpm = startAdvertBean.getCpm();
+        Integer startBudgetSum = startAdvertBean.getStartBudgetSum();
+        LocalDateTime nextCheckDateTime = startAdvertBean.getNextCheckDateTime();
         String message = String.format(
-                "Запущена кампания с advertId = [%s], cpm = [%s], датой проверки = [%s] и бюджетом = [%s]",
-                startAdvertBean.getAdvertId(),
-                startAdvertBean.getCpm(),
-                startAdvertBean.getNextCheckDateTime(),
-                startAdvertBean.getStartBudgetSum());
+                """
+                           Запущена кампания с:
+                           1. Advert id = %s
+                           2. Начальным CPM = %s
+                           3. Начальной суммой = %s руб.
+                           4. Датой следующей проверки = %s 
+                        """,
+                advertId, startCpm, startBudgetSum, nextCheckDateTime);
         return new SendMessage(chatId, message);
     }
 }
