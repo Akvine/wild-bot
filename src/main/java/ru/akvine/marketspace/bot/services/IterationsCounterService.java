@@ -20,18 +20,18 @@ public class IterationsCounterService {
     private final AdvertService advertService;
     private final Map<String, Integer> counters = new ConcurrentHashMap<>();
 
-    private static final int ONE_COUNT_INIT = 1;
+    private static final int ZERO_COUNT_INIT = 0;
 
     @PostConstruct
     private void init() {
         logger.debug("Start init IterationsCounterService...");
         List<AdvertBean> runningAdverts = advertService.getAdvertsByStatuses(List.of(AdvertStatus.RUNNING));
         logger.info("Initializing running adverts in size = {}", runningAdverts.size());
-        runningAdverts.forEach(advert -> counters.put(advert.getAdvertId(), ONE_COUNT_INIT));
+        runningAdverts.forEach(advert -> counters.put(advert.getAdvertId(), ZERO_COUNT_INIT));
     }
 
     public void add(String advertId) {
-        counters.put(advertId, ONE_COUNT_INIT);
+        counters.put(advertId, ZERO_COUNT_INIT);
         logger.info("Init counter for advert with id = {}", advertId);
     }
 
