@@ -99,11 +99,17 @@ public class MessageDispatcherOrigin implements MessageDispatcher {
             byte[] report = reportService.generateReport(chatId);
             telegramIntegrationService.sendFile(new ByteArrayInputStream(report), REPORT_DEFAULT_FILE_NAME, chatId);
             return new SendMessage(chatId, DEFAULT_OUTPUT_MESSAGE);
+        } else if (commandResolver.isCancelCommand(text)) {
+            return new SendMessage(
+                    chatId,
+                    DEFAULT_OUTPUT_MESSAGE
+            );
+        } else {
+            return new SendMessage(
+                    chatId,
+                    "Неизвестная команда. Введите /help для просмотра списка доступных команд"
+            );
         }
-        return new SendMessage(
-                chatId,
-                "Неизвестная команда. Введите /help для просмотра списка доступных команд"
-        );
     }
 
     private BotApiMethod<?> processStates(Update update, String chatId, String clientUuid) {
