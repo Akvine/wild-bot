@@ -29,6 +29,8 @@ import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static ru.akvine.marketspace.bot.constants.ClientStates.START_ADVERT.UPLOAD_PHOTO_STATE;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -84,6 +86,15 @@ public class MessageDispatcherOrigin implements MessageDispatcher {
                 telegramClientStateResolver.removeState(clientUuid);
                 return new SendMessage(chatId, DEFAULT_OUTPUT_MESSAGE);
             }
+
+//            // TODO: сделать более гибкую обработку ошибок
+//            if (telegramClientStateResolver.containsState(clientUuid) &&
+//                    telegramClientStateResolver.getState(clientUuid).equals(UPLOAD_PHOTO_STATE) &&
+//                    update.getCallbackQuery() == null) {
+//                return new SendMessage(chatId,
+//                        "Загрузите фотографию карточки для теста РК или\n" +
+//                                "введите команду /cancel для отмены запуска");
+//            }
             return processStates(update, chatId, clientUuid);
         }
 
@@ -116,9 +127,9 @@ public class MessageDispatcherOrigin implements MessageDispatcher {
         if (ClientStates.START_ADVERT.CHOOSE_CATEGORY_STATE.equals(telegramClientStateResolver.getState(clientUuid))) {
             String categoryId = update.getCallbackQuery().getData();
             ClientDataContext.set(new ClientData().setCategoryId(categoryId));
-            telegramClientStateResolver.setState(clientUuid, ClientStates.START_ADVERT.UPLOAD_PHOTO_STATE);
+            telegramClientStateResolver.setState(clientUuid, UPLOAD_PHOTO_STATE);
             return new SendMessage(chatId, "Загрузите новое изображение карточки: ");
-        } else if (ClientStates.START_ADVERT.UPLOAD_PHOTO_STATE.equals(telegramClientStateResolver.getState(clientUuid))) {
+        } else if (UPLOAD_PHOTO_STATE.equals(telegramClientStateResolver.getState(clientUuid))) {
             telegramClientStateResolver.removeState(clientUuid);
             PhotoSize photoSize = telegramPhotoResolver.resolve(update.getMessage());
             byte[] photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
