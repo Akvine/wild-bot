@@ -5,10 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.akvine.marketspace.bot.context.ClientDataContext;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
+import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
+import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertBudgetInfoResponse;
@@ -20,7 +21,6 @@ import ru.akvine.marketspace.bot.utils.DateUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +30,7 @@ public class AdvertStartService {
     private final CardService cardService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final IterationsCounterService iterationsCounterService;
+    private final SessionStorage<String, ClientSessionData> sessionStorage;
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
@@ -46,7 +47,7 @@ public class AdvertStartService {
     public AdvertBean startByAdvertId(String chatId, String advertId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         Preconditions.checkNotNull(advertId, "advertId is null");
-        String categoryId = Objects.requireNonNull(ClientDataContext.get()).getCategoryId();
+        String categoryId = sessionStorage.get(chatId).getChoosenCategoryId();
         logger.info("Try to start advert advert with id = {} and category with id = {}", advertId, categoryId);
 
         AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
@@ -55,7 +56,7 @@ public class AdvertStartService {
 
     public AdvertBean start(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
-        String categoryId = Objects.requireNonNull(ClientDataContext.get()).getCategoryId();
+        String categoryId = sessionStorage.get(chatId).getChoosenCategoryId();
         logger.info("Try to start first one advert with category id = {}", categoryId);
         AdvertBean advertToStart = advertService.getFirst(categoryId);
         return startInternal(chatId, advertToStart);
@@ -92,7 +93,7 @@ public class AdvertStartService {
         AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()
                 .setNmId(advertToStart.getItemId())
                 .setPhotoNumber(CARD_MAIN_PHOTO_POSITION)
-                .setUploadFile(Objects.requireNonNull(ClientDataContext.get()).getNewCardPhoto());
+                .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
         wildberriesIntegrationService.uploadPhoto(request);
 
         ChangeStocksRequest changeStocksRequest = new ChangeStocksRequest().setStocks(List.of(new SkuDto()
@@ -100,12 +101,6 @@ public class AdvertStartService {
                         .setAmount(changeStocksCount)));
         wildberriesIntegrationService.changeStocks(changeStocksRequest);
 
-        // TODO : нереальный кастыль. Нужно посмотреть на API WB
-        try {
-            Thread.sleep(5000);
-        } catch (Exception exception) {
-            throw new RuntimeException(exception);
-        }
         wildberriesIntegrationService.startAdvert(advertId);
 
         LocalDateTime startDateTime = LocalDateTime.now();

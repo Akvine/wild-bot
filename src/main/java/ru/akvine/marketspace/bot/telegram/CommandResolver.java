@@ -5,23 +5,24 @@ import ru.akvine.marketspace.bot.enums.Command;
 
 @Component
 public class CommandResolver {
-    public boolean isStartCommand(String command) {
-        return Command.COMMAND_START.getCommandName().equals(command);
-    }
 
-    public boolean isStatisticCommand(String command) {
-        return Command.COMMAND_STATISTIC.getCommandName().equals(command);
-    }
+    public Command resolve(String text) {
+        if (Command.COMMAND_START.getCommandName().equals(text)) {
+            return Command.COMMAND_START;
+        }
+        if (Command.COMMAND_STATISTIC.getCommandName().equals(text)) {
+            return Command.COMMAND_STATISTIC;
+        }
+        if (Command.COMMAND_REPORT.getCommandName().equals(text)) {
+            return Command.COMMAND_REPORT;
+        }
+        if (Command.COMMAND_CANCEL.getCommandName().equals(text)) {
+            return Command.COMMAND_CANCEL;
+        }
+        if (Command.COMMAND_HELP.getCommandName().equals(text)) {
+            return Command.COMMAND_HELP;
+        }
 
-    public boolean isReportCommand(String command) {
-        return Command.COMMAND_REPORT.getCommandName().equals(command);
-    }
-
-    public boolean isCancelCommand(String command) {
-        return Command.COMMAND_CANCEL.getCommandName().equals(command);
-    }
-
-    public boolean isHelpCommand(String command) {
-        return Command.COMMAND_HELP.getCommandName().equals(command);
+        return null;
     }
 }

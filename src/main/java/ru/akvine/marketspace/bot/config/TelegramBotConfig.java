@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScope
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.akvine.marketspace.bot.telegram.TelegramLongPoolingBot;
-import ru.akvine.marketspace.bot.telegram.dispatcher.MessageDispatcher;
+import ru.akvine.marketspace.bot.telegram.filter.MessageFilter;
 
 import java.util.List;
 import java.util.Objects;
@@ -56,11 +56,11 @@ public class TelegramBotConfig {
     }
 
     @Bean
-    public TelegramLongPoolingBot telegramLongPollingBot(DefaultBotOptions defaultBotOptions, MessageDispatcher messageDispatcher) throws TelegramApiException {
+    public TelegramLongPoolingBot telegramLongPollingBot(DefaultBotOptions defaultBotOptions, MessageFilter startMessageFilter) throws TelegramApiException {
         TelegramLongPoolingBot bot = new TelegramLongPoolingBot(defaultBotOptions,
                 botToken,
                 botUsername,
-                messageDispatcher);
+                startMessageFilter);
         List<BotCommand> listCommands = initBotCommands();
         bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);

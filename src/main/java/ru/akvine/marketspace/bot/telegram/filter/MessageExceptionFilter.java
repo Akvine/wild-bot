@@ -1,8 +1,7 @@
-package ru.akvine.marketspace.bot.telegram.dispatcher;
+package ru.akvine.marketspace.bot.telegram.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -11,22 +10,20 @@ import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
 import ru.akvine.marketspace.bot.exceptions.ClientWhitelistException;
 import ru.akvine.marketspace.bot.exceptions.StartAdvertException;
 
-@Component
 @RequiredArgsConstructor
 @Slf4j
-public class MessageDispatcherProxy implements MessageDispatcher {
-    private final MessageDispatcher messageDispatcher;
+public class MessageExceptionFilter extends MessageFilter {
 
-    public BotApiMethod<?> doDispatch(Update update) {
-        String chatId;
-        if (update.getCallbackQuery() != null) {
-            chatId = String.valueOf(update.getCallbackQuery().getMessage().getChatId());
-        } else {
-            chatId = String.valueOf(update.getMessage().getChatId());
-        }
-
+    @Override
+    public BotApiMethod<?> handle(Update update) {
+        String chatId = "";
         try {
-            return messageDispatcher.doDispatch(update);
+            if (update.getCallbackQuery() != null) {
+                chatId = String.valueOf(update.getCallbackQuery().getMessage().getChatId());
+            } else {
+                chatId = String.valueOf(update.getMessage().getChatId());
+            }
+            return messageFilter.handle(update);
         } catch (Exception exception) {
             if (exception instanceof BlockedCredentialsException) {
                 return processBlockedCredentialsException(chatId, exception.getMessage());

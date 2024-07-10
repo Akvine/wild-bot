@@ -35,7 +35,6 @@ public class ReportService {
     public byte[] generateReport(String chatId) {
         logger.info("Generate report for chat id = {}", chatId);
 
-        // TODO : N + 1 - достаем по очереди карточки вместо пачки
         Long clientId = clientService.verifyExistsByChatId(chatId).getId();
         List<AdvertStatisticEntity> advertStatistics = advertStatisticRepository.findByClientId(clientId);
         Workbook workbook = new XSSFWorkbook();
