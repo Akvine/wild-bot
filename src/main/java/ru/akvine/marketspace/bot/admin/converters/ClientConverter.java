@@ -82,6 +82,13 @@ public class ClientConverter {
                 .setChatIds(request.getChatIds());
     }
 
+    public AddToWhitelist convertToAddToWhitelist(AddToWhitelistRequest request) {
+        Preconditions.checkNotNull(request, "addToWhitelistRequest is null");
+        return new AddToWhitelist()
+                .setChatId(request.getChatId())
+                .setUsername(request.getUsername());
+    }
+
     private BlockClientDto buildBlockClientDto(BlockClientEntry entry) {
         return new BlockClientDto()
                 .setUuid(entry.getUuid())

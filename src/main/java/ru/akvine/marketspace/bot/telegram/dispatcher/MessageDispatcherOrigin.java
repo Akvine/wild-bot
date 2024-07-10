@@ -14,7 +14,6 @@ import ru.akvine.marketspace.bot.context.ClientData;
 import ru.akvine.marketspace.bot.context.ClientDataContext;
 import ru.akvine.marketspace.bot.controller.AdvertStartController;
 import ru.akvine.marketspace.bot.controller.StatisticController;
-import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
 import ru.akvine.marketspace.bot.services.BlockingService;
 import ru.akvine.marketspace.bot.services.ClientService;
 import ru.akvine.marketspace.bot.services.ReportService;
@@ -26,7 +25,6 @@ import ru.akvine.marketspace.bot.telegram.TelegramClientStateResolver;
 import ru.akvine.marketspace.bot.utils.TelegramPhotoResolver;
 
 import java.io.ByteArrayInputStream;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static ru.akvine.marketspace.bot.constants.ClientStates.START_ADVERT.UPLOAD_PHOTO_STATE;
@@ -74,9 +72,10 @@ public class MessageDispatcherOrigin implements MessageDispatcher {
                     message.getFrom().getLastName()
             );
             clientBean = clientService.create(clientCreate);
-        } else {
-            checkIsBlockedAndThrowException(clientBean.getUuid());
         }
+
+        clientService.checkIsInWhitelist(clientBean.getUsername());
+        clientService.checkIsBlockedAndThrowException(clientBean.getUuid());
 
         logger.info("Send message = {} by client = [{}]", text, clientBean);
         String clientUuid = clientBean.getUuid();
@@ -142,14 +141,6 @@ public class MessageDispatcherOrigin implements MessageDispatcher {
             return advertStartController.startAdvert(chatId);
         } else {
             throw new IllegalStateException("Illegal state");
-        }
-    }
-
-    private void checkIsBlockedAndThrowException(String clientUuid) {
-        LocalDateTime blockDateTime = blockingService.getEndBlockDate(clientUuid);
-        if (blockDateTime != null) {
-            String errorMessage = String.format("Вы были заблокированы до %s!", blockDateTime.toLocalDate());
-            throw new BlockedCredentialsException(errorMessage);
         }
     }
 

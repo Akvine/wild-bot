@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.marketspace.bot.exceptions.AdvertNotFoundException;
 import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
+import ru.akvine.marketspace.bot.exceptions.ClientWhitelistException;
 import ru.akvine.marketspace.bot.exceptions.StartAdvertException;
 
 @Component
@@ -36,6 +37,9 @@ public class MessageDispatcherProxy implements MessageDispatcher {
             if (exception instanceof StartAdvertException) {
                 return processStartAdvertException(chatId, exception.getMessage());
             }
+            if (exception instanceof ClientWhitelistException) {
+                return processClientWhitelistException(chatId);
+            }
             return processGeneralException(chatId, exception);
         }
     }
@@ -55,5 +59,9 @@ public class MessageDispatcherProxy implements MessageDispatcher {
 
     private SendMessage processStartAdvertException(String chatId, String message) {
         return new SendMessage(chatId, message);
+    }
+
+    private SendMessage processClientWhitelistException(String chatId) {
+        return new SendMessage(chatId, "Вы не можете использовать функционал бота, т.к. не в whitelist");
     }
 }

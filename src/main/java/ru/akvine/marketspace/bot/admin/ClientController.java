@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import ru.akvine.marketspace.bot.admin.converters.ClientConverter;
+import ru.akvine.marketspace.bot.admin.dto.client.AddToWhitelistRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.BlockClientRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.SendMessageRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.UnblockClientRequest;
@@ -52,6 +53,14 @@ public class ClientController implements ClientControllerMeta {
         clientValidator.verifySecret(request);
         SendMessage sendMessage = clientConverter.convertToSendMessage(request);
         clientAdminService.sendMessage(sendMessage);
+        return new SuccessfulResponse();
+    }
+
+    @Override
+    public Response addToWhiteList(@Valid AddToWhitelistRequest request) {
+        clientValidator.verifyAddToWhitelistRequest(request);
+        AddToWhitelist addToWhitelist = clientConverter.convertToAddToWhitelist(request);
+        clientAdminService.addToWhiteList(addToWhitelist);
         return new SuccessfulResponse();
     }
 }

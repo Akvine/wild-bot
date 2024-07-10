@@ -9,6 +9,7 @@ import ru.akvine.marketspace.bot.entities.BlockedCredentialsEntity;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.services.BlockingService;
 import ru.akvine.marketspace.bot.services.ClientService;
+import ru.akvine.marketspace.bot.services.domain.ClientBean;
 import ru.akvine.marketspace.bot.services.dto.admin.client.*;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.utils.DateUtils;
@@ -96,5 +97,19 @@ public class ClientAdminService {
 
         String message = sendMessage.getMessage();
         telegramIntegrationService.sendMessage(activeChatIds, message);
+    }
+
+    public void addToWhiteList(AddToWhitelist addToWhitelist) {
+        Preconditions.checkNotNull(addToWhitelist, "addToWhiteList is null");
+        String username;
+        if (StringUtils.isNotBlank(addToWhitelist.getChatId())) {
+            username = clientService
+                    .getByChatId(addToWhitelist.getChatId())
+                    .getUsername();
+        } else {
+            username = addToWhitelist.getUsername();
+        }
+
+        clientService.addToWhitelist(username);
     }
 }

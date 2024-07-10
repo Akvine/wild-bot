@@ -3,6 +3,7 @@ package ru.akvine.marketspace.bot.admin.validator;
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import ru.akvine.marketspace.bot.admin.dto.client.AddToWhitelistRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.BlockClientRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.BlockRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.UnblockClientRequest;
@@ -21,6 +22,22 @@ public class ClientValidator extends AdminValidator {
         verifySecret(request);
         Preconditions.checkNotNull(request, "unblockClientRequest is null");
         verifyBlockRequest(request);
+    }
+
+    public void verifyAddToWhitelistRequest(AddToWhitelistRequest request) {
+        verifySecret(request);
+        if (StringUtils.isBlank(request.getChatId()) && StringUtils.isBlank(request.getUsername())) {
+            throw new ValidationException(
+                    CommonErrorCodes.Validation.BOTH_PARAMETERS_BLANK_ERROR,
+                    "Username or chat id are not presented. Must  be only one of these params"
+            );
+        }
+        if (StringUtils.isNotBlank(request.getChatId()) && StringUtils.isNotBlank(request.getUsername())) {
+            throw new ValidationException(
+                    CommonErrorCodes.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
+                    "Username and chat id are presented. Must  be only one of these params"
+            );
+        }
     }
 
     private void verifyBlockRequest(BlockRequest request) {
