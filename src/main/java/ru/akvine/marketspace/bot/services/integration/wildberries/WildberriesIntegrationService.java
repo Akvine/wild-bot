@@ -28,7 +28,7 @@ public interface WildberriesIntegrationService {
     AdvertBudgetInfoResponse getAdvertBudgetInfo(String advertId);
 
     /**
-     * Пополнить бюджет рекламной кампании. Сумма фиксировано пополняется на 500 рублей
+     * Пополнить бюджет рекламной кампании. Сумма фиксировано пополняется на 1000 рублей
      * @param advertId идентификатор кампании в системе WB
      * @param sum сумма пополнения бюджета в рублях
      * @return

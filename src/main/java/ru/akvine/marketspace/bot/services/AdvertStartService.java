@@ -35,12 +35,14 @@ public class AdvertStartService {
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
 
-    @Value("${default.start.advert.budget.sum}")
-    private int defaultBudgetSum;
-    @Value("${default.start.advert.cpm.sum}")
-    private int defaultCpmSum;
+    @Value("${default.advert.budget.sum.increase}")
+    private int defaultBudgetSumIncrease;
+    @Value("${default.advert.cpm}")
+    private int defaultCpm;
     @Value("${wildberries.change.stocks.count}")
     private int changeStocksCount;
+    @Value("${advert.budget.min.sum}")
+    private int budgetMinSum;
 
     private final static int CARD_MAIN_PHOTO_POSITION = 1;
 
@@ -69,21 +71,21 @@ public class AdvertStartService {
         AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId);
         Integer advertTotalBudget = advertBudgetInfo.getTotal();
 
-        if (advertTotalBudget == 0) {
-            wildberriesIntegrationService.advertBudgetDeposit(advertId, defaultBudgetSum);
-            advertToStart.setStartBudgetSum(defaultBudgetSum);
+        if (advertTotalBudget < budgetMinSum) {
+            wildberriesIntegrationService.advertBudgetDeposit(advertId, defaultBudgetSumIncrease);
+            advertToStart.plusStartBudget(defaultBudgetSumIncrease);
         } else {
             advertToStart.setStartBudgetSum(advertTotalBudget);
         }
         advertToStart.setCheckBudgetSum(advertToStart.getStartBudgetSum());
 
-        if (advertToStart.getCpm() < defaultCpmSum) {
+        if (advertToStart.getCpm() < defaultCpm) {
             AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
                     .setAdvertId(Integer.parseInt(advertId))
                     .setType(advertToStart.getType().getCode())
                     .setParam(Integer.parseInt(advertToStart.getCategoryId()))
-                    .setCpm(defaultCpmSum);
-            advertToStart.setCpm(defaultCpmSum);
+                    .setCpm(defaultCpm);
+            advertToStart.setCpm(defaultCpm);
             wildberriesIntegrationService.changeAdvertCpm(request);
         }
 

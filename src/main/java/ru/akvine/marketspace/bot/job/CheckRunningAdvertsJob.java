@@ -34,7 +34,7 @@ public class CheckRunningAdvertsJob {
     private long checkMilliseconds;
     @Value("${max.start.sum.difference}")
     private int maxStartSumDifference;
-    @Value("${default.increase.cpm.sum}")
+    @Value("${default.advert.cpm.sum.increase}")
     private int defaultIncreaseCpmSum;
     @Value("${check.advert.iterations.before.increase}")
     private int maxIterationsBeforeIncreaseCpm;

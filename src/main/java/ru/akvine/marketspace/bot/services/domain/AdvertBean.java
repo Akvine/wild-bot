@@ -54,4 +54,8 @@ public class AdvertBean extends SoftBean {
         this.deletedDate = advertEntity.getDeletedDate();
         this.deleted = advertEntity.isDeleted();
     }
+
+    public void plusStartBudget(int value) {
+        this.startBudgetSum += value;
+    }
 }
