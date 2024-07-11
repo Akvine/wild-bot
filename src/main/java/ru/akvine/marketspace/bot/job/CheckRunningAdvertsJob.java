@@ -70,6 +70,7 @@ public class CheckRunningAdvertsJob {
                 advert.setUpdatedDate(LocalDateTime.now());
                 advert.setNextCheckDateTime(null);
                 advert.setCheckBudgetSum(null);
+                advert.setClient(null);
                 advertRepository.save(advert);
                 iterationsCounterService.delete(advertId);
 

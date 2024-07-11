@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.services.AdvertService;
+import ru.akvine.marketspace.bot.services.AdvertStartService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
 import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
@@ -26,11 +27,18 @@ import java.util.List;
 @Slf4j
 public class AdvertAdminService {
     private final AdvertService advertService;
+    private final AdvertStartService advertStartService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final TelegramIntegrationService telegramIntegrationService;
     private final AdvertStatisticService advertStatisticService;
 
     private final static int ADVERT_PAUSE_STATUS_CODE = 11;
+
+    public AdvertBean start(String advertId) {
+        Preconditions.checkNotNull(advertId, "advertId is null");
+        logger.info("Start advert with id = {}", advertId);
+        return advertStartService.startByAdvertId(advertId);
+    }
 
     public AdvertStatisticBean pauseAdvert(PauseAdvert pauseAdvert) {
         Preconditions.checkNotNull(pauseAdvert, "pauseAdvert is null");
@@ -59,6 +67,7 @@ public class AdvertAdminService {
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
+        advertEntity.setClient(null);
         AdvertBean updatedAdvert = advertService.update(new AdvertBean(advertEntity));
         AdvertStatisticBean advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
 

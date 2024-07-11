@@ -46,14 +46,10 @@ public class AdvertStartService {
 
     private final static int CARD_MAIN_PHOTO_POSITION = 1;
 
-    public AdvertBean startByAdvertId(String chatId, String advertId) {
-        Preconditions.checkNotNull(chatId, "chatId is null");
+    public AdvertBean startByAdvertId(String advertId) {
         Preconditions.checkNotNull(advertId, "advertId is null");
-        String categoryId = sessionStorage.get(chatId).getChoosenCategoryId();
-        logger.info("Try to start advert advert with id = {} and category with id = {}", advertId, categoryId);
-
         AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
-        return startInternal(chatId, new AdvertBean(advertEntity));
+        return startInternal(null, new AdvertBean(advertEntity));
     }
 
     public AdvertBean start(String chatId) {
@@ -92,11 +88,14 @@ public class AdvertStartService {
         String advertStartName = "Bot:" + DateUtils.formatLocalDateTime(LocalDateTime.now()) + ":" + advertId;
         wildberriesIntegrationService.renameAdvert(advertId, advertStartName);
 
-        AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()
-                .setNmId(advertToStart.getItemId())
-                .setPhotoNumber(CARD_MAIN_PHOTO_POSITION)
-                .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
-        wildberriesIntegrationService.uploadPhoto(request);
+        //  TODO: костыль для админки
+        if (chatId != null) {
+            AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()
+                    .setNmId(advertToStart.getItemId())
+                    .setPhotoNumber(CARD_MAIN_PHOTO_POSITION)
+                    .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
+            wildberriesIntegrationService.uploadPhoto(request);
+        }
 
         ChangeStocksRequest changeStocksRequest = new ChangeStocksRequest().setStocks(List.of(new SkuDto()
                         .setSku(card.getBarcode())
