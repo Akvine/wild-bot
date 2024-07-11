@@ -9,9 +9,13 @@ import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticDatesDto;
+import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticIntervalDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticResponse;
+import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertStatisticInterval;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,12 +27,27 @@ public class AdvertStatisticService {
 
     public AdvertStatisticBean getAndSave(AdvertEntity advert) {
         logger.info("Start getting advert full statistic for advert with id = {}", advert.getAdvertId());
-        List<AdvertFullStatisticDatesDto> advertFullStatisticRequest = List.of(
-                new AdvertFullStatisticDatesDto()
-                        .setId(Integer.parseInt(advert.getAdvertId()))
-                        .setDates(List.of(LocalDate.now().toString()))
-        );
-        AdvertFullStatisticResponse[] response = wildberriesIntegrationService.getAdvertsFullStatistic(advertFullStatisticRequest);
+
+        AdvertFullStatisticResponse[] response;
+        Duration duration = Duration.between(advert.getStartCheckDateTime(), LocalDateTime.now());
+        if (duration.toHours() < 24) {
+            List<AdvertFullStatisticDatesDto> request = List.of(
+                    new AdvertFullStatisticDatesDto()
+                            .setId(Integer.parseInt(advert.getAdvertId()))
+                            .setDates(List.of(LocalDate.now().toString()))
+            );
+            response = wildberriesIntegrationService.getAdvertsFullStatisticByDates(request);
+        } else {
+            List<AdvertFullStatisticIntervalDto> request = List.of(
+                    new AdvertFullStatisticIntervalDto()
+                            .setId(Integer.parseInt(advert.getAdvertId()))
+                            .setInterval(new AdvertStatisticInterval()
+                                    .setBegin(advert.getStartCheckDateTime().toLocalDate().toString())
+                                    .setEnd(LocalDate.now().toString()))
+            );
+            response = wildberriesIntegrationService.getAdvertsFullStatisticByInterval(request);
+        }
+
         AdvertFullStatisticResponse firstPositionResponse = response[0];
         AdvertStatisticEntity advertStatisticEntity = new AdvertStatisticEntity()
                 .setViews(firstPositionResponse.getViews())

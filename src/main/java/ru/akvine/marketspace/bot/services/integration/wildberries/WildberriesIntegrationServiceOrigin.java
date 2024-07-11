@@ -351,8 +351,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
     }
 
     @Override
-    @RateLimiter(name = "wb-get-adverts-full-statistic")
-    public AdvertFullStatisticResponse[] getAdvertsFullStatistic(List<AdvertFullStatisticDatesDto> request) {
+    @RateLimiter(name = "wb-get-adverts-full-statistic-by-dates")
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request) {
         logger.info("Get advert full statistic by request = [{}]", request);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<List<AdvertFullStatisticDatesDto>> httpEntity = new HttpEntity<>(request, headers);
@@ -372,7 +372,34 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
         AdvertFullStatisticResponse[] responses = response.getBody();
         if (responses == null || responses.length == 0) {
-            throw new IntegrationException("Full statistic responses is null or empty");
+            throw new IntegrationException("Full statistic responses by dates is null or empty");
+        }
+        return response.getBody();
+    }
+
+    @Override
+    @RateLimiter(name = "wb-get-adverts-full-statistic-by-interval")
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request) {
+        logger.info("Get advert full statistic interval by request = [{}]", request);
+        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpEntity<List<AdvertFullStatisticIntervalDto>> httpEntity = new HttpEntity<>(request, headers);
+
+        ResponseEntity<AdvertFullStatisticResponse[]> response;
+        try {
+            response = restTemplate.postForEntity(
+                    WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getUrl() + WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getMethod(),
+                    httpEntity,
+                    AdvertFullStatisticResponse[].class);
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling wb api method = [%s]. Message = %s",
+                    WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+
+        AdvertFullStatisticResponse[] responses = response.getBody();
+        if (responses == null || responses.length == 0) {
+            throw new IntegrationException("Full statistic responses by interval is null or empty");
         }
         return response.getBody();
     }

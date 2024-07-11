@@ -94,5 +94,11 @@ public interface WildberriesIntegrationService {
      * Получение полной статистики по кампании за определенные даты
      * @param request
      */
-    AdvertFullStatisticResponse[] getAdvertsFullStatistic(List<AdvertFullStatisticDatesDto> request);
+    AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request);
+
+    /**
+     * Получение полной статистики по кампании за интервал времени
+     * @param request
+     */
+    AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request);
 }
