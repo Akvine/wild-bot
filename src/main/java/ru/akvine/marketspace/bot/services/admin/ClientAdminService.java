@@ -9,7 +9,6 @@ import ru.akvine.marketspace.bot.entities.BlockedCredentialsEntity;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.services.BlockingService;
 import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.domain.ClientBean;
 import ru.akvine.marketspace.bot.services.dto.admin.client.*;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.utils.DateUtils;

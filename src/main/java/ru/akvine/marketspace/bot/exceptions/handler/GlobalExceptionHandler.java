@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.akvine.marketspace.bot.admin.dto.common.ErrorResponse;
+import ru.akvine.marketspace.bot.exceptions.AdvertAlreadyInPauseStateException;
 import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
 
@@ -31,6 +32,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ValidationException.class})
     public ResponseEntity<ErrorResponse> handleValidationException(ValidationException exception) {
         ErrorResponse errorResponse = new ErrorResponse(exception.getErrorCode(), exception.getMessage(), exception.getMessage());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AdvertAlreadyInPauseStateException.class)
+    public ResponseEntity<ErrorResponse> handleAdvertAlreadyInPauseStateException(AdvertAlreadyInPauseStateException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                CommonErrorCodes.ADVERT_ALREADY_IN_PAUSE_STATE_ERROR,
+                exception.getMessage(),
+                exception.getMessage()
+                );
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 }

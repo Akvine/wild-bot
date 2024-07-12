@@ -96,6 +96,7 @@ public class AdvertService {
                 .setOrdinalType(advertBean.getType().getCode())
                 .setStartCheckDateTime(advertBean.getStartCheckDateTime())
                 .setCheckBudgetSum(advertBean.getCheckBudgetSum())
+                .setLocked(advertBean.isLocked())
                 .setUpdatedDate(LocalDateTime.now());
         AdvertBean updatedAdvert = new AdvertBean(advertRepository.save(advertEntity));
 
@@ -117,6 +118,7 @@ public class AdvertService {
         List<AdvertBean> pauseAdvertBeans = advertBeans
                 .stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.PAUSE))
+                .filter(advertBean -> !advertBean.isLocked())
                 .toList();
         if (!pauseAdvertBeans.isEmpty()) {
             return pauseAdvertBeans.getFirst();
@@ -125,6 +127,7 @@ public class AdvertService {
         List<AdvertBean> readyForStartAdvertBeans = advertBeans
                 .stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.READY_FOR_START))
+                .filter(advertBean -> !advertBean.isLocked())
                 .toList();
         if (!readyForStartAdvertBeans.isEmpty()) {
             return readyForStartAdvertBeans.getFirst();
@@ -134,6 +137,11 @@ public class AdvertService {
                 "Pause or ready for start advert with specified category id = [%s] not found!",
                 categoryId);
         throw new AdvertNotFoundException(errorMessage);
+    }
+
+    public AdvertBean getByAdvertId(String advertId) {
+        Preconditions.checkNotNull(advertId, "advertId is null");
+        return new AdvertBean(verifyExistsByAdvertId(advertId));
     }
 
     public AdvertEntity verifyExistsByAdvertId(String advertId) {

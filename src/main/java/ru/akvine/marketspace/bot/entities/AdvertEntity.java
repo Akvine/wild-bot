@@ -73,4 +73,7 @@ public class AdvertEntity extends SoftBaseEntity {
     @OneToOne
     @JoinColumn(name = "LAUNCHED_BY_CLIENT_ID")
     private ClientEntity client;
+
+    @Column(name = "IS_LOCKED", nullable = false)
+    private boolean locked;
 }

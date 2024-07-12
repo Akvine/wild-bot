@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.entities.CardEntity;
+import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
 import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertBudgetInfoResponse;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertUploadPhotoRequest;
+import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SkuDto;
 import ru.akvine.marketspace.bot.utils.DateUtils;
@@ -28,6 +27,7 @@ import java.util.List;
 public class AdvertStartService {
     private final AdvertService advertService;
     private final CardService cardService;
+    private final ClientService clientService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final IterationsCounterService iterationsCounterService;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
@@ -49,21 +49,22 @@ public class AdvertStartService {
     public AdvertBean startByAdvertId(String advertId) {
         Preconditions.checkNotNull(advertId, "advertId is null");
         AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
-        return startInternal(null, new AdvertBean(advertEntity));
+        return startInternal(null);
     }
 
     public AdvertBean start(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         String categoryId = sessionStorage.get(chatId).getChoosenCategoryId();
         logger.info("Try to start first one advert with category id = {}", categoryId);
-        AdvertBean advertToStart = advertService.getFirst(categoryId);
-        return startInternal(chatId, advertToStart);
+        return startInternal(chatId);
     }
 
-    private AdvertBean startInternal(String chatId, AdvertBean advertToStart) {
+    private AdvertBean startInternal(String chatId) {
+        String advertId = sessionStorage.get(chatId).getLockedAdvertId();
+        AdvertBean advertToStart = advertService.getByAdvertId(advertId);
         CardEntity card = cardService.verifyExistsByItemId(advertToStart.getItemId());
+        ClientEntity client = clientService.verifyExistsByChatId(chatId);
 
-        String advertId = advertToStart.getAdvertId();
         AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId);
         Integer advertTotalBudget = advertBudgetInfo.getTotal();
 
@@ -88,6 +89,17 @@ public class AdvertStartService {
         String advertStartName = "Bot:" + DateUtils.formatLocalDateTime(LocalDateTime.now()) + ":" + advertId;
         wildberriesIntegrationService.renameAdvert(advertId, advertStartName);
 
+        if (sessionStorage.get(chatId).isInputNewCardPriceAndDiscount()) {
+            SetGoodPriceRequest request = new SetGoodPriceRequest()
+                    .setData(List.of(
+                            new SetGoodDto()
+                                    .setNmID(Integer.parseInt(advertToStart.getItemId()))
+                                    .setPrice(sessionStorage.get(chatId).getNewCardPrice())
+                                    .setDiscount(sessionStorage.get(chatId).getNewCardDiscount())
+                    ));
+            wildberriesIntegrationService.setGoodPriceAndDiscount(request);
+        }
+
         //  TODO: костыль для админки
         if (chatId != null) {
             AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()
@@ -98,8 +110,8 @@ public class AdvertStartService {
         }
 
         ChangeStocksRequest changeStocksRequest = new ChangeStocksRequest().setStocks(List.of(new SkuDto()
-                        .setSku(card.getBarcode())
-                        .setAmount(changeStocksCount)));
+                .setSku(card.getBarcode())
+                .setAmount(changeStocksCount)));
         wildberriesIntegrationService.changeStocks(changeStocksRequest);
 
         wildberriesIntegrationService.startAdvert(advertId);
@@ -113,6 +125,7 @@ public class AdvertStartService {
         AdvertBean updatedAdvert = advertService.update(advertToStart);
 
         iterationsCounterService.add(advertToStart.getAdvertId());
+        sessionStorage.close(chatId);
 
         logger.info("Successful start advert = [{}]", updatedAdvert);
         return advertToStart;

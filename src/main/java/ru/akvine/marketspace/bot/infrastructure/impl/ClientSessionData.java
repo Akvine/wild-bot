@@ -8,4 +8,8 @@ import lombok.experimental.Accessors;
 public class ClientSessionData {
     private String choosenCategoryId;
     private byte[] uploadedCardPhoto;
+    private boolean inputNewCardPriceAndDiscount;
+    private int newCardPrice;
+    private int newCardDiscount;
+    private String lockedAdvertId;
 }

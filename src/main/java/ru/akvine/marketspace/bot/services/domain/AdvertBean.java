@@ -32,11 +32,13 @@ public class AdvertBean extends SoftBean {
     private LocalDateTime startCheckDateTime;
     @Nullable
     private LocalDateTime nextCheckDateTime;
+    private boolean locked;
 
     public AdvertBean(AdvertEntity advertEntity) {
         this.id = advertEntity.getId();
         this.uuid = advertEntity.getUuid();
         this.name = advertEntity.getName();
+        this.locked = advertEntity.isLocked();
         this.advertId = advertEntity.getAdvertId();
         this.itemId = advertEntity.getItemId();
         this.changeTime = advertEntity.getChangeTime();

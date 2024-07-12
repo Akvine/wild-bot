@@ -71,6 +71,7 @@ public class CheckRunningAdvertsJob {
                 advert.setNextCheckDateTime(null);
                 advert.setCheckBudgetSum(null);
                 advert.setClient(null);
+                advert.setLocked(false);
                 advertRepository.save(advert);
                 iterationsCounterService.delete(advertId);
 

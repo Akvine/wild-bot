@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
+import ru.akvine.marketspace.bot.exceptions.AdvertAlreadyInPauseStateException;
 import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.AdvertStartService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
@@ -51,6 +52,10 @@ public class AdvertAdminService {
             advertEntity = advertService.verifyExistsByAdvertId(pauseAdvert.getAdvertId());
         }
 
+        if (advertEntity.getStatus() == AdvertStatus.PAUSE) {
+            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getItemId() + "] already in pause!");
+        }
+
         String advertId = advertEntity.getAdvertId();
         AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId));
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
@@ -64,11 +69,6 @@ public class AdvertAdminService {
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
             wildberriesIntegrationService.pauseAdvert(advertEntity.getAdvertId());
         }
-        advertEntity.setNextCheckDateTime(null);
-        advertEntity.setStatus(AdvertStatus.PAUSE);
-        advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
-        advertEntity.setClient(null);
-        AdvertBean updatedAdvert = advertService.update(new AdvertBean(advertEntity));
         AdvertStatisticBean advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
 
         String finishedTestMessage = String.format(
@@ -76,6 +76,14 @@ public class AdvertAdminService {
                 advertId
         );
         telegramIntegrationService.sendMessage(advertEntity.getClient().getChatId(), finishedTestMessage);
+
+        advertEntity.setNextCheckDateTime(null);
+        advertEntity.setStatus(AdvertStatus.PAUSE);
+        advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
+        advertEntity.setClient(null);
+        advertEntity.setLocked(false);
+        AdvertBean updatedAdvert = advertService.update(new AdvertBean(advertEntity));
+
         logger.info("Successful pause advert = [{}]", updatedAdvert);
         return advertStatisticBean;
     }

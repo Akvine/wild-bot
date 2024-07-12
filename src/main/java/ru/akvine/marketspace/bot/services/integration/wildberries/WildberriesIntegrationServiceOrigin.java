@@ -15,6 +15,7 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.*;
 import ru.akvine.marketspace.bot.utils.RequestUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +33,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     private final static int BUDGET_TYPE = 0;
     private final static String ADVERT_QUERY_ID_PARAM = "id";
+    private final static String LIMIT_QUERY_PARAM = "limit";
+    private final static String FILTER_NM_ID_QUERY_PARAM = "filterNmID";
     private final static int CARD_GET_LIMIT_COUNT = 100;
 
     @Override
@@ -402,6 +405,64 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException("Full statistic responses by interval is null or empty");
         }
         return response.getBody();
+    }
+
+    @Override
+    public GetGoodsResponse getGoods(GetGoodsRequest request) {
+        logger.info("Get goods by request = [{}]", request);
+
+        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpEntity<GetGoodsRequest> httpEntity = new HttpEntity<>(headers);
+
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(LIMIT_QUERY_PARAM, String.valueOf(request.getLimit()));
+        if (request.getFilterNmID() != null) {
+            queryParams.put(FILTER_NM_ID_QUERY_PARAM, String.valueOf(request.getFilterNmID()));
+        }
+
+        ResponseEntity<GetGoodsResponse> responseEntity;
+        try {
+            responseEntity = restTemplate.exchange(
+                    RequestUtils.buildUri(WildberriesApiMethods.GET_GOODS.getUrl() + WildberriesApiMethods.GET_GOODS.getMethod(), queryParams),
+                    HttpMethod.GET,
+                    httpEntity,
+                    GetGoodsResponse.class
+            );
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling wb api method = [%s]. Message = %s",
+                    WildberriesApiMethods.GET_GOODS, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+
+        GetGoodsResponse response = responseEntity.getBody();
+        if (response == null) {
+            throw new IntegrationException("Get goods response is null");
+        }
+
+        return response;
+    }
+
+    @Override
+    public void setGoodPriceAndDiscount(SetGoodPriceRequest request) {
+        logger.info("Set goods new price and discount by request = [{}]", request);
+
+        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpEntity<SetGoodPriceRequest> httpEntity = new HttpEntity<>(request, headers);
+
+        try {
+            restTemplate.exchange(
+                    WildberriesApiMethods.SET_GOODS_PRICE_AND_DISCOUNT.getUrl() + WildberriesApiMethods.SET_GOODS_PRICE_AND_DISCOUNT.getMethod(),
+                    HttpMethod.POST,
+                    httpEntity,
+                    String.class
+            );
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling wb api method = [%s]. Message = %s",
+                    WildberriesApiMethods.SET_GOODS_PRICE_AND_DISCOUNT, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
     }
 
     private HttpHeaders buildHttpHeadersForJsonBody() {

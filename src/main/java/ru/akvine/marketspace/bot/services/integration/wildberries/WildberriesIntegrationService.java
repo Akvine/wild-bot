@@ -101,4 +101,16 @@ public interface WildberriesIntegrationService {
      * @param request
      */
     AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request);
+
+    /**
+     * Получение товаров
+     * @param request
+     */
+    GetGoodsResponse getGoods(GetGoodsRequest request);
+
+    /**
+     * Установить цену и скидку для товара
+     * @param request
+     */
+    void setGoodPriceAndDiscount(SetGoodPriceRequest request);
 }
