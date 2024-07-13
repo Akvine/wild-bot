@@ -19,6 +19,9 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
     @Query("from ClientEntity ce where ce.username = :username and ce.deleted = false and ce.deletedDate is null")
     Optional<ClientEntity> findByUsername(@Param("username") String username);
 
+    @Query("from ClientEntity ce where ce.username in :usernames and ce.deleted = false")
+    List<ClientEntity> findByUsernames(@Param("usernames") List<String> usernames);
+
     @Query("from ClientEntity ce where ce.chatId in :chatIds and ce.deleted = false and ce.deletedDate is null")
     List<ClientEntity> findByListChatId(@Param("chatIds") List<String> chatIds);
 

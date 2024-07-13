@@ -2,16 +2,36 @@ package ru.akvine.marketspace.bot.admin.validator;
 
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.admin.dto.client.AddToWhitelistRequest;
-import ru.akvine.marketspace.bot.admin.dto.client.BlockClientRequest;
-import ru.akvine.marketspace.bot.admin.dto.client.BlockRequest;
-import ru.akvine.marketspace.bot.admin.dto.client.UnblockClientRequest;
+import org.springframework.util.CollectionUtils;
+import ru.akvine.marketspace.bot.admin.dto.client.*;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
 import ru.akvine.marketspace.bot.exceptions.handler.CommonErrorCodes;
 
 @Component
 public class ClientValidator extends AdminValidator {
+    @Value("${max.clients.send.message.count}")
+    private int maxClientsSendMessageCount;
+
+    public void verifySendMessageRequest(SendMessageRequest request) {
+        verifySecret(request);
+
+        if (!CollectionUtils.isEmpty(request.getChatIds()) && request.getChatIds().size() > maxClientsSendMessageCount) {
+            String errorMessage = String.format(
+                    "Clients count to send message = [%s] is greater than max = [%s]",
+                    request.getChatIds().size(), maxClientsSendMessageCount);
+            throw new ValidationException(CommonErrorCodes.Validation.MAX_CLIENTS_SEND_MESSAGE_COUNT_ERROR, errorMessage);
+        }
+
+        if (!CollectionUtils.isEmpty(request.getUsernames()) && request.getUsernames().size() > maxClientsSendMessageCount) {
+            String errorMessage = String.format(
+                    "Clients count to send message = [%s] is greater than max = [%s]",
+                    request.getChatIds().size(), maxClientsSendMessageCount);
+            throw new ValidationException(CommonErrorCodes.Validation.MAX_CLIENTS_SEND_MESSAGE_COUNT_ERROR, errorMessage);
+        }
+    }
+
     public void verifyBlockClientRequest(BlockClientRequest request) {
         verifySecret(request);
         Preconditions.checkNotNull(request, "blockClientRequest is null");

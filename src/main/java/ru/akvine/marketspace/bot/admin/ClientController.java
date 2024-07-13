@@ -50,7 +50,7 @@ public class ClientController implements ClientControllerMeta {
 
     @Override
     public Response sendMessage(@Valid SendMessageRequest request) {
-        clientValidator.verifySecret(request);
+        clientValidator.verifySendMessageRequest(request);
         SendMessage sendMessage = clientConverter.convertToSendMessage(request);
         clientAdminService.sendMessage(sendMessage);
         return new SuccessfulResponse();

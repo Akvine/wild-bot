@@ -103,12 +103,31 @@ public class ClientService {
         return clientRepository.findByUsername(username).orElseThrow(() -> new ClientNotFoundException("Client has no with username = [" + username + "]!"));
     }
 
-    public List<ClientEntity> getByListChatId(List<String> chatIds) {
+    public List<ClientBean> getByListChatId(List<String> chatIds) {
         Preconditions.checkNotNull(chatIds, "chatIds is null");
-        return clientRepository.findByListChatId(chatIds);
+        logger.info("Get by chat ids = {}", chatIds);
+        return clientRepository
+                .findByListChatId(chatIds)
+                .stream()
+                .map(ClientBean::new)
+                .toList();
     }
 
-    public List<ClientEntity> getAll() {
-        return clientRepository.findAll();
+    public List<ClientBean> getAll() {
+        logger.info("Get all clients");
+        return clientRepository
+                .findAll()
+                .stream()
+                .map(ClientBean::new)
+                .toList();
+    }
+
+    public List<ClientBean> getAllByUsernames(List<String> usernames) {
+        logger.info("Get all clients by usernames = {}", usernames);
+        return clientRepository
+                .findByUsernames(usernames)
+                .stream()
+                .map(ClientBean::new)
+                .toList();
     }
 }

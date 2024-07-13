@@ -16,4 +16,6 @@ public class SendMessageRequest extends SecretRequest {
     private String message;
 
     private List<String> chatIds;
+
+    private List<String> usernames;
 }

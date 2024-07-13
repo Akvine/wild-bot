@@ -79,7 +79,8 @@ public class ClientConverter {
         Preconditions.checkNotNull(request, "SendMessageRequest is null");
         return new SendMessage()
                 .setMessage(request.getMessage())
-                .setChatIds(request.getChatIds());
+                .setChatIds(request.getChatIds())
+                .setUsernames(request.getUsernames());
     }
 
     public AddToWhitelist convertToAddToWhitelist(AddToWhitelistRequest request) {
