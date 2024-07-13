@@ -40,6 +40,11 @@ public class MessageDispatcher {
         String chatId = resolver.extractChatId(telegramData.getData());
         String text = resolver.extractText(telegramData.getData());
 
+        logger.info(
+                "Received in dispatcher message = {} with type = {} by chat id = {}",
+                text, telegramData.getType(), chatId
+        );
+
         ClientBean clientBean = clientService.findByChatId(chatId);
         if ((clientBean == null || clientBean.isDeleted()) && telegramData.getType() == TelegramDataType.MESSAGE) {
             Message message = telegramData.getData().getMessage();
@@ -54,8 +59,6 @@ public class MessageDispatcher {
 
         clientService.checkIsInWhitelist(clientBean.getUsername());
         clientService.checkIsBlockedAndThrowException(clientBean.getUuid());
-
-        logger.info("Send message = {} by client = [{}]", text, clientBean);
 
         if (stateStorage.containsState(chatId)) {
             if (commandResolver.resolve(text) == Command.COMMAND_CANCEL) {
