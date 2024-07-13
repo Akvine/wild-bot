@@ -44,7 +44,7 @@ public class ClientValidator extends AdminValidator {
         verifyBlockRequest(request);
     }
 
-    public void verifyAddToWhitelistRequest(AddToWhitelistRequest request) {
+    public void verifyWhitelistRequest(WhitelistRequest request) {
         verifySecret(request);
         if (StringUtils.isBlank(request.getChatId()) && StringUtils.isBlank(request.getUsername())) {
             throw new ValidationException(

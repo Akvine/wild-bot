@@ -18,6 +18,7 @@ public class ClientBean extends SoftBean {
     private String firstName;
     @Nullable
     private String lastName;
+    private boolean inWhitelist;
 
     public ClientBean(ClientEntity clientEntity) {
         this.id = clientEntity.getId();
@@ -26,6 +27,7 @@ public class ClientBean extends SoftBean {
         this.username = clientEntity.getUsername();
         this.firstName = clientEntity.getFirstName();
         this.lastName = clientEntity.getLastName();
+        this.inWhitelist = clientEntity.isInWhiteList();
 
         this.createdDate = clientEntity.getCreatedDate();
         this.updatedDate = clientEntity.getUpdatedDate();

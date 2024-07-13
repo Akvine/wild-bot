@@ -122,17 +122,31 @@ public class ClientAdminService {
         telegramIntegrationService.sendMessage(activeChatIds, message);
     }
 
-    public void addToWhiteList(AddToWhitelist addToWhitelist) {
-        Preconditions.checkNotNull(addToWhitelist, "addToWhiteList is null");
+    public void addToWhiteList(Whitelist whitelist) {
+        Preconditions.checkNotNull(whitelist, "whitelist is null");
         String username;
-        if (StringUtils.isNotBlank(addToWhitelist.getChatId())) {
+        if (StringUtils.isNotBlank(whitelist.getChatId())) {
             username = clientService
-                    .getByChatId(addToWhitelist.getChatId())
+                    .getByChatId(whitelist.getChatId())
                     .getUsername();
         } else {
-            username = addToWhitelist.getUsername();
+            username = whitelist.getUsername();
         }
 
         clientService.addToWhitelist(username);
+    }
+
+    public void deleteFromWhiteList(Whitelist whitelist) {
+        Preconditions.checkNotNull(whitelist, "whitelist is null");
+        String username;
+        if (StringUtils.isNotBlank(whitelist.getChatId())) {
+            username = clientService
+                    .getByChatId(whitelist.getChatId())
+                    .getUsername();
+        } else {
+            username = whitelist.getUsername();
+        }
+
+        clientService.deleteFromWhitelist(username);
     }
 }

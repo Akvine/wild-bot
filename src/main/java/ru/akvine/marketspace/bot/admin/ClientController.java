@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import ru.akvine.marketspace.bot.admin.converters.ClientConverter;
-import ru.akvine.marketspace.bot.admin.dto.client.AddToWhitelistRequest;
+import ru.akvine.marketspace.bot.admin.dto.client.WhitelistRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.BlockClientRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.SendMessageRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.UnblockClientRequest;
@@ -57,10 +57,18 @@ public class ClientController implements ClientControllerMeta {
     }
 
     @Override
-    public Response addToWhiteList(@Valid AddToWhitelistRequest request) {
-        clientValidator.verifyAddToWhitelistRequest(request);
-        AddToWhitelist addToWhitelist = clientConverter.convertToAddToWhitelist(request);
-        clientAdminService.addToWhiteList(addToWhitelist);
+    public Response addToWhiteList(@Valid WhitelistRequest request) {
+        clientValidator.verifyWhitelistRequest(request);
+        Whitelist whitelist = clientConverter.convertToWhitelist(request);
+        clientAdminService.addToWhiteList(whitelist);
+        return new SuccessfulResponse();
+    }
+
+    @Override
+    public Response deleteFromWhiteList(WhitelistRequest request) {
+        clientValidator.verifyWhitelistRequest(request);
+        Whitelist whitelist = clientConverter.convertToWhitelist(request);
+        clientAdminService.deleteFromWhiteList(whitelist);
         return new SuccessfulResponse();
     }
 }

@@ -83,9 +83,9 @@ public class ClientConverter {
                 .setUsernames(request.getUsernames());
     }
 
-    public AddToWhitelist convertToAddToWhitelist(AddToWhitelistRequest request) {
-        Preconditions.checkNotNull(request, "addToWhitelistRequest is null");
-        return new AddToWhitelist()
+    public Whitelist convertToWhitelist(WhitelistRequest request) {
+        Preconditions.checkNotNull(request, "WhitelistRequest is null");
+        return new Whitelist()
                 .setChatId(request.getChatId())
                 .setUsername(request.getUsername());
     }

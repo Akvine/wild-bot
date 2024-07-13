@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.akvine.marketspace.bot.admin.dto.client.AddToWhitelistRequest;
+import ru.akvine.marketspace.bot.admin.dto.client.WhitelistRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.BlockClientRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.SendMessageRequest;
 import ru.akvine.marketspace.bot.admin.dto.client.UnblockClientRequest;
@@ -26,5 +26,8 @@ public interface ClientControllerMeta {
     Response sendMessage(@Valid @RequestBody SendMessageRequest request);
 
     @PostMapping(value = "/client/add/whitelist")
-    Response addToWhiteList(@Valid @RequestBody AddToWhitelistRequest request);
+    Response addToWhiteList(@Valid @RequestBody WhitelistRequest request);
+
+    @PostMapping(value = "/client/delete/whitelist")
+    Response deleteFromWhiteList(@Valid @RequestBody WhitelistRequest request);
 }
