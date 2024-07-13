@@ -16,26 +16,22 @@ public class MessageExceptionFilter extends MessageFilter {
 
     @Override
     public BotApiMethod<?> handle(Update update) {
-        String chatId = "";
+        String chatId = getChatId(update);
         try {
-            if (update.getCallbackQuery() != null) {
-                chatId = String.valueOf(update.getCallbackQuery().getMessage().getChatId());
-            } else {
-                chatId = String.valueOf(update.getMessage().getChatId());
-            }
+            logger.debug("Update data was reached in MessageException filter for chat with id = {}", chatId);
             return messageFilter.handle(update);
         } catch (Exception exception) {
             if (exception instanceof BlockedCredentialsException) {
                 return processBlockedCredentialsException(chatId, exception.getMessage());
             }
             if (exception instanceof AdvertNotFoundException) {
-                return processAdvertNotFoundException(chatId);
+                return processAdvertNotFoundException(chatId, exception.getMessage());
             }
             if (exception instanceof StartAdvertException) {
                 return processStartAdvertException(chatId, exception.getMessage());
             }
             if (exception instanceof ClientWhitelistException) {
-                return processClientWhitelistException(chatId);
+                return processClientWhitelistException(chatId, exception.getMessage());
             }
             return processGeneralException(chatId, exception);
         }
@@ -47,18 +43,24 @@ public class MessageExceptionFilter extends MessageFilter {
     }
 
     private SendMessage processBlockedCredentialsException(String chatId, String message) {
+        logger.info("Client with chat id = {} is blocked. Message = {}", chatId, message);
         return new SendMessage(chatId, message);
     }
 
-    private SendMessage processAdvertNotFoundException(String chatId) {
+    private SendMessage processAdvertNotFoundException(String chatId, String exceptionMessage) {
+        logger.warn(
+                "For chat with id = {} has no advert in status \"PAUSE\" or \"READY_TO_START\". Message = {}",
+                chatId, exceptionMessage);
         return new SendMessage(chatId, "Не найдено ни одной рекламной кампании в статусе \"На паузе\" или \"Готова к запуску\"");
     }
 
     private SendMessage processStartAdvertException(String chatId, String message) {
+
         return new SendMessage(chatId, message);
     }
 
-    private SendMessage processClientWhitelistException(String chatId) {
+    private SendMessage processClientWhitelistException(String chatId, String message) {
+        logger.info("Client with chat id = {} not in whitelist. Message = {}", chatId, message);
         return new SendMessage(chatId, "Вы не можете использовать функционал бота, т.к. не в whitelist");
     }
 }

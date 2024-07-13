@@ -2,6 +2,7 @@ package ru.akvine.marketspace.bot.services;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.CardEntity;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CardService {
     @Value("${card.uuid.length}")
     private int length;
@@ -30,6 +32,7 @@ public class CardService {
 
     public List<CardBean> create(List<CardDto> cards) {
         Preconditions.checkNotNull(cards, "cards is null");
+        logger.info("Create clients by request with size = {}", cards.size());
         return cards
                 .stream()
                 .map(cardDto -> {
@@ -54,6 +57,7 @@ public class CardService {
     }
 
     public List<CardBean> list() {
+        logger.info("List clients");
         return cardRepository
                 .findAll()
                 .stream()

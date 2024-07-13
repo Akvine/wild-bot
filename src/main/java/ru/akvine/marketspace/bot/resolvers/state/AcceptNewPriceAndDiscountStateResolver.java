@@ -1,6 +1,7 @@
 package ru.akvine.marketspace.bot.resolvers.state;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,6 +16,7 @@ import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AcceptNewPriceAndDiscountStateResolver implements StateResolver {
     private final TelegramDataResolverManager dataResolverManager;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
@@ -26,6 +28,8 @@ public class AcceptNewPriceAndDiscountStateResolver implements StateResolver {
         TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(data.getType());
         String chatId = resolver.extractChatId(data.getData());
         String text = resolver.extractText(data.getData());
+
+        logger.info("[{}] state resolved for chat with id = {} and text = {}", getState(), chatId, text);
 
         if (text.equalsIgnoreCase("изменить")) {
             sessionStorage.get(chatId).setInputNewCardPriceAndDiscount(true);

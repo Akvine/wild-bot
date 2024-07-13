@@ -56,6 +56,7 @@ public class CheckRunningAdvertsJob {
                 logger.info("Get statistic and pause advert with id = {}", advertId);
                 advertStatisticService.getAndSave(advert);
                 if (currentBudgetSum != 0) {
+                    logger.info("Current budget for advert = [{}] not equals zero, pause advert", advert);
                     wildberriesIntegrationService.pauseAdvert(advertId);
                 }
                 CardEntity cardEntity = cardService.verifyExistsByItemId(advert.getItemId());
@@ -65,6 +66,7 @@ public class CheckRunningAdvertsJob {
                                 .setSku(cardEntity.getBarcode())));
                 wildberriesIntegrationService.changeStocks(request);
 
+                String chatId = advert.getClient().getChatId();
                 advert.setStatus(AdvertStatus.getByCode(PAUSE_STATUS_ADVERT_CODE));
                 advert.setOrdinalStatus(PAUSE_STATUS_ADVERT_CODE);
                 advert.setUpdatedDate(LocalDateTime.now());
@@ -79,7 +81,7 @@ public class CheckRunningAdvertsJob {
                         "Тест с advert id = %s успешно завершился.\nВведите команду /report для просмотра отчета",
                         advertId
                 );
-                telegramIntegrationService.sendMessage(advert.getClient().getChatId(), finishedTestMessage);
+                telegramIntegrationService.sendMessage(chatId, finishedTestMessage);
                 continue;
             }
             long seconds = checkMilliseconds / 1000;

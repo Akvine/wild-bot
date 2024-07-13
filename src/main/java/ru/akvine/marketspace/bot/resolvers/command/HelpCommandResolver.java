@@ -1,6 +1,7 @@
 package ru.akvine.marketspace.bot.resolvers.command;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -8,9 +9,12 @@ import ru.akvine.marketspace.bot.enums.Command;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class HelpCommandResolver implements CommandResolver {
     @Override
     public BotApiMethod<?> resolve(String chatId, String text) {
+        logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
+
         StringBuilder sb = new StringBuilder();
         sb
                 .append("/start - запустить кампанию в паузе или готовую к запуску \n")

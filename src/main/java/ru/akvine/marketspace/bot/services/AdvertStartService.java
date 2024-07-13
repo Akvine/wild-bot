@@ -63,7 +63,7 @@ public class AdvertStartService {
         String advertId = sessionStorage.get(chatId).getLockedAdvertId();
         AdvertBean advertToStart = advertService.getByAdvertId(advertId);
         CardEntity card = cardService.verifyExistsByItemId(advertToStart.getItemId());
-        ClientEntity client = clientService.verifyExistsByChatId(chatId);
+        clientService.verifyExistsByChatId(chatId);
 
         AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId);
         Integer advertTotalBudget = advertBudgetInfo.getTotal();

@@ -9,6 +9,5 @@ import lombok.experimental.Accessors;
 public class AdvertUploadPhotoResponse {
     @JsonProperty(namespace = "error")
     private boolean hasError;
-
     private String errorText;
 }

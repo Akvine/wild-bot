@@ -14,10 +14,7 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.*;
 import ru.akvine.marketspace.bot.utils.RequestUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,7 +101,10 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     WildberriesApiMethods.GET_ADVERTS, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
-        return responseEntity.getBody();
+
+        AdvertListResponse response = responseEntity.getBody();
+        logger.info("Get adverts list response was occurred = [{}]", response);
+        return response;
     }
 
     @Override
@@ -129,7 +129,10 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     WildberriesApiMethods.ADVERT_BUDGET_INFO, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
-        return responseEntity.getBody();
+
+        AdvertBudgetInfoResponse response = responseEntity.getBody();
+        logger.info("Advert budget info response was occurred = [{}]", response);
+        return response;
     }
 
     @Override
@@ -159,7 +162,10 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     WildberriesApiMethods.ADVERT_BUDGET_DEPOSIT, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
-        return responseEntity.getBody();
+
+        AdvertBudgetDepositResponse response = responseEntity.getBody();
+        logger.info("Advert budget deposit response was occurred = [{}]", response);
+        return response;
     }
 
     @Override
@@ -206,7 +212,10 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     WildberriesApiMethods.GET_ADVERTS_INFO, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
-        return new AdvertsInfoResponse().setAdverts(List.of(responseEntity.getBody()));
+
+        List<AdvertDto> response = List.of(Objects.requireNonNull(responseEntity.getBody()));
+        logger.info("Get adverts info response with size = {} was received", response.size());
+        return new AdvertsInfoResponse().setAdverts(response);
     }
 
     @Override
@@ -231,7 +240,10 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     WildberriesApiMethods.GET_ADVERT_STATISTIC, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
-        return responseEntity.getBody();
+
+        AdvertStatisticResponse response = responseEntity.getBody();
+        logger.info("Get advert statistic response = [{}]", response);
+        return response;
     }
 
     @Override
@@ -329,7 +341,10 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     WildberriesApiMethods.UPLOAD_CARD_PHOTO, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
-        return response.getBody();
+
+        AdvertUploadPhotoResponse bodyResponse = response.getBody();
+        logger.info("Advert upload photo response was received = [{}]", bodyResponse);
+        return bodyResponse;
     }
 
     @Override
@@ -377,7 +392,9 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         if (responses == null || responses.length == 0) {
             throw new IntegrationException("Full statistic responses by dates is null or empty");
         }
-        return response.getBody();
+
+        logger.info("Received full statistic responses by dates = [{}]", List.of(responses));
+        return responses;
     }
 
     @Override
@@ -404,7 +421,9 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         if (responses == null || responses.length == 0) {
             throw new IntegrationException("Full statistic responses by interval is null or empty");
         }
-        return response.getBody();
+
+        logger.info("Received full statistic responses by interval = [{}]", List.of(responses));
+        return responses;
     }
 
     @Override
@@ -440,6 +459,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException("Get goods response is null");
         }
 
+        logger.info("Set goods new price and discount response was received = [{}]", response);
         return response;
     }
 

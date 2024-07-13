@@ -1,6 +1,7 @@
 package ru.akvine.marketspace.bot.resolvers.command;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,6 +13,7 @@ import java.io.ByteArrayInputStream;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ReportCommandResolver implements CommandResolver {
     private final TelegramIntegrationService telegramIntegrationService;
     private final ReportService reportService;
@@ -21,6 +23,8 @@ public class ReportCommandResolver implements CommandResolver {
 
     @Override
     public BotApiMethod<?> resolve(String chatId, String text) {
+        logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
+
         byte[] report = reportService.generateReport(chatId);
         telegramIntegrationService.sendFile(new ByteArrayInputStream(report), REPORT_DEFAULT_FILE_NAME, chatId);
         return new SendMessage(chatId, DEFAULT_OUTPUT_MESSAGE);

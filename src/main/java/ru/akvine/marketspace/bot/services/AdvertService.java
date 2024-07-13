@@ -55,6 +55,7 @@ public class AdvertService {
 
     public List<AdvertBean> getAdvertsByStatuses(List<AdvertStatus> statuses) {
         Preconditions.checkNotNull(statuses, "advertStatuses is null");
+        logger.info("Get adverts by statuses = [{}]", statuses);
         return advertRepository
                 .findByStatuses(statuses)
                 .stream()
@@ -65,6 +66,9 @@ public class AdvertService {
     public List<AdvertBean> getAdvertsByChatIdAndStatuses(String chatId, List<AdvertStatus> statuses) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         Preconditions.checkNotNull(statuses, "advertStatuses is null");
+
+        logger.info("Get adverts by chat id = {} and statuses = [{}]", chatId,statuses);
+
         Long clientId = clientService.verifyExistsByChatId(chatId).getId();
         return advertRepository
                 .findByClientIdAndStatuses(clientId, statuses)
@@ -75,8 +79,8 @@ public class AdvertService {
     }
 
     public AdvertBean update(AdvertBean advertBean) {
-        logger.info("Update advert by bean = [{}]", advertBean);
         Preconditions.checkNotNull(advertBean, "advertBean is null");
+        logger.info("Update advert by bean = [{}]", advertBean);
 
         AdvertEntity advertEntity = advertRepository
                 .findByUuid(advertBean.getUuid())
@@ -106,6 +110,7 @@ public class AdvertService {
 
     public AdvertBean getFirst(String categoryId) {
         Preconditions.checkNotNull(categoryId, "categoryId is null");
+        logger.info("Get first advert by category id = {}", categoryId);
 
         List<AdvertBean> advertBeans = advertRepository
                 .findByStatusesAndCategoryId(
@@ -121,7 +126,9 @@ public class AdvertService {
                 .filter(advertBean -> !advertBean.isLocked())
                 .toList();
         if (!pauseAdvertBeans.isEmpty()) {
-            return pauseAdvertBeans.getFirst();
+            AdvertBean pauseAdvert = pauseAdvertBeans.getFirst();
+            logger.info("Return pause advert = [{}]", pauseAdvert);
+            return pauseAdvert;
         }
 
         List<AdvertBean> readyForStartAdvertBeans = advertBeans
@@ -130,7 +137,9 @@ public class AdvertService {
                 .filter(advertBean -> !advertBean.isLocked())
                 .toList();
         if (!readyForStartAdvertBeans.isEmpty()) {
-            return readyForStartAdvertBeans.getFirst();
+            AdvertBean advertReadyForStart = readyForStartAdvertBeans.getFirst();
+            logger.info("Return ready for start advert = [{}]", advertReadyForStart);
+            return advertReadyForStart;
         }
 
         String errorMessage = String.format(
@@ -141,11 +150,13 @@ public class AdvertService {
 
     public AdvertBean getByAdvertId(String advertId) {
         Preconditions.checkNotNull(advertId, "advertId is null");
+        logger.info("Get advert with id = {}", advertId);
         return new AdvertBean(verifyExistsByAdvertId(advertId));
     }
 
     public AdvertEntity verifyExistsByAdvertId(String advertId) {
         Preconditions.checkNotNull(advertId, "advertId is null");
+        logger.info("Verify advert exists with id = {}", advertId);
         return advertRepository
                 .findByAdvertId(advertId)
                 .orElseThrow(() -> new AdvertNotFoundException("Advert with advertUd = [" + advertId + "] not found!"));
@@ -153,6 +164,7 @@ public class AdvertService {
 
     public AdvertEntity verifyExistsByUuid(String uuid) {
         Preconditions.checkNotNull(uuid, "uuid is null");
+        logger.info("Verify advert exists with uuid = {}", uuid);
         return advertRepository
                 .findByUuid(uuid)
                 .orElseThrow(() -> new AdvertNotFoundException("Advert with uuid = [" + uuid + "] not found!"));

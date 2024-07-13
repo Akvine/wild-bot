@@ -38,3 +38,4 @@ build/
 /tdumps
 *.tdump
 application-*.properties
+/src/main/resources/logging/logback-spring-local.xml

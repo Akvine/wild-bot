@@ -35,7 +35,7 @@ public class SyncCardJob {
             List<String> cardsInWb = cardsDto
                     .stream()
                     .map(CardDto::getNmID)
-                    .collect(Collectors.toList());
+                    .toList();
 
             List<String> commonElements = new ArrayList<>(cardsInWb);
             commonElements.retainAll(cardsIdDb);
@@ -46,8 +46,8 @@ public class SyncCardJob {
             List<String> uniqueCardsInDb = new ArrayList<>(cardsIdDb);
             uniqueCardsInDb.removeAll(commonElements);
 
-            if (!uniqueCardsInDb.isEmpty()) {
-                logger.info("Delete unused db cards");
+            if (!CollectionUtils.isEmpty(uniqueCardsInDb)) {
+                logger.info("Delete unused db cards. Size = {}", uniqueCardsInDb.size());
                 cards
                         .stream()
                         .filter(cardEntity -> uniqueCardsInDb.contains(cardEntity.getItemId()))
@@ -58,8 +58,8 @@ public class SyncCardJob {
                         });
             }
 
-            if (!uniqueCardsInWb.isEmpty()) {
-                logger.info("Save new cards in db");
+            if (!CollectionUtils.isEmpty(uniqueCardsInWb)) {
+                logger.info("Save new cards in db. Size = {}", uniqueCardsInWb.size());
                 List<CardDto> newCardsDto = cardsDto
                         .stream()
                         .filter(cardDto -> uniqueCardsInWb.contains(cardDto.getNmID()))

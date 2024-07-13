@@ -1,6 +1,7 @@
 package ru.akvine.marketspace.bot.resolvers.state;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,6 +16,7 @@ import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ChooseCategoryStateResolver implements StateResolver {
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final StateStorage<String> stateStorage;
@@ -26,6 +28,9 @@ public class ChooseCategoryStateResolver implements StateResolver {
         TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(data.getType());
         String chatId = resolver.extractChatId(update);
         String categoryId = resolver.extractText(data.getData());
+
+        logger.info("[{}] state resolved for chat with id = {} and category id = {}", getState(), chatId, categoryId);
+
         sessionStorage.get(chatId).setChoosenCategoryId(categoryId);
         stateStorage.setState(chatId, ClientState.UPLOAD_NEW_CARD_PHOTO_STATE);
         return new SendMessage(chatId, "Загрузите новое изображение карточки: ");

@@ -2,6 +2,7 @@ package ru.akvine.marketspace.bot.services.integration.telegram;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TelegramIntegrationServiceOrigin implements TelegramIntegrationService {
     private TelegramLongPoolingBot bot;
     private AbsSender absSender;
@@ -43,6 +45,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
     @Override
     public byte[] downloadPhoto(String photoId, String chatId) {
         Preconditions.checkNotNull(photoId, "photoId is null");
+        logger.info("Download photo with id = {} for chat with id = {}", photoId, chatId);
 
         try {
             GetFile getFileRequest = new GetFile();
@@ -65,6 +68,8 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
     @Override
     public void sendFile(InputStream file, String fileName, String chatId) {
+        logger.info("Send file with file name = {} for chat id = {}", file, chatId);
+
         try {
             SendDocument sendDocument = new SendDocument();
             sendDocument.setChatId(chatId);
@@ -80,6 +85,8 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
     @Override
     public void sendMessage(List<String> chatIds, String message) {
+        logger.info("Send message = {} to chat with ids = [{}]", message, chatIds);
+
         try {
             for (String chatId : chatIds) {
                 bot.execute(new SendMessage(chatId, message));

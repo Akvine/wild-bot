@@ -26,11 +26,12 @@ public class AdvertStatisticService {
     private final AdvertStatisticRepository advertStatisticRepository;
 
     public AdvertStatisticBean getAndSave(AdvertEntity advert) {
-        logger.info("Start getting advert full statistic for advert with id = {}", advert.getAdvertId());
+        logger.info("Start getting advert full statistic for advert = [{}]", advert);
 
         AdvertFullStatisticResponse[] response;
         Duration duration = Duration.between(advert.getStartCheckDateTime(), LocalDateTime.now());
         if (duration.toHours() < 24) {
+            logger.info("Get advert with id = {} statistic by dates request", advert.getAdvertId());
             List<AdvertFullStatisticDatesDto> request = List.of(
                     new AdvertFullStatisticDatesDto()
                             .setId(Integer.parseInt(advert.getAdvertId()))
@@ -38,6 +39,7 @@ public class AdvertStatisticService {
             );
             response = wildberriesIntegrationService.getAdvertsFullStatisticByDates(request);
         } else {
+            logger.info("Get advert with id = {} statistic by interval request", advert.getAdvertId());
             List<AdvertFullStatisticIntervalDto> request = List.of(
                     new AdvertFullStatisticIntervalDto()
                             .setId(Integer.parseInt(advert.getAdvertId()))

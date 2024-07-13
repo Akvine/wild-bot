@@ -12,7 +12,6 @@ import ru.akvine.marketspace.bot.utils.DateUtils;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,13 +21,15 @@ import java.util.Optional;
 public class BlockingService {
     private final BlockedCredentialsRepository blockedCredentialsRepository;
 
-    public long setBlock(String uuid, Long minutes) {
+    public void setBlock(String uuid, Long minutes) {
+        logger.info("Block client with uuid = {} for minutes = {}", uuid, minutes);
         Optional<BlockedCredentialsEntity> blockedCredentialsOptional = blockedCredentialsRepository.findByLogin(uuid);
         if (blockedCredentialsOptional.isPresent()) {
-            return DateUtils.getMinutes(
+            DateUtils.getMinutes(
                     blockedCredentialsOptional.get().getBlockStartDate(),
                     blockedCredentialsOptional.get().getBlockEndDate()
             );
+            return;
         }
 
         BlockTime newBlock = new BlockTime(minutes);
@@ -37,38 +38,29 @@ public class BlockingService {
         newBlockedCredentials.setBlockStartDate(newBlock.start);
         newBlockedCredentials.setBlockEndDate(newBlock.end);
 
-        BlockedCredentialsEntity savedBlockedCredentials = blockedCredentialsRepository.save(newBlockedCredentials);
-        return savedBlockedCredentials.getId();
+        blockedCredentialsRepository.save(newBlockedCredentials);
     }
 
-    public boolean removeBlock(String uuid) {
+    public void removeBlock(String uuid) {
+        logger.info("Remove block client with uuid = {}", uuid);
         BlockedCredentialsEntity blockedCredentialsEntity = blockedCredentialsRepository
                 .findByLogin(uuid)
                 .orElseThrow(() -> new BlockedCredentialsException("Not exists block record for client with uuid = [" + uuid + "]"));
 
         blockedCredentialsRepository.delete(blockedCredentialsEntity);
-        return true;
     }
 
     public List<BlockedCredentialsEntity> list() {
+        logger.info("List blocked clients");
         return blockedCredentialsRepository.findAll();
-    }
-
-    public boolean isBlocked(String uuid) {
-        Preconditions.checkNotNull(uuid, "clientUuid is null");
-        Optional<BlockedCredentialsEntity> blockedCredentialsEntityOptional = blockedCredentialsRepository.findByLogin(uuid);
-        return blockedCredentialsEntityOptional.filter(blockedCredentialsEntity -> !blockedCredentialsEntity.getBlockEndDate().isAfter(LocalDateTime.now())).isPresent();
     }
 
     @Nullable
     public LocalDateTime getEndBlockDate(String clientUuid) {
         Preconditions.checkNotNull(clientUuid, "clientUuid is null");
+        logger.info("Get end block date for client with uuid = {}", clientUuid);
         Optional<BlockedCredentialsEntity> blockedCredentialsEntityOptional = blockedCredentialsRepository.findByLogin(clientUuid);
-
-        if (blockedCredentialsEntityOptional.isEmpty()) {
-            return null;
-        }
-        return blockedCredentialsEntityOptional.get().getBlockEndDate();
+        return blockedCredentialsEntityOptional.map(BlockedCredentialsEntity::getBlockEndDate).orElse(null);
     }
 
     @ThreadSafe
@@ -76,14 +68,9 @@ public class BlockingService {
         final LocalDateTime start;
         final LocalDateTime end;
 
-        public BlockTime(BlockedCredentialsEntity blockedCredentialsEntity) {
-            this.start = blockedCredentialsEntity.getBlockStartDate();
-            this.end = blockedCredentialsEntity.getBlockEndDate();
-        }
-
         public BlockTime(long howMuchMinutes) {
             this.start = LocalDateTime.now();
-            this.end = start.plus(howMuchMinutes, ChronoUnit.MINUTES);
+            this.end = start.plusMinutes(howMuchMinutes);
         }
     }
 }

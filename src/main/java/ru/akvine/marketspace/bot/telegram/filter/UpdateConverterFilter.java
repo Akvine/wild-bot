@@ -15,13 +15,18 @@ public class UpdateConverterFilter extends MessageFilter {
 
     @Override
     public BotApiMethod<?> handle(Update update) {
+        String chatId = getChatId(update);
+        logger.debug("Update data was reached in UpdateConverterFilter filter for chat with id = {}", chatId);
         TelegramData telegramUpdateData = new TelegramData();
         telegramUpdateData.setData(update);
         if (update.getCallbackQuery() != null) {
+            logger.debug("Message type for chat id = {} is [CALLBACK]", chatId);
             telegramUpdateData.setType(TelegramDataType.CALLBACK);
         } else {
+            logger.debug("Message type for chat id = {} is [MESSAGE]", chatId);
             telegramUpdateData.setType(TelegramDataType.MESSAGE);
         }
+
         return messageDispatcher.doDispatch(telegramUpdateData);
     }
 }

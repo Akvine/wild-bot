@@ -3,6 +3,7 @@ package ru.akvine.marketspace.bot.job;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.CollectionUtils;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
@@ -54,7 +55,7 @@ public class SyncAdvertJob {
             List<String> uniqueAdvertsInDb = new ArrayList<>(advertsIdsInDb);
             uniqueAdvertsInDb.removeAll(commonElements);
 
-            if (!uniqueAdvertsInDb.isEmpty()) {
+            if (!CollectionUtils.isEmpty(uniqueAdvertsInDb)) {
                 logger.info("Delete unused db adverts");
                 advertsInDb
                         .stream()
@@ -66,7 +67,7 @@ public class SyncAdvertJob {
                         });
             }
 
-            if (!uniqueAdvertsInWb.isEmpty()) {
+            if (!CollectionUtils.isEmpty(uniqueAdvertsInWb)) {
                 int batchSize = 50;
                 int batchNumber = 1;
                 int batchSavedCount = 0;
