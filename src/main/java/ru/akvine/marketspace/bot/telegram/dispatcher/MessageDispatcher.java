@@ -5,18 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.akvine.marketspace.bot.enums.ClientState;
 import ru.akvine.marketspace.bot.enums.Command;
-import ru.akvine.marketspace.bot.enums.TelegramDataType;
 import ru.akvine.marketspace.bot.infrastructure.StateStorage;
 import ru.akvine.marketspace.bot.managers.CommandResolverManager;
 import ru.akvine.marketspace.bot.managers.StateResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
-import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.domain.ClientBean;
-import ru.akvine.marketspace.bot.services.dto.ClientCreate;
 import ru.akvine.marketspace.bot.telegram.CommandResolver;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
@@ -26,7 +21,6 @@ import static ru.akvine.marketspace.bot.constants.TelegramMessageConstants.UNKNO
 @RequiredArgsConstructor
 @Slf4j
 public class MessageDispatcher {
-    private final ClientService clientService;
     private final StateStorage<String> stateStorage;
 
     private final StateResolverManager stateResolverManager;
@@ -44,21 +38,6 @@ public class MessageDispatcher {
                 "Received in dispatcher message = {} with type = {} by chat id = {}",
                 text, telegramData.getType(), chatId
         );
-
-        ClientBean clientBean = clientService.findByChatId(chatId);
-        if ((clientBean == null || clientBean.isDeleted()) && telegramData.getType() == TelegramDataType.MESSAGE) {
-            Message message = telegramData.getData().getMessage();
-            ClientCreate clientCreate = new ClientCreate(
-                    chatId,
-                    message.getFrom().getUserName(),
-                    message.getFrom().getFirstName(),
-                    message.getFrom().getLastName()
-            );
-            clientBean = clientService.create(clientCreate);
-        }
-
-        clientService.checkIsInWhitelist(clientBean.getUsername());
-        clientService.checkIsBlockedAndThrowException(clientBean.getUuid());
 
         if (stateStorage.containsState(chatId)) {
             if (commandResolver.resolve(text) == Command.COMMAND_CANCEL) {

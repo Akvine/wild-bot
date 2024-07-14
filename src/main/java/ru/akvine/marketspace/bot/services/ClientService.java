@@ -49,20 +49,24 @@ public class ClientService {
         return new ClientBean(clientRepository.save(clientEntity));
     }
 
-    public void checkIsBlockedAndThrowException(String clientUuid) {
-        logger.info("Check client is blocked by uuid = {}", clientUuid);
-        LocalDateTime blockDateTime = blockingService.getEndBlockDate(clientUuid);
+    public void checkIsBlocked(String chatId) {
+        logger.info("Check client is blocked by chat id = {}", chatId);
+        String uuid = verifyExistsByChatId(chatId).getUuid();
+        LocalDateTime blockDateTime = blockingService.getEndBlockDate(uuid);
         if (blockDateTime != null) {
             String errorMessage = String.format("Вы были заблокированы до %s!", blockDateTime.toLocalDate());
             throw new BlockedCredentialsException(errorMessage);
         }
     }
 
-    public void checkIsInWhitelist(String username) {
-        logger.info("Check client is in white list by username = {}", username);
-        ClientEntity client = verifyExistsByUsername(username);
+    public void checkIsInWhitelist(String chatId) {
+        logger.info("Check client is in white list by chat id = {}", chatId);
+        ClientEntity client = verifyExistsByChatId(chatId);
+        String username = client.getUsername();
         if (!client.isInWhiteList()) {
-            String errorMessage = String.format("Client with username = [%s] not in whitelist", username);
+            String errorMessage = String.format(
+                    "Client with chat id = [%s] and username = [%s] not in whitelist",
+                    chatId, username);
             throw new ClientNotInWhitelistException(errorMessage);
         }
     }

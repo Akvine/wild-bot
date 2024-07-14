@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Setter
 public abstract class MessageFilter {
-    protected MessageFilter messageFilter;
+    protected MessageFilter nextMessageFilter;
 
     public abstract BotApiMethod<?> handle(Update update);
 

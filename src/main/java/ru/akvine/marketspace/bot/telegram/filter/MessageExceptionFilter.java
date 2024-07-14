@@ -19,7 +19,7 @@ public class MessageExceptionFilter extends MessageFilter {
         String chatId = getChatId(update);
         try {
             logger.debug("Update data was reached in MessageException filter for chat with id = {}", chatId);
-            return messageFilter.handle(update);
+            return nextMessageFilter.handle(update);
         } catch (Exception exception) {
             if (exception instanceof BlockedCredentialsException) {
                 return processBlockedCredentialsException(chatId, exception.getMessage());
