@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.akvine.marketspace.bot.exceptions.IntegrationException;
-import ru.akvine.marketspace.bot.telegram.TelegramLongPoolingBot;
+import ru.akvine.marketspace.bot.telegram.bot.TelegramDevBot;
 import ru.akvine.marketspace.bot.utils.ByteUtils;
 
 import java.io.InputStream;
@@ -26,14 +26,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TelegramIntegrationServiceOrigin implements TelegramIntegrationService {
-    private TelegramLongPoolingBot bot;
+    private TelegramDevBot bot;
     private AbsSender absSender;
 
     @Value("${telegram.bot.token}")
     private String botToken;
 
     @Autowired
-    public void setBot(@Lazy TelegramLongPoolingBot bot) {
+    public void setBot(@Lazy TelegramDevBot bot) {
         this.bot = bot;
     }
 
