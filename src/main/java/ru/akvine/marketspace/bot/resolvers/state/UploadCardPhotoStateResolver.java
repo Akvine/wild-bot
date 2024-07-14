@@ -23,7 +23,10 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.Goo
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.GoodSizeDto;
 import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
+import ru.akvine.marketspace.bot.utils.LockHelper;
 import ru.akvine.marketspace.bot.utils.TelegramPhotoResolver;
+
+import static ru.akvine.marketspace.bot.constants.DbLockConstants.UPLOAD_CARD_PHOTO_STATE;
 
 @Component
 @RequiredArgsConstructor
@@ -36,6 +39,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
     private final TelegramIntegrationService telegramIntegrationService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final AdvertService advertService;
+    private final LockHelper lockHelper;
 
     @Override
     public BotApiMethod<?> resolve(TelegramData data) {
@@ -52,29 +56,29 @@ public class UploadCardPhotoStateResolver implements StateResolver {
         byte[] photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
 
         // TODO : тут надо поставить лок
-        AdvertBean advertBean = advertService.getFirst(sessionStorage.get(chatId).getChoosenCategoryId());
-        advertBean.setLocked(true);
-        advertService.update(advertBean);
-        sessionStorage.get(chatId).setLockedAdvertId(advertBean.getAdvertId());
+        String message = lockHelper.doWithLock(UPLOAD_CARD_PHOTO_STATE + chatId, () -> {
+            AdvertBean advertBean = advertService.getFirst(sessionStorage.get(chatId).getChoosenCategoryId());
+            advertBean.setLocked(true);
+            advertService.update(advertBean);
+            sessionStorage.get(chatId).setLockedAdvertId(advertBean.getAdvertId());
 
-        int nmId = advertBean.getItemId();
-        GetGoodsRequest request = new GetGoodsRequest()
-                .setLimit(100)
-                .setFilterNmID(nmId);
-        GetGoodsResponse response = wildberriesIntegrationService.getGoods(request);
-        String message;
-        if (!CollectionUtils.isEmpty(response.getData().getListGoods())) {
-            GoodDto goodDto = response.getData().getListGoods().getFirst();
-            GoodSizeDto size = goodDto.getSizes().getFirst();
-            int discount = goodDto.getDiscount();
-            int price = size.getPrice();
-            double discountedPrice=  size.getDiscountedPrice();
-            message = buildMessage(price, discount, discountedPrice);
-        } else {
-            String errorMessage = String.format("Card with nm id = [%s] has no goods", nmId);
-            throw new IllegalStateException(errorMessage);
-        }
-        //
+            int nmId = advertBean.getItemId();
+            GetGoodsRequest request = new GetGoodsRequest()
+                    .setLimit(100)
+                    .setFilterNmID(nmId);
+            GetGoodsResponse response = wildberriesIntegrationService.getGoods(request);
+            if (!CollectionUtils.isEmpty(response.getData().getListGoods())) {
+                GoodDto goodDto = response.getData().getListGoods().getFirst();
+                GoodSizeDto size = goodDto.getSizes().getFirst();
+                int discount = goodDto.getDiscount();
+                int price = size.getPrice();
+                double discountedPrice=  size.getDiscountedPrice();
+                return buildMessage(price, discount, discountedPrice);
+            } else {
+                String errorMessage = String.format("Card with nm id = [%s] has no goods", nmId);
+                throw new IllegalStateException(errorMessage);
+            }
+        });
 
         sessionStorage.get(chatId).setUploadedCardPhoto(photo);
         stateStorage.setState(chatId, ClientState.IS_NEED_INPUT_NEW_CARD_PRICE_STATE);
