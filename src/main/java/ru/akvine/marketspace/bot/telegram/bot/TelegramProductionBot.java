@@ -27,7 +27,7 @@ public class TelegramProductionBot extends TelegramWebhookBot {
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        return null;
+        return messageFilter.handle(update);
     }
 
     @Override
