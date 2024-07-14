@@ -7,5 +7,5 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AdvertSubject {
     private String name;
-    private String id;
+    private int id;
 }

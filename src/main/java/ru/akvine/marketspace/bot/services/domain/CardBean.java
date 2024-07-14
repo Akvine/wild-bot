@@ -15,10 +15,10 @@ public class CardBean extends SoftBean {
     private String uuid;
     @Nullable
     private String clientUuid;
-    private String itemId;
+    private int itemId;
     private String itemTitle;
     private String categoryTitle;
-    private String categoryId;
+    private int categoryId;
     private String barcode;
 
     public CardBean(CardEntity cardEntity) {

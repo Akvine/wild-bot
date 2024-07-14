@@ -34,25 +34,25 @@ public class SyncAdvertJob {
         logger.info("Start advert sync...");
         AdvertListResponse advertListResponse = wildberriesIntegrationService.getAdverts();
         if (advertListResponse.getAll() != 0) {
-            List<String> advertsInWb = advertListResponse
+            List<Integer> advertsInWb = advertListResponse
                     .getAdverts()
                     .stream()
                     .filter(advertStatisticDto -> advertStatisticDto.getStatus() == ADVERT_PAUSE_STATUS_CODE || advertStatisticDto.getStatus() == ADVERT_READY_FOR_START_STATUS_CODE)
                     .flatMap(advertStatisticDto -> advertStatisticDto.getAdvertList().stream().map(AdvertDto::getAdvertId))
                     .toList();
             List<AdvertEntity> advertsInDb = advertRepository.findByStatuses(List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START));
-            List<String> advertsIdsInDb = advertsInDb
+            List<Integer> advertsIdsInDb = advertsInDb
                     .stream()
                     .map(AdvertEntity::getAdvertId)
                     .collect(Collectors.toList());
 
-            List<String> commonElements = new ArrayList<>(advertsInWb);
+            List<Integer> commonElements = new ArrayList<>(advertsInWb);
             commonElements.retainAll(advertsIdsInDb);
 
-            List<String> uniqueAdvertsInWb = new ArrayList<>(advertsInWb);
+            List<Integer> uniqueAdvertsInWb = new ArrayList<>(advertsInWb);
             uniqueAdvertsInWb.removeAll(commonElements);
 
-            List<String> uniqueAdvertsInDb = new ArrayList<>(advertsIdsInDb);
+            List<Integer> uniqueAdvertsInDb = new ArrayList<>(advertsIdsInDb);
             uniqueAdvertsInDb.removeAll(commonElements);
 
             if (!CollectionUtils.isEmpty(uniqueAdvertsInDb)) {
@@ -73,7 +73,7 @@ public class SyncAdvertJob {
                 int batchSavedCount = 0;
                 for (int i = 0; i < uniqueAdvertsInWb.size(); i += batchSize) {
                     logger.info("Get info for adverts by batch with number = {} and max size = {}", batchNumber, batchSize);
-                    List<String> advertIdsBatch = uniqueAdvertsInWb.subList(i, Math.min(i + batchSize, uniqueAdvertsInWb.size()));
+                    List<Integer> advertIdsBatch = uniqueAdvertsInWb.subList(i, Math.min(i + batchSize, uniqueAdvertsInWb.size()));
                     AdvertsInfoResponse response = wildberriesIntegrationService.getAdvertsInfo(advertIdsBatch);
                     List<AdvertDto> filteredAdverts = response
                             .getAdverts()
@@ -81,8 +81,7 @@ public class SyncAdvertJob {
                             .filter(advertDto -> advertDto.getStatus() == ADVERT_PAUSE_STATUS_CODE
                                     || advertDto.getStatus() == ADVERT_READY_FOR_START_STATUS_CODE)
                             .filter(advertDto -> advertDto.getAdvertParams() != null
-                                    && advertDto.getAdvertParams().getSubject() != null
-                                    && advertDto.getAdvertParams().getSubject().getId() != null)
+                                    && advertDto.getAdvertParams().getSubject() != null)
                             .collect(Collectors.toList());
                     advertService.saveAll(filteredAdverts);
 

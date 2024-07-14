@@ -9,5 +9,5 @@ import ru.akvine.marketspace.bot.admin.dto.common.SecretRequest;
 public class PauseAdvertRequest extends SecretRequest {
     private String advertUuid;
 
-    private String advertId;
+    private Integer advertId;
 }

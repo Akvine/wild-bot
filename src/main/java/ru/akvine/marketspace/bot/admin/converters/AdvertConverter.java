@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class AdvertConverter {
     public PauseAdvert convertToPauseAdvert(PauseAdvertRequest request) {
         return new PauseAdvert()
-                .setAdvertId(StringUtils.isBlank(request.getAdvertId()) ? null : request.getAdvertId())
+                .setAdvertId(request.getAdvertId() == null ? null : request.getAdvertId())
                 .setAdvertUuid(StringUtils.isBlank(request.getAdvertUuid()) ? null : request.getAdvertUuid());
     }
 
@@ -57,7 +57,7 @@ public class AdvertConverter {
 
     public RenameAdvert convertToRenameAdvert(RenameAdvertRequest request) {
         return new RenameAdvert()
-                .setAdvertId(StringUtils.isBlank(request.getAdvertId()) ? null : request.getAdvertId())
+                .setAdvertId(request.getAdvertId() == null ? null : request.getAdvertId())
                 .setAdvertUuid(StringUtils.isBlank(request.getAdvertUuid()) ? null : request.getAdvertUuid())
                 .setName(request.getName());
     }

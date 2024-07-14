@@ -30,15 +30,15 @@ public class AdvertValidator extends AdminValidator {
         verifyUuidAndIdParams(request.getAdvertUuid(), request.getAdvertId());
     }
 
-    public void verifyUuidAndIdParams(String uuid, String id) {
-        if (StringUtils.isNotBlank(uuid) && StringUtils.isNotBlank(id)) {
+    public void verifyUuidAndIdParams(String uuid, Integer id) {
+        if (StringUtils.isNotBlank(uuid) && id != null) {
             throw new ValidationException(
                     CommonErrorCodes.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
                     "Presented advertId and advertUuid. Need only one parameter"
             );
         }
 
-        if (StringUtils.isBlank(uuid) && StringUtils.isBlank(id)) {
+        if (StringUtils.isBlank(uuid) && id == null) {
             throw new ValidationException(
                     CommonErrorCodes.Validation.BOTH_PARAMETERS_BLANK_ERROR,
                     "Blank advertId and advertUuid. Need only one parameter"

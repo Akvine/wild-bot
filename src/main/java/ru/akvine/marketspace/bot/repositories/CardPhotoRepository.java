@@ -8,6 +8,6 @@ import ru.akvine.marketspace.bot.entities.CardPhotoEntity;
 import java.util.List;
 
 public interface CardPhotoRepository extends JpaRepository<CardPhotoEntity, Long> {
-    @Query("from CardPhotoEntity cpe where cpe.cardEntity.id = :id")
+    @Query("from CardPhotoEntity cpe join cpe.cardEntity cpece where cpece.id = :id")
     List<CardPhotoEntity> findByCardId(@Param("id") Long cardId);
 }

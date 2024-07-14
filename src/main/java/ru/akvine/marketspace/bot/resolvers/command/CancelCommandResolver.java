@@ -2,7 +2,6 @@ package ru.akvine.marketspace.bot.resolvers.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -28,7 +27,7 @@ public class CancelCommandResolver implements CommandResolver {
         logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
 
         if (stateStorage.containsState(chatId)) {
-            if (StringUtils.isNotBlank(sessionStorage.get(chatId).getLockedAdvertId())) {
+            if (sessionStorage.get(chatId).getLockedAdvertId() != null) {
                 AdvertBean advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
                 advertBean.setLocked(false);
                 advertService.update(advertBean);

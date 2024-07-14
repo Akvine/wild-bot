@@ -15,7 +15,6 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.*;
 import ru.akvine.marketspace.bot.utils.RequestUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +60,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                         WildberriesApiMethods.GET_CARD_LIST, exception.getMessage());
                 throw new IntegrationException(errorMessage);
             }
-            List<CardDto> cards = responseEntity.getBody().getCards();
+            List<CardDto> cards = Objects.requireNonNull(responseEntity.getBody()).getCards();
             size = cards.size();
             responseCards.addAll(cards);
             if (size >= CARD_GET_LIMIT_COUNT) {
@@ -77,7 +76,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         return new CursorDto()
                 .setLimit(CARD_GET_LIMIT_COUNT)
                 .setUpdatedAt(lastCard.getUpdatedAt())
-                .setNmID(Integer.parseInt(lastCard.getNmID()));
+                .setNmID(lastCard.getNmID());
     }
 
     @Override
@@ -109,12 +108,12 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Override
     @RateLimiter(name = "wb-advert-budget-info")
-    public AdvertBudgetInfoResponse getAdvertBudgetInfo(String advertId) {
+    public AdvertBudgetInfoResponse getAdvertBudgetInfo(int advertId) {
         logger.info("Get budget info for advert with id = {}", advertId);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<String> httpEntity = new HttpEntity<>("some", headers);
 
-        Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, advertId);
+        Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
         ResponseEntity<AdvertBudgetInfoResponse> responseEntity;
         try {
             responseEntity = restTemplate.exchange(
@@ -137,7 +136,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Override
     @RateLimiter(name = "wb-advert-budget-deposit")
-    public AdvertBudgetDepositResponse advertBudgetDeposit(String advertId, int sum) {
+    public AdvertBudgetDepositResponse advertBudgetDeposit(int advertId, int sum) {
         logger.info("Deposit budget advert with id = {} and sum = {}", advertId, sum);
         AdvertBudgetDepositRequest request = new AdvertBudgetDepositRequest()
                 .setReturn(true)
@@ -147,7 +146,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<AdvertBudgetDepositRequest> httpEntity = new HttpEntity<>(request, headers);
 
-        Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, advertId);
+        Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
         ResponseEntity<AdvertBudgetDepositResponse> responseEntity;
         try {
             responseEntity = restTemplate.exchange(
@@ -170,12 +169,12 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Override
     @RateLimiter(name = "wb-advert-start")
-    public void startAdvert(String advertId) {
+    public void startAdvert(int advertId) {
         logger.info("Start advert with id = {}", advertId);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<String> httpEntity = new HttpEntity<>("some", headers);
 
-        Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, advertId);
+        Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
         try {
             restTemplate.exchange(
                     RequestUtils.buildUri(WildberriesApiMethods.START_ADVERT.getUrl() + WildberriesApiMethods.START_ADVERT.getMethod(), queryParams),
@@ -193,11 +192,10 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Override
     @RateLimiter(name = "wb-get-adverts-info")
-    public AdvertsInfoResponse getAdvertsInfo(List<String> advertIds) {
+    public AdvertsInfoResponse getAdvertsInfo(List<Integer> advertIds) {
         logger.info("Get adverts info");
         HttpHeaders headers = buildHttpHeadersForJsonBody();
-        List<Long> transformedIds = advertIds.stream().map(Long::valueOf).collect(Collectors.toList());
-        HttpEntity<List<Long>> httpEntity = new HttpEntity<>(transformedIds, headers);
+        HttpEntity<List<Integer>> httpEntity = new HttpEntity<>(advertIds, headers);
 
         ResponseEntity<AdvertDto[]> responseEntity;
         try {
@@ -248,12 +246,12 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Override
     @RateLimiter(name = "wb-advert-pause")
-    public void pauseAdvert(String advertId) {
+    public void pauseAdvert(int advertId) {
         logger.info("Pause advert with id = {}", advertId);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<String> httpEntity = new HttpEntity<>("some", headers);
 
-        Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, advertId);
+        Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
         try {
             restTemplate.exchange(
                     RequestUtils.buildUri(WildberriesApiMethods.PAUSE_ADVERT.getUrl() + WildberriesApiMethods.PAUSE_ADVERT.getMethod(), queryParams),
@@ -292,10 +290,10 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
     }
 
     @Override
-    public void renameAdvert(String advertId, String name) {
+    public void renameAdvert(int advertId, String name) {
         logger.info("Rename advert with id = {} by name = {}", advertId, name);
         AdvertRenameRequest request = new AdvertRenameRequest()
-                .setAdvertId(Integer.parseInt(advertId))
+                .setAdvertId(advertId)
                 .setName(name);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<AdvertRenameRequest> httpEntity = new HttpEntity<>(request, headers);
@@ -320,7 +318,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         logger.info("Upload photo with number = {} for card with id = {}", request.getPhotoNumber(), request.getNmId());
 
         Map<String, String> fields = Map.of(
-                "X-Nm-Id", request.getNmId(),
+                "X-Nm-Id", String.valueOf(request.getNmId()),
                 "X-Photo-Number", String.valueOf(request.getPhotoNumber())
         );
         HttpHeaders headers = buildHttpHeadersForMultipartBody(fields);

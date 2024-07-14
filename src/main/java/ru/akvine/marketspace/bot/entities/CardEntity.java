@@ -22,16 +22,16 @@ public class CardEntity extends SoftBaseEntity {
     private String uuid;
 
     @Column(name = "ITEM_ID", nullable = false)
-    private String itemId;
+    private int itemId;
 
     @Column(name = "ITEM_TITLE", nullable = false)
     private String itemTitle;
 
+    @Column(name = "CATEGORY_ID", nullable = false)
+    private int categoryId;
+
     @Column(name = "CATEGORY_TITLE", nullable = false)
     private String categoryTitle;
-
-    @Column(name = "CATEGORY_ID", nullable = false)
-    private String categoryId;
 
     @Column(name = "BARCODE", nullable = false)
     private String barcode;

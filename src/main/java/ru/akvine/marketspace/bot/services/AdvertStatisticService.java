@@ -34,7 +34,7 @@ public class AdvertStatisticService {
             logger.info("Get advert with id = {} statistic by dates request", advert.getAdvertId());
             List<AdvertFullStatisticDatesDto> request = List.of(
                     new AdvertFullStatisticDatesDto()
-                            .setId(Integer.parseInt(advert.getAdvertId()))
+                            .setId(advert.getAdvertId())
                             .setDates(List.of(LocalDate.now().toString()))
             );
             response = wildberriesIntegrationService.getAdvertsFullStatisticByDates(request);
@@ -42,7 +42,7 @@ public class AdvertStatisticService {
             logger.info("Get advert with id = {} statistic by interval request", advert.getAdvertId());
             List<AdvertFullStatisticIntervalDto> request = List.of(
                     new AdvertFullStatisticIntervalDto()
-                            .setId(Integer.parseInt(advert.getAdvertId()))
+                            .setId(advert.getAdvertId())
                             .setInterval(new AdvertStatisticInterval()
                                     .setBegin(advert.getStartCheckDateTime().toLocalDate().toString())
                                     .setEnd(LocalDate.now().toString()))

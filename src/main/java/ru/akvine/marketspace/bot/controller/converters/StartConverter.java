@@ -24,7 +24,7 @@ public class StartConverter {
                     String text = aggregateCard.getCategoryTitle() + " (" + aggregateCard.getCount() + ")";
                     InlineKeyboardButton button = new InlineKeyboardButton();
                     button.setText(text);
-                    button.setCallbackData(aggregateCard.getCategoryId());
+                    button.setCallbackData(String.valueOf(aggregateCard.getCategoryId()));
                     return List.of(button);
                 })
                 .collect(Collectors.toList());
@@ -38,7 +38,7 @@ public class StartConverter {
     }
 
     public SendMessage buildStartAdvert(String chatId, AdvertBean startAdvertBean) {
-        String advertId = startAdvertBean.getAdvertId();
+        int advertId = startAdvertBean.getAdvertId();
         int startCpm = startAdvertBean.getCpm();
         Integer startBudgetSum = startAdvertBean.getStartBudgetSum();
         LocalDateTime nextCheckDateTime = startAdvertBean.getNextCheckDateTime();

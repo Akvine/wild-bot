@@ -11,6 +11,6 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class AggregateCard {
     private int count;
-    private String categoryId;
+    private int categoryId;
     private String categoryTitle;
 }

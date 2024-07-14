@@ -27,7 +27,7 @@ public class AdvertEntity extends SoftBaseEntity {
     private String uuid;
 
     @Column(name = "ADVERT_ID", nullable = false)
-    private String advertId;
+    private int advertId;
 
     @Column(name = "NAME", nullable = false)
     private String name;
@@ -35,11 +35,11 @@ public class AdvertEntity extends SoftBaseEntity {
     @Column(name = "CHANGE_TIME", nullable = false)
     private Date changeTime;
 
-    @Column(name = "CATEGORY_ID")
-    private String categoryId;
-
     @Column(name = "ITEM_ID", nullable = false)
-    private String itemId;
+    private int itemId;
+
+    @Column(name = "CATEGORY_ID", nullable = false)
+    private int categoryId;
 
     @Column(name = "STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -55,8 +55,8 @@ public class AdvertEntity extends SoftBaseEntity {
     @Column(name = "ORDINAL_TYPE", nullable = false)
     private int ordinalType;
 
-    @Column(name = "CPM")
-    private Integer cpm;
+    @Column(name = "CPM", nullable = false)
+    private int cpm;
 
     @Column(name = "START_CHECK_DATE_TIME")
     private LocalDateTime startCheckDateTime;

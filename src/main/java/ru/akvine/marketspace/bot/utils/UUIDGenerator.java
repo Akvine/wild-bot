@@ -9,14 +9,14 @@ public class UUIDGenerator {
     private final static int START_INDEX = 0;
 
     public String uuid() {
-        return UUID.randomUUID().toString();
+        return UUID.randomUUID().toString().toUpperCase();
     }
 
     public String uuid(int length) {
         return uuid().substring(START_INDEX, length);
     }
 
-    public String uuidWithoutDashes(int length) {
-        return uuid(length).replaceAll("-", "");
+    public String uuidWithoutDashes() {
+        return uuid().replaceAll("-", "");
     }
 }

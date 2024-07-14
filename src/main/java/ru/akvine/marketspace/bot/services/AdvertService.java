@@ -24,9 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class AdvertService {
-    @Value("${advert.uuid.length}")
-    private int length;
-
     private final AdvertRepository advertRepository;
     private final ClientService clientService;
 
@@ -36,7 +33,7 @@ public class AdvertService {
 
         adverts.forEach(advertDto -> {
             AdvertEntity advertEntity = new AdvertEntity()
-                    .setUuid(UUIDGenerator.uuid(length))
+                    .setUuid(UUIDGenerator.uuidWithoutDashes())
                     .setAdvertId(advertDto.getAdvertId())
                     .setName(advertDto.getName())
                     .setChangeTime(advertDto.getChangeTime())
@@ -44,9 +41,11 @@ public class AdvertService {
                     .setOrdinalType(advertDto.getType())
                     .setStatus(AdvertStatus.getByCode(advertDto.getStatus()))
                     .setOrdinalStatus(advertDto.getStatus())
-                    .setItemId(advertDto.getAdvertParams().getNms().get(0))
-                    .setCpm(advertDto.getAdvertParams() != null ? advertDto.getAdvertParams().getCpm(): null)
+                    .setItemId(advertDto.getAdvertParams().getNms().getFirst())
                     .setCategoryId(advertDto.getAdvertParams().getSubject().getId());
+            if (advertDto.getAdvertParams() != null) {
+                advertEntity.setCpm(advertDto.getAdvertParams().getCpm());
+            }
             advertRepository.save(advertEntity);
             });
 
@@ -108,7 +107,7 @@ public class AdvertService {
         return updatedAdvert;
     }
 
-    public AdvertBean getFirst(String categoryId) {
+    public AdvertBean getFirst(Integer categoryId) {
         Preconditions.checkNotNull(categoryId, "categoryId is null");
         logger.info("Get first advert by category id = {}", categoryId);
 
@@ -148,14 +147,12 @@ public class AdvertService {
         throw new AdvertNotFoundException(errorMessage);
     }
 
-    public AdvertBean getByAdvertId(String advertId) {
-        Preconditions.checkNotNull(advertId, "advertId is null");
+    public AdvertBean getByAdvertId(int advertId) {
         logger.info("Get advert with id = {}", advertId);
         return new AdvertBean(verifyExistsByAdvertId(advertId));
     }
 
-    public AdvertEntity verifyExistsByAdvertId(String advertId) {
-        Preconditions.checkNotNull(advertId, "advertId is null");
+    public AdvertEntity verifyExistsByAdvertId(int advertId) {
         logger.info("Verify advert exists with id = {}", advertId);
         return advertRepository
                 .findByAdvertId(advertId)

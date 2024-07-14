@@ -28,22 +28,22 @@ public class SyncCardJob {
         List<CardDto> cardsDto = wildberriesIntegrationService.getCards();
         if (!CollectionUtils.isEmpty(cardsDto)) {
             List<CardEntity> cards = cardRepository.findAll();
-            List<String> cardsIdDb = cards
+            List<Integer> cardsIdDb = cards
                     .stream()
                     .map(CardEntity::getItemId)
                     .collect(Collectors.toList());
-            List<String> cardsInWb = cardsDto
+            List<Integer> cardsInWb = cardsDto
                     .stream()
                     .map(CardDto::getNmID)
                     .toList();
 
-            List<String> commonElements = new ArrayList<>(cardsInWb);
+            List<Integer> commonElements = new ArrayList<>(cardsInWb);
             commonElements.retainAll(cardsIdDb);
 
-            List<String> uniqueCardsInWb = new ArrayList<>(cardsInWb);
+            List<Integer> uniqueCardsInWb = new ArrayList<>(cardsInWb);
             uniqueCardsInWb.removeAll(commonElements);
 
-            List<String> uniqueCardsInDb = new ArrayList<>(cardsIdDb);
+            List<Integer> uniqueCardsInDb = new ArrayList<>(cardsIdDb);
             uniqueCardsInDb.removeAll(commonElements);
 
             if (!CollectionUtils.isEmpty(uniqueCardsInDb)) {

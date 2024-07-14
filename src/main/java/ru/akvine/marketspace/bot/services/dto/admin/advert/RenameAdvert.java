@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 public class RenameAdvert {
     @Nullable
     private String advertUuid;
-    @Nullable
-    private String advertId;
+    private Integer advertId;
     private String name;
 }

@@ -57,7 +57,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
         advertService.update(advertBean);
         sessionStorage.get(chatId).setLockedAdvertId(advertBean.getAdvertId());
 
-        int nmId = Integer.parseInt(advertBean.getItemId());
+        int nmId = advertBean.getItemId();
         GetGoodsRequest request = new GetGoodsRequest()
                 .setLimit(100)
                 .setFilterNmID(nmId);

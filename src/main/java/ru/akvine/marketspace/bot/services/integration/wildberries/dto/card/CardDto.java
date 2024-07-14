@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class CardDto {
-    private String nmID;
+    private int nmID;
     private String title;
-    private String subjectID;
+    private int subjectID;
     private String subjectName;
     private List<CardPhotoDto> photos;
     private List<SizeDto> sizes;

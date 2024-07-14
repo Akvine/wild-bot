@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class IterationsCounterService {
     private final AdvertService advertService;
-    private final Map<String, Integer> counters = new ConcurrentHashMap<>();
+    private final Map<Integer, Integer> counters = new ConcurrentHashMap<>();
 
     private static final int ZERO_COUNT_INIT = 0;
 
@@ -30,12 +30,12 @@ public class IterationsCounterService {
         runningAdverts.forEach(advert -> counters.put(advert.getAdvertId(), ZERO_COUNT_INIT));
     }
 
-    public void add(String advertId) {
+    public void add(int advertId) {
         counters.put(advertId, ZERO_COUNT_INIT);
         logger.info("Init counter for advert with id = {}", advertId);
     }
 
-    public void increase(String advertId) {
+    public void increase(int advertId) {
         validateExists(advertId);
         int advertCounter = counters.get(advertId);
         advertCounter += 1;
@@ -43,18 +43,18 @@ public class IterationsCounterService {
         logger.info("Increase counter for advert with id = {}, total = {}", advertId, counters.get(advertId));
     }
 
-    public void delete(String advertId) {
+    public void delete(int advertId) {
         validateExists(advertId);
         counters.remove(advertId);
         logger.info("Remove counter for advert with id = {}", advertId);
     }
 
-    public boolean check(String advertId, int maxCountBeforeIncrease) {
+    public boolean check(int advertId, int maxCountBeforeIncrease) {
         validateExists(advertId);
         return counters.get(advertId) % maxCountBeforeIncrease == 0;
     }
 
-    private void validateExists(String advertId) {
+    private void validateExists(int advertId) {
         if (!counters.containsKey(advertId)) {
             throw new ValidationException(
                     CommonErrorCodes.GENERAL_ERROR,

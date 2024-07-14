@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AdvertUploadPhotoRequest {
     private int photoNumber;
-    private String nmId;
+    private int nmId;
     @ToString.Exclude
     private byte[] uploadFile;
 }

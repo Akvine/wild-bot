@@ -50,7 +50,7 @@ public class AdvertStatisticEntity extends SoftBaseEntity {
     private String sumPrice;
 
     @ManyToOne
-    @JoinColumn(name = "ADVERT_ID")
+    @JoinColumn(name = "ADVERT_ID", nullable = false)
     private AdvertEntity advertEntity;
 
     @ManyToOne

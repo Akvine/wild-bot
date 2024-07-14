@@ -23,9 +23,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class ClientService {
-    @Value("${client.uuid.length}")
-    private int length;
-
     private final ClientRepository clientRepository;
     private final BlockingService blockingService;
 
@@ -43,7 +40,7 @@ public class ClientService {
         logger.info("Create client = [{}]", clientCreate);
 
         ClientEntity clientEntity = new ClientEntity()
-                .setUuid(UUIDGenerator.uuidWithoutDashes(length))
+                .setUuid(UUIDGenerator.uuidWithoutDashes())
                 .setChatId(clientCreate.getChatId())
                 .setUsername(clientCreate.getUsername())
                 .setFirstName(clientCreate.getFirstName())

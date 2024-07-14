@@ -9,6 +9,6 @@ import java.util.List;
 @Accessors(chain = true)
 public class AdvertParams {
     private AdvertSubject subject;
-    private Integer cpm;
-    private List<String> nms;
+    private int cpm;
+    private List<Integer> nms;
 }

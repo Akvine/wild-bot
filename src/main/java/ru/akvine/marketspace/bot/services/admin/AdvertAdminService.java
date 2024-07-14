@@ -35,8 +35,7 @@ public class AdvertAdminService {
 
     private final static int ADVERT_PAUSE_STATUS_CODE = 11;
 
-    public AdvertBean start(String advertId) {
-        Preconditions.checkNotNull(advertId, "advertId is null");
+    public AdvertBean start(int advertId) {
         logger.info("Start advert with id = {}", advertId);
         return advertStartService.startByAdvertId(advertId);
     }
@@ -56,7 +55,7 @@ public class AdvertAdminService {
             throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getItemId() + "] already in pause!");
         }
 
-        String advertId = advertEntity.getAdvertId();
+        int advertId = advertEntity.getAdvertId();
         AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId));
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {

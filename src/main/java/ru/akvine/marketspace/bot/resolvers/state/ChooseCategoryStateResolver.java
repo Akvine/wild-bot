@@ -27,7 +27,13 @@ public class ChooseCategoryStateResolver implements StateResolver {
         Update update = data.getData();
         TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(data.getType());
         String chatId = resolver.extractChatId(update);
-        String categoryId = resolver.extractText(data.getData());
+        Integer categoryId;
+
+        try {
+            categoryId = Integer.parseInt(resolver.extractText(data.getData()));
+        } catch (Exception exception) {
+            return new SendMessage(chatId, "Нужно выбрать категорию из списка или ввести id вручную!");
+        }
 
         logger.info("[{}] state resolved for chat with id = {} and category id = {}", getState(), chatId, categoryId);
 

@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class AdvertDto {
-    private String advertId;
+    private int advertId;
     private String name;
     private Date changeTime;
     private int type;

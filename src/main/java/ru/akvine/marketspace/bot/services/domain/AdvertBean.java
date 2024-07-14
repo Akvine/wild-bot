@@ -17,15 +17,15 @@ public class AdvertBean extends SoftBean {
     private Long id;
     private String uuid;
     private String name;
-    private String advertId;
+    private int advertId;
     @Nullable
     private String chatId;
     private Date changeTime;
     private AdvertStatus status;
     private AdvertType type;
     private int cpm;
-    private String categoryId;
-    private String itemId;
+    private int categoryId;
+    private int itemId;
     private Integer startBudgetSum;
     @Nullable
     private Integer checkBudgetSum;

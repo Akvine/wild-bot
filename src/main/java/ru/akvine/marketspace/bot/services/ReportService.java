@@ -44,7 +44,7 @@ public class ReportService {
         for (int i = 0; i < advertStatistics.size(); ++i) {
             Row row = sheet.createRow(i + 1);
 
-            String itemId = advertStatistics.get(i).getAdvertEntity().getItemId();
+            int itemId = advertStatistics.get(i).getAdvertEntity().getItemId();
             CardEntity cardEntity = cardService.verifyExistsByItemId(itemId);
             List<CardPhotoEntity> cardPhotos = cardPhotoRepository.findByCardId(cardEntity.getId());
             CardPhotoEntity cardPhotoEntity = extractMainPhoto(cardEntity.getUuid(), cardPhotos);

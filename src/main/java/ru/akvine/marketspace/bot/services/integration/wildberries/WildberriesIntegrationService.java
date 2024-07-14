@@ -9,12 +9,14 @@ import java.util.List;
 public interface WildberriesIntegrationService {
     /**
      * Получение списка карточек продавца
+     *
      * @return
      */
     List<CardDto> getCards();
 
     /**
      * Получение списка рекламных кампаний продавца
+     *
      * @return
      */
     AdvertListResponse getAdverts();
@@ -22,36 +24,41 @@ public interface WildberriesIntegrationService {
 
     /**
      * Узнать бюджет рекламной кампании (в рублях)
+     *
      * @param advertId идентификатор кампании в системе WB
      * @return
      */
-    AdvertBudgetInfoResponse getAdvertBudgetInfo(String advertId);
+    AdvertBudgetInfoResponse getAdvertBudgetInfo(int advertId);
 
     /**
      * Пополнить бюджет рекламной кампании. Сумма фиксировано пополняется на 1000 рублей
+     *
      * @param advertId идентификатор кампании в системе WB
-     * @param sum сумма пополнения бюджета в рублях
+     * @param sum      сумма пополнения бюджета в рублях
      * @return
      */
-    AdvertBudgetDepositResponse advertBudgetDeposit(String advertId, int sum);
+    AdvertBudgetDepositResponse advertBudgetDeposit(int advertId, int sum);
 
 
     /**
      * Запуск рекламной кампании
+     *
      * @param advertId идентификатор кампании в системе WB
      * @return
      */
-    void startAdvert(String advertId);
+    void startAdvert(int advertId);
 
     /**
      * Получение детальной информации о рекламных кампаниях
+     *
      * @param advertIds список id рекламных кампаний продавца
      * @return
      */
-    AdvertsInfoResponse getAdvertsInfo(List<String> advertIds);
+    AdvertsInfoResponse getAdvertsInfo(List<Integer> advertIds);
 
     /**
      * Получение краткой статистики по кампании (количество кликов, ctr и т.д.)
+     *
      * @param advertId идентификатор кампании в системе WB
      * @return
      */
@@ -59,13 +66,15 @@ public interface WildberriesIntegrationService {
 
     /**
      * Приостановка на паузу рекламной кампании
+     *
      * @param advertId идентификатор кампании в системе WB
      * @return
      */
-    void pauseAdvert(String advertId);
+    void pauseAdvert(int advertId);
 
     /**
      * Изменение ставки кампании
+     *
      * @param request запрос на изменение ставки у кампании
      * @return
      */
@@ -73,43 +82,50 @@ public interface WildberriesIntegrationService {
 
     /**
      * Переименование кампании
+     *
      * @param advertId идентификатор кампании в WB
-     * @param name новое имя (Не может быть больше 100 символов)
+     * @param name     новое имя (Не может быть больше 100 символов)
      */
-    void renameAdvert(String advertId, String name);
+    void renameAdvert(int advertId, String name);
 
     /**
      * Добавление фотографии
+     *
      * @param request данные запроса
      */
     AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request);
 
     /**
      * Изменение остатка товара (карточки) на складе
+     *
      * @param request
      */
     void changeStocks(ChangeStocksRequest request);
 
     /**
      * Получение полной статистики по кампании за определенные даты
+     *
      * @param request
      */
     AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request);
 
     /**
      * Получение полной статистики по кампании за интервал времени
+     *
      * @param request
      */
     AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request);
 
     /**
      * Получение товаров
+     *
      * @param request
      */
     GetGoodsResponse getGoods(GetGoodsRequest request);
 
     /**
      * Установить цену и скидку для товара
+     *
      * @param request
      */
     void setGoodPriceAndDiscount(SetGoodPriceRequest request);

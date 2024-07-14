@@ -47,7 +47,7 @@ public class CheckRunningAdvertsJob {
         List<AdvertEntity> runningAdverts = advertRepository.findByStatuses(List.of(AdvertStatus.RUNNING));
         LocalDateTime startCheckDateTime = LocalDateTime.now();
         for (AdvertEntity advert : runningAdverts) {
-            String advertId = advert.getAdvertId();
+            int advertId = advert.getAdvertId();
             int currentBudgetSum = wildberriesIntegrationService.getAdvertBudgetInfo(advertId).getTotal();
             int startBudgetSum = advert.getStartBudgetSum();
             int differenceBudgetSum = startBudgetSum - currentBudgetSum;
@@ -91,8 +91,8 @@ public class CheckRunningAdvertsJob {
                 int newCpm = advert.getCpm() + defaultIncreaseCpmSum;
                 AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
                         .setCpm(newCpm)
-                        .setAdvertId(Integer.parseInt(advertId))
-                        .setParam(Integer.parseInt(advert.getCategoryId()))
+                        .setAdvertId(advertId)
+                        .setParam(advert.getCategoryId())
                         .setType(advert.getOrdinalType());
                 wildberriesIntegrationService.changeAdvertCpm(request);
 

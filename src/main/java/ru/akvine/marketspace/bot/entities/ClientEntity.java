@@ -27,7 +27,7 @@ public class ClientEntity extends SoftBaseEntity {
     @Column(name = "USERNAME", nullable = false)
     private String username;
 
-    @Column(name = "FIRS_TNAME", nullable = false)
+    @Column(name = "FIRST_NAME", nullable = false)
     private String firstName;
 
     @Column(name = "LAST_NAME")

@@ -7,5 +7,5 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PauseAdvert {
     private String advertUuid;
-    private String advertId;
+    private Integer advertId;
 }

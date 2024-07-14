@@ -3,7 +3,6 @@ package ru.akvine.marketspace.bot.services;
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.entities.CardPhotoEntity;
@@ -22,27 +21,37 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class CardService {
-    @Value("${card.uuid.length}")
-    private int length;
-
-    private final static int SINGLE_ELEMENT_INDEX = 0;
 
     private final CardRepository cardRepository;
     private final CardPhotoRepository cardPhotoRepository;
 
     public List<CardBean> create(List<CardDto> cards) {
         Preconditions.checkNotNull(cards, "cards is null");
-        logger.info("Create clients by request with size = {}", cards.size());
+        logger.info("Create cards by request with size = {}", cards.size());
         return cards
                 .stream()
                 .map(cardDto -> {
                     CardEntity cardEntity = new CardEntity()
-                            .setUuid(UUIDGenerator.uuidWithoutDashes(length))
+                            .setUuid(UUIDGenerator.uuidWithoutDashes())
                             .setItemId(cardDto.getNmID())
                             .setItemTitle(cardDto.getTitle())
                             .setCategoryId(cardDto.getSubjectID())
-                            .setCategoryTitle(cardDto.getSubjectName())
-                            .setBarcode(cardDto.getSizes().get(SINGLE_ELEMENT_INDEX).getSkus().get(SINGLE_ELEMENT_INDEX));
+                            .setCategoryTitle(cardDto.getSubjectName());
+
+                    if (cardDto.getSizes().size() > 1) {
+                        String errorMessage = String.format(
+                                "Card with nm ID = [%s] has more 1 sizes = [%s]",
+                                cardDto.getNmID(), cardDto.getSizes().size());
+                        throw new IllegalStateException(errorMessage);
+                    }
+                    SizeDto size = cardDto.getSizes().getFirst();
+                    if (size.getSkus().size() > 1) {
+                        String errorMessage = String.format(
+                                "For card with nm ID = [%s] has size that has more 1 barcodes = [%s]",
+                                cardDto.getNmID(), size.getSkus().size());
+                        throw new IllegalStateException(errorMessage);
+                    }
+                    cardEntity.setBarcode(size.getSkus().getFirst());
 
                     CardEntity savedCard = cardRepository.save(cardEntity);
                     cardDto.getPhotos().forEach(photo -> {
@@ -65,8 +74,7 @@ public class CardService {
                 .collect(Collectors.toList());
     }
 
-    public CardEntity verifyExistsByItemId(String itemId) {
-        Preconditions.checkNotNull(itemId, "itemId is null");
+    public CardEntity verifyExistsByItemId(int itemId) {
         return cardRepository
                 .findByItemId(itemId)
                 .orElseThrow(() -> new CardNotFoundException("Card with item id = [" + itemId + "] not found!"));

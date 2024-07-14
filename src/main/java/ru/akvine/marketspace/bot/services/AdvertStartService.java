@@ -46,21 +46,20 @@ public class AdvertStartService {
 
     private final static int CARD_MAIN_PHOTO_POSITION = 1;
 
-    public AdvertBean startByAdvertId(String advertId) {
-        Preconditions.checkNotNull(advertId, "advertId is null");
+    public AdvertBean startByAdvertId(int advertId) {
         AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
         return startInternal(null);
     }
 
     public AdvertBean start(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
-        String categoryId = sessionStorage.get(chatId).getChoosenCategoryId();
+        Integer categoryId = sessionStorage.get(chatId).getChoosenCategoryId();
         logger.info("Try to start first one advert with category id = {}", categoryId);
         return startInternal(chatId);
     }
 
     private AdvertBean startInternal(String chatId) {
-        String advertId = sessionStorage.get(chatId).getLockedAdvertId();
+        int advertId = sessionStorage.get(chatId).getLockedAdvertId();
         AdvertBean advertToStart = advertService.getByAdvertId(advertId);
         CardEntity card = cardService.verifyExistsByItemId(advertToStart.getItemId());
         clientService.verifyExistsByChatId(chatId);
@@ -78,9 +77,9 @@ public class AdvertStartService {
 
         if (advertToStart.getCpm() < defaultCpm) {
             AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
-                    .setAdvertId(Integer.parseInt(advertId))
+                    .setAdvertId(advertId)
                     .setType(advertToStart.getType().getCode())
-                    .setParam(Integer.parseInt(advertToStart.getCategoryId()))
+                    .setParam(advertToStart.getCategoryId())
                     .setCpm(defaultCpm);
             advertToStart.setCpm(defaultCpm);
             wildberriesIntegrationService.changeAdvertCpm(request);
@@ -93,7 +92,7 @@ public class AdvertStartService {
             SetGoodPriceRequest request = new SetGoodPriceRequest()
                     .setData(List.of(
                             new SetGoodDto()
-                                    .setNmID(Integer.parseInt(advertToStart.getItemId()))
+                                    .setNmID(advertToStart.getItemId())
                                     .setPrice(sessionStorage.get(chatId).getNewCardPrice())
                                     .setDiscount(sessionStorage.get(chatId).getNewCardDiscount())
                     ));
