@@ -17,10 +17,10 @@ public class HelpCommandResolver implements CommandResolver {
 
         StringBuilder sb = new StringBuilder();
         sb
-                .append("/start - запустить кампанию в паузе или готовую к запуску \n")
-                .append("/statistic - вывести статистику по запущенным кампаниям \n")
-                .append("/report - генерирует отчет с тестами \n")
-                .append("/help - список доступных команд \n")
+                .append("/start - запустить первую попавшуюся кампанию в паузе или готовую к запуску\n")
+                .append("/statistic - вывести статистику по запущенным кампаниям\n")
+                .append("/report - генерирует отчет с тестами\n")
+                .append("/help - список доступных команд\n")
                 .append("/cancel - отменить запуск кампании");
         return new SendMessage(chatId, sb.toString());
     }

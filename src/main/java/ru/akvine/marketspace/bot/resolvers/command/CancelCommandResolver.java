@@ -27,13 +27,17 @@ public class CancelCommandResolver implements CommandResolver {
     public BotApiMethod<?> resolve(String chatId, String text) {
         logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
 
-        stateStorage.removeState(chatId);
-        if (StringUtils.isNotBlank(sessionStorage.get(chatId).getLockedAdvertId())) {
-            AdvertBean advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
-            advertBean.setLocked(false);
-            advertService.update(advertBean);
+        if (stateStorage.containsState(chatId)) {
+            if (StringUtils.isNotBlank(sessionStorage.get(chatId).getLockedAdvertId())) {
+                AdvertBean advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
+                advertBean.setLocked(false);
+                advertService.update(advertBean);
+            }
+
+            stateStorage.removeState(chatId);
+            sessionStorage.close(chatId);
         }
-        sessionStorage.close(chatId);
+
         return new SendMessage(chatId, DEFAULT_MESSAGE);
     }
 

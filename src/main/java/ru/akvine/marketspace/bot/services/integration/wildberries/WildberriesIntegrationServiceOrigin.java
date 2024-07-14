@@ -103,7 +103,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         }
 
         AdvertListResponse response = responseEntity.getBody();
-        logger.info("Get adverts list response was occurred = [{}]", response);
+        logger.info("Get adverts list response was occurred with elements size = {}", response.getAll());
         return response;
     }
 
