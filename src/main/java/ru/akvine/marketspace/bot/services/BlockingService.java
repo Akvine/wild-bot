@@ -23,7 +23,7 @@ public class BlockingService {
 
     public void setBlock(String uuid, Long minutes) {
         logger.info("Block client with uuid = {} for minutes = {}", uuid, minutes);
-        Optional<BlockedCredentialsEntity> blockedCredentialsOptional = blockedCredentialsRepository.findByLogin(uuid);
+        Optional<BlockedCredentialsEntity> blockedCredentialsOptional = blockedCredentialsRepository.findByUuid(uuid);
         if (blockedCredentialsOptional.isPresent()) {
             DateUtils.getMinutes(
                     blockedCredentialsOptional.get().getBlockStartDate(),
@@ -44,7 +44,7 @@ public class BlockingService {
     public void removeBlock(String uuid) {
         logger.info("Remove block client with uuid = {}", uuid);
         BlockedCredentialsEntity blockedCredentialsEntity = blockedCredentialsRepository
-                .findByLogin(uuid)
+                .findByUuid(uuid)
                 .orElseThrow(() -> new BlockedCredentialsException("Not exists block record for client with uuid = [" + uuid + "]"));
 
         blockedCredentialsRepository.delete(blockedCredentialsEntity);
@@ -59,7 +59,7 @@ public class BlockingService {
     public LocalDateTime getEndBlockDate(String clientUuid) {
         Preconditions.checkNotNull(clientUuid, "clientUuid is null");
         logger.info("Get end block date for client with uuid = {}", clientUuid);
-        Optional<BlockedCredentialsEntity> blockedCredentialsEntityOptional = blockedCredentialsRepository.findByLogin(clientUuid);
+        Optional<BlockedCredentialsEntity> blockedCredentialsEntityOptional = blockedCredentialsRepository.findByUuid(clientUuid);
         return blockedCredentialsEntityOptional.map(BlockedCredentialsEntity::getBlockEndDate).orElse(null);
     }
 

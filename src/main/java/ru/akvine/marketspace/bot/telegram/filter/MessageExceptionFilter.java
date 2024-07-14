@@ -10,6 +10,8 @@ import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
 import ru.akvine.marketspace.bot.exceptions.ClientNotInWhitelistException;
 import ru.akvine.marketspace.bot.exceptions.StartAdvertException;
 
+import static ru.akvine.marketspace.bot.constants.TelegramMessageConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
+
 @RequiredArgsConstructor
 @Slf4j
 public class MessageExceptionFilter extends MessageFilter {
@@ -61,6 +63,6 @@ public class MessageExceptionFilter extends MessageFilter {
 
     private SendMessage processClientWhitelistException(String chatId, String message) {
         logger.info("Client with chat id = {} not in whitelist. Message = {}", chatId, message);
-        return new SendMessage(chatId, "Вы не можете использовать функционал бота, т.к. не в whitelist");
+        return new SendMessage(chatId, CLIENT_NOT_IN_WHITELIST_MESSAGE);
     }
 }

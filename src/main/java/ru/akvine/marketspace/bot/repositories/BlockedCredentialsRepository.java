@@ -8,6 +8,6 @@ import ru.akvine.marketspace.bot.entities.BlockedCredentialsEntity;
 import java.util.Optional;
 
 public interface BlockedCredentialsRepository extends JpaRepository<BlockedCredentialsEntity, Long> {
-    @Query("from BlockedCredentialsEntity bce where bce.uuid = :login")
-    Optional<BlockedCredentialsEntity> findByLogin(@Param("login") String login);
+    @Query("from BlockedCredentialsEntity bce where bce.uuid = :uuid")
+    Optional<BlockedCredentialsEntity> findByUuid(@Param("uuid") String uuid);
 }

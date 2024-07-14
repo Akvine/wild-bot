@@ -16,16 +16,20 @@ public class MessageFilterConfig {
     @Bean
     public MessageFilter messageFilters() {
         UpdateConverterFilter updateConverterFilter = new UpdateConverterFilter(dispatcher);
-        MessageFilter exceptionHandlerFilter = new MessageExceptionFilter();
+        MessageExceptionFilter exceptionHandlerFilter = new MessageExceptionFilter();
         ClientFilter clientFilter = new ClientFilter(clientService);
         ClientBlockedFilter clientBlockedFilter = new ClientBlockedFilter(clientService);
         ClientWhitelistFilter clientWhitelistFilter = new ClientWhitelistFilter(clientService);
 
+        exceptionHandlerFilter.setNextMessageFilter(clientFilter);
+
         clientFilter.setNextMessageFilter(clientBlockedFilter);
+
         clientBlockedFilter.setNextMessageFilter(clientWhitelistFilter);
-        clientWhitelistFilter.setNextMessageFilter(exceptionHandlerFilter);
-        exceptionHandlerFilter.setNextMessageFilter(updateConverterFilter);
-        return clientFilter;
+
+        clientWhitelistFilter.setNextMessageFilter(updateConverterFilter);
+
+        return exceptionHandlerFilter;
     }
 }
 
