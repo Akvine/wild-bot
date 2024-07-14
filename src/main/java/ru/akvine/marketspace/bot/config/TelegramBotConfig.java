@@ -34,7 +34,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class TelegramBotConfig {
-    private static final String TELEGRAM_API_URL = "https://api.bot.org/bot";
+    private static final String TELEGRAM_API_URL = "https://api.telegram.org/bot";
 
     private static final String HTTPS_PROXY_PORT_PROPERTY_NAME = "https.proxyPort";
     private static final String HTTPS_PROXY_HOST_PROPERTY_NAME = "https.proxyHost";
