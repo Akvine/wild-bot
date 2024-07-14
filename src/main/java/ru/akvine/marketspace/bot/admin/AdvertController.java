@@ -44,6 +44,14 @@ public class AdvertController implements AdvertControllerMeta {
     }
 
     @Override
+    public Response pauseForce(@Valid PauseAdvertRequest request) {
+        advertValidator.verifyPauseAdvertRequest(request);
+        PauseAdvert pauseAdvert = advertConverter.convertToPauseAdvert(request);
+        advertAdminService.pauseAdvertForce(pauseAdvert);
+        return new SuccessfulResponse();
+    }
+
+    @Override
     public Response list(@Valid ListAdvertRequest request) {
         advertValidator.verifyListAdvertRequest(request);
         ListAdvert listAdvert = advertConverter.convertToListAdvert(request);

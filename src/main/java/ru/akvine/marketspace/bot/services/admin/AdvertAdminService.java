@@ -87,6 +87,45 @@ public class AdvertAdminService {
         return advertStatisticBean;
     }
 
+    public void pauseAdvertForce(PauseAdvert pauseAdvert) {
+        Preconditions.checkNotNull(pauseAdvert, "pauseAdvert is null");
+        logger.info("Force pause advert by [{}]", pauseAdvert);
+
+        AdvertEntity advertEntity;
+        if (StringUtils.isNotBlank(pauseAdvert.getAdvertUuid())) {
+            advertEntity = advertService.verifyExistsByUuid(pauseAdvert.getAdvertUuid());
+        } else {
+            advertEntity = advertService.verifyExistsByAdvertId(pauseAdvert.getAdvertId());
+        }
+
+        if (advertEntity.getStatus() == AdvertStatus.PAUSE) {
+            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getItemId() + "] already in pause!");
+        }
+
+        int advertId = advertEntity.getAdvertId();
+        AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId));
+        List<AdvertDto> advertsInfo = infoResponse.getAdverts();
+        if (advertsInfo.isEmpty()) {
+            String errorMessage = String.format(
+                    "Error info adverts response, get info for %s but advertsInfo is empty",
+                    advertId);
+            throw new IllegalStateException(errorMessage);
+        }
+        AdvertDto advertDto = advertsInfo.getFirst();
+        if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
+            wildberriesIntegrationService.pauseAdvert(advertEntity.getAdvertId());
+        }
+
+        advertEntity.setNextCheckDateTime(null);
+        advertEntity.setStatus(AdvertStatus.PAUSE);
+        advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
+        advertEntity.setClient(null);
+        advertEntity.setLocked(false);
+        AdvertBean updatedAdvert = advertService.update(new AdvertBean(advertEntity));
+
+        logger.info("Successful force pause advert = [{}]", updatedAdvert);
+    }
+
     public List<AdvertBean> listAdvert(ListAdvert listAdvert) {
         Preconditions.checkNotNull(listAdvert, "listAdvert is null");
         logger.info("List adverts by statuses = {}", listAdvert.getStatuses());

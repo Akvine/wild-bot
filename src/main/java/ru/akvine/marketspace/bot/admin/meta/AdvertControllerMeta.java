@@ -19,6 +19,9 @@ public interface AdvertControllerMeta {
     @PostMapping(value = "/pause")
     Response pause(@Valid @RequestBody PauseAdvertRequest request);
 
+    @PostMapping(value = "/pause/force")
+    Response pauseForce(@Valid @RequestBody PauseAdvertRequest request);
+
     @PostMapping(value = "/list")
     Response list(@Valid @RequestBody ListAdvertRequest request);
 
