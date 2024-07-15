@@ -17,5 +17,7 @@ public class CommonErrorCodes {
         String ADVERT_STATUS_INVALID_ERROR = "advert.status.invalid.error";
 
         String MAX_CLIENTS_SEND_MESSAGE_COUNT_ERROR = "max.clients.sendMessage.count.error";
+
+        String LESS_THEN_MIN_VALUE_ERROR = "less.than.min.value.error";
     }
 }

@@ -16,7 +16,7 @@ import static ru.akvine.marketspace.bot.constants.TelegramMessageConstants.CLIEN
 import static ru.akvine.marketspace.bot.constants.TelegramMessageConstants.UNKNOWN_COMMAND_MESSAGE;
 
 @ExtendWith(SpringExtension.class)
-@DisplayName("Bot flow test")
+@DisplayName("Bot flow tests")
 public class BotFlowTest extends BaseTest {
 
     @Test
