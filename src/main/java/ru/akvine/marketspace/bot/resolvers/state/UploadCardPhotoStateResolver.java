@@ -23,8 +23,8 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.Goo
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.GoodSizeDto;
 import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
-import ru.akvine.marketspace.bot.utils.LockHelper;
-import ru.akvine.marketspace.bot.utils.TelegramPhotoResolver;
+import ru.akvine.marketspace.bot.helpers.LockHelper;
+import ru.akvine.marketspace.bot.helpers.TelegramPhotoHelper;
 
 import static ru.akvine.marketspace.bot.constants.DbLockConstants.UPLOAD_CARD_PHOTO_STATE;
 
@@ -35,7 +35,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
     private final TelegramDataResolverManager dataResolverManager;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final StateStorage<String> stateStorage;
-    private final TelegramPhotoResolver telegramPhotoResolver;
+    private final TelegramPhotoHelper telegramPhotoHelper;
     private final TelegramIntegrationService telegramIntegrationService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final AdvertService advertService;
@@ -52,7 +52,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
                     "введите команду /cancel для отмены запуска");
         }
 
-        PhotoSize photoSize = telegramPhotoResolver.resolve(data.getData().getMessage().getPhoto());
+        PhotoSize photoSize = telegramPhotoHelper.resolve(data.getData().getMessage().getPhoto());
         byte[] photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
 
         // TODO : тут надо поставить лок
