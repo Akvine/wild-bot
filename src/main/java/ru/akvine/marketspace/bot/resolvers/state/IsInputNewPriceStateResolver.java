@@ -33,7 +33,7 @@ public class IsInputNewPriceStateResolver implements StateResolver {
 
         if (text.equalsIgnoreCase("изменить")) {
             sessionStorage.get(chatId).setInputNewCardPriceAndDiscount(true);
-            stateStorage.setState(chatId, ClientState.INPUT_NEW_CARD_PRICE_STATE);
+            setNextState(chatId, ClientState.INPUT_NEW_CARD_PRICE_STATE);
             return new SendMessage(chatId, "Введите новую цену для карточки: ");
         } else if (text.equalsIgnoreCase("не изменять")) {
             sessionStorage.get(chatId).setInputNewCardPriceAndDiscount(false);
@@ -47,5 +47,10 @@ public class IsInputNewPriceStateResolver implements StateResolver {
     @Override
     public ClientState getState() {
         return ClientState.IS_NEED_INPUT_NEW_CARD_PRICE_STATE;
+    }
+
+    @Override
+    public void setNextState(String chatId, ClientState nextState) {
+        stateStorage.setState(chatId, nextState);
     }
 }

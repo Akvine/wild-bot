@@ -55,7 +55,6 @@ public class UploadCardPhotoStateResolver implements StateResolver {
         PhotoSize photoSize = telegramPhotoHelper.resolve(data.getData().getMessage().getPhoto());
         byte[] photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
 
-        // TODO : тут надо поставить лок
         String message = lockHelper.doWithLock(UPLOAD_CARD_PHOTO_STATE + chatId, () -> {
             AdvertBean advertBean = advertService.getFirst(sessionStorage.get(chatId).getChoosenCategoryId());
             advertBean.setLocked(true);
@@ -72,7 +71,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
                 GoodSizeDto size = goodDto.getSizes().getFirst();
                 int discount = goodDto.getDiscount();
                 int price = size.getPrice();
-                double discountedPrice=  size.getDiscountedPrice();
+                double discountedPrice = size.getDiscountedPrice();
                 return buildMessage(price, discount, discountedPrice);
             } else {
                 String errorMessage = String.format("Card with nm id = [%s] has no goods", nmId);
@@ -81,7 +80,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
         });
 
         sessionStorage.get(chatId).setUploadedCardPhoto(photo);
-        stateStorage.setState(chatId, ClientState.IS_NEED_INPUT_NEW_CARD_PRICE_STATE);
+        setNextState(chatId, ClientState.IS_NEED_INPUT_NEW_CARD_PRICE_STATE);
 
         SendMessage sendMessage = new SendMessage(chatId, message);
         sendMessage.enableMarkdown(true);
@@ -92,6 +91,11 @@ public class UploadCardPhotoStateResolver implements StateResolver {
     @Override
     public ClientState getState() {
         return ClientState.UPLOAD_NEW_CARD_PHOTO_STATE;
+    }
+
+    @Override
+    public void setNextState(String chatId, ClientState nextState) {
+        stateStorage.setState(chatId, nextState);
     }
 
     private String buildMessage(int price, int discount, double discountedPrice) {

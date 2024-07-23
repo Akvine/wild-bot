@@ -38,12 +38,17 @@ public class ChooseCategoryStateResolver implements StateResolver {
         logger.info("[{}] state resolved for chat with id = {} and category id = {}", getState(), chatId, categoryId);
 
         sessionStorage.get(chatId).setChoosenCategoryId(categoryId);
-        stateStorage.setState(chatId, ClientState.UPLOAD_NEW_CARD_PHOTO_STATE);
+        setNextState(chatId, ClientState.UPLOAD_NEW_CARD_PHOTO_STATE);
         return new SendMessage(chatId, "Загрузите новое изображение карточки: ");
     }
 
     @Override
     public ClientState getState() {
         return ClientState.CHOOSE_CATEGORY_STATE;
+    }
+
+    @Override
+    public void setNextState(String chatId, ClientState nextState) {
+        stateStorage.setState(chatId, nextState);
     }
 }

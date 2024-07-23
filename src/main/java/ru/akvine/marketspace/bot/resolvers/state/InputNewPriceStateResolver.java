@@ -41,12 +41,17 @@ public class InputNewPriceStateResolver implements StateResolver {
         }
 
         sessionStorage.get(chatId).setNewCardPrice(newPrice);
-        stateStorage.setState(chatId, ClientState.INPUT_NEW_CARD_DISCOUNT_STATE);
+        setNextState(chatId, ClientState.INPUT_NEW_CARD_DISCOUNT_STATE);
         return new SendMessage(chatId, "Введите скидку: ");
     }
 
     @Override
     public ClientState getState() {
         return ClientState.INPUT_NEW_CARD_PRICE_STATE;
+    }
+
+    @Override
+    public void setNextState(String chatId, ClientState nextState) {
+        stateStorage.setState(chatId, nextState);
     }
 }

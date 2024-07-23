@@ -8,4 +8,6 @@ public interface StateResolver {
     BotApiMethod<?> resolve(TelegramData update);
 
     ClientState getState();
+
+    void setNextState(String chatId, ClientState nextState);
 }

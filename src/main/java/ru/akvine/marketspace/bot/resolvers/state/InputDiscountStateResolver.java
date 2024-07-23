@@ -49,7 +49,7 @@ public class InputDiscountStateResolver implements StateResolver {
         }
 
         sessionStorage.get(chatId).setNewCardDiscount(newDiscount);
-        stateStorage.setState(chatId, ClientState.INPUT_NEW_CARD_DISCOUNT_STATE);
+        setNextState(chatId, ClientState.INPUT_NEW_CARD_DISCOUNT_STATE);
 
         String message = buildMessage(
                 sessionStorage.get(chatId).getNewCardPrice(),
@@ -60,13 +60,18 @@ public class InputDiscountStateResolver implements StateResolver {
         sendMessage.enableMarkdown(true);
         sendMessage.setReplyMarkup(KeyboardFactory.getYesAndNoKeyboard());
 
-        stateStorage.setState(chatId, ClientState.ACCEPT_NEW_PRICE_AND_DISCOUNT_STATE);
+        setNextState(chatId, ClientState.ACCEPT_NEW_PRICE_AND_DISCOUNT_STATE);
         return sendMessage;
     }
 
     @Override
     public ClientState getState() {
         return ClientState.INPUT_NEW_CARD_DISCOUNT_STATE;
+    }
+
+    @Override
+    public void setNextState(String chatId, ClientState nextState) {
+        stateStorage.setState(chatId, nextState);
     }
 
     private String buildMessage(int price, int discount) {
