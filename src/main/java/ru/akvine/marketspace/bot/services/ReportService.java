@@ -2,7 +2,6 @@ package ru.akvine.marketspace.bot.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -10,11 +9,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
-import ru.akvine.marketspace.bot.entities.CardEntity;
-import ru.akvine.marketspace.bot.entities.CardPhotoEntity;
-import ru.akvine.marketspace.bot.exceptions.CardPhotoNotFoundException;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
-import ru.akvine.marketspace.bot.repositories.CardPhotoRepository;
 import ru.akvine.marketspace.bot.utils.POIUtils;
 
 import java.util.List;
@@ -24,12 +19,9 @@ import java.util.List;
 @Slf4j
 public class ReportService {
     private final AdvertStatisticRepository advertStatisticRepository;
-    private final CardService cardService;
-    private final CardPhotoRepository cardPhotoRepository;
     private final ClientService clientService;
 
     private final static String SHEET_NAME = "sheet";
-    private final static String MAIN_PHOTO_URL_PATTERN = "1.";
     private final static int HEADERS_ROW_INDEX = 0;
 
     public byte[] generateReport(String chatId) {
@@ -44,13 +36,8 @@ public class ReportService {
         for (int i = 0; i < advertStatistics.size(); ++i) {
             Row row = sheet.createRow(i + 1);
 
-            int itemId = advertStatistics.get(i).getAdvertEntity().getItemId();
-            CardEntity cardEntity = cardService.verifyExistsByItemId(itemId);
-            List<CardPhotoEntity> cardPhotos = cardPhotoRepository.findByCardId(cardEntity.getId());
-            CardPhotoEntity cardPhotoEntity = extractMainPhoto(cardEntity.getUuid(), cardPhotos);
-
-            Cell urlCell = row.createCell(1);
-            urlCell.setCellValue(cardPhotoEntity.getBigUrl());
+            Cell idCell = row.createCell(1);
+            idCell.setCellValue(advertStatistics.get(i).getId());
 
             Cell viewsCell = row.createCell(2);
             viewsCell.setCellValue(advertStatistics.get(i).getViews());
@@ -95,52 +82,44 @@ public class ReportService {
     private void createHeaders(Sheet sheet) {
         Row headersRow = sheet.createRow(HEADERS_ROW_INDEX);
 
-        Cell urlCell = headersRow.createCell(1);
-        urlCell.setCellValue("URL");
+        Cell urlCell = headersRow.createCell(0);
+        urlCell.setCellValue("ID");
 
-        Cell viewsCell = headersRow.createCell(2);
+        Cell viewsCell = headersRow.createCell(1);
         viewsCell.setCellValue("Просмотры");
 
-        Cell clicksCell = headersRow.createCell(3);
+        Cell clicksCell = headersRow.createCell(2);
         clicksCell.setCellValue("Клики");
 
-        Cell ctrCell = headersRow.createCell(4);
+        Cell ctrCell = headersRow.createCell(3);
         ctrCell.setCellValue("CTR");
 
-        Cell cpcCell = headersRow.createCell(5);
+        Cell cpcCell = headersRow.createCell(4);
         cpcCell.setCellValue("CPC");
 
-        Cell sumCell = headersRow.createCell(6);
+        Cell sumCell = headersRow.createCell(5);
         sumCell.setCellValue("Затраты");
 
-        Cell atbsCell = headersRow.createCell(7);
+        Cell atbsCell = headersRow.createCell(6);
         atbsCell.setCellValue("ATBS");
 
-        Cell ordersCell = headersRow.createCell(8);
+        Cell ordersCell = headersRow.createCell(7);
         ordersCell.setCellValue("ORDERS");
 
-        Cell crCell = headersRow.createCell(9);
+        Cell crCell = headersRow.createCell(8);
         crCell.setCellValue("CR");
 
-        Cell shksCell = headersRow.createCell(10);
+        Cell shksCell = headersRow.createCell(9);
         shksCell.setCellValue("SHKS");
 
-        Cell sumPriceCell = headersRow.createCell(11);
+        Cell sumPriceCell = headersRow.createCell(10);
         sumPriceCell.setCellValue("SUM_PRICE");
 
-        Cell advertIdCell = headersRow.createCell(12);
+        Cell advertIdCell = headersRow.createCell(11);
         advertIdCell.setCellValue("Advert ID");
 
-        Cell startDateTimeCell = headersRow.createCell(13);
+        Cell startDateTimeCell = headersRow.createCell(12);
         startDateTimeCell.setCellValue("Время запуска теста");
 
-    }
-
-    private CardPhotoEntity extractMainPhoto(String cardUuid, List<CardPhotoEntity> cardsPhotos) {
-        return cardsPhotos
-                .stream()
-                .filter(cardPhoto -> StringUtils.isNotBlank(cardPhoto.getBigUrl()) && cardPhoto.getBigUrl().contains(MAIN_PHOTO_URL_PATTERN))
-                .findFirst()
-                .orElseThrow(() -> new CardPhotoNotFoundException("Not found main photo for card with uuid = [" + cardUuid + "]"));
     }
 }

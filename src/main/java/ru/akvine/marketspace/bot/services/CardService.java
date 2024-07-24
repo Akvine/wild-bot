@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.CardEntity;
-import ru.akvine.marketspace.bot.entities.CardPhotoEntity;
 import ru.akvine.marketspace.bot.exceptions.CardNotFoundException;
-import ru.akvine.marketspace.bot.repositories.CardPhotoRepository;
 import ru.akvine.marketspace.bot.repositories.CardRepository;
 import ru.akvine.marketspace.bot.services.domain.CardBean;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.CardDto;
@@ -23,7 +21,6 @@ import java.util.stream.Collectors;
 public class CardService {
 
     private final CardRepository cardRepository;
-    private final CardPhotoRepository cardPhotoRepository;
 
     public List<CardBean> create(List<CardDto> cards) {
         Preconditions.checkNotNull(cards, "cards is null");
@@ -54,12 +51,6 @@ public class CardService {
                     cardEntity.setBarcode(size.getSkus().getFirst());
 
                     CardEntity savedCard = cardRepository.save(cardEntity);
-                    cardDto.getPhotos().forEach(photo -> {
-                        CardPhotoEntity cardPhotoEntity = new CardPhotoEntity()
-                                .setBigUrl(photo.getBig())
-                                .setCardEntity(savedCard);
-                        cardPhotoRepository.save(cardPhotoEntity);
-                    });
                     return new CardBean(savedCard);
                 })
                 .collect(Collectors.toList());
