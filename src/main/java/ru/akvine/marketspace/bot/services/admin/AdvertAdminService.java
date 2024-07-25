@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
+import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.exceptions.AdvertAlreadyInPauseStateException;
 import ru.akvine.marketspace.bot.services.AdvertService;
@@ -115,6 +116,10 @@ public class AdvertAdminService {
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
             wildberriesIntegrationService.pauseAdvert(advertEntity.getAdvertId());
         }
+
+        Long clientId = advertEntity.getClient().getId();
+        AdvertStatisticEntity advertStatistic = advertStatisticService.verifyExistsByClientIdAndAdvertId(clientId, advertId);
+        advertStatisticService.delete(advertStatistic);
 
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);

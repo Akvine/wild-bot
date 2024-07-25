@@ -1,5 +1,7 @@
 package ru.akvine.marketspace.bot.services.integration.telegram;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -34,4 +36,18 @@ public interface TelegramIntegrationService {
      * @param message сообщение
      */
     void sendMessage(List<String> chatIds, String message);
+
+    /**
+     * Отправка изображения пользователю
+     * @param chatId идентификатор пользователя
+     * @param image изображение
+     */
+    void sendImage(String chatId, byte[] image);
+
+    /**
+     * Отправка изображения пользователю
+     * @param chatId идентификатор пользователя
+     * @param image изображение
+     */
+    void sendImage(String chatId, InputStream image);
 }

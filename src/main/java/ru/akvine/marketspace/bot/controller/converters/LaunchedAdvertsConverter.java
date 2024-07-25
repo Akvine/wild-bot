@@ -12,13 +12,13 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class StatisticConverter {
+public class LaunchedAdvertsConverter {
     @Value("${max.running.adverts.limit}")
     private int maxRunningAdvertsLimit;
 
     private final static String NEW_LINE = "\n";
 
-    public SendMessage convertToStatistic(String chatId, List<AdvertBean> runningAdverts) {
+    public SendMessage convertToLaunchedListMessage(String chatId, List<AdvertBean> runningAdverts) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         Preconditions.checkNotNull(runningAdverts, "runningAdverts is null");
 

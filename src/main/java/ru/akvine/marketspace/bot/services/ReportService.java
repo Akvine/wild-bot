@@ -36,43 +36,43 @@ public class ReportService {
         for (int i = 0; i < advertStatistics.size(); ++i) {
             Row row = sheet.createRow(i + 1);
 
-            Cell idCell = row.createCell(1);
+            Cell idCell = row.createCell(0);
             idCell.setCellValue(advertStatistics.get(i).getId());
 
-            Cell viewsCell = row.createCell(2);
+            Cell viewsCell = row.createCell(1);
             viewsCell.setCellValue(advertStatistics.get(i).getViews());
 
-            Cell clicksCell = row.createCell(3);
+            Cell clicksCell = row.createCell(2);
             clicksCell.setCellValue(advertStatistics.get(i).getClicks());
 
-            Cell ctrCell = row.createCell(4);
+            Cell ctrCell = row.createCell(3);
             ctrCell.setCellValue(advertStatistics.get(i).getCtr());
 
-            Cell cpcCell = row.createCell(5);
+            Cell cpcCell = row.createCell(4);
             cpcCell.setCellValue(advertStatistics.get(i).getCpc());
 
-            Cell sumCell = row.createCell(6);
+            Cell sumCell = row.createCell(5);
             sumCell.setCellValue(advertStatistics.get(i).getSum());
 
-            Cell atbsCell = row.createCell(7);
+            Cell atbsCell = row.createCell(6);
             atbsCell.setCellValue(advertStatistics.get(i).getAtbs());
 
-            Cell ordersCell = row.createCell(8);
+            Cell ordersCell = row.createCell(7);
             ordersCell.setCellValue(advertStatistics.get(i).getOrders());
 
-            Cell crCell = row.createCell(9);
+            Cell crCell = row.createCell(8);
             crCell.setCellValue(advertStatistics.get(i).getCr());
 
-            Cell shksCell = row.createCell(10);
+            Cell shksCell = row.createCell(9);
             shksCell.setCellValue(advertStatistics.get(i).getShks());
 
-            Cell sumPriceCell = row.createCell(11);
+            Cell sumPriceCell = row.createCell(10);
             sumPriceCell.setCellValue(advertStatistics.get(i).getSumPrice());
 
-            Cell advertIdCell = row.createCell(12);
+            Cell advertIdCell = row.createCell(11);
             advertIdCell.setCellValue(advertStatistics.get(i).getAdvertEntity().getAdvertId());
 
-            Cell startDateTimeCell = row.createCell(13);
+            Cell startDateTimeCell = row.createCell(12);
             startDateTimeCell.setCellValue(advertStatistics.get(i).getAdvertEntity().getStartCheckDateTime().toString());
         }
 

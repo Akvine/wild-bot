@@ -6,11 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
+import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
 import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
+import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
@@ -28,6 +30,7 @@ public class AdvertStartService {
     private final AdvertService advertService;
     private final CardService cardService;
     private final ClientService clientService;
+    private final AdvertStatisticRepository advertStatisticRepository;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final IterationsCounterService iterationsCounterService;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
@@ -62,7 +65,7 @@ public class AdvertStartService {
         int advertId = sessionStorage.get(chatId).getLockedAdvertId();
         AdvertBean advertToStart = advertService.getByAdvertId(advertId);
         CardEntity card = cardService.verifyExistsByItemId(advertToStart.getItemId());
-        clientService.verifyExistsByChatId(chatId);
+        ClientEntity client = clientService.verifyExistsByChatId(chatId);
 
         AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId);
         Integer advertTotalBudget = advertBudgetInfo.getTotal();
@@ -74,6 +77,14 @@ public class AdvertStartService {
             advertToStart.setStartBudgetSum(advertTotalBudget);
         }
         advertToStart.setCheckBudgetSum(advertToStart.getStartBudgetSum());
+
+        // TODO : дикий кастыль. Надо смотреть API WB
+        try {
+            // Нужно, чтобы успел пополниться баланс
+            Thread.sleep(2500);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception.getMessage());
+        }
 
         if (advertToStart.getCpm() < defaultCpm) {
             AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
@@ -122,6 +133,13 @@ public class AdvertStartService {
         advertToStart.setName(advertStartName);
         advertToStart.setChatId(chatId);
         AdvertBean updatedAdvert = advertService.update(advertToStart);
+
+        AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
+        AdvertStatisticEntity advertStatisticEntity = new AdvertStatisticEntity()
+                .setPhoto(sessionStorage.get(chatId).getUploadedCardPhoto())
+                .setAdvertEntity(advertEntity)
+                .setClient(client);
+        advertStatisticRepository.save(advertStatisticEntity);
 
         iterationsCounterService.add(advertToStart.getAdvertId());
         sessionStorage.close(chatId);

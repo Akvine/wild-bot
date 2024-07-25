@@ -10,8 +10,8 @@ public class CommandResolver {
         if (Command.COMMAND_START.getCommandName().equals(text)) {
             return Command.COMMAND_START;
         }
-        if (Command.COMMAND_STATISTIC.getCommandName().equals(text)) {
-            return Command.COMMAND_STATISTIC;
+        if (Command.COMMAND_LAUNCHED.getCommandName().equals(text)) {
+            return Command.COMMAND_LAUNCHED;
         }
         if (Command.COMMAND_REPORT.getCommandName().equals(text)) {
             return Command.COMMAND_REPORT;
@@ -21,6 +21,9 @@ public class CommandResolver {
         }
         if (Command.COMMAND_HELP.getCommandName().equals(text)) {
             return Command.COMMAND_HELP;
+        }
+        if (Command.COMMAND_STATISTIC.getCommandName().equals(text)) {
+            return Command.COMMAND_STATISTIC;
         }
 
         return null;

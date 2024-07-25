@@ -144,7 +144,8 @@ public class TelegramBotConfig {
     private List<BotCommand> initBotCommands() {
         return List.of(
                 new BotCommand("/start", "Запустить рекламную кампанию"),
-                new BotCommand("/statistic", "Получить статистику по запущенным рекламным кампаниям"),
+                new BotCommand("/launched", "Получить список запущенных рекламных кампаний"),
+                new BotCommand("/statistic", "Получить фото карточки и статистику для опред. записи в отчете"),
                 new BotCommand("/report", "Сгенерировать отчет о тестах"),
                 new BotCommand("/help", "Получение списка доступных команд"),
                 new BotCommand("/cancel", "Отменить запуск рекламной кампании")

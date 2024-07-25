@@ -19,35 +19,38 @@ public class AdvertStatisticEntity extends SoftBaseEntity {
     @SequenceGenerator(name = "advertStatisticEntitySequence", sequenceName = "SEQ_ADVERT_STATISTIC_ENTITY", allocationSize = 1000)
     private Long id;
 
-    @Column(name = "VIEWS", nullable = false)
+    @Column(name = "VIEWS")
     private String views;
 
-    @Column(name = "CLICKS", nullable = false)
+    @Column(name = "CLICKS")
     private String clicks;
 
-    @Column(name = "CTR", nullable = false)
+    @Column(name = "CTR")
     private String ctr;
 
-    @Column(name = "CPC", nullable = false)
+    @Column(name = "CPC")
     private String cpc;
 
-    @Column(name = "SUM", nullable = false)
+    @Column(name = "SUM")
     private String sum;
 
-    @Column(name = "ATBS", nullable = false)
+    @Column(name = "ATBS")
     private String atbs;
 
-    @Column(name = "ORDERS", nullable = false)
+    @Column(name = "ORDERS")
     private String orders;
 
-    @Column(name = "CR", nullable = false)
+    @Column(name = "CR")
     private String cr;
 
-    @Column(name = "SHKS", nullable = false)
+    @Column(name = "SHKS")
     private String shks;
 
-    @Column(name = "SUM_PRICE", nullable = false)
+    @Column(name = "SUM_PRICE")
     private String sumPrice;
+
+    @Column(name = "PHOTO")
+    private byte[] photo;
 
     @ManyToOne
     @JoinColumn(name = "ADVERT_ID", nullable = false)

@@ -18,7 +18,8 @@ public class HelpCommandResolver implements CommandResolver {
         StringBuilder sb = new StringBuilder();
         sb
                 .append("/start - запустить первую попавшуюся кампанию в паузе или готовую к запуску\n")
-                .append("/statistic - вывести статистику по запущенным кампаниям\n")
+                .append("/launched - вывести статистику по запущенным кампаниям\n")
+                .append("/statistic - получить фото карточки и статистику для опред. записи в отчете\n")
                 .append("/report - генерирует отчет с тестами\n")
                 .append("/help - список доступных команд\n")
                 .append("/cancel - отменить запуск кампании");

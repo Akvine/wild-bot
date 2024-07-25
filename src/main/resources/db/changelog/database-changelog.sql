@@ -199,3 +199,58 @@ CREATE INDEX ADVERT_STATISTIC_CLIENT_ID_INDEX ON ADVERT_STATISTIC_ENTITY (CLIENT
 DROP TABLE CARD_PHOTO_ENTITY;
 DROP SEQUENCE SEQ_CARD_PHOTO_ENTITY;
 --rollback not required
+
+--changeset akvine:TG-BOT-1-12
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' AND upper(column_name) = 'VIEWS' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN VIEWS DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-13
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' AND upper(column_name) = 'CLICKS' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN CLICKS DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-14
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' AND upper(column_name) = 'CTR' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN CTR DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-15
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' AND upper(column_name) = 'CPC' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN CPC DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-16
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'SUM' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN SUM DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-17
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'ATBS' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN ATBS DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-18
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'ORDERS' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN ORDERS DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-19
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'CR' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN CR DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-20
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'SHKS' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN SHKS DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-21
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'SUM_PRICE' AND is_nullable = 'NO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN SUM_PRICE DROP NOT NULL;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-22
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'PHOTO';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ADD PHOTO BYTEA;
+--rollback not required

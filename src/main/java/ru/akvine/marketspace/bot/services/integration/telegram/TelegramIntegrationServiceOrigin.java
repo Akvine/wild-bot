@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -17,6 +18,8 @@ import ru.akvine.marketspace.bot.exceptions.IntegrationException;
 import ru.akvine.marketspace.bot.telegram.bot.TelegramDevBot;
 import ru.akvine.marketspace.bot.utils.ByteUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -95,6 +98,29 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
             String errorMessage = String.format(
                     "Error while calling telegram api method = [%s]. Message = %s",
                     TelegramApiMethods.SEND_MESSAGE, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+    }
+
+    @Override
+    public void sendImage(String chatId, byte[] image) {
+        sendImage(chatId, new ByteArrayInputStream(image));
+    }
+
+    @Override
+    public void sendImage(String chatId, InputStream image) {
+        try {
+            SendPhoto sendPhoto = new SendPhoto();
+            InputFile inputFile = new InputFile();
+            inputFile.setMedia(image, "photo");
+            sendPhoto.setChatId(chatId);
+            sendPhoto.setPhoto(inputFile);
+
+            absSender.execute(sendPhoto);
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling telegram api method = [%s]. Message = %s",
+                    TelegramApiMethods.SEND_IMAGE, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
     }

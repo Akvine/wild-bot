@@ -3,8 +3,10 @@ package ru.akvine.marketspace.bot.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
+import ru.akvine.marketspace.bot.exceptions.AdvertStatisticNotFoundException;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
@@ -27,6 +29,8 @@ public class AdvertStatisticService {
 
     public AdvertStatisticBean getAndSave(AdvertEntity advert) {
         logger.info("Start getting advert full statistic for advert = [{}]", advert);
+
+        AdvertStatisticEntity advertStatisticEntity = verifyExistsByClientIdAndAdvertId(advert.getClient().getId(), advert.getId());
 
         AdvertFullStatisticResponse[] response;
         Duration duration = Duration.between(advert.getStartCheckDateTime(), LocalDateTime.now());
@@ -51,7 +55,7 @@ public class AdvertStatisticService {
         }
 
         AdvertFullStatisticResponse firstPositionResponse = response[0];
-        AdvertStatisticEntity advertStatisticEntity = new AdvertStatisticEntity()
+        advertStatisticEntity
                 .setViews(firstPositionResponse.getViews())
                 .setClicks(firstPositionResponse.getClicks())
                 .setCtr(firstPositionResponse.getCtr())
@@ -68,5 +72,32 @@ public class AdvertStatisticService {
         AdvertStatisticBean savedAdvertStatistic = new AdvertStatisticBean(advertStatisticRepository.save(advertStatisticEntity));
         logger.info("Successful get statistic from wb and save it = [{}]", savedAdvertStatistic);
         return savedAdvertStatistic;
+    }
+
+    public AdvertStatisticEntity verifyExistsByClientIdAndAdvertId(long clientId, long advertId) {
+        return advertStatisticRepository
+                .findByClientIdAndAdvertId(clientId, advertId)
+                .orElseThrow(() -> {
+                    String errorMessage = String.format(
+                            "Advert statistic for client with id = [%s] and advert with id = [%s] not found!",
+                            clientId, advertId);
+                    return new AdvertStatisticNotFoundException(errorMessage);
+                });
+    }
+
+    public AdvertStatisticEntity verifyExistsByClientIdAndId(long clientId, long id) {
+        return advertStatisticRepository
+                .findByClientIdAndId(clientId, id)
+                .orElseThrow(() -> {
+                    String errorMessage = String.format(
+                            "Advert statistic for client with id = [%s] and  id = [%s] not found!",
+                            clientId, id);
+                    return new AdvertStatisticNotFoundException(errorMessage);
+                });
+    }
+
+    @Transactional
+    public void delete(AdvertStatisticEntity advertStatisticEntity) {
+        advertStatisticRepository.delete(advertStatisticEntity);
     }
 }
