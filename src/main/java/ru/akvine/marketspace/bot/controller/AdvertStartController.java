@@ -24,7 +24,7 @@ public class AdvertStartController {
     private final AdvertStartService advertStartService;
 
     public SendMessage getCategories(String chatId) {
-        startValidator.verifyStart();
+        startValidator.verifyStart(chatId);
         List<CardBean> cards = cardService.list();
         List<AggregateCard> aggregateCards = cardAggregateService.aggregateByCategory(cards);
         return startConverter.buildCategories(chatId, aggregateCards);

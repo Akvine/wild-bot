@@ -1,7 +1,12 @@
 package ru.akvine.marketspace.bot.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public class StartAdvertException extends RuntimeException {
-    public StartAdvertException(String message) {
+    private final String exceptionMessage;
+    public StartAdvertException(String message, String exceptionMessage) {
         super(message);
+        this.exceptionMessage = exceptionMessage;
     }
 }

@@ -30,7 +30,7 @@ public class MessageExceptionFilter extends MessageFilter {
                 return processAdvertNotFoundException(chatId, exception.getMessage());
             }
             if (exception instanceof StartAdvertException) {
-                return processStartAdvertException(chatId, exception.getMessage());
+                return processStartAdvertException(chatId, (StartAdvertException) exception);
             }
             if (exception instanceof ClientNotInWhitelistException) {
                 return processClientWhitelistException(chatId, exception.getMessage());
@@ -56,9 +56,9 @@ public class MessageExceptionFilter extends MessageFilter {
         return new SendMessage(chatId, "Не найдено ни одной рекламной кампании в статусе \"На паузе\" или \"Готова к запуску\"");
     }
 
-    private SendMessage processStartAdvertException(String chatId, String message) {
-
-        return new SendMessage(chatId, message);
+    private SendMessage processStartAdvertException(String chatId, StartAdvertException exception) {
+        logger.warn("Error while starting advert, message = {}", exception.getExceptionMessage());
+        return new SendMessage(chatId, exception.getMessage());
     }
 
     private SendMessage processClientWhitelistException(String chatId, String message) {

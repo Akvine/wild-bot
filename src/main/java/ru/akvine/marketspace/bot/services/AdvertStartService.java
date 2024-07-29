@@ -67,10 +67,10 @@ public class AdvertStartService {
             advertBean.setLocked(false);
             advertService.update(advertBean);
             String errorMessage = String.format(
-                    "Some error was occurred while starting advert with id = [%s]. Unlocked!",
+                    "При запуске рекламной кампании с id = [%s] произошла ошибка",
                     advertBean.getAdvertId()
             );
-            throw new StartAdvertException(errorMessage);
+            throw new StartAdvertException(errorMessage, exception.getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ public class AdvertStartService {
         // TODO : дикий кастыль. Надо смотреть API WB
         try {
             // Нужно, чтобы успел пополниться баланс
-            Thread.sleep(2500);
+            Thread.sleep(3000);
         } catch (Exception exception) {
             throw new RuntimeException(exception.getMessage());
         }

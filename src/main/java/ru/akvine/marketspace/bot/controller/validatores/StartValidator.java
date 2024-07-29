@@ -17,13 +17,16 @@ public class StartValidator {
     @Value("${max.running.adverts.limit}")
     private int maxRunningAdvertsLimit;
 
-    public void verifyStart() {
+    public void verifyStart(String chatId) {
         int currentRunningAdvertsCount = advertService.getAdvertsByStatuses(List.of(AdvertStatus.RUNNING)).size();
         if (currentRunningAdvertsCount == maxRunningAdvertsLimit) {
             String errorMessage = String.format(
                     "Превышен лимит по запуску кампаний. Запущено %s/%s",
                     currentRunningAdvertsCount, maxRunningAdvertsLimit);
-            throw new StartAdvertException(errorMessage);
+            String exceptionMessage = String.format(
+                    "Limit for max running adverts is reached for chat with id = [%s]",
+                    chatId);
+            throw new StartAdvertException(errorMessage, exceptionMessage);
         }
     }
 }
