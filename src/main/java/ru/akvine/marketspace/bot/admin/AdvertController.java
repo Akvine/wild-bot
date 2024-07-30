@@ -7,7 +7,6 @@ import ru.akvine.marketspace.bot.admin.converters.AdvertConverter;
 import ru.akvine.marketspace.bot.admin.dto.advert.ListAdvertRequest;
 import ru.akvine.marketspace.bot.admin.dto.advert.PauseAdvertRequest;
 import ru.akvine.marketspace.bot.admin.dto.advert.RenameAdvertRequest;
-import ru.akvine.marketspace.bot.admin.dto.advert.StartAdvertRequest;
 import ru.akvine.marketspace.bot.admin.dto.common.Response;
 import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
 import ru.akvine.marketspace.bot.admin.meta.AdvertControllerMeta;
@@ -27,13 +26,6 @@ public class AdvertController implements AdvertControllerMeta {
     private final AdvertValidator advertValidator;
     private final AdvertConverter advertConverter;
     private final AdvertAdminService advertAdminService;
-
-    @Override
-    public Response start(@Valid StartAdvertRequest request) {
-        advertValidator.verifySecret(request);
-        AdvertBean startedAdvert = advertAdminService.start(request.getAdvertId());
-        return advertConverter.convertToAdvertListResponse(List.of(startedAdvert));
-    }
 
     @Override
     public Response pause(@Valid PauseAdvertRequest request) {

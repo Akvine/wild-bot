@@ -51,11 +51,6 @@ public class AdvertStartService {
 
     private final static int CARD_MAIN_PHOTO_POSITION = 1;
 
-    public AdvertBean startByAdvertId(int advertId) {
-        AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
-        return startInternal(null);
-    }
-
     public AdvertBean start(String chatId) {
         // TODO : убрать локирование РК, когда будем создавать РК, если нет свободных
         try {
