@@ -8,12 +8,11 @@ import ru.akvine.marketspace.bot.job.CheckRunningAdvertsJob;
 import ru.akvine.marketspace.bot.job.SyncAdvertJob;
 import ru.akvine.marketspace.bot.job.SyncCardJob;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
-import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.repositories.CardRepository;
 import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.CardService;
-import ru.akvine.marketspace.bot.services.IterationsCounterService;
+import ru.akvine.marketspace.bot.services.counter.IterationsCounterService;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 

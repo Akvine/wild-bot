@@ -14,6 +14,7 @@ import ru.akvine.marketspace.bot.exceptions.AdvertStartException;
 import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
 import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
+import ru.akvine.marketspace.bot.services.counter.IterationsCounterService;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;

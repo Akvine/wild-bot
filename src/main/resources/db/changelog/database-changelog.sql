@@ -254,3 +254,17 @@ ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN SUM_PRICE DROP NOT NULL;
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'PHOTO';
 ALTER TABLE ADVERT_STATISTIC_ENTITY ADD PHOTO BYTEA;
 --rollback not required
+
+--changeset akvine:TG-BOT-1-23
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'ITERATION_COUNTER_ENTITY' and table_schema = 'public';
+CREATE TABLE ITERATION_COUNTER_ENTITY
+(
+    ID                      BIGINT       NOT NULL,
+    ADVERT_ID               INTEGER      NOT NULL,
+    COUNTER                 INTEGER      NOT NULL,
+    CONSTRAINT ITERATION_COUNTER_PKEY PRIMARY KEY (id)
+);
+CREATE SEQUENCE SEQ_ITERATION_COUNTER_ENTITY START WITH 1 INCREMENT BY 1000;
+CREATE UNIQUE INDEX ITERATION_COUNTER_ID_INDEX ON ITERATION_COUNTER_ENTITY (ID);
+CREATE UNIQUE INDEX ITERATION_COUNTER_ADVERT_ID_INDEX ON ITERATION_COUNTER_ENTITY (ADVERT_ID);
