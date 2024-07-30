@@ -10,7 +10,7 @@ import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.exceptions.StartAdvertException;
+import ru.akvine.marketspace.bot.exceptions.AdvertStartException;
 import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
 import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
@@ -66,11 +66,7 @@ public class AdvertStartService {
             AdvertBean advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
             advertBean.setLocked(false);
             advertService.update(advertBean);
-            String errorMessage = String.format(
-                    "При запуске рекламной кампании с id = [%s] произошла ошибка",
-                    advertBean.getAdvertId()
-            );
-            throw new StartAdvertException(errorMessage, exception.getMessage());
+            throw new AdvertStartException(exception.getMessage());
         }
     }
 
