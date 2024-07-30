@@ -27,14 +27,16 @@ public class CancelCommandResolver implements CommandResolver {
         logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
 
         if (stateStorage.containsState(chatId)) {
-            if (sessionStorage.get(chatId).getLockedAdvertId() != null) {
+            if (sessionStorage.hasSession(chatId) && sessionStorage.get(chatId).getLockedAdvertId() != null) {
                 AdvertBean advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
                 advertBean.setLocked(false);
                 advertService.update(advertBean);
             }
 
             stateStorage.removeState(chatId);
-            sessionStorage.close(chatId);
+            if (sessionStorage.hasSession(chatId)) {
+                sessionStorage.close(chatId);
+            }
         }
 
         return new SendMessage(chatId, DEFAULT_MESSAGE);
