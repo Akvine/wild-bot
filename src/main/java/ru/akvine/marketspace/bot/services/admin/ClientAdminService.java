@@ -7,7 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.akvine.marketspace.bot.entities.BlockedCredentialsEntity;
+import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.exceptions.ClientNotFoundException;
+import ru.akvine.marketspace.bot.repositories.ClientRepository;
 import ru.akvine.marketspace.bot.services.BlockingService;
 import ru.akvine.marketspace.bot.services.ClientService;
 import ru.akvine.marketspace.bot.services.domain.ClientBean;
@@ -25,7 +27,21 @@ import java.util.stream.Collectors;
 public class ClientAdminService {
     private final BlockingService blockingService;
     private final ClientService clientService;
+    // TODO : лучше делать обновление сущности в ClientService, так по канону
+    private final ClientRepository clientRepository;
     private final TelegramIntegrationService telegramIntegrationService;
+
+    public ClientBean addTestsToClient(AddTests addTests) {
+        ClientEntity client;
+        if (StringUtils.isNotBlank(addTests.getUsername())) {
+            client = clientService.verifyExistsByUsername(addTests.getUsername());
+        } else {
+            client = clientService.verifyExistsByChatId(addTests.getChatId());
+        }
+
+        client.increaseAvailableTestsCount(addTests.getTestsCount());
+        return new ClientBean(clientRepository.save(client));
+    }
 
     public BlockClientFinish blockClient(BlockClientStart start) {
         Preconditions.checkNotNull(start, "blockClientStart is null");

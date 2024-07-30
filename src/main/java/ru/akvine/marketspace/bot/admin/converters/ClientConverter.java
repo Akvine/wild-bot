@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.marketspace.bot.admin.dto.client.*;
+import ru.akvine.marketspace.bot.services.domain.ClientBean;
 import ru.akvine.marketspace.bot.services.dto.admin.client.*;
 import ru.akvine.marketspace.bot.utils.DateUtils;
 
@@ -15,6 +16,20 @@ import java.util.stream.Collectors;
 @Component
 public class ClientConverter {
     private static final int BLOCK_TIME_YEARS = 100;
+
+    public AddTests convertToAddTests(AddTestsRequest request) {
+        return new AddTests()
+                .setTestsCount(request.getCount())
+                .setUsername(request.getUsername())
+                .setChatId(request.getChatId());
+    }
+
+    public AddTestsResponse convertToAddTestsResponse(ClientBean clientBean) {
+        return new AddTestsResponse()
+                .setChatId(clientBean.getChatId())
+                .setUsername(clientBean.getUsername())
+                .setTotalAvailableTestsCount(clientBean.getAvailableTestsCount());
+    }
 
     public BlockClientStart convertToBlockClientStart(BlockClientRequest request) {
         Preconditions.checkNotNull(request, "blockClientRequest is null");

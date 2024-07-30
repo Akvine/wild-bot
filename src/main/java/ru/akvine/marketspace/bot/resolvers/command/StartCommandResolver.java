@@ -12,6 +12,8 @@ import ru.akvine.marketspace.bot.enums.Command;
 import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
 import ru.akvine.marketspace.bot.infrastructure.StateStorage;
 import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
+import ru.akvine.marketspace.bot.services.ClientService;
+import ru.akvine.marketspace.bot.services.domain.ClientBean;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class StartCommandResolver implements CommandResolver {
     private final StateStorage<String> stateStorage;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final AdvertStartController advertStartController;
+    private final ClientService clientService;
 
     @Value("${advert.start.enabled}")
     private boolean isAdvertStartEnabled;
@@ -27,6 +30,11 @@ public class StartCommandResolver implements CommandResolver {
     @Override
     public BotApiMethod<?> resolve(String chatId, String text) {
         logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
+
+        ClientBean client = clientService.getByChatId(chatId);
+        if (client.getAvailableTestsCount() <= 0) {
+            return new SendMessage(chatId, "У вас нет доступных рекламных кампаний для запуска!");
+        }
 
         if (isAdvertStartEnabled) {
             SendMessage sendMessage = advertStartController.getCategories(chatId);

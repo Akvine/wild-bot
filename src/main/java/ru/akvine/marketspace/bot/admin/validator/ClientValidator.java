@@ -14,6 +14,24 @@ public class ClientValidator extends AdminValidator {
     @Value("${max.clients.send.message.count}")
     private int maxClientsSendMessageCount;
 
+    public void verifyAddTestsRequest(AddTestsRequest request) {
+        verifySecret(request);
+
+        if (StringUtils.isBlank(request.getUsername()) && StringUtils.isBlank(request.getChatId())) {
+            throw new ValidationException(
+                    CommonErrorCodes.Validation.BOTH_PARAMETERS_BLANK_ERROR,
+                    "Username and chatId parameters is blank"
+            );
+        }
+
+        if (request.getCount() < 1) {
+            throw new ValidationException(
+                    CommonErrorCodes.Validation.LESS_THEN_MIN_VALUE_ERROR,
+                    "Count parameter can't be less than 1"
+            );
+        }
+    }
+
     public void verifySendMessageRequest(SendMessageRequest request) {
         verifySecret(request);
 

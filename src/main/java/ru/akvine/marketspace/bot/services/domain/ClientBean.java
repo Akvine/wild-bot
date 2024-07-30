@@ -19,6 +19,7 @@ public class ClientBean extends SoftBean {
     @Nullable
     private String lastName;
     private boolean inWhitelist;
+    private int availableTestsCount;
 
     public ClientBean(ClientEntity clientEntity) {
         this.id = clientEntity.getId();
@@ -28,6 +29,7 @@ public class ClientBean extends SoftBean {
         this.firstName = clientEntity.getFirstName();
         this.lastName = clientEntity.getLastName();
         this.inWhitelist = clientEntity.isInWhiteList();
+        this.availableTestsCount = clientEntity.getAvailableTestsCount();
 
         this.createdDate = clientEntity.getCreatedDate();
         this.updatedDate = clientEntity.getUpdatedDate();

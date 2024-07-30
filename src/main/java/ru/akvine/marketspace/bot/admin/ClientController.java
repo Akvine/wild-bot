@@ -4,16 +4,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import ru.akvine.marketspace.bot.admin.converters.ClientConverter;
-import ru.akvine.marketspace.bot.admin.dto.client.WhitelistRequest;
-import ru.akvine.marketspace.bot.admin.dto.client.BlockClientRequest;
-import ru.akvine.marketspace.bot.admin.dto.client.SendMessageRequest;
-import ru.akvine.marketspace.bot.admin.dto.client.UnblockClientRequest;
+import ru.akvine.marketspace.bot.admin.dto.client.*;
 import ru.akvine.marketspace.bot.admin.dto.common.Response;
 import ru.akvine.marketspace.bot.admin.dto.common.SecretRequest;
 import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
 import ru.akvine.marketspace.bot.admin.meta.ClientControllerMeta;
 import ru.akvine.marketspace.bot.admin.validator.ClientValidator;
 import ru.akvine.marketspace.bot.services.admin.ClientAdminService;
+import ru.akvine.marketspace.bot.services.domain.ClientBean;
 import ru.akvine.marketspace.bot.services.dto.admin.client.*;
 
 import java.util.List;
@@ -24,6 +22,14 @@ public class ClientController implements ClientControllerMeta {
     private final ClientAdminService clientAdminService;
     private final ClientValidator clientValidator;
     private final ClientConverter clientConverter;
+
+    @Override
+    public Response addTests(@Valid AddTestsRequest request) {
+        clientValidator.verifyAddTestsRequest(request);
+        AddTests addTests = clientConverter.convertToAddTests(request);
+        ClientBean clientBean = clientAdminService.addTestsToClient(addTests);
+        return clientConverter.convertToAddTestsResponse(clientBean);
+    }
 
     @Override
     public Response block(@Valid BlockClientRequest request) {

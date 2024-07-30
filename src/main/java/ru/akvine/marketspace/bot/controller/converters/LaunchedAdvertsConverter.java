@@ -18,11 +18,14 @@ public class LaunchedAdvertsConverter {
 
     private final static String NEW_LINE = "\n";
 
-    public SendMessage convertToLaunchedListMessage(String chatId, List<AdvertBean> runningAdverts) {
+    public SendMessage convertToLaunchedListMessage(String chatId,
+                                                    int availableTestsCount,
+                                                    List<AdvertBean> runningAdverts) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         Preconditions.checkNotNull(runningAdverts, "runningAdverts is null");
 
         StringBuilder sb = new StringBuilder();
+        sb.append("Количество доступных рекламных кампаний: ").append(availableTestsCount).append(NEW_LINE);
         sb.append("Количество запущенных рекламных кампаний: ")
                 .append(runningAdverts.size()).append(" / ").append(maxRunningAdvertsLimit).append(NEW_LINE);
         if (!runningAdverts.isEmpty()) {

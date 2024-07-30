@@ -4,30 +4,30 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.akvine.marketspace.bot.admin.dto.client.WhitelistRequest;
-import ru.akvine.marketspace.bot.admin.dto.client.BlockClientRequest;
-import ru.akvine.marketspace.bot.admin.dto.client.SendMessageRequest;
-import ru.akvine.marketspace.bot.admin.dto.client.UnblockClientRequest;
+import ru.akvine.marketspace.bot.admin.dto.client.*;
 import ru.akvine.marketspace.bot.admin.dto.common.Response;
 import ru.akvine.marketspace.bot.admin.dto.common.SecretRequest;
 
-@RequestMapping(value = "/admin")
+@RequestMapping(value = "/admin/clients")
 public interface ClientControllerMeta {
-    @PostMapping(value = "/client/block")
+    @PostMapping(value = "/add/tests")
+    Response addTests(@Valid @RequestBody AddTestsRequest request);
+
+    @PostMapping(value = "/block")
     Response block(@Valid @RequestBody BlockClientRequest request);
 
-    @PostMapping(value = "/client/unblock")
+    @PostMapping(value = "/unblock")
     Response unblock(@Valid @RequestBody UnblockClientRequest request);
 
-    @PostMapping(value = "/client/block/list")
+    @PostMapping(value = "/block/list")
     Response list(@Valid @RequestBody SecretRequest request);
 
     @PostMapping(value = "/send/message")
     Response sendMessage(@Valid @RequestBody SendMessageRequest request);
 
-    @PostMapping(value = "/client/add/whitelist")
+    @PostMapping(value = "/add/whitelist")
     Response addToWhiteList(@Valid @RequestBody WhitelistRequest request);
 
-    @PostMapping(value = "/client/delete/whitelist")
+    @PostMapping(value = "/delete/whitelist")
     Response deleteFromWhiteList(@Valid @RequestBody WhitelistRequest request);
 }
