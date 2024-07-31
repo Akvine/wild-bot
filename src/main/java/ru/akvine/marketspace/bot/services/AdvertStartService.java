@@ -91,35 +91,33 @@ public class AdvertStartService {
             throw new RuntimeException(exception.getMessage());
         }
 
-        if (advertToStart.getCpm() < defaultCpm) {
-            AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
-                    .setAdvertId(advertId)
-                    .setType(advertToStart.getType().getCode())
-                    .setParam(advertToStart.getCategoryId())
-                    .setCpm(defaultCpm);
-            advertToStart.setCpm(defaultCpm);
-            wildberriesIntegrationService.changeAdvertCpm(request);
-        }
+        AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
+                .setAdvertId(advertId)
+                .setType(advertToStart.getType().getCode())
+                .setParam(advertToStart.getCategoryId())
+                .setCpm(defaultCpm);
+        advertToStart.setCpm(defaultCpm);
+        wildberriesIntegrationService.changeAdvertCpm(request);
 
         String advertStartName = "Bot:" + DateUtils.formatLocalDateTime(LocalDateTime.now()) + ":" + advertId;
         wildberriesIntegrationService.renameAdvert(advertId, advertStartName);
 
         if (sessionStorage.get(chatId).isInputNewCardPriceAndDiscount()) {
-            SetGoodPriceRequest request = new SetGoodPriceRequest()
+            SetGoodPriceRequest setGoodPriceRequest = new SetGoodPriceRequest()
                     .setData(List.of(
                             new SetGoodDto()
                                     .setNmID(advertToStart.getItemId())
                                     .setPrice(sessionStorage.get(chatId).getNewCardPrice())
                                     .setDiscount(sessionStorage.get(chatId).getNewCardDiscount())
                     ));
-            wildberriesIntegrationService.setGoodPriceAndDiscount(request);
+            wildberriesIntegrationService.setGoodPriceAndDiscount(setGoodPriceRequest);
         }
 
-        AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()
+        AdvertUploadPhotoRequest uploadPhotoRequest = new AdvertUploadPhotoRequest()
                 .setNmId(advertToStart.getItemId())
                 .setPhotoNumber(CARD_MAIN_PHOTO_POSITION)
                 .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
-        wildberriesIntegrationService.uploadPhoto(request);
+        wildberriesIntegrationService.uploadPhoto(uploadPhotoRequest);
 
         ChangeStocksRequest changeStocksRequest = new ChangeStocksRequest().setStocks(List.of(new SkuDto()
                 .setSku(card.getBarcode())
