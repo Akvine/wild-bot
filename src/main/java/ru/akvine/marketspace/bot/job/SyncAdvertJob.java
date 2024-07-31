@@ -2,8 +2,10 @@ package ru.akvine.marketspace.bot.job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
+import ru.akvine.marketspace.bot.constants.MDCConstants;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
@@ -25,6 +27,7 @@ public class SyncAdvertJob {
     private final AdvertRepository advertRepository;
     private final AdvertService advertService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
+    private final String name;
 
     private static final int ADVERT_PAUSE_STATUS_CODE = 11;
     private static final int ADVERT_READY_FOR_START_STATUS_CODE = 4;
@@ -32,6 +35,7 @@ public class SyncAdvertJob {
     @Scheduled(fixedDelayString = "${sync.advert.cron.milliseconds}")
     public void sync() {
         logger.info("Start advert sync...");
+        MDC.put(MDCConstants.USERNAME, name);
         AdvertListResponse advertListResponse = wildberriesIntegrationService.getAdverts();
         if (advertListResponse.getAll() != 0) {
             List<Integer> advertsInWb = advertListResponse

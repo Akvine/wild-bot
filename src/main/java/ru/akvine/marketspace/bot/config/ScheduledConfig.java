@@ -26,7 +26,7 @@ public class ScheduledConfig {
             AdvertRepository advertRepository,
             AdvertService advertService,
             WildberriesIntegrationService wildberriesIntegrationService) {
-        return new SyncAdvertJob(advertRepository, advertService, wildberriesIntegrationService);
+        return new SyncAdvertJob(advertRepository, advertService, wildberriesIntegrationService, SyncAdvertJob.class.getSimpleName());
     }
 
     @Bean
@@ -35,7 +35,7 @@ public class ScheduledConfig {
             WildberriesIntegrationService wildberriesIntegrationService,
             CardRepository cardRepository,
             CardService cardService) {
-        return new SyncCardJob(wildberriesIntegrationService, cardRepository, cardService);
+        return new SyncCardJob(wildberriesIntegrationService, cardRepository, cardService, SyncCardJob.class.getSimpleName());
     }
 
     @Bean
@@ -51,7 +51,8 @@ public class ScheduledConfig {
                 telegramIntegrationService,
                 wildberriesIntegrationService,
                 iterationsCounterService,
-                advertStatisticService
+                advertStatisticService,
+                CheckRunningAdvertsJob.class.getSimpleName()
         );
     }
 }

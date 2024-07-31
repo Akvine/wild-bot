@@ -2,6 +2,7 @@ package ru.akvine.marketspace.bot.job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
 import ru.akvine.marketspace.bot.entities.CardEntity;
@@ -21,10 +22,12 @@ public class SyncCardJob {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final CardRepository cardRepository;
     private final CardService cardService;
+    private final String name;
 
     @Scheduled(fixedDelayString = "${sync.card.cron.milliseconds}")
     public void sync() {
         logger.info("Start card sync...");
+        MDC.put("username", name);
         List<CardDto> cardsDto = wildberriesIntegrationService.getCards();
         if (!CollectionUtils.isEmpty(cardsDto)) {
             List<CardEntity> cards = cardRepository.findAll();
