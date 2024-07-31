@@ -13,7 +13,7 @@ import static ru.akvine.marketspace.bot.constants.TelegramMessageConstants.CLIEN
 @RequiredArgsConstructor
 @Slf4j
 public class MessageExceptionFilter extends MessageFilter {
-    @Value("${telegram.bot.support.username}")
+    @Value("${telegram.bot.support.url}")
     private String supportUsername;
 
     @Override

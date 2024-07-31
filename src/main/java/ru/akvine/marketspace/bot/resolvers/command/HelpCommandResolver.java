@@ -13,7 +13,7 @@ import ru.akvine.marketspace.bot.enums.Command;
 @Slf4j
 public class HelpCommandResolver implements CommandResolver {
     private final static String NEW_LINE = "\n";
-    @Value("${telegram.bot.support.username}")
+    @Value("${telegram.bot.support.url}")
     private String supportUsername;
 
     @Override

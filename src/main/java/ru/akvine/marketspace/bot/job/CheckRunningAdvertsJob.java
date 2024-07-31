@@ -37,10 +37,12 @@ public class CheckRunningAdvertsJob {
     private long checkMilliseconds;
     @Value("${max.start.sum.difference}")
     private int maxStartSumDifference;
-    @Value("${default.advert.cpm.sum.increase}")
-    private int defaultIncreaseCpmSum;
+    @Value("${advert.cpm.increase.value}")
+    private int advertCpmIncreaseValue;
     @Value("${check.advert.iterations.before.increase}")
     private int maxIterationsBeforeIncreaseCpm;
+    @Value("${advert.max.cpm}")
+    private int advertMaxCpm;
 
     private final static int PAUSE_STATUS_ADVERT_CODE = 11;
 
@@ -55,6 +57,7 @@ public class CheckRunningAdvertsJob {
             int currentBudgetSum = wildberriesIntegrationService.getAdvertBudgetInfo(advertId).getTotal();
             int startBudgetSum = advert.getStartBudgetSum();
             int differenceBudgetSum = startBudgetSum - currentBudgetSum;
+            int currentCpm = advert.getCpm();
 
             if (currentBudgetSum == 0 || differenceBudgetSum >= maxStartSumDifference) {
                 logger.info("Get statistic and pause advert with id = {}", advertId);
@@ -88,21 +91,23 @@ public class CheckRunningAdvertsJob {
                 telegramIntegrationService.sendMessage(chatId, finishedTestMessage);
                 continue;
             }
-            long seconds = checkMilliseconds / 1000;
-            if (iterationsCounterService.check(advertId, maxIterationsBeforeIncreaseCpm)) {
-                logger.info("Increase cpm for advert with id = {}", advertId);
+            if (currentCpm <= advertMaxCpm) {
+                if (iterationsCounterService.check(advertId, maxIterationsBeforeIncreaseCpm)) {
+                    logger.info("Increase cpm for advert with id = {}", advertId);
 
-                int newCpm = advert.getCpm() + defaultIncreaseCpmSum;
-                AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
-                        .setCpm(newCpm)
-                        .setAdvertId(advertId)
-                        .setParam(advert.getCategoryId())
-                        .setType(advert.getOrdinalType());
-                wildberriesIntegrationService.changeAdvertCpm(request);
+                    int newCpm = advert.getCpm() + advertCpmIncreaseValue;
+                    AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
+                            .setCpm(newCpm)
+                            .setAdvertId(advertId)
+                            .setParam(advert.getCategoryId())
+                            .setType(advert.getOrdinalType());
+                    wildberriesIntegrationService.changeAdvertCpm(request);
 
-                advert.setCpm(newCpm);
+                    advert.setCpm(newCpm);
+                }
+                iterationsCounterService.increase(advertId);
             }
-            iterationsCounterService.increase(advertId);
+            long seconds = checkMilliseconds / 1000;
             advert.setCheckBudgetSum(currentBudgetSum);
             advert.setNextCheckDateTime(startCheckDateTime.plusSeconds(seconds));
             advert.setUpdatedDate(LocalDateTime.now());

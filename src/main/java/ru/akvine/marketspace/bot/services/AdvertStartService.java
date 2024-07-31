@@ -21,6 +21,7 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SkuDto;
 import ru.akvine.marketspace.bot.utils.DateUtils;
+import ru.akvine.marketspace.bot.utils.ThreadUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,10 +41,10 @@ public class AdvertStartService {
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
 
-    @Value("${default.advert.budget.sum.increase}")
-    private int defaultBudgetSumIncrease;
-    @Value("${default.advert.cpm}")
-    private int defaultCpm;
+    @Value("${advert.budget.sum.increase.value}")
+    private int advertBudgetSumIncreaseValue;
+    @Value("${advert.min.cpm}")
+    private int advertMinCpm;
     @Value("${wildberries.change.stocks.count}")
     private int changeStocksCount;
     @Value("${advert.budget.min.sum}")
@@ -76,27 +77,21 @@ public class AdvertStartService {
         Integer advertTotalBudget = advertBudgetInfo.getTotal();
 
         if (advertTotalBudget < budgetMinSum) {
-            wildberriesIntegrationService.advertBudgetDeposit(advertId, defaultBudgetSumIncrease);
-            advertToStart.plusStartBudget(defaultBudgetSumIncrease);
+            wildberriesIntegrationService.advertBudgetDeposit(advertId, advertBudgetSumIncreaseValue);
+            advertToStart.plusStartBudget(advertBudgetSumIncreaseValue);
         } else {
             advertToStart.setStartBudgetSum(advertTotalBudget);
         }
         advertToStart.setCheckBudgetSum(advertToStart.getStartBudgetSum());
 
-        // TODO : дикий кастыль. Надо смотреть API WB
-        try {
-            // Нужно, чтобы успел пополниться баланс
-            Thread.sleep(3000);
-        } catch (Exception exception) {
-            throw new RuntimeException(exception.getMessage());
-        }
+        ThreadUtils.sleep(5000);
 
         AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
                 .setAdvertId(advertId)
                 .setType(advertToStart.getType().getCode())
                 .setParam(advertToStart.getCategoryId())
-                .setCpm(defaultCpm);
-        advertToStart.setCpm(defaultCpm);
+                .setCpm(advertMinCpm);
+        advertToStart.setCpm(advertMinCpm);
         wildberriesIntegrationService.changeAdvertCpm(request);
 
         String advertStartName = "Bot:" + DateUtils.formatLocalDateTime(LocalDateTime.now()) + ":" + advertId;
