@@ -24,7 +24,7 @@ public class CancelCommandResolver implements CommandResolver {
 
     @Override
     public BotApiMethod<?> resolve(String chatId, String text) {
-        logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
+        logger.info("[{}] resolved", getCommand());
 
         if (stateStorage.containsState(chatId)) {
             if (sessionStorage.hasSession(chatId) && sessionStorage.get(chatId).getLockedAdvertId() != null) {

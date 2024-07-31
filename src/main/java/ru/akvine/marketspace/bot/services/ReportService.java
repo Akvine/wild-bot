@@ -25,7 +25,7 @@ public class ReportService {
     private final static int HEADERS_ROW_INDEX = 0;
 
     public byte[] generateReport(String chatId) {
-        logger.info("Generate report for chat id = {}", chatId);
+        logger.info("Generate report");
 
         Long clientId = clientService.verifyExistsByChatId(chatId).getId();
         List<AdvertStatisticEntity> advertStatistics = advertStatisticRepository.findByClientId(clientId);

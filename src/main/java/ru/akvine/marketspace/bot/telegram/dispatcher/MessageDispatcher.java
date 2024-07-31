@@ -35,8 +35,8 @@ public class MessageDispatcher {
         String text = resolver.extractText(telegramData.getData());
 
         logger.info(
-                "Received in dispatcher message = {} with type = {} by chat id = {}",
-                text, telegramData.getType(), chatId
+                "Received in dispatcher message = [{}] with type = [{}]",
+                text, telegramData.getType()
         );
 
         if (stateStorage.containsState(chatId)) {

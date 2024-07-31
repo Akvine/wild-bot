@@ -47,7 +47,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
     public BotApiMethod<?> resolve(TelegramData data) {
         TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(data.getType());
         String chatId = resolver.extractChatId(data.getData());
-        logger.info("[{}] state resolved for chat with id = {}", getState(), chatId);
+        logger.info("[{}] state resolved", getState());
 
         if (data.getData().getMessage().getPhoto() == null) {
             return new SendMessage(chatId, "Загрузите фотографию карточки для теста РК или\n" +

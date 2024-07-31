@@ -16,6 +16,7 @@ public class MDCFilter extends MessageFilter {
         String chatId = getChatId(update);
         String username = clientService.getByChatId(chatId).getUsername();
         MDC.put(MDCConstants.USERNAME, username);
+        MDC.put(MDCConstants.CHAT_ID, chatId);
         return nextMessageFilter.handle(update);
     }
 }

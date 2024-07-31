@@ -27,7 +27,7 @@ public class InputNewPriceStateResolver implements StateResolver {
         String chatId = resolver.extractChatId(data.getData());
         String text = resolver.extractText(data.getData());
 
-        logger.info("[{}] state resolved for chat with id = {} and text = {}", getState(), chatId, text);
+        logger.info("[{}] state resolved with text = {}", getState(), text);
 
         int newPrice;
         try {

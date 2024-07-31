@@ -23,7 +23,7 @@ public class ReportCommandResolver implements CommandResolver {
 
     @Override
     public BotApiMethod<?> resolve(String chatId, String text) {
-        logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
+        logger.info("[{}] resolved", getCommand());
 
         byte[] report = reportService.generateReport(chatId);
         telegramIntegrationService.sendFile(new ByteArrayInputStream(report), REPORT_DEFAULT_FILE_NAME, chatId);

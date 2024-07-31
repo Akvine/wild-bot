@@ -32,6 +32,8 @@ public class InputStatisticIdStateResolver implements StateResolver {
         String chatId = resolver.extractChatId(data.getData());
         String text = resolver.extractText(data.getData());
 
+        logger.info("[{}] state resolved with text = {}", getState(), text);
+
         long statisticId;
         try {
             statisticId = Long.parseLong(text);

@@ -17,7 +17,7 @@ public class StopCommandResolver implements CommandResolver {
 
     @Override
     public BotApiMethod<?> resolve(String chatId, String text) {
-        logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
+        logger.info("[{}] resolved", getCommand());
         stateStorage.setState(chatId, ClientState.INPUT_ADVERT_ID);
         return new SendMessage(chatId, "Введите advert id кампании, которую хотите остановить и снять метрики: ");
     }

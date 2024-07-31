@@ -37,7 +37,7 @@ public class InputAdvertIdStateResolver implements StateResolver {
         String chatId = resolver.extractChatId(update);
         String text = resolver.extractText(update);
 
-        logger.info("[{}] state resolved for chat with id = {} and text = {}", getState(), chatId, text);
+        logger.info("[{}] state resolved with text = {}", getState(), text);
 
         int advertId;
         try {

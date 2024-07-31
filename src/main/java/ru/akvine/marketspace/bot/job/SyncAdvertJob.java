@@ -28,14 +28,17 @@ public class SyncAdvertJob {
     private final AdvertService advertService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final String name;
+    private final String chatId;
 
     private static final int ADVERT_PAUSE_STATUS_CODE = 11;
     private static final int ADVERT_READY_FOR_START_STATUS_CODE = 4;
 
     @Scheduled(fixedDelayString = "${sync.advert.cron.milliseconds}")
     public void sync() {
-        logger.info("Start advert sync...");
         MDC.put(MDCConstants.USERNAME, name);
+        MDC.put(MDCConstants.CHAT_ID, chatId);
+        logger.info("Start advert sync...");
+
         AdvertListResponse advertListResponse = wildberriesIntegrationService.getAdverts();
         if (advertListResponse.getAll() != 0) {
             List<Integer> advertsInWb = advertListResponse

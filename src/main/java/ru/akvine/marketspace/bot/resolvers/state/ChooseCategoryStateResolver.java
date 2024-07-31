@@ -35,7 +35,7 @@ public class ChooseCategoryStateResolver implements StateResolver {
             return new SendMessage(chatId, "Нужно выбрать категорию из списка или ввести id вручную!");
         }
 
-        logger.info("[{}] state resolved for chat with id = {} and category id = {}", getState(), chatId, categoryId);
+        logger.info("[{}] state resolved with category id = {}", getState(), categoryId);
 
         sessionStorage.get(chatId).setChoosenCategoryId(categoryId);
         setNextState(chatId, ClientState.UPLOAD_NEW_CARD_PHOTO_STATE);

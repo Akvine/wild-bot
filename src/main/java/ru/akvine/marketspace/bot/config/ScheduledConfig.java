@@ -19,6 +19,7 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesInt
 @Configuration
 @EnableScheduling
 public class ScheduledConfig {
+    private final static String SYSTEM = "system";
 
     @Bean
     @ConditionalOnProperty(name = "sync.enabled", havingValue = "true")
@@ -26,7 +27,11 @@ public class ScheduledConfig {
             AdvertRepository advertRepository,
             AdvertService advertService,
             WildberriesIntegrationService wildberriesIntegrationService) {
-        return new SyncAdvertJob(advertRepository, advertService, wildberriesIntegrationService, SyncAdvertJob.class.getSimpleName());
+        return new SyncAdvertJob(advertRepository,
+                advertService,
+                wildberriesIntegrationService,
+                SyncAdvertJob.class.getSimpleName(),
+                SYSTEM);
     }
 
     @Bean
@@ -35,7 +40,11 @@ public class ScheduledConfig {
             WildberriesIntegrationService wildberriesIntegrationService,
             CardRepository cardRepository,
             CardService cardService) {
-        return new SyncCardJob(wildberriesIntegrationService, cardRepository, cardService, SyncCardJob.class.getSimpleName());
+        return new SyncCardJob(wildberriesIntegrationService,
+                cardRepository,
+                cardService,
+                SyncCardJob.class.getSimpleName(),
+                SYSTEM);
     }
 
     @Bean
@@ -52,7 +61,8 @@ public class ScheduledConfig {
                 wildberriesIntegrationService,
                 iterationsCounterService,
                 advertStatisticService,
-                CheckRunningAdvertsJob.class.getSimpleName()
+                CheckRunningAdvertsJob.class.getSimpleName(),
+                SYSTEM
         );
     }
 }

@@ -31,7 +31,9 @@ public class CheckRunningAdvertsJob {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final IterationsCounterService iterationsCounterService;
     private final AdvertStatisticService advertStatisticService;
+
     private final String name;
+    private final String chatId;
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
@@ -48,8 +50,10 @@ public class CheckRunningAdvertsJob {
 
     @Scheduled(fixedDelayString = "${check.advert.cron.milliseconds}")
     public void checkRunningAdverts() {
-        logger.info("Start check running adverts...");
         MDC.put(MDCConstants.USERNAME, name);
+        MDC.put(MDCConstants.CHAT_ID, chatId);
+        logger.info("Start check running adverts...");
+
         List<AdvertEntity> runningAdverts = advertRepository.findByStatuses(List.of(AdvertStatus.RUNNING));
         LocalDateTime startCheckDateTime = LocalDateTime.now();
         for (AdvertEntity advert : runningAdverts) {

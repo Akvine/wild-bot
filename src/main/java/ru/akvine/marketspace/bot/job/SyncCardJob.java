@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
+import ru.akvine.marketspace.bot.constants.MDCConstants;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.repositories.CardRepository;
 import ru.akvine.marketspace.bot.services.CardService;
@@ -23,11 +24,14 @@ public class SyncCardJob {
     private final CardRepository cardRepository;
     private final CardService cardService;
     private final String name;
+    private final String chatId;
 
     @Scheduled(fixedDelayString = "${sync.card.cron.milliseconds}")
     public void sync() {
+        MDC.put(MDCConstants.USERNAME, name);
+        MDC.put(MDCConstants.CHAT_ID, chatId);
         logger.info("Start card sync...");
-        MDC.put("username", name);
+
         List<CardDto> cardsDto = wildberriesIntegrationService.getCards();
         if (!CollectionUtils.isEmpty(cardsDto)) {
             List<CardEntity> cards = cardRepository.findAll();

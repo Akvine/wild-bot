@@ -18,7 +18,7 @@ public class HelpCommandResolver implements CommandResolver {
 
     @Override
     public BotApiMethod<?> resolve(String chatId, String text) {
-        logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
+        logger.info("[{}] resolved", getCommand());
 
         StringBuilder sb = new StringBuilder();
         sb
