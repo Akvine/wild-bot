@@ -36,7 +36,7 @@ public class MessageExceptionFilter extends MessageFilter {
                 return processClientWhitelistException(chatId, exception.getMessage());
             }
             if (exception instanceof AdvertStartLimitException) {
-                processAdvertStartLimitException(chatId);
+                return processAdvertStartLimitException(chatId);
             }
             return processGeneralException(chatId, exception);
         }
