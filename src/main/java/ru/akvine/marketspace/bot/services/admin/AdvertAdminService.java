@@ -107,11 +107,11 @@ public class AdvertAdminService {
         }
         AdvertDto advertDto = advertsInfo.getFirst();
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
-            wildberriesIntegrationService.pauseAdvert(advertEntity.getAdvertId());
+            wildberriesIntegrationService.pauseAdvert(advertId);
         }
 
         Long clientId = advertEntity.getClient().getId();
-        AdvertStatisticEntity advertStatistic = advertStatisticService.verifyExistsByClientIdAndAdvertId(clientId, advertId);
+        AdvertStatisticEntity advertStatistic = advertStatisticService.verifyExistsByClientIdAndAdvertId(clientId, advertEntity.getId());
         advertStatisticService.delete(advertStatistic);
 
         advertEntity.setNextCheckDateTime(null);

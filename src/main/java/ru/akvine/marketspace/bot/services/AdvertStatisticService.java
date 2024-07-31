@@ -72,7 +72,8 @@ public class AdvertStatisticService {
                 .setShks(firstPositionResponse.getShks())
                 .setSumPrice(firstPositionResponse.getSumPrice())
                 .setAdvertEntity(advert)
-                .setClient(advert.getClient());
+                .setClient(advert.getClient())
+                .setActive(false);
 
         AdvertStatisticBean savedAdvertStatistic = new AdvertStatisticBean(advertStatisticRepository.save(advertStatisticEntity));
 

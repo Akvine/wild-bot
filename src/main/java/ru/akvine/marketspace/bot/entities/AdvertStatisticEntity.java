@@ -52,6 +52,9 @@ public class AdvertStatisticEntity extends SoftBaseEntity {
     @Column(name = "PHOTO")
     private byte[] photo;
 
+    @Column(name = "IS_ACTIVE")
+    private boolean active;
+
     @ManyToOne
     @JoinColumn(name = "ADVERT_ID", nullable = false)
     private AdvertEntity advertEntity;

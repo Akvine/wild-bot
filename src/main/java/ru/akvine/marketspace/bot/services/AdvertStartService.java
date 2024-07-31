@@ -141,6 +141,7 @@ public class AdvertStartService {
 
         AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
         AdvertStatisticEntity advertStatisticEntity = new AdvertStatisticEntity()
+                .setActive(true)
                 .setPhoto(sessionStorage.get(chatId).getUploadedCardPhoto())
                 .setAdvertEntity(advertEntity)
                 .setClient(client);
