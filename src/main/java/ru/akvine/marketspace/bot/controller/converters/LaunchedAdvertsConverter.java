@@ -25,7 +25,7 @@ public class LaunchedAdvertsConverter {
         Preconditions.checkNotNull(runningAdverts, "runningAdverts is null");
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Количество доступных рекламных кампаний: ").append(availableTestsCount).append(NEW_LINE);
+        sb.append("Количество доступных тестов: ").append(availableTestsCount).append(NEW_LINE);
         sb.append("Количество запущенных рекламных кампаний: ")
                 .append(runningAdverts.size()).append(" / ").append(maxRunningAdvertsLimit).append(NEW_LINE);
         if (!runningAdverts.isEmpty()) {
