@@ -25,6 +25,7 @@ import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 import ru.akvine.marketspace.bot.helpers.LockHelper;
 import ru.akvine.marketspace.bot.helpers.TelegramPhotoHelper;
+import ru.akvine.marketspace.bot.validator.PhotoValidator;
 
 import static ru.akvine.marketspace.bot.constants.DbLockConstants.UPLOAD_CARD_PHOTO_STATE;
 
@@ -40,6 +41,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final AdvertService advertService;
     private final LockHelper lockHelper;
+    private final PhotoValidator photoValidator;
 
     @Override
     public BotApiMethod<?> resolve(TelegramData data) {
@@ -54,6 +56,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
 
         PhotoSize photoSize = telegramPhotoHelper.resolve(data.getData().getMessage().getPhoto());
         byte[] photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
+        photoValidator.validate(photo);
 
         String message = lockHelper.doWithLock(UPLOAD_CARD_PHOTO_STATE + chatId, () -> {
             AdvertBean advertBean = advertService.getFirst(sessionStorage.get(chatId).getChoosenCategoryId());

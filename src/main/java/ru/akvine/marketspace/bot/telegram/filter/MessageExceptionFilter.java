@@ -14,7 +14,13 @@ import static ru.akvine.marketspace.bot.constants.TelegramMessageConstants.CLIEN
 @Slf4j
 public class MessageExceptionFilter extends MessageFilter {
     @Value("${telegram.bot.support.url}")
-    private String supportUsername;
+    private String supportUrl;
+    @Value("${photo.width.min.pixels}")
+    private int minWidth;
+    @Value("${photo.height.min.pixels}")
+    private int minHeight;
+    @Value("${photo.max.size.megabytes}")
+    private int maxMegabytesSize;
 
     @Override
     public BotApiMethod<?> handle(Update update) {
@@ -38,6 +44,12 @@ public class MessageExceptionFilter extends MessageFilter {
             if (exception instanceof AdvertStartLimitException) {
                 return processAdvertStartLimitException(chatId);
             }
+            if (exception instanceof PhotoDimensionsValidationException) {
+                return processPhotoDimensionsValidationException(chatId, (PhotoDimensionsValidationException) exception);
+            }
+            if (exception instanceof PhotoSizeValidationException) {
+                return processPhotoSizeValidationException(chatId, (PhotoSizeValidationException) exception);
+            }
             return processGeneralException(chatId, exception);
         }
     }
@@ -46,7 +58,7 @@ public class MessageExceptionFilter extends MessageFilter {
         logger.error("Some error occurred for chatId = {}, ex = {}", chatId, exception.getMessage());
         String messageToUser = String.format(
                 "Произошла неизвестная ошибка... \nПожалуйста, обратитесь в поддержку: %s",
-                supportUsername
+                supportUrl
         );
         return new SendMessage(chatId, messageToUser);
     }
@@ -67,7 +79,7 @@ public class MessageExceptionFilter extends MessageFilter {
         logger.warn("Error while starting advert, message = {}", exception.getMessage());
         String errorMessage = String.format(
                 "При запуске рекламной кампании произошла ошибка. \nПожалуйста, обратитесь в поддержку: %s",
-                supportUsername
+                supportUrl
         );
         return new SendMessage(chatId, errorMessage);
     }
@@ -80,5 +92,24 @@ public class MessageExceptionFilter extends MessageFilter {
     private SendMessage processAdvertStartLimitException(String chatId) {
         logger.info("Start advert limit reached for client with chat id = {}", chatId);
         return new SendMessage(chatId, "Превышен лимит по запуску рекламных кампаний!");
+    }
+
+    private SendMessage processPhotoDimensionsValidationException(String chatId, PhotoDimensionsValidationException exception) {
+        logger.info("Photo dimensions validation error for client with chat id = {}, message = {}", chatId, exception.getMessage());
+        String message = String.format(
+                "Неверный размер изображения!\nМинимум: %sx%s. Фактический: %sx%s",
+                minWidth, minHeight, exception.getWidth(), exception.getHeight()
+        );
+        return new SendMessage(chatId, message);
+    }
+
+    private SendMessage processPhotoSizeValidationException(String chatId, PhotoSizeValidationException exception) {
+        double currentMegabytes = exception.getMegabytes();
+        logger.info("Photo size validation error for client with chat id = {}, message = {}", chatId, exception.getMessage());
+        String message = String.format(
+                "Размер изображения слишком большой!\nМаксимум %s. Фактический: %s",
+                maxMegabytesSize, currentMegabytes
+        );
+        return new SendMessage(chatId, message);
     }
 }
