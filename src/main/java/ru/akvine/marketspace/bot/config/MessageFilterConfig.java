@@ -20,10 +20,13 @@ public class MessageFilterConfig {
         ClientFilter clientFilter = new ClientFilter(clientService);
         ClientBlockedFilter clientBlockedFilter = new ClientBlockedFilter(clientService);
         ClientWhitelistFilter clientWhitelistFilter = new ClientWhitelistFilter(clientService);
+        MDCFilter mdcFilter = new MDCFilter(clientService);
 
         exceptionHandlerFilter.setNextMessageFilter(clientFilter);
 
-        clientFilter.setNextMessageFilter(clientBlockedFilter);
+        clientFilter.setNextMessageFilter(mdcFilter);
+
+        mdcFilter.setNextMessageFilter(clientBlockedFilter);
 
         clientBlockedFilter.setNextMessageFilter(clientWhitelistFilter);
 
