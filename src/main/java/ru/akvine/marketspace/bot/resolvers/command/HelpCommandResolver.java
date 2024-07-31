@@ -11,18 +11,21 @@ import ru.akvine.marketspace.bot.enums.Command;
 @RequiredArgsConstructor
 @Slf4j
 public class HelpCommandResolver implements CommandResolver {
+    private final static String NEW_LINE = "\n";
+
     @Override
     public BotApiMethod<?> resolve(String chatId, String text) {
         logger.info("[{}] resolved for chat with id = {} and text = {}", getCommand(), chatId, text);
 
         StringBuilder sb = new StringBuilder();
         sb
-                .append("/start - запустить первую попавшуюся кампанию в паузе или готовую к запуску\n")
-                .append("/launched - вывести статистику по запущенным кампаниям\n")
-                .append("/statistic - получить фото карточки и статистику для опред. записи в отчете\n")
-                .append("/report - генерирует отчет с тестами\n")
-                .append("/help - список доступных команд\n")
-                .append("/cancel - отменить запуск кампании");
+                .append("/start - запустить первую попавшуюся кампанию в паузе или готовую к запуску").append(NEW_LINE)
+                .append("/stop - остановить запущенную рекламную кампанию и снять метрики").append(NEW_LINE)
+                .append("/cancel - отменить запуск рекламной кампании").append(NEW_LINE)
+                .append("/stats - получить количество доступных тестов и список запущенных рекламных кампаний").append(NEW_LINE)
+                .append("/report - сгенерировать excel-отчет о проведенных тестах").append(NEW_LINE)
+                .append("/photo - получить фото карточки и статистику для опред. записи в отчете").append(NEW_LINE)
+                .append("/help - вывести список доступных команд");
         return new SendMessage(chatId, sb.toString());
     }
 
