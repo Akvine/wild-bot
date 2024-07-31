@@ -58,7 +58,7 @@ public class BlockingService {
     @Nullable
     public LocalDateTime getEndBlockDate(String clientUuid) {
         Preconditions.checkNotNull(clientUuid, "clientUuid is null");
-        logger.info("Get end block date for client with uuid = {}", clientUuid);
+        logger.debug("Get end block date for client with uuid = {}", clientUuid);
         Optional<BlockedCredentialsEntity> blockedCredentialsEntityOptional = blockedCredentialsRepository.findByUuid(clientUuid);
         return blockedCredentialsEntityOptional.map(BlockedCredentialsEntity::getBlockEndDate).orElse(null);
     }

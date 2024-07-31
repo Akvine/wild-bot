@@ -54,7 +54,7 @@ public class AdvertService {
 
     public List<AdvertBean> getAdvertsByStatuses(List<AdvertStatus> statuses) {
         Preconditions.checkNotNull(statuses, "advertStatuses is null");
-        logger.info("Get adverts by statuses = [{}]", statuses);
+        logger.info("Get adverts by statuses = {}", statuses);
         return advertRepository
                 .findByStatuses(statuses)
                 .stream()
@@ -66,7 +66,7 @@ public class AdvertService {
         Preconditions.checkNotNull(chatId, "chatId is null");
         Preconditions.checkNotNull(statuses, "advertStatuses is null");
 
-        logger.info("Get adverts by chat id = {} and statuses = [{}]", chatId,statuses);
+        logger.info("Get adverts by chat id = {} and statuses = {}", chatId,statuses);
 
         Long clientId = clientService.verifyExistsByChatId(chatId).getId();
         return advertRepository

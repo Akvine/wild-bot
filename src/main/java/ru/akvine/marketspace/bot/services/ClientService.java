@@ -93,13 +93,13 @@ public class ClientService {
 
     public ClientBean getByChatId(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
-        logger.info("Get client by uuid = {}", chatId);
+        logger.debug("Get client by uuid = {}", chatId);
         return new ClientBean(verifyExistsByChatId(chatId));
     }
 
     public ClientEntity verifyExistsByChatId(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
-        logger.info("Verify client exists by chat with id = {}", chatId);
+        logger.debug("Verify client exists by chat with id = {}", chatId);
         return clientRepository.findByChatId(chatId).orElseThrow(() -> new ClientNotFoundException("Client has no with chatId = [" + chatId + "]!"));
     }
 
