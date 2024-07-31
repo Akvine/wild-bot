@@ -29,7 +29,7 @@ public class ClientService {
     @Nullable
     public ClientBean findByChatId(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
-        logger.info("Find client by chatId = {}", chatId);
+        logger.debug("Find client by chatId = {}", chatId);
 
         Optional<ClientEntity> client = clientRepository.findByChatId(chatId);
         return client.map(ClientBean::new).orElse(null);
@@ -50,7 +50,7 @@ public class ClientService {
     }
 
     public void checkIsBlocked(String chatId) {
-        logger.info("Check client is blocked by chat id = {}", chatId);
+        logger.debug("Check client is blocked by chat id = {}", chatId);
         String uuid = verifyExistsByChatId(chatId).getUuid();
         LocalDateTime blockDateTime = blockingService.getEndBlockDate(uuid);
         if (blockDateTime != null) {
@@ -60,7 +60,7 @@ public class ClientService {
     }
 
     public void checkIsInWhitelist(String chatId) {
-        logger.info("Check client is in white list by chat id = {}", chatId);
+        logger.debug("Check client is in white list by chat id = {}", chatId);
         ClientEntity client = verifyExistsByChatId(chatId);
         String username = client.getUsername();
         if (!client.isInWhiteList()) {
