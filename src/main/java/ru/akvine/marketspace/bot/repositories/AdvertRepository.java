@@ -35,4 +35,11 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
 
     @Query("from AdvertEntity ae where ae.advertId = :advertId and ae.deleted = false")
     Optional<AdvertEntity> findByAdvertId(@Param("advertId") int advertId);
+
+    @Query("from AdvertEntity ae join ae.client c " +
+            "where ae.advertId = :advertId and " +
+            "c.id = :clientId and " +
+            "ae.deleted = false")
+    Optional<AdvertEntity> findByAdvertIdAndClientId(@Param("advertId") int advertId,
+                                                     @Param("clientId") long clientId);
 }

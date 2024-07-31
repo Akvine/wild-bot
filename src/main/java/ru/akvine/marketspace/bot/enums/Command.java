@@ -8,10 +8,11 @@ import lombok.RequiredArgsConstructor;
 public enum Command {
 
     COMMAND_START("/start"),
-    COMMAND_LAUNCHED("/launched"),
-    COMMAND_REPORT("/report"),
+    COMMAND_STOP("/stop"),
     COMMAND_CANCEL("/cancel"),
-    COMMAND_STATISTIC("/statistic"),
+    COMMAND_STATS("/stats"),
+    COMMAND_PHOTO("/photo"),
+    COMMAND_REPORT("/report"),
     COMMAND_HELP("/help");
 
     private final String commandName;

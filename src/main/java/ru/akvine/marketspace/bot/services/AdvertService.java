@@ -156,7 +156,20 @@ public class AdvertService {
         logger.info("Verify advert exists with id = {}", advertId);
         return advertRepository
                 .findByAdvertId(advertId)
-                .orElseThrow(() -> new AdvertNotFoundException("Advert with advertUd = [" + advertId + "] not found!"));
+                .orElseThrow(() -> new AdvertNotFoundException("Advert with advertId = [" + advertId + "] not found!"));
+    }
+
+    public AdvertEntity verifyExistsByAdvertIdAndClientId(int advertId, long clientId) {
+        logger.info("Verify advert exists with id = {} launched by client with id = {}", advertId, clientId);
+        return advertRepository
+                .findByAdvertIdAndClientId(advertId, clientId)
+                .orElseThrow(() -> {
+                    String errorMessage = String.format(
+                            "Advert with advertId = [%s] and launched client with id = [%s] not found!",
+                            advertId, clientId
+                    );
+                    return new AdvertNotFoundException(errorMessage);
+                });
     }
 
     public AdvertEntity verifyExistsByUuid(String uuid) {

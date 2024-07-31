@@ -21,7 +21,7 @@ public class HelpCommandResolver implements CommandResolver {
         sb
                 .append("/start - запустить первую попавшуюся кампанию в паузе или готовую к запуску").append(NEW_LINE)
                 .append("/stop - остановить запущенную рекламную кампанию и снять метрики").append(NEW_LINE)
-                .append("/cancel - отменить запуск рекламной кампании").append(NEW_LINE)
+                .append("/cancel - отменить действие").append(NEW_LINE)
                 .append("/stats - получить количество доступных тестов и список запущенных рекламных кампаний").append(NEW_LINE)
                 .append("/report - сгенерировать excel-отчет о проведенных тестах").append(NEW_LINE)
                 .append("/photo - получить фото карточки и статистику для опред. записи в отчете").append(NEW_LINE)

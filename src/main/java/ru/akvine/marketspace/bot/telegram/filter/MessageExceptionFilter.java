@@ -58,9 +58,9 @@ public class MessageExceptionFilter extends MessageFilter {
 
     private SendMessage processAdvertNotFoundException(String chatId, String exceptionMessage) {
         logger.warn(
-                "For chat with id = {} has no advert in status \"PAUSE\" or \"READY_TO_START\". Message = {}",
+                "For chat with id = {} has no advert. Message = {}",
                 chatId, exceptionMessage);
-        return new SendMessage(chatId, "Не найдено ни одной рекламной кампании в статусе \"На паузе\" или \"Готова к запуску\"");
+        return new SendMessage(chatId, "Рекламная кампания не найдена");
     }
 
     private SendMessage processStartAdvertException(String chatId, AdvertStartException exception) {
