@@ -93,7 +93,7 @@ public class AdvertAdminService {
         }
 
         if (advertEntity.getStatus() == AdvertStatus.PAUSE) {
-            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getItemId() + "] already in pause!");
+            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getAdvertId() + "] already in pause!");
         }
 
         int advertId = advertEntity.getAdvertId();

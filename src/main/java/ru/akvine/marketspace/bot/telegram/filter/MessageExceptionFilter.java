@@ -45,7 +45,7 @@ public class MessageExceptionFilter extends MessageFilter {
     private SendMessage processGeneralException(String chatId, Exception exception) {
         logger.error("Some error occurred for chatId = {}, ex = {}", chatId, exception.getMessage());
         String messageToUser = String.format(
-                "Произошла неизвестная ошибка... Пожалуйста, обратитесь в поддержку: %s",
+                "Произошла неизвестная ошибка... \nПожалуйста, обратитесь в поддержку: %s",
                 supportUsername
         );
         return new SendMessage(chatId, messageToUser);
@@ -66,7 +66,7 @@ public class MessageExceptionFilter extends MessageFilter {
     private SendMessage processStartAdvertException(String chatId, AdvertStartException exception) {
         logger.warn("Error while starting advert, message = {}", exception.getMessage());
         String errorMessage = String.format(
-                "При запуске рекламной кампании произошла ошибка. Пожалуйста, обратитесь в поддержку: %s",
+                "При запуске рекламной кампании произошла ошибка. \nПожалуйста, обратитесь в поддержку: %s",
                 supportUsername
         );
         return new SendMessage(chatId, errorMessage);

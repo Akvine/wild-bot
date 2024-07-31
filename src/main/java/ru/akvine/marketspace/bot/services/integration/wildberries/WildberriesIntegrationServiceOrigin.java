@@ -369,7 +369,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
     @Override
     @RateLimiter(name = "wb-get-adverts-full-statistic-by-dates")
     public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request) {
-        logger.info("Get advert full statistic by request = [{}]", request);
+        logger.info("Get advert full statistic by request = {}", request);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<List<AdvertFullStatisticDatesDto>> httpEntity = new HttpEntity<>(request, headers);
 
@@ -398,7 +398,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
     @Override
     @RateLimiter(name = "wb-get-adverts-full-statistic-by-interval")
     public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request) {
-        logger.info("Get advert full statistic interval by request = [{}]", request);
+        logger.info("Get advert full statistic interval by request = {}", request);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<List<AdvertFullStatisticIntervalDto>> httpEntity = new HttpEntity<>(request, headers);
 
@@ -426,7 +426,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Override
     public GetGoodsResponse getGoods(GetGoodsRequest request) {
-        logger.info("Get goods by request = [{}]", request);
+        logger.info("Get goods by request = {}", request);
 
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<GetGoodsRequest> httpEntity = new HttpEntity<>(headers);
@@ -463,7 +463,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Override
     public void setGoodPriceAndDiscount(SetGoodPriceRequest request) {
-        logger.info("Set goods new price and discount by request = [{}]", request);
+        logger.info("Set goods new price and discount by request = {}", request);
 
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<SetGoodPriceRequest> httpEntity = new HttpEntity<>(request, headers);
