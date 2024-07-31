@@ -115,14 +115,11 @@ public class AdvertStartService {
             wildberriesIntegrationService.setGoodPriceAndDiscount(request);
         }
 
-        //  TODO: костыль для админки
-        if (chatId != null) {
-            AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()
-                    .setNmId(advertToStart.getItemId())
-                    .setPhotoNumber(CARD_MAIN_PHOTO_POSITION)
-                    .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
-            wildberriesIntegrationService.uploadPhoto(request);
-        }
+        AdvertUploadPhotoRequest request = new AdvertUploadPhotoRequest()
+                .setNmId(advertToStart.getItemId())
+                .setPhotoNumber(CARD_MAIN_PHOTO_POSITION)
+                .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
+        wildberriesIntegrationService.uploadPhoto(request);
 
         ChangeStocksRequest changeStocksRequest = new ChangeStocksRequest().setStocks(List.of(new SkuDto()
                 .setSku(card.getBarcode())
