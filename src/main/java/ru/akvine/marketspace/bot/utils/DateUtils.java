@@ -3,6 +3,7 @@ package ru.akvine.marketspace.bot.utils;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -44,5 +45,9 @@ public class DateUtils {
             return null;
         }
         return localDateTime.format(dateTimeFormatter);
+    }
+
+    public LocalDateTime getStartOfNextDay() {
+        return LocalDate.now().plusDays(1).atStartOfDay();
     }
 }

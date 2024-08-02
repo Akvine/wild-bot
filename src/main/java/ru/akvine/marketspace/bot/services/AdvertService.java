@@ -100,6 +100,7 @@ public class AdvertService {
                 .setStartCheckDateTime(advertBean.getStartCheckDateTime())
                 .setCheckBudgetSum(advertBean.getCheckBudgetSum())
                 .setLocked(advertBean.isLocked())
+                .setAvailableForStart(advertBean.getAvailableForStart())
                 .setUpdatedDate(LocalDateTime.now());
         AdvertBean updatedAdvert = new AdvertBean(advertRepository.save(advertEntity));
 
@@ -123,6 +124,7 @@ public class AdvertService {
                 .stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.PAUSE))
                 .filter(advertBean -> !advertBean.isLocked())
+                .filter(AdvertBean::isAvailableForStart)
                 .toList();
         if (!pauseAdvertBeans.isEmpty()) {
             AdvertBean pauseAdvert = pauseAdvertBeans.getFirst();
@@ -134,6 +136,7 @@ public class AdvertService {
                 .stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.READY_FOR_START))
                 .filter(advertBean -> !advertBean.isLocked())
+                .filter(AdvertBean::isAvailableForStart)
                 .toList();
         if (!readyForStartAdvertBeans.isEmpty()) {
             AdvertBean advertReadyForStart = readyForStartAdvertBeans.getFirst();

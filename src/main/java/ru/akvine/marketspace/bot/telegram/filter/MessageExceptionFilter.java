@@ -29,6 +29,8 @@ public class MessageExceptionFilter extends MessageFilter {
             logger.debug("Update data was reached in MessageException filter for chat with id = {}", chatId);
             return nextMessageFilter.handle(update);
         } catch (Exception exception) {
+
+            // TODO : подумать в сторону паттерна стратегия или посмотреть аналог ExceptionHandler из спринга
             if (exception instanceof BlockedCredentialsException) {
                 return processBlockedCredentialsException(chatId, exception.getMessage());
             }

@@ -22,6 +22,8 @@ public class AdvertDto {
     private Integer startBudgetSum;
     private Integer checkBudgetSum;
     private LocalDateTime nextCheckDateTime;
+    private LocalDateTime availableForStart;
+    private boolean isAvailable;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 }

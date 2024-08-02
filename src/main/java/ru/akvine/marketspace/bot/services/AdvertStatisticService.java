@@ -10,12 +10,14 @@ import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.exceptions.AdvertStatisticNotFoundException;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.repositories.ClientRepository;
+import ru.akvine.marketspace.bot.services.domain.AdvertBean;
 import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticDatesDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticIntervalDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticResponse;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertStatisticInterval;
+import ru.akvine.marketspace.bot.utils.DateUtils;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -31,6 +33,7 @@ public class AdvertStatisticService {
     // TODO : сделать все через clientService
     private final ClientRepository clientRepository;
     private final ClientService clientService;
+    private final AdvertService advertService;
 
     public AdvertStatisticBean getAndSave(AdvertEntity advert) {
         logger.info("Start getting advert full statistic for advert = [{}]", advert);
@@ -80,6 +83,9 @@ public class AdvertStatisticService {
         ClientEntity client = clientService.verifyExistsByChatId(advert.getClient().getChatId());
         client.decreaseOneTest();
         clientRepository.save(client);
+
+        advert.setAvailableForStart(DateUtils.getStartOfNextDay());
+        advertService.update(new AdvertBean(advert));
 
         logger.info("Successful get statistic from wb and save it = [{}]", savedAdvertStatistic);
         return savedAdvertStatistic;

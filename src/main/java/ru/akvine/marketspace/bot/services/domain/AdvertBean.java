@@ -32,6 +32,7 @@ public class AdvertBean extends SoftBean {
     private LocalDateTime startCheckDateTime;
     @Nullable
     private LocalDateTime nextCheckDateTime;
+    private LocalDateTime availableForStart;
     private boolean locked;
 
     public AdvertBean(AdvertEntity advertEntity) {
@@ -50,6 +51,7 @@ public class AdvertBean extends SoftBean {
         this.startCheckDateTime = advertEntity.getStartCheckDateTime();
         this.startBudgetSum = advertEntity.getStartBudgetSum();
         this.checkBudgetSum = advertEntity.getCheckBudgetSum();
+        this.availableForStart = advertEntity.getAvailableForStart();
 
         this.createdDate = advertEntity.getCreatedDate();
         this.updatedDate = advertEntity.getUpdatedDate();
@@ -59,5 +61,9 @@ public class AdvertBean extends SoftBean {
 
     public void plusStartBudget(int value) {
         this.startBudgetSum += value;
+    }
+
+    public boolean isAvailableForStart() {
+        return LocalDateTime.now().isAfter(availableForStart);
     }
 }

@@ -20,6 +20,7 @@ import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrati
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
+import ru.akvine.marketspace.bot.utils.DateUtils;
 
 import java.util.List;
 
@@ -119,6 +120,7 @@ public class AdvertAdminService {
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
         advertEntity.setClient(null);
         advertEntity.setLocked(false);
+        advertEntity.setAvailableForStart(DateUtils.getStartOfNextDay());
         AdvertBean updatedAdvert = advertService.update(new AdvertBean(advertEntity));
 
         logger.info("Successful force pause advert = [{}]", updatedAdvert);

@@ -75,6 +75,8 @@ public class AdvertConverter {
                 .setNextCheckDateTime(advertBean.getNextCheckDateTime())
                 .setStatus(advertBean.getStatus())
                 .setType(advertBean.getType())
+                .setAvailableForStart(advertBean.getAvailableForStart())
+                .setAvailable(advertBean.isAvailableForStart())
                 .setCreatedDate(advertBean.getCreatedDate())
                 .setUpdatedDate(advertBean.getUpdatedDate());
     }

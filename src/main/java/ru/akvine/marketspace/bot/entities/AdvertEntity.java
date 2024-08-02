@@ -70,10 +70,18 @@ public class AdvertEntity extends SoftBaseEntity {
     @Column(name = "CHECK_BUDGET_SUM")
     private Integer checkBudgetSum;
 
+    @Column(name = "AVAILABLE_FOR_START")
+    private LocalDateTime availableForStart = LocalDateTime.now();
+
     @OneToOne
     @JoinColumn(name = "LAUNCHED_BY_CLIENT_ID")
     private ClientEntity client;
 
     @Column(name = "IS_LOCKED", nullable = false)
     private boolean locked;
+
+    @Transient
+    public boolean isAvailableForStart() {
+        return LocalDateTime.now().isAfter(availableForStart);
+    }
 }

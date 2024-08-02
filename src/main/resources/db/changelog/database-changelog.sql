@@ -278,3 +278,8 @@ ALTER TABLE CLIENT_ENTITY ADD COLUMN AVAILABLE_TESTS_COUNT INTEGER DEFAULT 0;
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'IS_ACTIVE';
 ALTER TABLE ADVERT_STATISTIC_ENTITY ADD COLUMN IS_ACTIVE BOOLEAN DEFAULT FALSE;
+
+--changeset akvine:TG-BOT-1-26
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_ENTITY' and upper(column_name) = 'AVAILABLE_FOR_START';
+ALTER TABLE ADVERT_STATISTIC_ENTITY ADD COLUMN AVAILABLE_FOR_START TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
