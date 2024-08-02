@@ -129,4 +129,13 @@ public interface WildberriesIntegrationService {
      * @param request
      */
     void setGoodPriceAndDiscount(SetGoodPriceRequest request);
+
+    /**
+     * Создать автоматическую рекламную кампанию.
+     * В ответе возвращает id рекламной кампании (advertId)
+     *
+     * @param request
+     * @return
+     */
+    int createAdvert(AdvertCreateRequest request);
 }

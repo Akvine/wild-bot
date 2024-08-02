@@ -10,13 +10,18 @@ import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.enums.AdvertType;
+import ru.akvine.marketspace.bot.enums.DebitType;
 import ru.akvine.marketspace.bot.exceptions.AdvertNotFoundException;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.CardBean;
+import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertDto;
+import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertCreateRequest;
 import ru.akvine.marketspace.bot.utils.UUIDGenerator;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +31,15 @@ import java.util.stream.Collectors;
 public class AdvertService {
     private final AdvertRepository advertRepository;
     private final ClientService clientService;
+    private final WildberriesIntegrationService wildberriesIntegrationService;
+    private final CardService cardService;
+
+    @Value("${create.adverts.by.api.enabled}")
+    private boolean createAdvertsByApi;
+    @Value("${advert.budget.sum.increase.value}")
+    private int advertBudgetSumIncrease;
+    @Value("${advert.min.cpm}")
+    private int advertMinCpm;
 
     public void saveAll(List<AdvertDto> adverts) {
         Preconditions.checkNotNull(adverts, "loadedAdverts is null");
@@ -47,7 +61,7 @@ public class AdvertService {
                 advertEntity.setCpm(advertDto.getAdvertParams().getCpm());
             }
             advertRepository.save(advertEntity);
-            });
+        });
 
         logger.info("Successful save new adverts");
     }
@@ -142,6 +156,39 @@ public class AdvertService {
             AdvertBean advertReadyForStart = readyForStartAdvertBeans.getFirst();
             logger.info("Return ready for start advert = [{}]", advertReadyForStart);
             return advertReadyForStart;
+        }
+
+        if (createAdvertsByApi) {
+            logger.info("Create advert with category id = {} by API", categoryId);
+            CardBean cardBean = cardService.getFirst(categoryId);
+            String advertName = "Created by API: " + LocalDateTime.now();
+            AdvertCreateRequest request = new AdvertCreateRequest()
+                    .setSubjectId(categoryId)
+                    .setSum(advertBudgetSumIncrease)
+                    .setName(advertName)
+                    .setType(AdvertType.AUTO.getCode())
+                    .setBtype(DebitType.ACCOUNT.getCode())
+                    .setOnPause(true)
+                    .setCpm(advertMinCpm)
+                    .setNms(new int[]{cardBean.getItemId()});
+            int advertId = wildberriesIntegrationService.createAdvert(request);
+
+            AdvertEntity advertEntity = new AdvertEntity()
+                    .setUuid(UUIDGenerator.uuidWithoutDashes())
+                    .setAdvertId(advertId)
+                    .setChangeTime(new Date())
+                    .setLocked(false)
+                    .setCpm(advertMinCpm)
+                    .setCategoryId(categoryId)
+                    .setItemId(cardBean.getItemId())
+                    .setStatus(AdvertStatus.PAUSE)
+                    .setOrdinalStatus(AdvertStatus.PAUSE.getCode())
+                    .setType(AdvertType.AUTO)
+                    .setOrdinalType(AdvertType.AUTO.getCode())
+                    .setName(advertName);
+            AdvertEntity savedAdvert = advertRepository.save(advertEntity);
+            savedAdvert.setAvailableForStart(LocalDateTime.now().plusMinutes(3));
+            advertRepository.save(savedAdvert);
         }
 
         String errorMessage = String.format(

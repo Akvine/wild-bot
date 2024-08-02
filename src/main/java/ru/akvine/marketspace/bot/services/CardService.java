@@ -13,6 +13,7 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SizeD
 import ru.akvine.marketspace.bot.utils.UUIDGenerator;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,5 +70,24 @@ public class CardService {
         return cardRepository
                 .findByItemId(itemId)
                 .orElseThrow(() -> new CardNotFoundException("Card with item id = [" + itemId + "] not found!"));
+    }
+
+    public CardBean getFirst(int categoryId) {
+        logger.info("Get first card by categoryId = {}", categoryId);
+
+        try {
+            return getByCategoryId(categoryId).getFirst();
+        } catch (NoSuchElementException exception) {
+            throw new CardNotFoundException("No one card with category id = [" + categoryId + "] not found!");
+        }
+    }
+
+    public List<CardBean> getByCategoryId(int categoryId) {
+        logger.info("Get cards by category id = {}", categoryId);
+        return cardRepository
+                .findByCategoryId(categoryId)
+                .stream()
+                .map(CardBean::new)
+                .toList();
     }
 }

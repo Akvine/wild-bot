@@ -20,7 +20,8 @@ public enum WildberriesApiMethods {
     CHANGE_CARD_STOCKS("https://suppliers-api.wildberries.ru", "/api/v3/stocks/"),
     GET_ADVERTS_FULL_STATISTIC("https://advert-api.wb.ru", "/adv/v2/fullstats"),
     GET_GOODS("https://discounts-prices-api.wildberries.ru", "/api/v2/list/goods/filter"),
-    SET_GOODS_PRICE_AND_DISCOUNT("https://discounts-prices-api.wildberries.ru", "/api/v2/upload/task");
+    SET_GOODS_PRICE_AND_DISCOUNT("https://discounts-prices-api.wildberries.ru", "/api/v2/upload/task"),
+    CREATE_AUTO_ADVERT("https://advert-api.wildberries.ru", "/adv/v1/save-ad");
 
     private final String url;
     private final String method;

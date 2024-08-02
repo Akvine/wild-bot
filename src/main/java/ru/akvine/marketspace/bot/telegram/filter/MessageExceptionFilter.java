@@ -59,7 +59,7 @@ public class MessageExceptionFilter extends MessageFilter {
     private SendMessage processGeneralException(String chatId, Exception exception) {
         logger.error("Some error occurred for chatId = {}, ex = {}", chatId, exception.getMessage());
         String messageToUser = String.format(
-                "Произошла неизвестная ошибка... \nПожалуйста, обратитесь в поддержку: %s",
+                "Произошла неизвестная ошибка :( \nПожалуйста, обратитесь в поддержку: %s",
                 supportUrl
         );
         return new SendMessage(chatId, messageToUser);
@@ -74,7 +74,7 @@ public class MessageExceptionFilter extends MessageFilter {
         logger.warn(
                 "For chat with id = {} has no advert. Message = {}",
                 chatId, exceptionMessage);
-        return new SendMessage(chatId, "Рекламная кампания не найдена");
+        return new SendMessage(chatId, "Рекламная кампания для запуска не найдена. Попробуйте позже...");
     }
 
     private SendMessage processStartAdvertException(String chatId, AdvertStartException exception) {

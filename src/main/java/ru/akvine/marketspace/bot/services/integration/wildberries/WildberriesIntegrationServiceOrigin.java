@@ -483,6 +483,31 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         }
     }
 
+    @Override
+    public int createAdvert(AdvertCreateRequest request) {
+        logger.info("Create advert by request = {}", request);
+
+        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpEntity<AdvertCreateRequest> httpEntity = new HttpEntity<>(request, headers);
+
+        String response;
+        try {
+            response = restTemplate.exchange(
+                    WildberriesApiMethods.CREATE_AUTO_ADVERT.getUrl() + WildberriesApiMethods.CREATE_AUTO_ADVERT.getMethod(),
+                    HttpMethod.POST,
+                    httpEntity,
+                    String.class
+            ).getBody();
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling wb api method = [%s]. Message = %s",
+                    WildberriesApiMethods.CREATE_AUTO_ADVERT, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+
+        return Integer.parseInt(response);
+    }
+
     private HttpHeaders buildHttpHeadersForJsonBody() {
         HttpHeaders headers = buildHttpHeadersInternal();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);

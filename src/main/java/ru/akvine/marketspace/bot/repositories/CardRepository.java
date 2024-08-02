@@ -16,4 +16,7 @@ public interface CardRepository extends JpaRepository<CardEntity, Long> {
 
     @Query("from CardEntity ce where ce.itemId = :itemId and ce.deleted = false and ce.deletedDate is null")
     Optional<CardEntity> findByItemId(@Param("itemId") int itemId);
+
+    @Query("from CardEntity ce where ce.categoryId = :categoryId and ce.deleted = false")
+    List<CardEntity> findByCategoryId(@Param("categoryId") int categoryId);
 }

@@ -21,7 +21,7 @@ public class StartConverter {
         List<List<InlineKeyboardButton>> buttons = aggregateCards
                 .stream()
                 .map(aggregateCard -> {
-                    String text = aggregateCard.getCategoryTitle() + " (" + aggregateCard.getCount() + ")";
+                    String text = aggregateCard.getCategoryTitle();
                     InlineKeyboardButton button = new InlineKeyboardButton();
                     button.setText(text);
                     button.setCallbackData(String.valueOf(aggregateCard.getCategoryId()));

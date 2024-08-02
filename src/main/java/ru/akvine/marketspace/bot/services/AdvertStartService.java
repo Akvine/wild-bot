@@ -84,6 +84,7 @@ public class AdvertStartService {
         }
         advertToStart.setCheckBudgetSum(advertToStart.getStartBudgetSum());
 
+        // TODO : убрать в рамках рефакторинга
         ThreadUtils.sleep(5000);
 
         AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
