@@ -20,10 +20,6 @@ import ru.akvine.marketspace.bot.services.AdvertService;
 
 @Configuration
 public class InfrastructureBeansConfig {
-    @Bean
-    public StateStorage<String> stateStorage() {
-        return new StateStorageInMemoryImpl();
-    }
 
     @Bean
     @ConditionalOnProperty(name = "state.storage.implementation.type", havingValue = "memory")

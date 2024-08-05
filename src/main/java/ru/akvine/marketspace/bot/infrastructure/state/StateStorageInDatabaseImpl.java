@@ -17,7 +17,9 @@ public class StateStorageInDatabaseImpl implements StateStorage<String> {
     public void setState(String chatId, ClientState state) {
         ClientState clientState = getState(chatId);
         if (clientState == null) {
-            StateEntity stateEntity = new StateEntity().setClientState(state);
+            StateEntity stateEntity = new StateEntity()
+                    .setChatId(chatId)
+                    .setClientState(state);
             stateRepository.save(stateEntity);
         } else {
             StateEntity stateEntity = getByChatId(chatId).setClientState(state);
