@@ -11,17 +11,16 @@ import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.exceptions.AdvertStartException;
-import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
+import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
+import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
+import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
-import ru.akvine.marketspace.bot.services.counter.IterationsCounterService;
 import ru.akvine.marketspace.bot.services.domain.AdvertBean;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SkuDto;
 import ru.akvine.marketspace.bot.utils.DateUtils;
-import ru.akvine.marketspace.bot.utils.ThreadUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +34,7 @@ public class AdvertStartService {
     private final ClientService clientService;
     private final AdvertStatisticRepository advertStatisticRepository;
     private final WildberriesIntegrationService wildberriesIntegrationService;
-    private final IterationsCounterService iterationsCounterService;
+    private final CountersStorage countersStorage;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
     @Value("${check.advert.cron.milliseconds}")
@@ -53,10 +52,9 @@ public class AdvertStartService {
     private final static int CARD_MAIN_PHOTO_POSITION = 1;
 
     public AdvertBean start(String chatId) {
-        // TODO : убрать локирование РК, когда будем создавать РК, если нет свободных
         try {
             Preconditions.checkNotNull(chatId, "chatId is null");
-            Integer categoryId = sessionStorage.get(chatId).getChoosenCategoryId();
+            Integer categoryId = sessionStorage.get(chatId).getSelectedCategoryId();
             logger.info("Try to start first one advert with category id = {}", categoryId);
             return startInternal(chatId);
         } catch (Exception exception) {
@@ -83,9 +81,6 @@ public class AdvertStartService {
             advertToStart.setStartBudgetSum(advertTotalBudget);
         }
         advertToStart.setCheckBudgetSum(advertToStart.getStartBudgetSum());
-
-        // TODO : убрать в рамках рефакторинга
-        ThreadUtils.sleep(5000);
 
         AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
                 .setAdvertId(advertId)
@@ -138,7 +133,7 @@ public class AdvertStartService {
                 .setClient(client);
         advertStatisticRepository.save(advertStatisticEntity);
 
-        iterationsCounterService.add(advertToStart.getAdvertId());
+        countersStorage.add(advertToStart.getAdvertId());
         sessionStorage.close(chatId);
 
         logger.info("Successful start advert = [{}]", updatedAdvert);

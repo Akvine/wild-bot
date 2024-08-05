@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import ru.akvine.marketspace.bot.admin.dto.client.*;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
-import ru.akvine.marketspace.bot.exceptions.handler.CommonErrorCodes;
+import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
 
 @Component
 public class ClientValidator extends AdminValidator {
@@ -19,14 +19,14 @@ public class ClientValidator extends AdminValidator {
 
         if (StringUtils.isBlank(request.getUsername()) && StringUtils.isBlank(request.getChatId())) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.BOTH_PARAMETERS_BLANK_ERROR,
+                    ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,
                     "Username and chatId parameters is blank"
             );
         }
 
         if (request.getCount() < 1) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.LESS_THEN_MIN_VALUE_ERROR,
+                    ApiErrorConstants.Validation.LESS_THEN_MIN_VALUE_ERROR,
                     "Count parameter can't be less than 1"
             );
         }
@@ -39,14 +39,14 @@ public class ClientValidator extends AdminValidator {
             String errorMessage = String.format(
                     "Clients count to send message = [%s] is greater than max = [%s]",
                     request.getChatIds().size(), maxClientsSendMessageCount);
-            throw new ValidationException(CommonErrorCodes.Validation.MAX_CLIENTS_SEND_MESSAGE_COUNT_ERROR, errorMessage);
+            throw new ValidationException(ApiErrorConstants.Validation.MAX_CLIENTS_SEND_MESSAGE_COUNT_ERROR, errorMessage);
         }
 
         if (!CollectionUtils.isEmpty(request.getUsernames()) && request.getUsernames().size() > maxClientsSendMessageCount) {
             String errorMessage = String.format(
                     "Clients count to send message = [%s] is greater than max = [%s]",
                     request.getChatIds().size(), maxClientsSendMessageCount);
-            throw new ValidationException(CommonErrorCodes.Validation.MAX_CLIENTS_SEND_MESSAGE_COUNT_ERROR, errorMessage);
+            throw new ValidationException(ApiErrorConstants.Validation.MAX_CLIENTS_SEND_MESSAGE_COUNT_ERROR, errorMessage);
         }
     }
 
@@ -66,13 +66,13 @@ public class ClientValidator extends AdminValidator {
         verifySecret(request);
         if (StringUtils.isBlank(request.getChatId()) && StringUtils.isBlank(request.getUsername())) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.BOTH_PARAMETERS_BLANK_ERROR,
+                    ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,
                     "Username or chat id are not presented. Must  be only one of these params"
             );
         }
         if (StringUtils.isNotBlank(request.getChatId()) && StringUtils.isNotBlank(request.getUsername())) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
+                    ApiErrorConstants.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
                     "Username and chat id are presented. Must  be only one of these params"
             );
         }
@@ -81,12 +81,12 @@ public class ClientValidator extends AdminValidator {
     private void verifyBlockRequest(BlockRequest request) {
         if (StringUtils.isBlank(request.getUuid()) && StringUtils.isBlank(request.getChatId()) && StringUtils.isBlank(request.getUsername())) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.BOTH_PARAMETERS_BLANK_ERROR,
+                    ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,
                     "Username, chatId and client uuid are not presented. Must be only one of these params");
         }
         if (StringUtils.isNotBlank(request.getUuid()) && StringUtils.isNotBlank(request.getChatId()) && StringUtils.isNotBlank(request.getUsername())) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
+                    ApiErrorConstants.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
                     "Username, chatId and client uuid are presented. Must be only one of these params");
         }
     }

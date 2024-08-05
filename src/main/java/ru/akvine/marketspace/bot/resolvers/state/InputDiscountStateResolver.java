@@ -6,13 +6,12 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
-import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
+import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
+import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
+import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.services.WildberriesCalculationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 import ru.akvine.marketspace.bot.utils.MathUtils;
@@ -48,12 +47,15 @@ public class InputDiscountStateResolver implements StateResolver {
             return new SendMessage(chatId, "Скидка не может быть больше 100");
         }
 
-        sessionStorage.get(chatId).setNewCardDiscount(newDiscount);
+        ClientSessionData session = sessionStorage.get(chatId);
+        session.setNewCardDiscount(newDiscount);
+        sessionStorage.save(session);
+
         setNextState(chatId, ClientState.INPUT_NEW_CARD_DISCOUNT_STATE);
 
         String message = buildMessage(
-                sessionStorage.get(chatId).getNewCardPrice(),
-                sessionStorage.get(chatId).getNewCardDiscount()
+                session.getNewCardPrice(),
+                session.getNewCardDiscount()
         );
 
         SendMessage sendMessage = new SendMessage(chatId, message);

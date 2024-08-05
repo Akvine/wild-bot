@@ -8,9 +8,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
-import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
+import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
+import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
+import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.services.AdvertService;
@@ -59,10 +59,13 @@ public class UploadCardPhotoStateResolver implements StateResolver {
         photoValidator.validate(photo);
 
         String message = lockHelper.doWithLock(UPLOAD_CARD_PHOTO_STATE + chatId, () -> {
-            AdvertBean advertBean = advertService.getFirst(sessionStorage.get(chatId).getChoosenCategoryId());
+            AdvertBean advertBean = advertService.getFirst(sessionStorage.get(chatId).getSelectedCategoryId());
             advertBean.setLocked(true);
             advertService.update(advertBean);
-            sessionStorage.get(chatId).setLockedAdvertId(advertBean.getAdvertId());
+
+            ClientSessionData session = sessionStorage.get(chatId);
+            session.setLockedAdvertId(advertBean.getAdvertId());
+            sessionStorage.save(session);
 
             int nmId = advertBean.getItemId();
             GetGoodsRequest request = new GetGoodsRequest()
@@ -82,7 +85,10 @@ public class UploadCardPhotoStateResolver implements StateResolver {
             }
         });
 
-        sessionStorage.get(chatId).setUploadedCardPhoto(photo);
+        ClientSessionData session = sessionStorage.get(chatId);
+        session.setUploadedCardPhoto(photo);
+        sessionStorage.save(session);
+
         setNextState(chatId, ClientState.IS_NEED_INPUT_NEW_CARD_PRICE_STATE);
 
         SendMessage sendMessage = new SendMessage(chatId, message);

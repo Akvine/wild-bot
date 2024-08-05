@@ -54,8 +54,8 @@ public class ClientService {
         String uuid = verifyExistsByChatId(chatId).getUuid();
         LocalDateTime blockDateTime = blockingService.getEndBlockDate(uuid);
         if (blockDateTime != null) {
-            String errorMessage = String.format("Вы были заблокированы до %s!", blockDateTime.toLocalDate());
-            throw new BlockedCredentialsException(errorMessage);
+            String errorMessage = String.format("Client with chat id = [%s] has blocked until = [%s]!", chatId, blockDateTime);
+            throw new BlockedCredentialsException(errorMessage, blockDateTime.toLocalDate());
         }
     }
 

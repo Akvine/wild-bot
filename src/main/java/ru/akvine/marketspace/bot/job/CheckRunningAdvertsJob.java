@@ -12,7 +12,7 @@ import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.CardService;
-import ru.akvine.marketspace.bot.services.counter.IterationsCounterService;
+import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
@@ -29,7 +29,7 @@ public class CheckRunningAdvertsJob {
     private final CardService cardService;
     private final TelegramIntegrationService telegramIntegrationService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
-    private final IterationsCounterService iterationsCounterService;
+    private final CountersStorage countersStorage;
     private final AdvertStatisticService advertStatisticService;
 
     private final String name;
@@ -86,7 +86,7 @@ public class CheckRunningAdvertsJob {
                 advert.setClient(null);
                 advert.setLocked(false);
                 advertRepository.save(advert);
-                iterationsCounterService.delete(advertId);
+                countersStorage.delete(advertId);
 
                 String finishedTestMessage = String.format(
                         "Тест с advert id = %s успешно завершился.\nВведите команду /report для просмотра отчета",
@@ -96,7 +96,7 @@ public class CheckRunningAdvertsJob {
                 continue;
             }
             if (currentCpm <= advertMaxCpm) {
-                if (iterationsCounterService.check(advertId, maxIterationsBeforeIncreaseCpm)) {
+                if (countersStorage.check(advertId, maxIterationsBeforeIncreaseCpm)) {
                     logger.info("Increase cpm for advert with id = {}", advertId);
 
                     int newCpm = advert.getCpm() + advertCpmIncreaseValue;
@@ -109,7 +109,7 @@ public class CheckRunningAdvertsJob {
 
                     advert.setCpm(newCpm);
                 }
-                iterationsCounterService.increase(advertId);
+                countersStorage.increase(advertId);
             }
             long seconds = checkMilliseconds / 1000;
             advert.setCheckBudgetSum(currentBudgetSum);

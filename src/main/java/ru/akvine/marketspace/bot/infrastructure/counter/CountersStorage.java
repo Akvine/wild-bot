@@ -1,6 +1,6 @@
-package ru.akvine.marketspace.bot.services.counter;
+package ru.akvine.marketspace.bot.infrastructure.counter;
 
-public interface IterationsCounterService {
+public interface CountersStorage {
     int ZERO_COUNT_INIT = 0;
 
     void add(int advertId);

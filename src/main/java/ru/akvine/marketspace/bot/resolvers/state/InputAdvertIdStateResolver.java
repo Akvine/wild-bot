@@ -7,15 +7,14 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
-import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
 import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
+import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.counter.IterationsCounterService;
+import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
@@ -28,7 +27,7 @@ public class InputAdvertIdStateResolver implements StateResolver {
     private final AdvertService advertService;
     private final AdvertStatisticService advertStatisticService;
     private final ClientService clientService;
-    private final IterationsCounterService iterationsCounterService;
+    private final CountersStorage countersStorage;
 
     @Override
     public BotApiMethod<?> resolve(TelegramData data) {
@@ -49,7 +48,7 @@ public class InputAdvertIdStateResolver implements StateResolver {
         long clientId = clientService.getByChatId(chatId).getId();
         AdvertEntity advertToStop = advertService.verifyExistsByAdvertIdAndClientId(advertId, clientId);
         AdvertStatisticBean advertStatistic = advertStatisticService.getAndSave(advertToStop);
-        iterationsCounterService.delete(advertId);
+        countersStorage.delete(advertId);
         String message = buildStatisticMessage(advertStatistic);
         stateStorage.removeState(chatId);
         return new SendMessage(chatId, message);

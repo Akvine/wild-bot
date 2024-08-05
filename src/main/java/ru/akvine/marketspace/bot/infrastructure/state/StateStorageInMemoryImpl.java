@@ -1,10 +1,9 @@
-package ru.akvine.marketspace.bot.infrastructure.impl;
+package ru.akvine.marketspace.bot.infrastructure.state;
 
 import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

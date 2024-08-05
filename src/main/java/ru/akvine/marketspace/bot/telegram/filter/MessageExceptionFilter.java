@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.marketspace.bot.exceptions.*;
 
-import static ru.akvine.marketspace.bot.constants.TelegramMessageConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -30,7 +30,6 @@ public class MessageExceptionFilter extends MessageFilter {
             return nextMessageFilter.handle(update);
         } catch (Exception exception) {
 
-            // TODO : подумать в сторону паттерна стратегия или посмотреть аналог ExceptionHandler из спринга
             if (exception instanceof BlockedCredentialsException) {
                 return processBlockedCredentialsException(chatId, exception.getMessage());
             }

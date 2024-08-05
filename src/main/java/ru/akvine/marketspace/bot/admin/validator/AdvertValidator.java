@@ -7,7 +7,7 @@ import ru.akvine.marketspace.bot.admin.dto.advert.ListAdvertRequest;
 import ru.akvine.marketspace.bot.admin.dto.advert.PauseAdvertRequest;
 import ru.akvine.marketspace.bot.admin.dto.advert.RenameAdvertRequest;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
-import ru.akvine.marketspace.bot.exceptions.handler.CommonErrorCodes;
+import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
 import ru.akvine.marketspace.bot.validator.AdvertStatusValidator;
 
 @Component
@@ -33,14 +33,14 @@ public class AdvertValidator extends AdminValidator {
     public void verifyUuidAndIdParams(String uuid, Integer id) {
         if (StringUtils.isNotBlank(uuid) && id != null) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
+                    ApiErrorConstants.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
                     "Presented advertId and advertUuid. Need only one parameter"
             );
         }
 
         if (StringUtils.isBlank(uuid) && id == null) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.BOTH_PARAMETERS_BLANK_ERROR,
+                    ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,
                     "Blank advertId and advertUuid. Need only one parameter"
             );
         }

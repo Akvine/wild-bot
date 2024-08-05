@@ -7,9 +7,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
-import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
+import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
+import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
+import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
@@ -27,7 +27,7 @@ public class ChooseCategoryStateResolver implements StateResolver {
         Update update = data.getData();
         TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(data.getType());
         String chatId = resolver.extractChatId(update);
-        Integer categoryId;
+        int categoryId;
 
         try {
             categoryId = Integer.parseInt(resolver.extractText(data.getData()));
@@ -37,7 +37,10 @@ public class ChooseCategoryStateResolver implements StateResolver {
 
         logger.info("[{}] state resolved with category id = {}", getState(), categoryId);
 
-        sessionStorage.get(chatId).setChoosenCategoryId(categoryId);
+        ClientSessionData session = sessionStorage.get(chatId);
+        session.setSelectedCategoryId(categoryId);
+        sessionStorage.save(session);
+
         setNextState(chatId, ClientState.UPLOAD_NEW_CARD_PHOTO_STATE);
         return new SendMessage(chatId, "Загрузите новое изображение карточки: ");
     }

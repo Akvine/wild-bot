@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
-import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
+import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
+import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
+import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
@@ -40,7 +40,10 @@ public class InputNewPriceStateResolver implements StateResolver {
             return new SendMessage(chatId, "Цена не может быть меньше 0");
         }
 
-        sessionStorage.get(chatId).setNewCardPrice(newPrice);
+        ClientSessionData session = sessionStorage.get(chatId);
+        session.setNewCardPrice(newPrice);
+        sessionStorage.save(session);
+
         setNextState(chatId, ClientState.INPUT_NEW_CARD_DISCOUNT_STATE);
         return new SendMessage(chatId, "Введите скидку: ");
     }

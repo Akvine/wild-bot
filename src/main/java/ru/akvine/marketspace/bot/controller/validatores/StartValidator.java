@@ -20,9 +20,7 @@ public class StartValidator {
     public void verifyStart(String chatId) {
         int currentRunningAdvertsCount = advertService.getAdvertsByStatuses(List.of(AdvertStatus.RUNNING)).size();
         if (currentRunningAdvertsCount == maxRunningAdvertsLimit) {
-            String errorMessage = String.format(
-                    "Limit for max running adverts is reached for chat with id = [%s]",
-                    chatId);
+            String errorMessage = "Limit for max running adverts is reached!";
             throw new AdvertStartLimitException(errorMessage);
         }
     }

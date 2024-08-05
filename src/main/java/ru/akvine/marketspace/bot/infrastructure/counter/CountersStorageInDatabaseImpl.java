@@ -1,15 +1,15 @@
-package ru.akvine.marketspace.bot.services.counter;
+package ru.akvine.marketspace.bot.infrastructure.counter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
-import ru.akvine.marketspace.bot.entities.IterationCounterEntity;
+import ru.akvine.marketspace.bot.entities.infrastructure.IterationCounterEntity;
 import ru.akvine.marketspace.bot.exceptions.IterationCounterNotFoundException;
-import ru.akvine.marketspace.bot.repositories.IterationCounterRepository;
+import ru.akvine.marketspace.bot.repositories.infrastructure.IterationCounterRepository;
 
 @RequiredArgsConstructor
 @Slf4j
-public class IterationsCounterServiceInDatabaseImpl implements IterationsCounterService {
+public class CountersStorageInDatabaseImpl implements CountersStorage {
     private final IterationCounterRepository iterationCounterRepository;
 
     @Override

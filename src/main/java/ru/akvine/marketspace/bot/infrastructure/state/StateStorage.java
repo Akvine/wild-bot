@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.infrastructure;
+package ru.akvine.marketspace.bot.infrastructure.state;
 
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.marketspace.bot.enums.ClientState;

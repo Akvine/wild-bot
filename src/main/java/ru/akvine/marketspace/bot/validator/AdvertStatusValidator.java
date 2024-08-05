@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
-import ru.akvine.marketspace.bot.exceptions.handler.CommonErrorCodes;
+import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
 
 @Component
 public class AdvertStatusValidator implements Validator<String> {
@@ -12,7 +12,7 @@ public class AdvertStatusValidator implements Validator<String> {
     public void validate(String status) {
         if (StringUtils.isBlank(status)) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.ADVERT_STATUS_BLANK_ERROR,
+                    ApiErrorConstants.Validation.ADVERT_STATUS_BLANK_ERROR,
                     "Advert status is blank"
             );
         }
@@ -21,7 +21,7 @@ public class AdvertStatusValidator implements Validator<String> {
             AdvertStatus.valueOf(status.toUpperCase());
         } catch (Exception exception) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.ADVERT_STATUS_INVALID_ERROR,
+                    ApiErrorConstants.Validation.ADVERT_STATUS_INVALID_ERROR,
                     "Advert status is invalid"
             );
         }

@@ -45,7 +45,10 @@ public class BlockingService {
         logger.info("Remove block client with uuid = {}", uuid);
         BlockedCredentialsEntity blockedCredentialsEntity = blockedCredentialsRepository
                 .findByUuid(uuid)
-                .orElseThrow(() -> new BlockedCredentialsException("Not exists block record for client with uuid = [" + uuid + "]"));
+                .orElse(null);
+        if (blockedCredentialsEntity == null) {
+            return;
+        }
 
         blockedCredentialsRepository.delete(blockedCredentialsEntity);
     }

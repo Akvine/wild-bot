@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
 import ru.akvine.marketspace.bot.enums.ClientState;
 import ru.akvine.marketspace.bot.exceptions.AdvertStatisticNotFoundException;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
+import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;

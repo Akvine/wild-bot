@@ -263,6 +263,8 @@ CREATE TABLE ITERATION_COUNTER_ENTITY
     ID                      BIGINT       NOT NULL,
     ADVERT_ID               INTEGER      NOT NULL,
     COUNTER                 INTEGER      NOT NULL,
+    CREATED_DATE            TIMESTAMP    NOT NULL,
+    UPDATED_DATE            TIMESTAMP,
     CONSTRAINT ITERATION_COUNTER_PKEY PRIMARY KEY (id)
 );
 CREATE SEQUENCE SEQ_ITERATION_COUNTER_ENTITY START WITH 1 INCREMENT BY 1000;
@@ -283,3 +285,40 @@ ALTER TABLE ADVERT_STATISTIC_ENTITY ADD COLUMN IS_ACTIVE BOOLEAN DEFAULT FALSE;
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_ENTITY' and upper(column_name) = 'AVAILABLE_FOR_START';
 ALTER TABLE ADVERT_STATISTIC_ENTITY ADD COLUMN AVAILABLE_FOR_START TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+--changeset akvine:TG-BOT-1-27
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'CLIENT_SESSION_DATA_ENTITY' and table_schema = 'public';
+CREATE TABLE CLIENT_SESSION_DATA_ENTITY
+(
+    ID                                      BIGINT       NOT NULL,
+    CHAT_ID                                 VARCHAR(255) NOT NULL,
+    SELECTED_CATEGORY_ID                    INTEGER      NOT NULL,
+    UPLOADED_CARD_PHOTO                     BYTEA,
+    IS_INPUT_NEW_CARD_PRICE_AND_DISCOUNT    BOOLEAN      NOT NULL,
+    NEW_CARD_PRICE                          INTEGER,
+    NEW_CARD_DISCOUNT                       INTEGER,
+    LOCKED_ADVERT_ID                        INTEGER,
+    CREATED_DATE                            TIMESTAMP    NOT NULL,
+    UPDATED_DATE                            TIMESTAMP,
+    CONSTRAINT CLIENT_SESSION_DATA_PKEY PRIMARY KEY (id)
+);
+CREATE SEQUENCE SEQ_CLIENT_SESSION_DATA_ENTITY START WITH 1 INCREMENT BY 1000;
+CREATE UNIQUE INDEX CLIENT_SESSION_DATA_ID_INDEX ON CLIENT_SESSION_DATA_ENTITY (ID);
+CREATE UNIQUE INDEX CLIENT_SESSION_DATA_CHAT_ID_INDEX ON CLIENT_SESSION_DATA_ENTITY (CHAT_ID);
+
+--changeset akvine:TG-BOT-1-28
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'STATE_ENTITY' and table_schema = 'public';
+CREATE TABLE STATE_ENTITY
+(
+    ID                      BIGINT       NOT NULL,
+    CHAT_ID                 VARCHAR(255) NOT NULL,
+    STATE                   VARCHAR(255),
+    CREATED_DATE            TIMESTAMP    NOT NULL,
+    UPDATED_DATE            TIMESTAMP,
+    CONSTRAINT STATE_PKEY PRIMARY KEY (id)
+);
+CREATE SEQUENCE SEQ_STATE_ENTITY START WITH 1 INCREMENT BY 1000;
+CREATE UNIQUE INDEX STATE_ID_INDEX ON STATE_ENTITY (ID);
+CREATE UNIQUE INDEX STATE_CHAT_ID_INDEX ON STATE_ENTITY (CHAT_ID);

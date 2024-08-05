@@ -9,8 +9,8 @@ import ru.akvine.marketspace.bot.managers.CommandResolverManager;
 import ru.akvine.marketspace.bot.managers.StateResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.command.CommandResolver;
-import ru.akvine.marketspace.bot.resolvers.state.StateResolver;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.marketspace.bot.resolvers.state.StateResolver;
 
 import java.util.List;
 import java.util.Map;

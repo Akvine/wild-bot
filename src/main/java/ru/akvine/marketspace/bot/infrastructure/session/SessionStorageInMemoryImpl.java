@@ -1,7 +1,6 @@
-package ru.akvine.marketspace.bot.infrastructure.impl;
+package ru.akvine.marketspace.bot.infrastructure.session;
 
 import org.hibernate.SessionException;
-import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +17,12 @@ public class SessionStorageInMemoryImpl implements SessionStorage<String, Client
     public ClientSessionData get(String chatId) {
         validate(chatId);
         return sessions.get(chatId);
+    }
+
+    @Override
+    public ClientSessionData save(ClientSessionData data) {
+        String chatId = data.getChatId();
+        return sessions.replace(chatId, data);
     }
 
     @Override

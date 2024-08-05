@@ -51,7 +51,7 @@ public class LockHelper {
                 try {
                     return job.call();
                 } catch (Exception ex) {
-                    logger.debug("Error when performing job calling for lock " + lockId, ex);
+                    logger.debug("Error when performing job calling for lock {}", lockId, ex);
                     throw new RuntimeException(ex);
                 }
             });

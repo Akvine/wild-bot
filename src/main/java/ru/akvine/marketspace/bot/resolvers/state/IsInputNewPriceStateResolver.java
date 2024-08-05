@@ -7,9 +7,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.marketspace.bot.controller.AdvertStartController;
 import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
-import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
+import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
+import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
+import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
@@ -31,12 +31,15 @@ public class IsInputNewPriceStateResolver implements StateResolver {
 
         logger.info("[{}] state resolved with text = {}", getState(), text);
 
+
         if (text.equalsIgnoreCase("изменить")) {
-            sessionStorage.get(chatId).setInputNewCardPriceAndDiscount(true);
+            ClientSessionData session = sessionStorage.get(chatId);
+            session.setInputNewCardPriceAndDiscount(true);
+            sessionStorage.save(session);
+
             setNextState(chatId, ClientState.INPUT_NEW_CARD_PRICE_STATE);
             return new SendMessage(chatId, "Введите новую цену для карточки: ");
         } else if (text.equalsIgnoreCase("не изменять")) {
-            sessionStorage.get(chatId).setInputNewCardPriceAndDiscount(false);
             stateStorage.removeState(chatId);
             return advertStartController.startAdvert(chatId);
         } else {

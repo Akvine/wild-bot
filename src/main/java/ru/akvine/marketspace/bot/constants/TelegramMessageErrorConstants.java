@@ -1,8 +1,8 @@
 package ru.akvine.marketspace.bot.constants;
 
-public final class TelegramMessageConstants {
-    private TelegramMessageConstants() {
-        throw new IllegalStateException("Calling TelegramMessageConstants constructor is prohibited!");
+public final class TelegramMessageErrorConstants {
+    private TelegramMessageErrorConstants() throws IllegalAccessException {
+        throw new IllegalAccessException("Calling " + TelegramMessageErrorConstants.class.getSimpleName() + " constructor is prohibited!");
     }
 
     public static final String DEFAULT_MESSAGE = "Введите команду: ";

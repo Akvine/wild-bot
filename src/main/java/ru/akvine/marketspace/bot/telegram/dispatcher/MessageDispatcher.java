@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.marketspace.bot.enums.ClientState;
 import ru.akvine.marketspace.bot.enums.Command;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
+import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.managers.CommandResolverManager;
 import ru.akvine.marketspace.bot.managers.StateResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
@@ -15,7 +15,7 @@ import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.telegram.CommandResolver;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
-import static ru.akvine.marketspace.bot.constants.TelegramMessageConstants.UNKNOWN_COMMAND_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.UNKNOWN_COMMAND_MESSAGE;
 
 @Component
 @RequiredArgsConstructor

@@ -2,7 +2,7 @@ package ru.akvine.marketspace.bot.utils;
 
 import lombok.experimental.UtilityClass;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
-import ru.akvine.marketspace.bot.exceptions.handler.CommonErrorCodes;
+import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
 
 @UtilityClass
 public class MathUtils {
@@ -11,7 +11,7 @@ public class MathUtils {
     public double round(double value, int roundAccuracy) {
         if (roundAccuracy < 0) {
             throw new ValidationException(
-                    CommonErrorCodes.Validation.LESS_THEN_MIN_VALUE_ERROR,
+                    ApiErrorConstants.Validation.LESS_THEN_MIN_VALUE_ERROR,
                     "Round accuracy can't be less than min value = " + MIN_VALUE
             );
         }

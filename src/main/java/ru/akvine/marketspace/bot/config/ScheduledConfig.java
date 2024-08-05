@@ -12,7 +12,7 @@ import ru.akvine.marketspace.bot.repositories.CardRepository;
 import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.CardService;
-import ru.akvine.marketspace.bot.services.counter.IterationsCounterService;
+import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 
@@ -51,7 +51,7 @@ public class ScheduledConfig {
     public CheckRunningAdvertsJob checkRunningAdvertsJob(AdvertRepository advertRepository,
                                                          WildberriesIntegrationService wildberriesIntegrationService,
                                                          CardService cardService,
-                                                         IterationsCounterService iterationsCounterService,
+                                                         CountersStorage countersStorage,
                                                          AdvertStatisticService advertStatisticService,
                                                          TelegramIntegrationService telegramIntegrationService) {
         return new CheckRunningAdvertsJob(
@@ -59,7 +59,7 @@ public class ScheduledConfig {
                 cardService,
                 telegramIntegrationService,
                 wildberriesIntegrationService,
-                iterationsCounterService,
+                countersStorage,
                 advertStatisticService,
                 CheckRunningAdvertsJob.class.getSimpleName(),
                 SYSTEM

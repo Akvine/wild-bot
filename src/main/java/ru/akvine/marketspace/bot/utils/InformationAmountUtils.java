@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class InformationAmountUtils {
-    // TODO : сделать единый метод convert, который будет принимать from, to и count!
     public int fromMegabytesToBytes(int megabytesCount) {
         return (int) (megabytesCount * Math.pow(10, 6));
     }

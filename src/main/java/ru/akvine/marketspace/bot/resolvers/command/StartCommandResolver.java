@@ -9,9 +9,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.marketspace.bot.controller.AdvertStartController;
 import ru.akvine.marketspace.bot.enums.ClientState;
 import ru.akvine.marketspace.bot.enums.Command;
-import ru.akvine.marketspace.bot.infrastructure.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.StateStorage;
-import ru.akvine.marketspace.bot.infrastructure.impl.ClientSessionData;
+import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
+import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
+import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.services.ClientService;
 import ru.akvine.marketspace.bot.services.domain.ClientBean;
 

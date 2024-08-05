@@ -1,7 +1,7 @@
-package ru.akvine.marketspace.bot.exceptions.handler;
+package ru.akvine.marketspace.bot.constants;
 
-public class CommonErrorCodes {
-    private CommonErrorCodes() {throw new IllegalStateException("CommonErrorCodes can't be called!");}
+public final class ApiErrorConstants {
+    private ApiErrorConstants() throws IllegalAccessException {throw new IllegalAccessException("Calling " + ApiErrorConstants.class.getSimpleName() + " constructor is prohibited!");}
 
     public final static String GENERAL_ERROR = "general.error";
 
