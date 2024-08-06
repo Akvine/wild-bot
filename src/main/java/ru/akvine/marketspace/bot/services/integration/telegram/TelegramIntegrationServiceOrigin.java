@@ -88,7 +88,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
     @Override
     public void sendMessage(List<String> chatIds, String message) {
-        logger.info("Send message = {} to chat with ids = [{}]", message, chatIds);
+        logger.info("Send message = {} to chat with ids = {}", message, chatIds);
 
         try {
             for (String chatId : chatIds) {

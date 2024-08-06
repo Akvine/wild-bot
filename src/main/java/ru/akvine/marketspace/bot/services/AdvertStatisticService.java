@@ -19,7 +19,6 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.Adv
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertStatisticInterval;
 import ru.akvine.marketspace.bot.utils.DateUtils;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,8 +40,7 @@ public class AdvertStatisticService {
         AdvertStatisticEntity advertStatisticEntity = verifyExistsByClientIdAndAdvertId(advert.getClient().getId(), advert.getId());
 
         AdvertFullStatisticResponse[] response;
-        Duration duration = Duration.between(advert.getStartCheckDateTime(), LocalDateTime.now());
-        if (duration.toHours() < 24) {
+        if (DateUtils.isSameDay(advert.getStartCheckDateTime(), LocalDateTime.now())) {
             logger.info("Get advert with id = {} statistic by dates request", advert.getAdvertId());
             List<AdvertFullStatisticDatesDto> request = List.of(
                     new AdvertFullStatisticDatesDto()

@@ -50,4 +50,11 @@ public class DateUtils {
     public LocalDateTime getStartOfNextDay() {
         return LocalDate.now().plusDays(1).atStartOfDay();
     }
+
+    public boolean isSameDay(LocalDateTime from, LocalDateTime to) {
+        if (from == null || to == null) {
+            return false;
+        }
+        return from.toLocalDate().isEqual(to.toLocalDate());
+    }
 }

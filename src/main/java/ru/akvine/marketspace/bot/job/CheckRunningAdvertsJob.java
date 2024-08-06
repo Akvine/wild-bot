@@ -46,8 +46,6 @@ public class CheckRunningAdvertsJob {
     @Value("${advert.max.cpm}")
     private int advertMaxCpm;
 
-    private final static int PAUSE_STATUS_ADVERT_CODE = 11;
-
     @Scheduled(fixedDelayString = "${check.advert.cron.milliseconds}")
     public void checkRunningAdverts() {
         MDC.put(MDCConstants.USERNAME, name);
@@ -78,8 +76,8 @@ public class CheckRunningAdvertsJob {
                 wildberriesIntegrationService.changeStocks(request);
 
                 String chatId = advert.getClient().getChatId();
-                advert.setStatus(AdvertStatus.getByCode(PAUSE_STATUS_ADVERT_CODE));
-                advert.setOrdinalStatus(PAUSE_STATUS_ADVERT_CODE);
+                advert.setStatus(AdvertStatus.PAUSE);
+                advert.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
                 advert.setUpdatedDate(LocalDateTime.now());
                 advert.setNextCheckDateTime(null);
                 advert.setCheckBudgetSum(null);
@@ -95,7 +93,7 @@ public class CheckRunningAdvertsJob {
                 telegramIntegrationService.sendMessage(chatId, finishedTestMessage);
                 continue;
             }
-            if (currentCpm <= advertMaxCpm) {
+            if (currentCpm < advertMaxCpm) {
                 if (countersStorage.check(advertId, maxIterationsBeforeIncreaseCpm)) {
                     logger.info("Increase cpm for advert with id = {}", advertId);
 

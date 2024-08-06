@@ -19,7 +19,7 @@ import ru.akvine.marketspace.bot.utils.MathUtils;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class InputDiscountStateResolver implements StateResolver {
+public class InputNewDiscountStateResolver implements StateResolver {
     private final TelegramDataResolverManager dataResolverManager;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final StateStorage<String> stateStorage;
@@ -37,7 +37,7 @@ public class InputDiscountStateResolver implements StateResolver {
         try {
             newDiscount = Integer.parseInt(text);
         } catch (NumberFormatException exception) {
-            return new SendMessage(chatId, "Введите целое число!");
+            return new SendMessage(chatId, "Введите целое число! (Пример: 50)");
         }
 
         if (newDiscount < 0) {

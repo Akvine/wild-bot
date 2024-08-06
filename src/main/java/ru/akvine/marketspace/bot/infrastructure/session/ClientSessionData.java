@@ -31,8 +31,8 @@ public class ClientSessionData {
         this.selectedCategoryId = clientSessionDataEntity.getSelectedCategoryId();
         this.uploadedCardPhoto = clientSessionDataEntity.getUploadedCardPhoto();
         this.inputNewCardPriceAndDiscount = clientSessionDataEntity.isInputNewCardPriceAndDiscount();
-        this.newCardPrice = clientSessionDataEntity.getNewCardDiscount();
-        this.newCardDiscount = clientSessionDataEntity.getNewCardPrice();
+        this.newCardPrice = clientSessionDataEntity.getNewCardPrice();
+        this.newCardDiscount = clientSessionDataEntity.getNewCardDiscount();
         this.lockedAdvertId = clientSessionDataEntity.getLockedAdvertId();
 
         this.createdDate = clientSessionDataEntity.getCreatedDate();

@@ -56,7 +56,10 @@ public class MessageExceptionFilter extends MessageFilter {
     }
 
     private SendMessage processGeneralException(String chatId, Exception exception) {
-        logger.error("Some error occurred for chatId = {}, ex = {}", chatId, exception.getMessage());
+        logger.error("Some error occurred for chatId = {}. Message = {}. StackTrace: {}",
+                chatId,
+                exception.getMessage(),
+                exception.getStackTrace());
         String messageToUser = String.format(
                 "Произошла неизвестная ошибка :( \nПожалуйста, обратитесь в поддержку: %s",
                 supportUrl
