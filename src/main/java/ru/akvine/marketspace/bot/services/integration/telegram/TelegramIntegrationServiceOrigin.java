@@ -48,7 +48,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
     @Override
     public byte[] downloadPhoto(String photoId, String chatId) {
         Preconditions.checkNotNull(photoId, "photoId is null");
-        logger.info("Download photo with id = {} for chat with id = {}", photoId, chatId);
+        logger.info("Download photo with id = [{}] for chat with id = {}", photoId, chatId);
 
         try {
             GetFile getFileRequest = new GetFile();
@@ -71,7 +71,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
     @Override
     public void sendFile(InputStream file, String fileName, String chatId) {
-        logger.info("Send file with file name = {}", fileName);
+        logger.info("Send file with file name = [{}]", fileName);
 
         try {
             SendDocument sendDocument = new SendDocument();
@@ -88,7 +88,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
     @Override
     public void sendMessage(List<String> chatIds, String message) {
-        logger.info("Send message = {} to chat with ids = {}", message, chatIds);
+        logger.info("Send message = [{}] to chat with ids = {}", message, chatIds);
 
         try {
             for (String chatId : chatIds) {

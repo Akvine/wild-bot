@@ -6,15 +6,15 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.marketspace.bot.enums.ClientState;
+import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
 import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
-import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
-import ru.akvine.marketspace.bot.services.WildberriesCalculationService;
 import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 import ru.akvine.marketspace.bot.utils.MathUtils;
+import ru.akvine.marketspace.bot.utils.WildberriesUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -23,7 +23,6 @@ public class InputNewDiscountStateResolver implements StateResolver {
     private final TelegramDataResolverManager dataResolverManager;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final StateStorage<String> stateStorage;
-    private final WildberriesCalculationService wildberriesCalculationService;
 
     @Override
     public BotApiMethod<?> resolve(TelegramData data) {
@@ -82,7 +81,7 @@ public class InputNewDiscountStateResolver implements StateResolver {
                 .append("У карточки будет следующая информация по стоимости перед запуском теста рекламной кампании: \n")
                 .append("1. Цена без скидки: ").append(price).append("\n")
                 .append("2. Скидка: ").append(discount).append("\n")
-                .append("3. Цена на сайте: ").append(MathUtils.round(wildberriesCalculationService.calculateDiscountPrice(price, discount), 2)).append("\n")
+                .append("3. Цена на сайте: ").append(MathUtils.round(WildberriesUtils.calculateDiscountPrice(price, discount), 2)).append("\n")
                 .append("Поменять цену и скидку у карточки перед запуском теста рекламной кампании?\n " +
                         "(Введите \"Изменить\" или \"Не изменять\"");
         return sb.toString();
