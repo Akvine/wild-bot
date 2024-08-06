@@ -17,6 +17,8 @@ public class MDCFilter extends MessageFilter {
         String username = clientService.getByChatId(chatId).getUsername();
         MDC.put(MDCConstants.USERNAME, username);
         MDC.put(MDCConstants.CHAT_ID, chatId);
-        return nextMessageFilter.handle(update);
+        BotApiMethod<?> response = nextMessageFilter.handle(update);
+        MDC.clear();
+        return response;
     }
 }
