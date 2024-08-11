@@ -83,40 +83,40 @@ public class ReportService {
         Row headersRow = sheet.createRow(HEADERS_ROW_INDEX);
 
         Cell urlCell = headersRow.createCell(0);
-        urlCell.setCellValue("ID");
+        urlCell.setCellValue("ID статистики");
 
         Cell viewsCell = headersRow.createCell(1);
-        viewsCell.setCellValue("Просмотры");
+        viewsCell.setCellValue("Просмотры (VIEWS)");
 
         Cell clicksCell = headersRow.createCell(2);
-        clicksCell.setCellValue("Клики");
+        clicksCell.setCellValue("Клики (CLICKS)");
 
         Cell ctrCell = headersRow.createCell(3);
-        ctrCell.setCellValue("CTR");
+        ctrCell.setCellValue("Показатель кликабельности (CTR)");
 
         Cell cpcCell = headersRow.createCell(4);
-        cpcCell.setCellValue("CPC");
+        cpcCell.setCellValue("Средняя стоимость клика (CPC)");
 
         Cell sumCell = headersRow.createCell(5);
         sumCell.setCellValue("Затраты");
 
         Cell atbsCell = headersRow.createCell(6);
-        atbsCell.setCellValue("ATBS");
+        atbsCell.setCellValue("Количество добавлений товаров в корзину (ATBS)");
 
         Cell ordersCell = headersRow.createCell(7);
-        ordersCell.setCellValue("ORDERS");
+        ordersCell.setCellValue("Количество заказов (ORDERS)");
 
         Cell crCell = headersRow.createCell(8);
-        crCell.setCellValue("CR");
+        crCell.setCellValue("Отношение количества заказов к общему количеству посещений кампании (CR)");
 
         Cell shksCell = headersRow.createCell(9);
-        shksCell.setCellValue("SHKS");
+        shksCell.setCellValue("Количество заказанных товаров (SHKS)");
 
         Cell sumPriceCell = headersRow.createCell(10);
-        sumPriceCell.setCellValue("SUM_PRICE");
+        sumPriceCell.setCellValue("Заказов на сумму (SUM_PRICE)");
 
         Cell advertIdCell = headersRow.createCell(11);
-        advertIdCell.setCellValue("Advert ID");
+        advertIdCell.setCellValue("Идентификатор рекламной кампании (Advert ID)");
 
         Cell startDateTimeCell = headersRow.createCell(12);
         startDateTimeCell.setCellValue("Время запуска теста");
