@@ -27,10 +27,6 @@ public class SyncAdvertJob {
     private final AdvertService advertService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
 
-    // TODO : заменить на enum AdvertStatus
-    private static final int ADVERT_PAUSE_STATUS_CODE = 11;
-    private static final int ADVERT_READY_FOR_START_STATUS_CODE = 4;
-
     public void sync() {
         logger.info("Start advert sync...");
 
@@ -39,7 +35,8 @@ public class SyncAdvertJob {
             List<Integer> advertsInWb = advertListResponse
                     .getAdverts()
                     .stream()
-                    .filter(advertStatisticDto -> advertStatisticDto.getStatus() == ADVERT_PAUSE_STATUS_CODE || advertStatisticDto.getStatus() == ADVERT_READY_FOR_START_STATUS_CODE)
+                    .filter(advertStatisticDto -> advertStatisticDto.getStatus() == AdvertStatus.PAUSE.getCode()
+                            || advertStatisticDto.getStatus() == AdvertStatus.READY_FOR_START.getCode())
                     .flatMap(advertStatisticDto -> advertStatisticDto.getAdvertList().stream().map(AdvertDto::getAdvertId))
                     .toList();
             List<AdvertEntity> advertsInDb = advertRepository.findByStatuses(List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START));
@@ -80,8 +77,8 @@ public class SyncAdvertJob {
                     List<AdvertDto> filteredAdverts = response
                             .getAdverts()
                             .stream()
-                            .filter(advertDto -> advertDto.getStatus() == ADVERT_PAUSE_STATUS_CODE
-                                    || advertDto.getStatus() == ADVERT_READY_FOR_START_STATUS_CODE)
+                            .filter(advertDto -> advertDto.getStatus() == AdvertStatus.PAUSE.getCode()
+                                    || advertDto.getStatus() == AdvertStatus.READY_FOR_START.getCode())
                             .filter(advertDto -> advertDto.getAdvertParams() != null
                                     && advertDto.getAdvertParams().getSubject() != null)
                             .collect(Collectors.toList());

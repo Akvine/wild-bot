@@ -57,7 +57,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                 );
             } catch (Exception exception) {
                 String errorMessage = String.format(
-                        "Error while calling wb api method = [%s]. Message = %s",
+                        "Error while calling wb api method = [%s]. Message = [%s]",
                         WildberriesApiMethods.GET_CARD_LIST, exception.getMessage());
                 throw new IntegrationException(errorMessage);
             }
@@ -97,7 +97,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.GET_ADVERTS, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -125,7 +125,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.ADVERT_BUDGET_INFO, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -185,7 +185,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.START_ADVERT, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -207,7 +207,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.GET_ADVERTS_INFO, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -235,7 +235,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.GET_ADVERT_STATISTIC, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -262,7 +262,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.PAUSE_ADVERT, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -284,7 +284,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.CHANGE_ADVERT_CPM, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -308,7 +308,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.RENAME_ADVERT, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -336,7 +336,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     AdvertUploadPhotoResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.UPLOAD_CARD_PHOTO, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -361,7 +361,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.CHANGE_CARD_STOCKS, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -382,7 +382,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     AdvertFullStatisticResponse[].class);
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -412,7 +412,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     AdvertFullStatisticResponse[].class);
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -450,7 +450,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.GET_GOODS, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -481,7 +481,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.SET_GOODS_PRICE_AND_DISCOUNT, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -504,7 +504,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             ).getBody();
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.CREATE_AUTO_ADVERT, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
@@ -529,7 +529,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             );
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = %s",
+                    "Error while calling wb api method = [%s]. Message = [%s]",
                     WildberriesApiMethods.GET_CARD_TYPES, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
