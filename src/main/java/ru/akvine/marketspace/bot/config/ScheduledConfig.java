@@ -12,7 +12,7 @@ import ru.akvine.marketspace.bot.job.sync.SyncAdvertJob;
 import ru.akvine.marketspace.bot.job.sync.SyncCardJob;
 import ru.akvine.marketspace.bot.job.sync.SyncCardTypeJob;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
-import ru.akvine.marketspace.bot.repositories.ClientSubscriptionRepository;
+import ru.akvine.marketspace.bot.repositories.SubscriptionRepository;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.CardService;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
@@ -57,10 +57,10 @@ public class ScheduledConfig {
 
     @Bean
     public SubscriptionJob subscriptionJob(TelegramIntegrationService telegramIntegrationService,
-                                           ClientSubscriptionRepository clientSubscriptionRepository) {
+                                           SubscriptionRepository subscriptionRepository) {
         return new SubscriptionJob(
                 telegramIntegrationService,
-                clientSubscriptionRepository,
+                subscriptionRepository,
                 SubscriptionJob.class.getSimpleName(),
                 SYSTEM
         );

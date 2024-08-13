@@ -9,7 +9,7 @@ import ru.akvine.marketspace.bot.admin.dto.common.Response;
 
 @RequestMapping(value = "/admin/subscriptions")
 public interface SubscriptionControllerMeta {
-    @PostMapping
+    @PostMapping(value = "/get")
     Response get(@Valid @RequestBody SubscriptionRequest request);
 
     @PostMapping(value = "/add")

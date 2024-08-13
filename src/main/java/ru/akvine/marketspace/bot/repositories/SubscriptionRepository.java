@@ -7,7 +7,7 @@ import ru.akvine.marketspace.bot.entities.SubscriptionEntity;
 
 import java.util.Optional;
 
-public interface ClientSubscriptionRepository extends JpaRepository<SubscriptionEntity, Long> {
+public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, Long> {
     @Query("from SubscriptionEntity se join se.client sec " +
             "where sec.chatId = :chatId")
     Optional<SubscriptionEntity> findByChatId(@Param("chatId") String chatId);

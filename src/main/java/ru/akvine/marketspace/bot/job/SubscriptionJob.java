@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.marketspace.bot.constants.MDCConstants;
 import ru.akvine.marketspace.bot.entities.SubscriptionEntity;
-import ru.akvine.marketspace.bot.repositories.ClientSubscriptionRepository;
+import ru.akvine.marketspace.bot.repositories.SubscriptionRepository;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 
 import java.time.Duration;
@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 public class SubscriptionJob {
     private final TelegramIntegrationService telegramIntegrationService;
-    private final ClientSubscriptionRepository clientSubscriptionRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final String mdcName;
     private final String mdcChatId;
 
@@ -32,11 +32,11 @@ public class SubscriptionJob {
         MDC.put(MDCConstants.USERNAME, mdcName);
         MDC.put(MDCConstants.CHAT_ID, mdcChatId);
         logger.info("Start delete expired subscriptions...");
-        List<SubscriptionEntity> subscriptions = clientSubscriptionRepository.findAll();
+        List<SubscriptionEntity> subscriptions = subscriptionRepository.findAll();
         subscriptions
                 .stream()
                 .filter(SubscriptionEntity::isExpired)
-                .forEach(clientSubscriptionRepository::delete);
+                .forEach(subscriptionRepository::delete);
         logger.info("End delete expired subscriptions");
     }
 
@@ -45,7 +45,7 @@ public class SubscriptionJob {
         MDC.put(MDCConstants.USERNAME, mdcName);
         MDC.put(MDCConstants.CHAT_ID, mdcChatId);
         logger.info("Start notify clients about expiring subscription...");
-        List<SubscriptionEntity> subscriptions = clientSubscriptionRepository.findAll();
+        List<SubscriptionEntity> subscriptions = subscriptionRepository.findAll();
         subscriptions
                 .stream()
                 .filter(subscription -> !subscription.isExpired())
@@ -59,7 +59,7 @@ public class SubscriptionJob {
                             daysBeforeExpire);
                     telegramIntegrationService.sendMessage(chatId, message);
                     subscription.setNotifiedThatExpires(true);
-                    clientSubscriptionRepository.save(subscription);
+                    subscriptionRepository.save(subscription);
                 });
         logger.info("End notify clients about expiring subscription");
     }

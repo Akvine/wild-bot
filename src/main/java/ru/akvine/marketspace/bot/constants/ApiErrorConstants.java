@@ -15,6 +15,8 @@ public final class ApiErrorConstants {
         String BOTH_PARAMETERS_PRESENT_ERROR = "both.parameters.present.error";
         String BOTH_PARAMETERS_BLANK_ERROR = "both.parameters.blank.error";
 
+        String BAD_CREDENTIALS_ERROR = "bad.credentials.error";
+
         String ADVERT_STATUS_BLANK_ERROR = "advert.status.blank.error";
         String ADVERT_STATUS_INVALID_ERROR = "advert.status.invalid.error";
 

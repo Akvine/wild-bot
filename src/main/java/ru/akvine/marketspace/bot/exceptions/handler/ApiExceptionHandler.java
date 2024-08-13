@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.akvine.marketspace.bot.admin.dto.common.ErrorResponse;
 import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
-import ru.akvine.marketspace.bot.exceptions.AdvertAlreadyInPauseStateException;
-import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
-import ru.akvine.marketspace.bot.exceptions.SubscriptionException;
-import ru.akvine.marketspace.bot.exceptions.ValidationException;
+import ru.akvine.marketspace.bot.exceptions.*;
 
 import static ru.akvine.marketspace.bot.constants.ApiErrorConstants.BLOCKED_ERROR;
 import static ru.akvine.marketspace.bot.constants.ApiErrorConstants.GENERAL_ERROR;
+import static ru.akvine.marketspace.bot.constants.ApiErrorConstants.Validation.BAD_CREDENTIALS_ERROR;
 
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -22,6 +20,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
         ErrorResponse errorResponse = new ErrorResponse(GENERAL_ERROR, exception.getMessage(), exception.getMessage());
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(BAD_CREDENTIALS_ERROR, exception.getMessage(), exception.getMessage());
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
