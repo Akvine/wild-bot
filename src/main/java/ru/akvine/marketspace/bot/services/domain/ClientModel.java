@@ -18,7 +18,6 @@ public class ClientModel extends SoftModel {
     private String firstName;
     @Nullable
     private String lastName;
-    private boolean inWhitelist;
     private int availableTestsCount;
 
     public ClientModel(ClientEntity clientEntity) {
@@ -28,7 +27,6 @@ public class ClientModel extends SoftModel {
         this.username = clientEntity.getUsername();
         this.firstName = clientEntity.getFirstName();
         this.lastName = clientEntity.getLastName();
-        this.inWhitelist = clientEntity.isInWhiteList();
         this.availableTestsCount = clientEntity.getAvailableTestsCount();
 
         this.createdDate = clientEntity.getCreatedDate();
