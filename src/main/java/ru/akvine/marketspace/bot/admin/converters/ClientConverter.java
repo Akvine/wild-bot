@@ -17,6 +17,24 @@ import java.util.stream.Collectors;
 public class ClientConverter {
     private static final int BLOCK_TIME_YEARS = 100;
 
+    public ClientListResponse convertToClientListResponse(List<ClientModel> clients) {
+        return new ClientListResponse().setClients(clients.stream().map(this::buildClientDto).toList());
+    }
+
+    private ClientDto buildClientDto(ClientModel clientModel) {
+        return new ClientDto()
+                .setUuid(clientModel.getUuid())
+                .setChatId(clientModel.getChatId())
+                .setUsername(clientModel.getUsername())
+                .setFirstName(clientModel.getFirstName())
+                .setLastName(clientModel.getLastName())
+                .setAvailableTestsCount(clientModel.getAvailableTestsCount())
+                .setCreatedDate(clientModel.getCreatedDate())
+                .setUpdatedDate(clientModel.getUpdatedDate())
+                .setDeletedDate(clientModel.getDeletedDate())
+                .setDeleted(clientModel.isDeleted());
+    }
+
     public AddTests convertToAddTests(AddTestsRequest request) {
         return new AddTests()
                 .setTestsCount(request.getCount())

@@ -27,6 +27,13 @@ public class ClientController implements ClientControllerMeta {
     private final ClientConverter clientConverter;
 
     @Override
+    public Response list(@Valid SecretRequest secretRequest) {
+        clientValidator.verifySecret(secretRequest);
+        List<ClientModel> clients = clientAdminService.list();
+        return clientConverter.convertToClientListResponse(clients);
+    }
+
+    @Override
     public Response addTests(@Valid AddTestsRequest request) {
         clientValidator.verifyAddTestsRequest(request);
         AddTests addTests = clientConverter.convertToAddTests(request);
@@ -43,7 +50,7 @@ public class ClientController implements ClientControllerMeta {
     }
 
     @Override
-    public Response list(@Valid SecretRequest request) {
+    public Response listBlocked(@Valid SecretRequest request) {
         clientValidator.verifySecret(request);
         List<BlockClientEntry> blocked = clientAdminService.listBlocked();
         return clientConverter.convertToListBlockClientResponse(blocked);

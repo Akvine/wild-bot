@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
@@ -14,7 +14,7 @@ import java.time.ZonedDateTime;
 @Accessors(chain = true)
 public abstract class SoftBaseEntity extends BaseEntity {
     @Column(name = "DELETED_DATE")
-    private ZonedDateTime deletedDate;
+    private LocalDateTime deletedDate;
 
     @Column(name = "IS_DELETED", nullable = false)
     private boolean deleted;

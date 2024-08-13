@@ -2,7 +2,7 @@ package ru.akvine.marketspace.bot.admin.converters;
 
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.admin.dto.client.SubscriptionRequest;
+import ru.akvine.marketspace.bot.admin.dto.subscription.SubscriptionRequest;
 import ru.akvine.marketspace.bot.admin.dto.subscription.SubscriptionResponse;
 import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
 import ru.akvine.marketspace.bot.services.dto.admin.client.Subscription;

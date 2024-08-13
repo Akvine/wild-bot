@@ -2,7 +2,7 @@ package ru.akvine.marketspace.bot.admin.validator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.admin.dto.client.SubscriptionRequest;
+import ru.akvine.marketspace.bot.admin.dto.subscription.SubscriptionRequest;
 import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
 

@@ -31,6 +31,10 @@ public class ClientAdminService {
     private final ClientRepository clientRepository;
     private final TelegramIntegrationService telegramIntegrationService;
 
+    public List<ClientModel> list() {
+        return clientService.getAll();
+    }
+
     public ClientModel addTestsToClient(AddTests addTests) {
         ClientEntity client;
         if (StringUtils.isNotBlank(addTests.getUsername())) {

@@ -3,7 +3,7 @@ package ru.akvine.marketspace.bot.admin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import ru.akvine.marketspace.bot.admin.converters.SubscriptionConverter;
-import ru.akvine.marketspace.bot.admin.dto.client.SubscriptionRequest;
+import ru.akvine.marketspace.bot.admin.dto.subscription.SubscriptionRequest;
 import ru.akvine.marketspace.bot.admin.dto.common.Response;
 import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
 import ru.akvine.marketspace.bot.admin.meta.SubscriptionControllerMeta;

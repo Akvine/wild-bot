@@ -1,6 +1,7 @@
 package ru.akvine.marketspace.bot.admin.meta;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,9 @@ import ru.akvine.marketspace.bot.admin.dto.common.SecretRequest;
 
 @RequestMapping(value = "/admin/clients")
 public interface ClientControllerMeta {
+    @GetMapping
+    Response list(@Valid @RequestBody SecretRequest secretRequest);
+
     @PostMapping(value = "/add/tests")
     Response addTests(@Valid @RequestBody AddTestsRequest request);
 
@@ -20,7 +24,7 @@ public interface ClientControllerMeta {
     Response unblock(@Valid @RequestBody UnblockClientRequest request);
 
     @PostMapping(value = "/block/list")
-    Response list(@Valid @RequestBody SecretRequest request);
+    Response listBlocked(@Valid @RequestBody SecretRequest request);
 
     @PostMapping(value = "/send/message")
     Response sendMessage(@Valid @RequestBody SendMessageRequest request);
