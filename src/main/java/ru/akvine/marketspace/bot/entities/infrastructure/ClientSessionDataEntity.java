@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import ru.akvine.marketspace.bot.entities.base.BaseEntity;
 
@@ -27,6 +28,7 @@ public class ClientSessionDataEntity extends BaseEntity {
     private int selectedCategoryId;
 
     @Column(name = "UPLOADED_CARD_PHOTO")
+    @ToString.Exclude
     private byte[] uploadedCardPhoto;
 
     @Column(name = "IS_INPUT_NEW_CARD_PRICE_AND_DISCOUNT", nullable = false)
