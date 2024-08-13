@@ -15,7 +15,7 @@ import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.ClientService;
 import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
-import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertStatisticModel;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 @Component
@@ -47,14 +47,14 @@ public class InputAdvertIdStateResolver implements StateResolver {
 
         long clientId = clientService.getByChatId(chatId).getId();
         AdvertEntity advertToStop = advertService.verifyExistsByAdvertIdAndClientId(advertId, clientId);
-        AdvertStatisticBean advertStatistic = advertStatisticService.getAndSave(advertToStop);
+        AdvertStatisticModel advertStatistic = advertStatisticService.getAndSave(advertToStop);
         countersStorage.delete(advertId);
         String message = buildStatisticMessage(advertStatistic);
         stateStorage.removeState(chatId);
         return new SendMessage(chatId, message);
     }
 
-    private String buildStatisticMessage(AdvertStatisticBean advertStatistic) {
+    private String buildStatisticMessage(AdvertStatisticModel advertStatistic) {
         StringBuilder sb = new StringBuilder();
         sb.append("1. ID: ").append(advertStatistic.getId()).append("\n");
         sb.append("2. Просмотры: ").append(advertStatistic.getViews()).append("\n");

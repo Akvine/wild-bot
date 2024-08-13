@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.exceptions.CardNotFoundException;
 import ru.akvine.marketspace.bot.repositories.CardRepository;
-import ru.akvine.marketspace.bot.services.domain.CardBean;
+import ru.akvine.marketspace.bot.services.domain.CardModel;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SizeDto;
 import ru.akvine.marketspace.bot.utils.UUIDGenerator;
@@ -23,7 +23,7 @@ public class CardService {
 
     private final CardRepository cardRepository;
 
-    public List<CardBean> create(List<CardDto> cards) {
+    public List<CardModel> create(List<CardDto> cards) {
         Preconditions.checkNotNull(cards, "cards is null");
         logger.info("Create cards by request with size = {}", cards.size());
         return cards
@@ -52,17 +52,17 @@ public class CardService {
                     cardEntity.setBarcode(size.getSkus().getFirst());
 
                     CardEntity savedCard = cardRepository.save(cardEntity);
-                    return new CardBean(savedCard);
+                    return new CardModel(savedCard);
                 })
                 .collect(Collectors.toList());
     }
 
-    public List<CardBean> list() {
+    public List<CardModel> list() {
         logger.info("List clients");
         return cardRepository
                 .findAll()
                 .stream()
-                .map(CardBean::new)
+                .map(CardModel::new)
                 .collect(Collectors.toList());
     }
 
@@ -72,7 +72,7 @@ public class CardService {
                 .orElseThrow(() -> new CardNotFoundException("Card with item id = [" + itemId + "] not found!"));
     }
 
-    public CardBean getFirst(int categoryId) {
+    public CardModel getFirst(int categoryId) {
         logger.info("Get first card by categoryId = {}", categoryId);
 
         try {
@@ -82,12 +82,12 @@ public class CardService {
         }
     }
 
-    public List<CardBean> getByCategoryId(int categoryId) {
+    public List<CardModel> getByCategoryId(int categoryId) {
         logger.info("Get cards by category id = {}", categoryId);
         return cardRepository
                 .findByCategoryId(categoryId)
                 .stream()
-                .map(CardBean::new)
+                .map(CardModel::new)
                 .toList();
     }
 }

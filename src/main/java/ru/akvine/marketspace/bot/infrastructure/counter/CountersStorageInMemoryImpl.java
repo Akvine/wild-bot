@@ -7,7 +7,7 @@ import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
 import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
 import ru.akvine.marketspace.bot.services.AdvertService;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class CountersStorageInMemoryImpl implements CountersStorage {
     @PostConstruct
     public void init() {
         logger.debug("Start init IterationsStorage...");
-        List<AdvertBean> runningAdverts = advertService.getAdvertsByStatuses(List.of(AdvertStatus.RUNNING));
+        List<AdvertModel> runningAdverts = advertService.getAdvertsByStatuses(List.of(AdvertStatus.RUNNING));
         logger.info("Initializing running adverts in size = {}", runningAdverts.size());
         runningAdverts.forEach(advert -> counters.put(advert.getAdvertId(), ZERO_COUNT_INIT));
     }

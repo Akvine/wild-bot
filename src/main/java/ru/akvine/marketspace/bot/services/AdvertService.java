@@ -13,8 +13,8 @@ import ru.akvine.marketspace.bot.enums.AdvertType;
 import ru.akvine.marketspace.bot.enums.DebitType;
 import ru.akvine.marketspace.bot.exceptions.AdvertNotFoundException;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
-import ru.akvine.marketspace.bot.services.domain.CardBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
+import ru.akvine.marketspace.bot.services.domain.CardModel;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertCreateRequest;
@@ -66,17 +66,17 @@ public class AdvertService {
         logger.info("Successful save new adverts");
     }
 
-    public List<AdvertBean> getAdvertsByStatuses(List<AdvertStatus> statuses) {
+    public List<AdvertModel> getAdvertsByStatuses(List<AdvertStatus> statuses) {
         Preconditions.checkNotNull(statuses, "advertStatuses is null");
         logger.info("Get adverts by statuses = {}", statuses);
         return advertRepository
                 .findByStatuses(statuses)
                 .stream()
-                .map(AdvertBean::new)
+                .map(AdvertModel::new)
                 .collect(Collectors.toList());
     }
 
-    public List<AdvertBean> getAdvertsByChatIdAndStatuses(String chatId, List<AdvertStatus> statuses) {
+    public List<AdvertModel> getAdvertsByChatIdAndStatuses(String chatId, List<AdvertStatus> statuses) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         Preconditions.checkNotNull(statuses, "advertStatuses is null");
 
@@ -86,12 +86,12 @@ public class AdvertService {
         return advertRepository
                 .findByClientIdAndStatuses(clientId, statuses)
                 .stream()
-                .map(AdvertBean::new)
+                .map(AdvertModel::new)
                 .toList();
 
     }
 
-    public AdvertBean update(AdvertBean advertBean) {
+    public AdvertModel update(AdvertModel advertBean) {
         Preconditions.checkNotNull(advertBean, "advertBean is null");
         logger.info("Update advert by bean = [{}]", advertBean);
 
@@ -116,51 +116,51 @@ public class AdvertService {
                 .setLocked(advertBean.isLocked())
                 .setAvailableForStart(advertBean.getAvailableForStart())
                 .setUpdatedDate(LocalDateTime.now());
-        AdvertBean updatedAdvert = new AdvertBean(advertRepository.save(advertEntity));
+        AdvertModel updatedAdvert = new AdvertModel(advertRepository.save(advertEntity));
 
         logger.info("Successful update advert, result = [{}]", updatedAdvert);
         return updatedAdvert;
     }
 
-    public AdvertBean getFirst(Integer categoryId) {
+    public AdvertModel getFirst(Integer categoryId) {
         Preconditions.checkNotNull(categoryId, "categoryId is null");
         logger.info("Get first advert by category id = {}", categoryId);
 
-        List<AdvertBean> advertBeans = advertRepository
+        List<AdvertModel> advertBeans = advertRepository
                 .findByStatusesAndCategoryId(
                         List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START),
                         categoryId)
                 .stream()
-                .map(AdvertBean::new)
+                .map(AdvertModel::new)
                 .toList();
 
-        List<AdvertBean> pauseAdvertBeans = advertBeans
+        List<AdvertModel> pauseAdvertBeans = advertBeans
                 .stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.PAUSE))
                 .filter(advertBean -> !advertBean.isLocked())
-                .filter(AdvertBean::isAvailableForStart)
+                .filter(AdvertModel::isAvailableForStart)
                 .toList();
         if (!pauseAdvertBeans.isEmpty()) {
-            AdvertBean pauseAdvert = pauseAdvertBeans.getFirst();
+            AdvertModel pauseAdvert = pauseAdvertBeans.getFirst();
             logger.info("Return pause advert = [{}]", pauseAdvert);
             return pauseAdvert;
         }
 
-        List<AdvertBean> readyForStartAdvertBeans = advertBeans
+        List<AdvertModel> readyForStartAdvertBeans = advertBeans
                 .stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.READY_FOR_START))
                 .filter(advertBean -> !advertBean.isLocked())
-                .filter(AdvertBean::isAvailableForStart)
+                .filter(AdvertModel::isAvailableForStart)
                 .toList();
         if (!readyForStartAdvertBeans.isEmpty()) {
-            AdvertBean advertReadyForStart = readyForStartAdvertBeans.getFirst();
+            AdvertModel advertReadyForStart = readyForStartAdvertBeans.getFirst();
             logger.info("Return ready for start advert = [{}]", advertReadyForStart);
             return advertReadyForStart;
         }
 
         if (createAdvertsByApi) {
             logger.info("Create advert with category id = {} by API", categoryId);
-            CardBean cardBean = cardService.getFirst(categoryId);
+            CardModel cardBean = cardService.getFirst(categoryId);
             String advertName = "Created by API: " + LocalDateTime.now();
             AdvertCreateRequest request = new AdvertCreateRequest()
                     .setSubjectId(categoryId)
@@ -197,9 +197,9 @@ public class AdvertService {
         throw new AdvertNotFoundException(errorMessage);
     }
 
-    public AdvertBean getByAdvertId(int advertId) {
+    public AdvertModel getByAdvertId(int advertId) {
         logger.info("Get advert with id = {}", advertId);
-        return new AdvertBean(verifyExistsByAdvertId(advertId));
+        return new AdvertModel(verifyExistsByAdvertId(advertId));
     }
 
     public AdvertEntity verifyExistsByAdvertId(int advertId) {

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
 import ru.akvine.marketspace.bot.utils.DateUtils;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class LaunchedAdvertsConverter {
 
     public SendMessage convertToLaunchedListMessage(String chatId,
                                                     int availableTestsCount,
-                                                    List<AdvertBean> runningAdverts) {
+                                                    List<AdvertModel> runningAdverts) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         Preconditions.checkNotNull(runningAdverts, "runningAdverts is null");
 

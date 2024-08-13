@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 
 @Data
 @Accessors(chain = true)
-public abstract class SoftBean extends Bean {
+public abstract class SoftModel extends Model {
     protected ZonedDateTime deletedDate;
     protected boolean deleted;
 }

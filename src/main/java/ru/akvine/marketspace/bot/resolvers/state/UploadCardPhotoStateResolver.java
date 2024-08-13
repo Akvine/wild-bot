@@ -14,7 +14,7 @@ import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.services.AdvertService;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.GetGoodsRequest;
@@ -59,7 +59,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
         photoValidator.validate(photo);
 
         String message = lockHelper.doWithLock(UPLOAD_CARD_PHOTO_STATE + chatId, () -> {
-            AdvertBean advertBean = advertService.getFirst(sessionStorage.get(chatId).getSelectedCategoryId());
+            AdvertModel advertBean = advertService.getFirst(sessionStorage.get(chatId).getSelectedCategoryId());
             advertBean.setLocked(true);
             advertService.update(advertBean);
 

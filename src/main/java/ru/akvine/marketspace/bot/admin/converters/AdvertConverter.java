@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.marketspace.bot.admin.dto.advert.*;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
-import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
+import ru.akvine.marketspace.bot.services.domain.AdvertStatisticModel;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
@@ -31,7 +31,7 @@ public class AdvertConverter {
                 .setStatuses(statuses);
     }
 
-    public PauseAdvertResponse convertToPauseAdvert(AdvertStatisticBean advertStatisticBean) {
+    public PauseAdvertResponse convertToPauseAdvert(AdvertStatisticModel advertStatisticBean) {
         return new PauseAdvertResponse()
                 .setAdvertId(advertStatisticBean.getAdvertBean().getAdvertId())
                 .setAdvertStatistic(new AdvertStatisticDto()
@@ -49,7 +49,7 @@ public class AdvertConverter {
                 );
     }
 
-    public ListAdvertResponse convertToAdvertListResponse(List<AdvertBean> adverts) {
+    public ListAdvertResponse convertToAdvertListResponse(List<AdvertModel> adverts) {
         return new ListAdvertResponse()
                 .setCount(adverts.size())
                 .setAdverts(adverts.stream().map(this::convertToAdvertDto).collect(Collectors.toList()));
@@ -62,7 +62,7 @@ public class AdvertConverter {
                 .setName(request.getName());
     }
 
-    private AdvertDto convertToAdvertDto(AdvertBean advertBean) {
+    private AdvertDto convertToAdvertDto(AdvertModel advertBean) {
         return new AdvertDto()
                 .setUuid(advertBean.getUuid())
                 .setName(advertBean.getName())

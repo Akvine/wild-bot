@@ -12,8 +12,8 @@ import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
 import ru.akvine.marketspace.bot.admin.meta.AdvertControllerMeta;
 import ru.akvine.marketspace.bot.admin.validator.AdvertValidator;
 import ru.akvine.marketspace.bot.services.admin.AdvertAdminService;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
-import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
+import ru.akvine.marketspace.bot.services.domain.AdvertStatisticModel;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
@@ -31,7 +31,7 @@ public class AdvertController implements AdvertControllerMeta {
     public Response pause(@Valid PauseAdvertRequest request) {
         advertValidator.verifyPauseAdvertRequest(request);
         PauseAdvert pauseAdvert = advertConverter.convertToPauseAdvert(request);
-        AdvertStatisticBean advertStatisticBean = advertAdminService.pauseAdvert(pauseAdvert);
+        AdvertStatisticModel advertStatisticBean = advertAdminService.pauseAdvert(pauseAdvert);
         return advertConverter.convertToPauseAdvert(advertStatisticBean);
     }
 
@@ -47,7 +47,7 @@ public class AdvertController implements AdvertControllerMeta {
     public Response list(@Valid ListAdvertRequest request) {
         advertValidator.verifyListAdvertRequest(request);
         ListAdvert listAdvert = advertConverter.convertToListAdvert(request);
-        List<AdvertBean> adverts = advertAdminService.listAdvert(listAdvert);
+        List<AdvertModel> adverts = advertAdminService.listAdvert(listAdvert);
         return advertConverter.convertToAdvertListResponse(adverts);
     }
 

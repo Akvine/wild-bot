@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.marketspace.bot.admin.dto.client.*;
-import ru.akvine.marketspace.bot.services.domain.ClientBean;
+import ru.akvine.marketspace.bot.services.domain.ClientModel;
 import ru.akvine.marketspace.bot.services.dto.admin.client.*;
 import ru.akvine.marketspace.bot.utils.DateUtils;
 
@@ -24,7 +24,7 @@ public class ClientConverter {
                 .setChatId(request.getChatId());
     }
 
-    public AddTestsResponse convertToAddTestsResponse(ClientBean clientBean) {
+    public AddTestsResponse convertToAddTestsResponse(ClientModel clientBean) {
         return new AddTestsResponse()
                 .setChatId(clientBean.getChatId())
                 .setUsername(clientBean.getUsername())

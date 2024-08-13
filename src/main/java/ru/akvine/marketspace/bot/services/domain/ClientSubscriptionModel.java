@@ -3,23 +3,23 @@ package ru.akvine.marketspace.bot.services.domain;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.akvine.marketspace.bot.entities.ClientSubscriptionEntity;
-import ru.akvine.marketspace.bot.services.domain.base.Bean;
+import ru.akvine.marketspace.bot.services.domain.base.Model;
 
 import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)
-public class ClientSubscriptionBean extends Bean {
+public class ClientSubscriptionModel extends Model {
     private Long id;
     private LocalDateTime expiresAt;
     private boolean notifiedThatExpires;
-    private ClientBean clientBean;
+    private ClientModel clientBean;
 
-    public ClientSubscriptionBean(ClientSubscriptionEntity clientSubscriptionEntity) {
+    public ClientSubscriptionModel(ClientSubscriptionEntity clientSubscriptionEntity) {
         this.id = clientSubscriptionEntity.getId();
         this.expiresAt = clientSubscriptionEntity.getExpiresAt();
         this.notifiedThatExpires = clientSubscriptionEntity.isNotifiedThatExpires();
-        this.clientBean = new ClientBean(clientSubscriptionEntity.getClient());
+        this.clientBean = new ClientModel(clientSubscriptionEntity.getClient());
 
         this.createdDate = clientSubscriptionEntity.getCreatedDate();
         this.updatedDate = clientSubscriptionEntity.getUpdatedDate();

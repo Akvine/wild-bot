@@ -15,7 +15,7 @@ import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
@@ -51,23 +51,23 @@ public class AdvertStartService {
 
     private final static int CARD_MAIN_PHOTO_POSITION = 1;
 
-    public AdvertBean start(String chatId) {
+    public AdvertModel start(String chatId) {
         try {
             Preconditions.checkNotNull(chatId, "chatId is null");
             Integer categoryId = sessionStorage.get(chatId).getSelectedCategoryId();
             logger.info("Try to start first one advert with category id = {}", categoryId);
             return startInternal(chatId);
         } catch (Exception exception) {
-            AdvertBean advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
+            AdvertModel advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
             advertBean.setLocked(false);
             advertService.update(advertBean);
             throw new AdvertStartException(exception.getMessage());
         }
     }
 
-    private AdvertBean startInternal(String chatId) {
+    private AdvertModel startInternal(String chatId) {
         int advertId = sessionStorage.get(chatId).getLockedAdvertId();
-        AdvertBean advertToStart = advertService.getByAdvertId(advertId);
+        AdvertModel advertToStart = advertService.getByAdvertId(advertId);
         CardEntity card = cardService.verifyExistsByItemId(advertToStart.getItemId());
         ClientEntity client = clientService.verifyExistsByChatId(chatId);
 
@@ -123,7 +123,7 @@ public class AdvertStartService {
         advertToStart.setStatus(AdvertStatus.RUNNING);
         advertToStart.setName(advertStartName);
         advertToStart.setChatId(chatId);
-        AdvertBean updatedAdvert = advertService.update(advertToStart);
+        AdvertModel updatedAdvert = advertService.update(advertToStart);
 
         AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
         AdvertStatisticEntity advertStatisticEntity = new AdvertStatisticEntity()

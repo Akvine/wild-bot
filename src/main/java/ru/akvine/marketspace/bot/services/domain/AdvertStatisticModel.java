@@ -3,11 +3,11 @@ package ru.akvine.marketspace.bot.services.domain;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
-import ru.akvine.marketspace.bot.services.domain.base.SoftBean;
+import ru.akvine.marketspace.bot.services.domain.base.SoftModel;
 
 @Data
 @Accessors(chain = true)
-public class AdvertStatisticBean extends SoftBean {
+public class AdvertStatisticModel extends SoftModel {
     private Long id;
     private String views;
     private String clicks;
@@ -20,10 +20,10 @@ public class AdvertStatisticBean extends SoftBean {
     private String shks;
     private String sumPrice;
     private boolean active;
-    private AdvertBean advertBean;
-    private ClientBean client;
+    private AdvertModel advertBean;
+    private ClientModel client;
 
-    public AdvertStatisticBean(AdvertStatisticEntity advertStatisticEntity) {
+    public AdvertStatisticModel(AdvertStatisticEntity advertStatisticEntity) {
         this.id = advertStatisticEntity.getId();
         this.views = advertStatisticEntity.getViews();
         this.clicks = advertStatisticEntity.getClicks();
@@ -36,8 +36,8 @@ public class AdvertStatisticBean extends SoftBean {
         this.shks = advertStatisticEntity.getShks();
         this.sumPrice = advertStatisticEntity.getSumPrice();
         this.active = advertStatisticEntity.isActive();
-        this.advertBean = new AdvertBean(advertStatisticEntity.getAdvertEntity());
-        this.client = new ClientBean(advertStatisticEntity.getClient());
+        this.advertBean = new AdvertModel(advertStatisticEntity.getAdvertEntity());
+        this.client = new ClientModel(advertStatisticEntity.getClient());
 
         this.createdDate = advertStatisticEntity.getCreatedDate();
         this.updatedDate = advertStatisticEntity.getUpdatedDate();

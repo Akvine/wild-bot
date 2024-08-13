@@ -7,8 +7,7 @@ import ru.akvine.marketspace.bot.controller.converters.LaunchedAdvertsConverter;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
-import ru.akvine.marketspace.bot.services.domain.ClientBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class LaunchedAdvertsController {
     private final ClientService clientService;
 
     public SendMessage getLaunchedList(String chatId) {
-        List<AdvertBean> runningAdverts = advertService.getAdvertsByChatIdAndStatuses(chatId, List.of(AdvertStatus.RUNNING));
+        List<AdvertModel> runningAdverts = advertService.getAdvertsByChatIdAndStatuses(chatId, List.of(AdvertStatus.RUNNING));
         int availableTestsCount = clientService.getByChatId(chatId).getAvailableTestsCount();
         return launchedAdvertsConverter.convertToLaunchedListMessage(chatId, availableTestsCount, runningAdverts);
     }

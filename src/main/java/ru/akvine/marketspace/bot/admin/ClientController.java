@@ -12,7 +12,7 @@ import ru.akvine.marketspace.bot.admin.meta.ClientControllerMeta;
 import ru.akvine.marketspace.bot.admin.validator.ClientValidator;
 import ru.akvine.marketspace.bot.services.ClientSubscriptionService;
 import ru.akvine.marketspace.bot.services.admin.ClientAdminService;
-import ru.akvine.marketspace.bot.services.domain.ClientBean;
+import ru.akvine.marketspace.bot.services.domain.ClientModel;
 import ru.akvine.marketspace.bot.services.dto.admin.client.*;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class ClientController implements ClientControllerMeta {
     public Response addTests(@Valid AddTestsRequest request) {
         clientValidator.verifyAddTestsRequest(request);
         AddTests addTests = clientConverter.convertToAddTests(request);
-        ClientBean clientBean = clientAdminService.addTestsToClient(addTests);
+        ClientModel clientBean = clientAdminService.addTestsToClient(addTests);
         return clientConverter.convertToAddTestsResponse(clientBean);
     }
 

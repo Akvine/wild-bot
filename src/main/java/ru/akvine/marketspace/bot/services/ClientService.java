@@ -9,7 +9,7 @@ import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
 import ru.akvine.marketspace.bot.exceptions.ClientNotFoundException;
 import ru.akvine.marketspace.bot.repositories.ClientRepository;
-import ru.akvine.marketspace.bot.services.domain.ClientBean;
+import ru.akvine.marketspace.bot.services.domain.ClientModel;
 import ru.akvine.marketspace.bot.services.dto.ClientCreate;
 import ru.akvine.marketspace.bot.utils.UUIDGenerator;
 
@@ -25,15 +25,15 @@ public class ClientService {
     private final BlockingService blockingService;
 
     @Nullable
-    public ClientBean findByChatId(String chatId) {
+    public ClientModel findByChatId(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         logger.debug("Find client by chatId = {}", chatId);
 
         Optional<ClientEntity> client = clientRepository.findByChatId(chatId);
-        return client.map(ClientBean::new).orElse(null);
+        return client.map(ClientModel::new).orElse(null);
     }
 
-    public ClientBean create(ClientCreate clientCreate) {
+    public ClientModel create(ClientCreate clientCreate) {
         Preconditions.checkNotNull(clientCreate, "ClientCreate is null");
         logger.info("Create client = [{}]", clientCreate);
 
@@ -44,7 +44,7 @@ public class ClientService {
                 .setFirstName(clientCreate.getFirstName())
                 .setLastName(clientCreate.getLastName());
 
-        return new ClientBean(clientRepository.save(clientEntity));
+        return new ClientModel(clientRepository.save(clientEntity));
     }
 
     public void checkIsBlocked(String chatId) {
@@ -63,10 +63,10 @@ public class ClientService {
         return clientRepository.findByUuid(clientUuid).orElseThrow(() -> new ClientNotFoundException("Client has no with uuid = [" + clientUuid + "]!"));
     }
 
-    public ClientBean getByChatId(String chatId) {
+    public ClientModel getByChatId(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         logger.debug("Get client by uuid = {}", chatId);
-        return new ClientBean(verifyExistsByChatId(chatId));
+        return new ClientModel(verifyExistsByChatId(chatId));
     }
 
     public ClientEntity verifyExistsByChatId(String chatId) {
@@ -81,31 +81,31 @@ public class ClientService {
         return clientRepository.findByUsername(username).orElseThrow(() -> new ClientNotFoundException("Client has no with username = [" + username + "]!"));
     }
 
-    public List<ClientBean> getByListChatId(List<String> chatIds) {
+    public List<ClientModel> getByListChatId(List<String> chatIds) {
         Preconditions.checkNotNull(chatIds, "chatIds is null");
         logger.info("Get by chat ids = {}", chatIds);
         return clientRepository
                 .findByListChatId(chatIds)
                 .stream()
-                .map(ClientBean::new)
+                .map(ClientModel::new)
                 .toList();
     }
 
-    public List<ClientBean> getAll() {
+    public List<ClientModel> getAll() {
         logger.info("Get all clients");
         return clientRepository
                 .findAll()
                 .stream()
-                .map(ClientBean::new)
+                .map(ClientModel::new)
                 .toList();
     }
 
-    public List<ClientBean> getAllByUsernames(List<String> usernames) {
+    public List<ClientModel> getAllByUsernames(List<String> usernames) {
         logger.info("Get all clients by usernames = {}", usernames);
         return clientRepository
                 .findByUsernames(usernames)
                 .stream()
-                .map(ClientBean::new)
+                .map(ClientModel::new)
                 .toList();
     }
 }

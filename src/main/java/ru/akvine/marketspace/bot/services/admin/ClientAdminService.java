@@ -12,7 +12,7 @@ import ru.akvine.marketspace.bot.exceptions.ClientNotFoundException;
 import ru.akvine.marketspace.bot.repositories.ClientRepository;
 import ru.akvine.marketspace.bot.services.BlockingService;
 import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.domain.ClientBean;
+import ru.akvine.marketspace.bot.services.domain.ClientModel;
 import ru.akvine.marketspace.bot.services.dto.admin.client.*;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.utils.DateUtils;
@@ -31,7 +31,7 @@ public class ClientAdminService {
     private final ClientRepository clientRepository;
     private final TelegramIntegrationService telegramIntegrationService;
 
-    public ClientBean addTestsToClient(AddTests addTests) {
+    public ClientModel addTestsToClient(AddTests addTests) {
         ClientEntity client;
         if (StringUtils.isNotBlank(addTests.getUsername())) {
             client = clientService.verifyExistsByUsername(addTests.getUsername());
@@ -40,7 +40,7 @@ public class ClientAdminService {
         }
 
         client.increaseAvailableTestsCount(addTests.getTestsCount());
-        return new ClientBean(clientRepository.save(client));
+        return new ClientModel(clientRepository.save(client));
     }
 
     public BlockClientFinish blockClient(BlockClientStart start) {
@@ -103,7 +103,7 @@ public class ClientAdminService {
         logger.info("Send message by request = {}", sendMessage);
 
         String message = sendMessage.getMessage();
-        List<ClientBean> activeClients;
+        List<ClientModel> activeClients;
         if (!CollectionUtils.isEmpty(sendMessage.getChatIds())) {
             activeClients = clientService.getByListChatId(sendMessage.getChatIds());
             if (CollectionUtils.isEmpty(activeClients)) {
@@ -130,10 +130,10 @@ public class ClientAdminService {
         sendMessageInternal(activeClients, message);
     }
 
-    private void sendMessageInternal(List<ClientBean> activeClients, String message) {
+    private void sendMessageInternal(List<ClientModel> activeClients, String message) {
         List<String> activeChatIds = activeClients
                 .stream()
-                .map(ClientBean::getChatId)
+                .map(ClientModel::getChatId)
                 .collect(Collectors.toList());
         telegramIntegrationService.sendMessage(activeChatIds, message);
     }

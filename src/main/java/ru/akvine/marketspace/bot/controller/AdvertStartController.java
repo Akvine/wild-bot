@@ -8,8 +8,8 @@ import ru.akvine.marketspace.bot.controller.validatores.StartValidator;
 import ru.akvine.marketspace.bot.services.AdvertStartService;
 import ru.akvine.marketspace.bot.services.CardAggregateService;
 import ru.akvine.marketspace.bot.services.CardService;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
-import ru.akvine.marketspace.bot.services.domain.CardBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
+import ru.akvine.marketspace.bot.services.domain.CardModel;
 import ru.akvine.marketspace.bot.services.dto.AggregateCard;
 
 import java.util.List;
@@ -25,13 +25,13 @@ public class AdvertStartController {
 
     public SendMessage getCategories(String chatId) {
         startValidator.verifyStart(chatId);
-        List<CardBean> cards = cardService.list();
+        List<CardModel> cards = cardService.list();
         List<AggregateCard> aggregateCards = cardAggregateService.aggregateByCategory(cards);
         return startConverter.buildCategories(chatId, aggregateCards);
     }
 
     public SendMessage startAdvert(String chatId) {
-        AdvertBean advertBean = advertStartService.start(chatId);
+        AdvertModel advertBean = advertStartService.start(chatId);
         return startConverter.buildStartAdvert(chatId, advertBean);
     }
 }

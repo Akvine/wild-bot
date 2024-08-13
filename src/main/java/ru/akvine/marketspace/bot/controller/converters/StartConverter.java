@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
 import ru.akvine.marketspace.bot.services.dto.AggregateCard;
 
 import java.time.LocalDateTime;
@@ -37,7 +37,7 @@ public class StartConverter {
         return sendMessage;
     }
 
-    public SendMessage buildStartAdvert(String chatId, AdvertBean startAdvertBean) {
+    public SendMessage buildStartAdvert(String chatId, AdvertModel startAdvertBean) {
         int advertId = startAdvertBean.getAdvertId();
         int startCpm = startAdvertBean.getCpm();
         Integer startBudgetSum = startAdvertBean.getStartBudgetSum();

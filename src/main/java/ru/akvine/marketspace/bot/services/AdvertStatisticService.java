@@ -10,8 +10,8 @@ import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.exceptions.AdvertStatisticNotFoundException;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.repositories.ClientRepository;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
-import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
+import ru.akvine.marketspace.bot.services.domain.AdvertStatisticModel;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticDatesDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticIntervalDto;
@@ -34,7 +34,7 @@ public class AdvertStatisticService {
     private final ClientService clientService;
     private final AdvertService advertService;
 
-    public AdvertStatisticBean getAndSave(AdvertEntity advert) {
+    public AdvertStatisticModel getAndSave(AdvertEntity advert) {
         logger.info("Start getting advert full statistic for advert = [{}]", advert);
 
         AdvertStatisticEntity advertStatisticEntity = verifyExistsByClientIdAndAdvertId(advert.getClient().getId(), advert.getId());
@@ -76,14 +76,14 @@ public class AdvertStatisticService {
                 .setClient(advert.getClient())
                 .setActive(false);
 
-        AdvertStatisticBean savedAdvertStatistic = new AdvertStatisticBean(advertStatisticRepository.save(advertStatisticEntity));
+        AdvertStatisticModel savedAdvertStatistic = new AdvertStatisticModel(advertStatisticRepository.save(advertStatisticEntity));
 
         ClientEntity client = clientService.verifyExistsByChatId(advert.getClient().getChatId());
         client.decreaseOneTest();
         clientRepository.save(client);
 
         advert.setAvailableForStart(DateUtils.getStartOfNextDay());
-        advertService.update(new AdvertBean(advert));
+        advertService.update(new AdvertModel(advert));
 
         logger.info("Successful get statistic from wb and save it = [{}]", savedAdvertStatistic);
         return savedAdvertStatistic;

@@ -5,12 +5,12 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
-import ru.akvine.marketspace.bot.services.domain.base.SoftBean;
+import ru.akvine.marketspace.bot.services.domain.base.SoftModel;
 
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
-public class ClientBean extends SoftBean {
+public class ClientModel extends SoftModel {
     private Long id;
     private String uuid;
     private String chatId;
@@ -21,7 +21,7 @@ public class ClientBean extends SoftBean {
     private boolean inWhitelist;
     private int availableTestsCount;
 
-    public ClientBean(ClientEntity clientEntity) {
+    public ClientModel(ClientEntity clientEntity) {
         this.id = clientEntity.getId();
         this.uuid = clientEntity.getUuid();
         this.chatId = clientEntity.getChatId();

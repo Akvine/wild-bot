@@ -11,8 +11,8 @@ import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.exceptions.AdvertAlreadyInPauseStateException;
 import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
-import ru.akvine.marketspace.bot.services.domain.AdvertStatisticBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
+import ru.akvine.marketspace.bot.services.domain.AdvertStatisticModel;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
@@ -35,7 +35,7 @@ public class AdvertAdminService {
 
     private final static int ADVERT_PAUSE_STATUS_CODE = 11;
 
-    public AdvertStatisticBean pauseAdvert(PauseAdvert pauseAdvert) {
+    public AdvertStatisticModel pauseAdvert(PauseAdvert pauseAdvert) {
         Preconditions.checkNotNull(pauseAdvert, "pauseAdvert is null");
         logger.info("Pause advert by [{}]", pauseAdvert);
 
@@ -63,7 +63,7 @@ public class AdvertAdminService {
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
             wildberriesIntegrationService.pauseAdvert(advertEntity.getAdvertId());
         }
-        AdvertStatisticBean advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
+        AdvertStatisticModel advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
 
         String finishedTestMessage = String.format(
                 "Тест с advert id = %s успешно завершился.\nВведите команду /report для просмотра отчета",
@@ -76,7 +76,7 @@ public class AdvertAdminService {
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
         advertEntity.setClient(null);
         advertEntity.setLocked(false);
-        AdvertBean updatedAdvert = advertService.update(new AdvertBean(advertEntity));
+        AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));
 
         logger.info("Successful pause advert = [{}]", updatedAdvert);
         return advertStatisticBean;
@@ -121,12 +121,12 @@ public class AdvertAdminService {
         advertEntity.setClient(null);
         advertEntity.setLocked(false);
         advertEntity.setAvailableForStart(DateUtils.getStartOfNextDay());
-        AdvertBean updatedAdvert = advertService.update(new AdvertBean(advertEntity));
+        AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));
 
         logger.info("Successful force pause advert = [{}]", updatedAdvert);
     }
 
-    public List<AdvertBean> listAdvert(ListAdvert listAdvert) {
+    public List<AdvertModel> listAdvert(ListAdvert listAdvert) {
         Preconditions.checkNotNull(listAdvert, "listAdvert is null");
         logger.info("List adverts by statuses = {}", listAdvert.getStatuses());
         return advertService.getAdvertsByStatuses(listAdvert.getStatuses());
@@ -144,7 +144,7 @@ public class AdvertAdminService {
         }
         wildberriesIntegrationService.renameAdvert(advertEntity.getAdvertId(), renameAdvert.getName());
         advertEntity.setName(renameAdvert.getName());
-        advertService.update(new AdvertBean(advertEntity));
+        advertService.update(new AdvertModel(advertEntity));
 
         logger.info("Successful rename advert = [{}]", renameAdvert);
     }

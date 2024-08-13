@@ -10,7 +10,7 @@ import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
 import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.services.AdvertService;
-import ru.akvine.marketspace.bot.services.domain.AdvertBean;
+import ru.akvine.marketspace.bot.services.domain.AdvertModel;
 
 import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.DEFAULT_MESSAGE;
 
@@ -28,7 +28,7 @@ public class CancelCommandResolver implements CommandResolver {
 
         if (stateStorage.containsState(chatId)) {
             if (sessionStorage.hasSession(chatId) && sessionStorage.get(chatId).getLockedAdvertId() != null) {
-                AdvertBean advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
+                AdvertModel advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
                 advertBean.setLocked(false);
                 advertService.update(advertBean);
             }

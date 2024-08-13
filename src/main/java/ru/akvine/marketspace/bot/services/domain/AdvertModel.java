@@ -6,14 +6,14 @@ import org.jetbrains.annotations.Nullable;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.enums.AdvertType;
-import ru.akvine.marketspace.bot.services.domain.base.SoftBean;
+import ru.akvine.marketspace.bot.services.domain.base.SoftModel;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-public class AdvertBean extends SoftBean {
+public class AdvertModel extends SoftModel {
     private Long id;
     private String uuid;
     private String name;
@@ -35,7 +35,7 @@ public class AdvertBean extends SoftBean {
     private LocalDateTime availableForStart;
     private boolean locked;
 
-    public AdvertBean(AdvertEntity advertEntity) {
+    public AdvertModel(AdvertEntity advertEntity) {
         this.id = advertEntity.getId();
         this.uuid = advertEntity.getUuid();
         this.name = advertEntity.getName();

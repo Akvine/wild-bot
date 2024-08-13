@@ -5,12 +5,12 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.marketspace.bot.entities.CardEntity;
-import ru.akvine.marketspace.bot.services.domain.base.SoftBean;
+import ru.akvine.marketspace.bot.services.domain.base.SoftModel;
 
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
-public class CardBean extends SoftBean {
+public class CardModel extends SoftModel {
     private Long id;
     private String uuid;
     @Nullable
@@ -21,7 +21,7 @@ public class CardBean extends SoftBean {
     private int categoryId;
     private String barcode;
 
-    public CardBean(CardEntity cardEntity) {
+    public CardModel(CardEntity cardEntity) {
         this.id = cardEntity.getId();
         this.uuid = cardEntity.getUuid();
         this.itemId = cardEntity.getItemId();

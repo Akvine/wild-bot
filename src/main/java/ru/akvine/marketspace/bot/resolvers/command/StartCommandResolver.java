@@ -13,7 +13,7 @@ import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
 import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.domain.ClientBean;
+import ru.akvine.marketspace.bot.services.domain.ClientModel;
 
 @Component
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class StartCommandResolver implements CommandResolver {
     public BotApiMethod<?> resolve(String chatId, String text) {
         logger.info("[{}] resolved", getCommand());
 
-        ClientBean client = clientService.getByChatId(chatId);
+        ClientModel client = clientService.getByChatId(chatId);
         if (client.getAvailableTestsCount() <= 0) {
             return new SendMessage(chatId, "У вас нет доступных рекламных кампаний для запуска!");
         }

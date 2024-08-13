@@ -12,11 +12,10 @@ import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.entities.ClientSubscriptionEntity;
 import ru.akvine.marketspace.bot.exceptions.ClientSubscriptionException;
 import ru.akvine.marketspace.bot.repositories.ClientSubscriptionRepository;
-import ru.akvine.marketspace.bot.services.domain.ClientSubscriptionBean;
+import ru.akvine.marketspace.bot.services.domain.ClientSubscriptionModel;
 import ru.akvine.marketspace.bot.services.dto.admin.client.Subscription;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Service
@@ -30,13 +29,13 @@ public class ClientSubscriptionService {
     private int expiresDaysAfter;
 
     @Nullable
-    public ClientSubscriptionBean getByChatIdOrNull(String chatId) {
+    public ClientSubscriptionModel getByChatIdOrNull(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         Optional<ClientSubscriptionEntity> clientSubscription = clientSubscriptionRepository.findByChatId(chatId);
-        return clientSubscription.map(ClientSubscriptionBean::new).orElse(null);
+        return clientSubscription.map(ClientSubscriptionModel::new).orElse(null);
     }
 
-    public ClientSubscriptionBean add(Subscription subscription) {
+    public ClientSubscriptionModel add(Subscription subscription) {
         Preconditions.checkNotNull(subscription, "subscription is null");
         logger.info("Add subscription by [{}]", subscription);
 
@@ -53,7 +52,7 @@ public class ClientSubscriptionService {
 
         ClientSubscriptionEntity savedClientSubscription = clientSubscriptionRepository.save(clientSubscriptionToSave);
         logger.info("Successful add subscription = [{}] to client with chat id = {}", savedClientSubscription, client.getChatId());
-        return new ClientSubscriptionBean(savedClientSubscription);
+        return new ClientSubscriptionModel(savedClientSubscription);
     }
 
     @Transactional

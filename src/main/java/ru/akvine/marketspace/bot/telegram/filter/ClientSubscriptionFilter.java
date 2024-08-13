@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.marketspace.bot.exceptions.ClientSubscriptionException;
 import ru.akvine.marketspace.bot.services.ClientSubscriptionService;
-import ru.akvine.marketspace.bot.services.domain.ClientSubscriptionBean;
+import ru.akvine.marketspace.bot.services.domain.ClientSubscriptionModel;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -17,7 +17,7 @@ public class ClientSubscriptionFilter extends MessageFilter {
     public BotApiMethod<?> handle(Update update) {
         String chatId = getChatId(update);
         logger.debug("Update data was reached in ClientSubscriptionFilter for chat with id = {}", chatId);
-        ClientSubscriptionBean clientSubscription = clientSubscriptionService.getByChatIdOrNull(chatId);
+        ClientSubscriptionModel clientSubscription = clientSubscriptionService.getByChatIdOrNull(chatId);
         if (clientSubscription == null) {
             throw new ClientSubscriptionException("Client has no subscription");
         }

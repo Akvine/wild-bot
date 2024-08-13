@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.domain.ClientBean;
+import ru.akvine.marketspace.bot.services.domain.ClientModel;
 import ru.akvine.marketspace.bot.services.dto.ClientCreate;
 
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class ClientFilter extends MessageFilter {
         String chatId = getChatId(update);
 
         logger.debug("Update data was reached in ClientFilter for chat with id = {}", chatId);
-        ClientBean clientBean = clientService.findByChatId(chatId);
+        ClientModel clientBean = clientService.findByChatId(chatId);
         if (clientBean == null) {
             Message message = update.getMessage();
             ClientCreate clientCreate = new ClientCreate(
