@@ -41,18 +41,18 @@ public class AdvertStatisticService {
 
         AdvertFullStatisticResponse[] response;
         if (DateUtils.isSameDay(advert.getStartCheckDateTime(), LocalDateTime.now())) {
-            logger.info("Get advert with id = {} statistic by dates request", advert.getAdvertId());
+            logger.info("Get advert with id = {} statistic by dates request", advert.getExternalId());
             List<AdvertFullStatisticDatesDto> request = List.of(
                     new AdvertFullStatisticDatesDto()
-                            .setId(advert.getAdvertId())
+                            .setId(advert.getExternalId())
                             .setDates(List.of(LocalDate.now().toString()))
             );
             response = wildberriesIntegrationService.getAdvertsFullStatisticByDates(request);
         } else {
-            logger.info("Get advert with id = {} statistic by interval request", advert.getAdvertId());
+            logger.info("Get advert with id = {} statistic by interval request", advert.getExternalId());
             List<AdvertFullStatisticIntervalDto> request = List.of(
                     new AdvertFullStatisticIntervalDto()
-                            .setId(advert.getAdvertId())
+                            .setId(advert.getExternalId())
                             .setInterval(new AdvertStatisticInterval()
                                     .setBegin(advert.getStartCheckDateTime().toLocalDate().toString())
                                     .setEnd(LocalDate.now().toString()))

@@ -70,7 +70,7 @@ public class ReportService {
             sumPriceCell.setCellValue(advertStatistics.get(i).getSumPrice());
 
             Cell advertIdCell = row.createCell(11);
-            advertIdCell.setCellValue(advertStatistics.get(i).getAdvertEntity().getAdvertId());
+            advertIdCell.setCellValue(advertStatistics.get(i).getAdvertEntity().getExternalId());
 
             Cell startDateTimeCell = row.createCell(12);
             startDateTimeCell.setCellValue(advertStatistics.get(i).getAdvertEntity().getStartCheckDateTime().toString());

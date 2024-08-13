@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.akvine.marketspace.bot.exceptions.IntegrationException;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.*;
+import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
 import ru.akvine.marketspace.bot.utils.RequestUtils;
 
 import java.util.*;
@@ -386,6 +387,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException(errorMessage);
         }
 
+        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов / получения ответов
         AdvertFullStatisticResponse[] responses = response.getBody();
         if (responses == null || responses.length == 0) {
             throw new IntegrationException("Full statistic responses by dates is null or empty");
@@ -415,6 +417,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException(errorMessage);
         }
 
+        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов / получения ответов
         AdvertFullStatisticResponse[] responses = response.getBody();
         if (responses == null || responses.length == 0) {
             throw new IntegrationException("Full statistic responses by interval is null or empty");
@@ -452,6 +455,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException(errorMessage);
         }
 
+        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов / получения ответов
         GetGoodsResponse response = responseEntity.getBody();
         if (response == null) {
             throw new IntegrationException("Get goods response is null");
@@ -506,6 +510,31 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         }
 
         return Integer.parseInt(response);
+    }
+
+    @Override
+    public CardTypeResponse getTypes() {
+        logger.info("Get card types");
+
+        HttpHeaders headers = buildHttpHeadersInternal();
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<CardTypeResponse> responseEntity;
+        try {
+            responseEntity = restTemplate.exchange(
+                    WildberriesApiMethods.GET_CARD_TYPES.getUrl() + WildberriesApiMethods.GET_CARD_TYPES.getMethod(),
+                    HttpMethod.GET,
+                    httpEntity,
+                    CardTypeResponse.class
+            );
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling wb api method = [%s]. Message = %s",
+                    WildberriesApiMethods.GET_CARD_TYPES, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+
+        return responseEntity.getBody();
     }
 
     private HttpHeaders buildHttpHeadersForJsonBody() {

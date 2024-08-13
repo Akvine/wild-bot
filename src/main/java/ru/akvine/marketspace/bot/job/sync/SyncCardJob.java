@@ -1,11 +1,9 @@
-package ru.akvine.marketspace.bot.job;
+package ru.akvine.marketspace.bot.job.sync;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.util.CollectionUtils;
-import ru.akvine.marketspace.bot.constants.MDCConstants;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Component;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.repositories.CardRepository;
 import ru.akvine.marketspace.bot.services.CardService;
@@ -19,25 +17,21 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
+@Component
 public class SyncCardJob {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final CardRepository cardRepository;
     private final CardService cardService;
-    private final String name;
-    private final String chatId;
 
-    @Scheduled(fixedDelayString = "${sync.card.cron.milliseconds}")
     public void sync() {
-        MDC.put(MDCConstants.USERNAME, name);
-        MDC.put(MDCConstants.CHAT_ID, chatId);
         logger.info("Start card sync...");
 
         List<CardDto> cardsDto = wildberriesIntegrationService.getCards();
-        if (!CollectionUtils.isEmpty(cardsDto)) {
+        if (CollectionUtils.isNotEmpty(cardsDto)) {
             List<CardEntity> cards = cardRepository.findAll();
             List<Integer> cardsIdDb = cards
                     .stream()
-                    .map(CardEntity::getItemId)
+                    .map(CardEntity::getExternalId)
                     .collect(Collectors.toList());
             List<Integer> cardsInWb = cardsDto
                     .stream()
@@ -53,11 +47,11 @@ public class SyncCardJob {
             List<Integer> uniqueCardsInDb = new ArrayList<>(cardsIdDb);
             uniqueCardsInDb.removeAll(commonElements);
 
-            if (!CollectionUtils.isEmpty(uniqueCardsInDb)) {
+            if (CollectionUtils.isNotEmpty(uniqueCardsInDb)) {
                 logger.info("Delete unused db cards. Size = {}", uniqueCardsInDb.size());
                 cards
                         .stream()
-                        .filter(cardEntity -> uniqueCardsInDb.contains(cardEntity.getItemId()))
+                        .filter(cardEntity -> uniqueCardsInDb.contains(cardEntity.getExternalId()))
                         .forEach(cardEntity -> {
                             cardEntity.setDeleted(true);
                             cardEntity.setDeletedDate(ZonedDateTime.now());
@@ -65,7 +59,7 @@ public class SyncCardJob {
                         });
             }
 
-            if (!CollectionUtils.isEmpty(uniqueCardsInWb)) {
+            if (CollectionUtils.isNotEmpty(uniqueCardsInWb)) {
                 logger.info("Save new cards in db. Size = {}", uniqueCardsInWb.size());
                 List<CardDto> newCardsDto = cardsDto
                         .stream()

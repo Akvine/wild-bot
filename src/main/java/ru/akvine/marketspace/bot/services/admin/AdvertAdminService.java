@@ -43,14 +43,14 @@ public class AdvertAdminService {
         if (StringUtils.isNotBlank(pauseAdvert.getAdvertUuid())) {
             advertEntity = advertService.verifyExistsByUuid(pauseAdvert.getAdvertUuid());
         } else {
-            advertEntity = advertService.verifyExistsByAdvertId(pauseAdvert.getAdvertId());
+            advertEntity = advertService.verifyExistsByExternalId(pauseAdvert.getAdvertId());
         }
 
         if (advertEntity.getStatus() == AdvertStatus.PAUSE) {
-            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getItemId() + "] already in pause!");
+            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getExternalId() + "] already in pause!");
         }
 
-        int advertId = advertEntity.getAdvertId();
+        int advertId = advertEntity.getExternalId();
         AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId));
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {
@@ -61,7 +61,7 @@ public class AdvertAdminService {
         }
         AdvertDto advertDto = advertsInfo.getFirst();
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
-            wildberriesIntegrationService.pauseAdvert(advertEntity.getAdvertId());
+            wildberriesIntegrationService.pauseAdvert(advertEntity.getExternalId());
         }
         AdvertStatisticModel advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
 
@@ -90,14 +90,14 @@ public class AdvertAdminService {
         if (StringUtils.isNotBlank(pauseAdvert.getAdvertUuid())) {
             advertEntity = advertService.verifyExistsByUuid(pauseAdvert.getAdvertUuid());
         } else {
-            advertEntity = advertService.verifyExistsByAdvertId(pauseAdvert.getAdvertId());
+            advertEntity = advertService.verifyExistsByExternalId(pauseAdvert.getAdvertId());
         }
 
         if (advertEntity.getStatus() == AdvertStatus.PAUSE) {
-            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getAdvertId() + "] already in pause!");
+            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getExternalId() + "] already in pause!");
         }
 
-        int advertId = advertEntity.getAdvertId();
+        int advertId = advertEntity.getExternalId();
         AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId));
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {
@@ -140,10 +140,10 @@ public class AdvertAdminService {
         if (StringUtils.isNotBlank(renameAdvert.getAdvertUuid())) {
             advertEntity = advertService.verifyExistsByUuid(renameAdvert.getAdvertUuid());
         } else {
-            advertEntity = advertService.verifyExistsByAdvertId(renameAdvert.getAdvertId());
+            advertEntity = advertService.verifyExistsByExternalId(renameAdvert.getAdvertId());
         }
-        wildberriesIntegrationService.renameAdvert(advertEntity.getAdvertId(), renameAdvert.getName());
-        advertEntity.setName(renameAdvert.getName());
+        wildberriesIntegrationService.renameAdvert(advertEntity.getExternalId(), renameAdvert.getName());
+        advertEntity.setExternalTitle(renameAdvert.getName());
         advertService.update(new AdvertModel(advertEntity));
 
         logger.info("Successful rename advert = [{}]", renameAdvert);

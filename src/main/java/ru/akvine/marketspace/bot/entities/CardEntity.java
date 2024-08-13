@@ -21,11 +21,11 @@ public class CardEntity extends SoftBaseEntity {
     @Column(name = "UUID", nullable = false)
     private String uuid;
 
-    @Column(name = "ITEM_ID", nullable = false)
-    private int itemId;
+    @Column(name = "EXTERNAL_ID", nullable = false)
+    private int externalId;
 
-    @Column(name = "ITEM_TITLE", nullable = false)
-    private String itemTitle;
+    @Column(name = "EXTERNAL_TITLE", nullable = false)
+    private String externalTitle;
 
     @Column(name = "CATEGORY_ID", nullable = false)
     private int categoryId;
@@ -35,4 +35,8 @@ public class CardEntity extends SoftBaseEntity {
 
     @Column(name = "BARCODE", nullable = false)
     private String barcode;
+
+    @ManyToOne
+    @JoinColumn(name = "CARD_TYPE_ID", nullable = false)
+    private CardTypeEntity cardType;
 }

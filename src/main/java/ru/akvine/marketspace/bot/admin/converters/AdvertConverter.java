@@ -33,7 +33,7 @@ public class AdvertConverter {
 
     public PauseAdvertResponse convertToPauseAdvert(AdvertStatisticModel advertStatisticBean) {
         return new PauseAdvertResponse()
-                .setAdvertId(advertStatisticBean.getAdvertBean().getAdvertId())
+                .setAdvertId(advertStatisticBean.getAdvertBean().getExternalId())
                 .setAdvertStatistic(new AdvertStatisticDto()
                         .setAtbs(advertStatisticBean.getAtbs())
                         .setCr(advertStatisticBean.getCr())
@@ -66,7 +66,7 @@ public class AdvertConverter {
         return new AdvertDto()
                 .setUuid(advertBean.getUuid())
                 .setName(advertBean.getName())
-                .setAdvertId(advertBean.getAdvertId())
+                .setAdvertId(advertBean.getExternalId())
                 .setCategoryId(advertBean.getCategoryId())
                 .setChangeTime(advertBean.getChangeTime())
                 .setCpm(advertBean.getCpm())

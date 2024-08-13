@@ -17,7 +17,7 @@ public class AdvertModel extends SoftModel {
     private Long id;
     private String uuid;
     private String name;
-    private int advertId;
+    private int externalId;
     @Nullable
     private String chatId;
     private Date changeTime;
@@ -34,24 +34,24 @@ public class AdvertModel extends SoftModel {
     private LocalDateTime nextCheckDateTime;
     private LocalDateTime availableForStart;
     private boolean locked;
+    private CardModel cardModel;
 
     public AdvertModel(AdvertEntity advertEntity) {
         this.id = advertEntity.getId();
         this.uuid = advertEntity.getUuid();
-        this.name = advertEntity.getName();
+        this.name = advertEntity.getExternalTitle();
         this.locked = advertEntity.isLocked();
-        this.advertId = advertEntity.getAdvertId();
-        this.itemId = advertEntity.getItemId();
+        this.externalId = advertEntity.getExternalId();
         this.changeTime = advertEntity.getChangeTime();
         this.status = advertEntity.getStatus();
         this.type = advertEntity.getType();
         this.cpm = advertEntity.getCpm();
-        this.categoryId = advertEntity.getCategoryId();
         this.nextCheckDateTime = advertEntity.getNextCheckDateTime();
         this.startCheckDateTime = advertEntity.getStartCheckDateTime();
         this.startBudgetSum = advertEntity.getStartBudgetSum();
         this.checkBudgetSum = advertEntity.getCheckBudgetSum();
         this.availableForStart = advertEntity.getAvailableForStart();
+        this.cardModel = new CardModel(advertEntity.getCard());
 
         this.createdDate = advertEntity.getCreatedDate();
         this.updatedDate = advertEntity.getUpdatedDate();

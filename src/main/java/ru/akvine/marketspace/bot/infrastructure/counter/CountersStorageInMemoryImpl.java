@@ -24,7 +24,7 @@ public class CountersStorageInMemoryImpl implements CountersStorage {
         logger.debug("Start init IterationsStorage...");
         List<AdvertModel> runningAdverts = advertService.getAdvertsByStatuses(List.of(AdvertStatus.RUNNING));
         logger.info("Initializing running adverts in size = {}", runningAdverts.size());
-        runningAdverts.forEach(advert -> counters.put(advert.getAdvertId(), ZERO_COUNT_INIT));
+        runningAdverts.forEach(advert -> counters.put(advert.getExternalId(), ZERO_COUNT_INIT));
     }
 
     @Override

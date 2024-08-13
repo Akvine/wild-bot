@@ -20,15 +20,17 @@ public class CardModel extends SoftModel {
     private String categoryTitle;
     private int categoryId;
     private String barcode;
+    private CardTypeModel cardType;
 
     public CardModel(CardEntity cardEntity) {
         this.id = cardEntity.getId();
         this.uuid = cardEntity.getUuid();
-        this.itemId = cardEntity.getItemId();
-        this.itemTitle = cardEntity.getItemTitle();
+        this.itemId = cardEntity.getExternalId();
+        this.itemTitle = cardEntity.getExternalTitle();
         this.categoryTitle = cardEntity.getCategoryTitle();
         this.categoryId = cardEntity.getCategoryId();
         this.barcode = cardEntity.getBarcode();
+        this.cardType = new CardTypeModel(cardEntity.getCardType());
 
         this.createdDate = cardEntity.getCreatedDate();
         this.updatedDate = cardEntity.getUpdatedDate();

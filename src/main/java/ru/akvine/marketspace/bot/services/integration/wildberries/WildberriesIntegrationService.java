@@ -3,6 +3,7 @@ package ru.akvine.marketspace.bot.services.integration.wildberries;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
+import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
 
 import java.util.List;
 
@@ -138,4 +139,10 @@ public interface WildberriesIntegrationService {
      * @return
      */
     int createAdvert(AdvertCreateRequest request);
+
+    /**
+     * Получение списка типов товаров (Женский, Мужской, Детский и т.д.)
+     * @return список типов товаров или ошибку
+     */
+    CardTypeResponse getTypes();
 }

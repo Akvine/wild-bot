@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CardRepository extends JpaRepository<CardEntity, Long> {
-    @Query("from CardEntity ce where ce.deleted = false and ce.deletedDate is null")
+    @Query("from CardEntity ce where ce.deleted = false")
     @NotNull
     List<CardEntity> findAll();
 
-    @Query("from CardEntity ce where ce.itemId = :itemId and ce.deleted = false and ce.deletedDate is null")
-    Optional<CardEntity> findByItemId(@Param("itemId") int itemId);
+    @Query("from CardEntity ce where ce.externalId = :externalId and ce.deleted = false")
+    Optional<CardEntity> findByExternalId(@Param("externalId") int externalId);
 
     @Query("from CardEntity ce where ce.categoryId = :categoryId and ce.deleted = false")
     List<CardEntity> findByCategoryId(@Param("categoryId") int categoryId);

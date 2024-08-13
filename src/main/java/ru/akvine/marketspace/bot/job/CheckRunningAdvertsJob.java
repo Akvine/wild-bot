@@ -55,7 +55,7 @@ public class CheckRunningAdvertsJob {
         List<AdvertEntity> runningAdverts = advertRepository.findByStatuses(List.of(AdvertStatus.RUNNING));
         LocalDateTime startCheckDateTime = LocalDateTime.now();
         for (AdvertEntity advert : runningAdverts) {
-            int advertId = advert.getAdvertId();
+            int advertId = advert.getExternalId();
             int currentBudgetSum = wildberriesIntegrationService.getAdvertBudgetInfo(advertId).getTotal();
             int startBudgetSum = advert.getStartBudgetSum();
             int differenceBudgetSum = startBudgetSum - currentBudgetSum;
@@ -68,7 +68,7 @@ public class CheckRunningAdvertsJob {
                     logger.info("Current budget for advert = [{}] not equals zero, pause advert", advert);
                     wildberriesIntegrationService.pauseAdvert(advertId);
                 }
-                CardEntity cardEntity = cardService.verifyExistsByItemId(advert.getItemId());
+                CardEntity cardEntity = advert.getCard();
                 ChangeStocksRequest request = new ChangeStocksRequest()
                         .setStocks(List.of(new SkuDto()
                                 .setAmount(0)
@@ -101,7 +101,7 @@ public class CheckRunningAdvertsJob {
                     AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
                             .setCpm(newCpm)
                             .setAdvertId(advertId)
-                            .setParam(advert.getCategoryId())
+                            .setParam(advert.getCard().getCategoryId())
                             .setType(advert.getOrdinalType());
                     wildberriesIntegrationService.changeAdvertCpm(request);
 

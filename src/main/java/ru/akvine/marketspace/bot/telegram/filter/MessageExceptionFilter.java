@@ -56,10 +56,7 @@ public class MessageExceptionFilter extends MessageFilter {
     }
 
     private SendMessage processGeneralException(String chatId, Exception exception) {
-        logger.error("Some error occurred for chatId = {}. Message = {}. StackTrace: {}",
-                chatId,
-                exception.getMessage(),
-                exception.getStackTrace());
+        logger.error("Some error occurred. Message = [{}]. StackTrace: {}", exception.getMessage(), exception.getStackTrace());
         String messageToUser = String.format(
                 "Произошла неизвестная ошибка :( \nПожалуйста, обратитесь в поддержку: %s",
                 supportUrl
@@ -68,14 +65,12 @@ public class MessageExceptionFilter extends MessageFilter {
     }
 
     private SendMessage processBlockedCredentialsException(String chatId, String message) {
-        logger.info("Client with chat id = {} is blocked. Message = {}", chatId, message);
+        logger.info("Client is blocked. Message = [{}]", message);
         return new SendMessage(chatId, message);
     }
 
     private SendMessage processAdvertNotFoundException(String chatId, String exceptionMessage) {
-        logger.warn(
-                "For chat with id = {} has no advert. Message = {}",
-                chatId, exceptionMessage);
+        logger.warn("Has no advert. Message = [{}]", exceptionMessage);
         return new SendMessage(chatId, "Рекламная кампания для запуска не найдена. Попробуйте позже...");
     }
 
@@ -89,17 +84,17 @@ public class MessageExceptionFilter extends MessageFilter {
     }
 
     private SendMessage processClientSubscriptionException(String chatId, String message) {
-        logger.info("Client with chat id = {} not in whitelist. Message = {}", chatId, message);
+        logger.info("Client's subscription is expired or has no. Message = [{}]", message);
         return new SendMessage(chatId, CLIENT_SUBSCRIPTION_MESSAGE);
     }
 
     private SendMessage processAdvertStartLimitException(String chatId) {
-        logger.info("Start advert limit reached for client with chat id = {}", chatId);
+        logger.info("Start advert limit reached");
         return new SendMessage(chatId, "Превышен лимит по запуску рекламных кампаний!");
     }
 
     private SendMessage processPhotoDimensionsValidationException(String chatId, PhotoDimensionsValidationException exception) {
-        logger.info("Photo dimensions validation error for client with chat id = {}, message = {}", chatId, exception.getMessage());
+        logger.info("Photo dimensions validation error. Message = [{}]", exception.getMessage());
         String message = String.format(
                 "Неверный размер изображения!\nМинимум: %sx%s. Фактический: %sx%s",
                 minWidth, minHeight, exception.getWidth(), exception.getHeight()
@@ -109,7 +104,7 @@ public class MessageExceptionFilter extends MessageFilter {
 
     private SendMessage processPhotoSizeValidationException(String chatId, PhotoSizeValidationException exception) {
         double currentMegabytes = exception.getMegabytes();
-        logger.info("Photo size validation error for client with chat id = {}, message = {}", chatId, exception.getMessage());
+        logger.info("Photo size validation error. Message = [{}]", exception.getMessage());
         String message = String.format(
                 "Размер изображения слишком большой!\nМаксимум %s. Фактический: %s",
                 maxMegabytesSize, currentMegabytes

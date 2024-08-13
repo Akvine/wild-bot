@@ -38,7 +38,7 @@ public class StartConverter {
     }
 
     public SendMessage buildStartAdvert(String chatId, AdvertModel startAdvertBean) {
-        int advertId = startAdvertBean.getAdvertId();
+        int advertId = startAdvertBean.getExternalId();
         int startCpm = startAdvertBean.getCpm();
         Integer startBudgetSum = startAdvertBean.getStartBudgetSum();
         LocalDateTime nextCheckDateTime = startAdvertBean.getNextCheckDateTime();

@@ -16,4 +16,5 @@ public class CardDto {
     private List<CardPhotoDto> photos;
     private List<SizeDto> sizes;
     private String updatedAt;
+    private List<CardCharacteristic> characteristics;
 }

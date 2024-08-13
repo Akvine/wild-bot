@@ -26,20 +26,14 @@ public class AdvertEntity extends SoftBaseEntity {
     @Column(name = "UUID", nullable = false)
     private String uuid;
 
-    @Column(name = "ADVERT_ID", nullable = false)
-    private int advertId;
+    @Column(name = "EXTERNAL_ID", nullable = false)
+    private int externalId;
 
-    @Column(name = "NAME", nullable = false)
-    private String name;
+    @Column(name = "EXTERNAL_TITLE", nullable = false)
+    private String externalTitle;
 
     @Column(name = "CHANGE_TIME", nullable = false)
     private Date changeTime;
-
-    @Column(name = "ITEM_ID", nullable = false)
-    private int itemId;
-
-    @Column(name = "CATEGORY_ID", nullable = false)
-    private int categoryId;
 
     @Column(name = "STATUS", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -79,6 +73,10 @@ public class AdvertEntity extends SoftBaseEntity {
 
     @Column(name = "IS_LOCKED", nullable = false)
     private boolean locked;
+
+    @OneToOne
+    @JoinColumn(name = "CARD_ID", nullable = false)
+    private CardEntity card;
 
     @Transient
     public boolean isAvailableForStart() {

@@ -15,9 +15,9 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
             "ae.deleted = false")
     List<AdvertEntity> findByStatuses(@Param("statuses") List<AdvertStatus> states);
 
-    @Query("from AdvertEntity ae where ae.status in :statuses " +
+    @Query("from AdvertEntity ae join ae.card aec where ae.status in :statuses " +
             "and " +
-            "ae.categoryId = :categoryId " +
+            "aec.categoryId = :categoryId " +
             "and " +
             "ae.deleted = false")
     List<AdvertEntity> findByStatusesAndCategoryId(@Param("statuses") List<AdvertStatus> states,
@@ -33,13 +33,13 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
     @Query("from AdvertEntity ae where ae.uuid = :uuid and ae.deleted = false")
     Optional<AdvertEntity> findByUuid(@Param("uuid") String uuid);
 
-    @Query("from AdvertEntity ae where ae.advertId = :advertId and ae.deleted = false")
-    Optional<AdvertEntity> findByAdvertId(@Param("advertId") int advertId);
+    @Query("from AdvertEntity ae where ae.externalId = :externalId and ae.deleted = false")
+    Optional<AdvertEntity> findByExternalId(@Param("externalId") int externalId);
 
     @Query("from AdvertEntity ae join ae.client c " +
-            "where ae.advertId = :advertId and " +
+            "where ae.externalId = :externalId and " +
             "c.id = :clientId and " +
             "ae.deleted = false")
-    Optional<AdvertEntity> findByAdvertIdAndClientId(@Param("advertId") int advertId,
-                                                     @Param("clientId") long clientId);
+    Optional<AdvertEntity> findByExternalIdAndClientId(@Param("externalId") int externalId,
+                                                       @Param("clientId") long clientId);
 }

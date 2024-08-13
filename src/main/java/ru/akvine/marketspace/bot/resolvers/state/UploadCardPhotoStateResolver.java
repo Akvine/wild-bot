@@ -64,7 +64,7 @@ public class UploadCardPhotoStateResolver implements StateResolver {
             advertService.update(advertBean);
 
             ClientSessionData session = sessionStorage.get(chatId);
-            session.setLockedAdvertId(advertBean.getAdvertId());
+            session.setLockedAdvertId(advertBean.getExternalId());
             sessionStorage.save(session);
 
             int nmId = advertBean.getItemId();

@@ -23,7 +23,7 @@ public class ClientSubscriptionEntity extends BaseEntity {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "CLIENT_ID")
+    @JoinColumn(name = "CLIENT_ID", nullable = false)
     private ClientEntity client;
 
     @Column(name = "EXPIRES_AT", nullable = false)

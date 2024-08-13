@@ -80,7 +80,7 @@ public class InputStatisticIdStateResolver implements StateResolver {
         sb.append("8. CR: ").append(advertStatistic.getCr()).append("\n");
         sb.append("9. SHKS: ").append(advertStatistic.getShks()).append("\n");
         sb.append("10. SUM_PRICE: ").append(advertStatistic.getSumPrice()).append("\n");
-        sb.append("11. Advert ID: ").append(advertStatistic.getAdvertEntity().getAdvertId()).append("\n");
+        sb.append("11. Advert ID: ").append(advertStatistic.getAdvertEntity().getExternalId()).append("\n");
         sb.append("12. Время запуска теста: ").append(advertStatistic.getAdvertEntity().getStartCheckDateTime().toString());
         return sb.toString();
     }

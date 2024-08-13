@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface ClientSubscriptionRepository extends JpaRepository<ClientSubscriptionEntity, Long> {
     @Query("from ClientSubscriptionEntity cse join cse.client csec " +
-            "where cses.chatId = :chatId")
+            "where csec.chatId = :chatId")
     Optional<ClientSubscriptionEntity> findByChatId(@Param("chatId") String chatId);
 }

@@ -4,17 +4,17 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.marketspace.bot.job.CheckRunningAdvertsJob;
 import ru.akvine.marketspace.bot.job.SubscriptionJob;
-import ru.akvine.marketspace.bot.job.SyncAdvertJob;
-import ru.akvine.marketspace.bot.job.SyncCardJob;
+import ru.akvine.marketspace.bot.job.sync.GlobalSyncJob;
+import ru.akvine.marketspace.bot.job.sync.SyncAdvertJob;
+import ru.akvine.marketspace.bot.job.sync.SyncCardJob;
+import ru.akvine.marketspace.bot.job.sync.SyncCardTypeJob;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
-import ru.akvine.marketspace.bot.repositories.CardRepository;
 import ru.akvine.marketspace.bot.repositories.ClientSubscriptionRepository;
-import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.CardService;
-import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 
@@ -24,28 +24,15 @@ public class ScheduledConfig {
     private final static String SYSTEM = "system";
 
     @Bean
-    @ConditionalOnProperty(name = "sync.enabled", havingValue = "true")
-    public SyncAdvertJob syncAdvertJob(
-            AdvertRepository advertRepository,
-            AdvertService advertService,
-            WildberriesIntegrationService wildberriesIntegrationService) {
-        return new SyncAdvertJob(advertRepository,
-                advertService,
-                wildberriesIntegrationService,
-                SyncAdvertJob.class.getSimpleName(),
-                SYSTEM);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "sync.enabled", havingValue = "true")
-    public SyncCardJob syncCardJob(
-            WildberriesIntegrationService wildberriesIntegrationService,
-            CardRepository cardRepository,
-            CardService cardService) {
-        return new SyncCardJob(wildberriesIntegrationService,
-                cardRepository,
-                cardService,
-                SyncCardJob.class.getSimpleName(),
+    @ConditionalOnProperty(name = "global.sync.enabled", havingValue = "true")
+    public GlobalSyncJob globalSyncJob(SyncCardTypeJob syncCardTypeJob,
+                                       SyncCardJob syncCardJob,
+                                       SyncAdvertJob syncAdvertJob) {
+        return new GlobalSyncJob(
+                syncCardTypeJob,
+                syncCardJob,
+                syncAdvertJob,
+                GlobalSyncJob.class.getSimpleName(),
                 SYSTEM);
     }
 

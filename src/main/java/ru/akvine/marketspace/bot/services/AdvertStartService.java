@@ -68,7 +68,7 @@ public class AdvertStartService {
     private AdvertModel startInternal(String chatId) {
         int advertId = sessionStorage.get(chatId).getLockedAdvertId();
         AdvertModel advertToStart = advertService.getByAdvertId(advertId);
-        CardEntity card = cardService.verifyExistsByItemId(advertToStart.getItemId());
+        CardEntity card = cardService.verifyExistsByExternalId(advertToStart.getItemId());
         ClientEntity client = clientService.verifyExistsByChatId(chatId);
 
         AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId);
@@ -125,7 +125,7 @@ public class AdvertStartService {
         advertToStart.setChatId(chatId);
         AdvertModel updatedAdvert = advertService.update(advertToStart);
 
-        AdvertEntity advertEntity = advertService.verifyExistsByAdvertId(advertId);
+        AdvertEntity advertEntity = advertService.verifyExistsByExternalId(advertId);
         AdvertStatisticEntity advertStatisticEntity = new AdvertStatisticEntity()
                 .setActive(true)
                 .setPhoto(sessionStorage.get(chatId).getUploadedCardPhoto())
@@ -133,7 +133,7 @@ public class AdvertStartService {
                 .setClient(client);
         advertStatisticRepository.save(advertStatisticEntity);
 
-        countersStorage.add(advertToStart.getAdvertId());
+        countersStorage.add(advertToStart.getExternalId());
         sessionStorage.close(chatId);
 
         logger.info("Successful start advert = [{}]", updatedAdvert);

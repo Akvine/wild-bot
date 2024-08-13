@@ -21,7 +21,8 @@ public enum WildberriesApiMethods {
     GET_ADVERTS_FULL_STATISTIC("https://advert-api.wb.ru", "/adv/v2/fullstats"),
     GET_GOODS("https://discounts-prices-api.wildberries.ru", "/api/v2/list/goods/filter"),
     SET_GOODS_PRICE_AND_DISCOUNT("https://discounts-prices-api.wildberries.ru", "/api/v2/upload/task"),
-    CREATE_AUTO_ADVERT("https://advert-api.wildberries.ru", "/adv/v1/save-ad");
+    CREATE_AUTO_ADVERT("https://advert-api.wildberries.ru", "/adv/v1/save-ad"),
+    GET_CARD_TYPES("https://content-api.wildberries.ru", "/content/v2/directory/kinds");
 
     private final String url;
     private final String method;

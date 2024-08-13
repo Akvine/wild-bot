@@ -33,7 +33,7 @@ public class LaunchedAdvertsConverter {
         }
 
         runningAdverts.forEach(advert -> {
-            sb.append("Advert ID: ").append(advert.getAdvertId()).append(NEW_LINE);
+            sb.append("Advert ID: ").append(advert.getExternalId()).append(NEW_LINE);
             sb.append("Название: ").append(advert.getName()).append(NEW_LINE);
             sb.append("Дата запуска теста по РК: ")
                     .append(DateUtils.formatLocalDateTime(advert.getStartCheckDateTime()))

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
+import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.enums.AdvertType;
@@ -16,8 +17,8 @@ import ru.akvine.marketspace.bot.repositories.AdvertRepository;
 import ru.akvine.marketspace.bot.services.domain.AdvertModel;
 import ru.akvine.marketspace.bot.services.domain.CardModel;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertCreateRequest;
+import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.marketspace.bot.utils.UUIDGenerator;
 
 import java.time.LocalDateTime;
@@ -46,17 +47,19 @@ public class AdvertService {
         logger.info("Save new adverts, size = {}", adverts.size());
 
         adverts.forEach(advertDto -> {
+            CardEntity card = cardService.verifyExistsByExternalId(
+                    advertDto.getAdvertParams().getNms().getFirst()
+            );
             AdvertEntity advertEntity = new AdvertEntity()
                     .setUuid(UUIDGenerator.uuidWithoutDashes())
-                    .setAdvertId(advertDto.getAdvertId())
-                    .setName(advertDto.getName())
+                    .setExternalId(advertDto.getAdvertId())
+                    .setExternalTitle(advertDto.getName())
                     .setChangeTime(advertDto.getChangeTime())
                     .setType(AdvertType.getByCode(advertDto.getType()))
                     .setOrdinalType(advertDto.getType())
                     .setStatus(AdvertStatus.getByCode(advertDto.getStatus()))
                     .setOrdinalStatus(advertDto.getStatus())
-                    .setItemId(advertDto.getAdvertParams().getNms().getFirst())
-                    .setCategoryId(advertDto.getAdvertParams().getSubject().getId());
+                    .setCard(card);
             if (advertDto.getAdvertParams() != null) {
                 advertEntity.setCpm(advertDto.getAdvertParams().getCpm());
             }
@@ -105,7 +108,7 @@ public class AdvertService {
         advertEntity
                 .setStartBudgetSum(advertBean.getStartBudgetSum())
                 .setNextCheckDateTime(advertBean.getNextCheckDateTime())
-                .setName(advertBean.getName())
+                .setExternalTitle(advertBean.getName())
                 .setCpm(advertBean.getCpm())
                 .setStatus(advertBean.getStatus())
                 .setOrdinalStatus(advertBean.getStatus().getCode())
@@ -175,17 +178,16 @@ public class AdvertService {
 
             AdvertEntity advertEntity = new AdvertEntity()
                     .setUuid(UUIDGenerator.uuidWithoutDashes())
-                    .setAdvertId(advertId)
+                    .setExternalId(advertId)
                     .setChangeTime(new Date())
                     .setLocked(false)
                     .setCpm(advertMinCpm)
-                    .setCategoryId(categoryId)
-                    .setItemId(cardBean.getItemId())
+                    .setExternalId(cardBean.getItemId())
                     .setStatus(AdvertStatus.PAUSE)
                     .setOrdinalStatus(AdvertStatus.PAUSE.getCode())
                     .setType(AdvertType.AUTO)
                     .setOrdinalType(AdvertType.AUTO.getCode())
-                    .setName(advertName);
+                    .setExternalTitle(advertName);
             AdvertEntity savedAdvert = advertRepository.save(advertEntity);
             savedAdvert.setAvailableForStart(LocalDateTime.now().plusMinutes(3));
             advertRepository.save(savedAdvert);
@@ -199,20 +201,20 @@ public class AdvertService {
 
     public AdvertModel getByAdvertId(int advertId) {
         logger.info("Get advert with id = {}", advertId);
-        return new AdvertModel(verifyExistsByAdvertId(advertId));
+        return new AdvertModel(verifyExistsByExternalId(advertId));
     }
 
-    public AdvertEntity verifyExistsByAdvertId(int advertId) {
-        logger.info("Verify advert exists with id = {}", advertId);
+    public AdvertEntity verifyExistsByExternalId(int externalId) {
+        logger.info("Verify advert exists with external id = {}", externalId);
         return advertRepository
-                .findByAdvertId(advertId)
-                .orElseThrow(() -> new AdvertNotFoundException("Advert with advertId = [" + advertId + "] not found!"));
+                .findByExternalId(externalId)
+                .orElseThrow(() -> new AdvertNotFoundException("Advert with external id = [" + externalId + "] not found!"));
     }
 
     public AdvertEntity verifyExistsByAdvertIdAndClientId(int advertId, long clientId) {
         logger.info("Verify advert exists with id = {} launched by client with id = {}", advertId, clientId);
         return advertRepository
-                .findByAdvertIdAndClientId(advertId, clientId)
+                .findByExternalIdAndClientId(advertId, clientId)
                 .orElseThrow(() -> {
                     String errorMessage = String.format(
                             "Advert with advertId = [%s] and launched client with id = [%s] not found!",

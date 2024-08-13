@@ -1,11 +1,9 @@
-package ru.akvine.marketspace.bot.job;
+package ru.akvine.marketspace.bot.job.sync;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.util.CollectionUtils;
-import ru.akvine.marketspace.bot.constants.MDCConstants;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Component;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
@@ -23,20 +21,17 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
+@Component
 public class SyncAdvertJob {
     private final AdvertRepository advertRepository;
     private final AdvertService advertService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
-    private final String name;
-    private final String chatId;
 
+    // TODO : заменить на enum AdvertStatus
     private static final int ADVERT_PAUSE_STATUS_CODE = 11;
     private static final int ADVERT_READY_FOR_START_STATUS_CODE = 4;
 
-    @Scheduled(fixedDelayString = "${sync.advert.cron.milliseconds}")
     public void sync() {
-        MDC.put(MDCConstants.USERNAME, name);
-        MDC.put(MDCConstants.CHAT_ID, chatId);
         logger.info("Start advert sync...");
 
         AdvertListResponse advertListResponse = wildberriesIntegrationService.getAdverts();
@@ -50,7 +45,7 @@ public class SyncAdvertJob {
             List<AdvertEntity> advertsInDb = advertRepository.findByStatuses(List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START));
             List<Integer> advertsIdsInDb = advertsInDb
                     .stream()
-                    .map(AdvertEntity::getAdvertId)
+                    .map(AdvertEntity::getExternalId)
                     .collect(Collectors.toList());
 
             List<Integer> commonElements = new ArrayList<>(advertsInWb);
@@ -62,11 +57,11 @@ public class SyncAdvertJob {
             List<Integer> uniqueAdvertsInDb = new ArrayList<>(advertsIdsInDb);
             uniqueAdvertsInDb.removeAll(commonElements);
 
-            if (!CollectionUtils.isEmpty(uniqueAdvertsInDb)) {
+            if (CollectionUtils.isNotEmpty(uniqueAdvertsInDb)) {
                 logger.info("Delete unused db adverts");
                 advertsInDb
                         .stream()
-                        .filter(advertEntity -> uniqueAdvertsInDb.contains(advertEntity.getAdvertId()))
+                        .filter(advertEntity -> uniqueAdvertsInDb.contains(advertEntity.getExternalId()))
                         .forEach(advertEntity -> {
                             advertEntity.setDeleted(true);
                             advertEntity.setDeletedDate(ZonedDateTime.now());
@@ -74,7 +69,7 @@ public class SyncAdvertJob {
                         });
             }
 
-            if (!CollectionUtils.isEmpty(uniqueAdvertsInWb)) {
+            if (CollectionUtils.isNotEmpty(uniqueAdvertsInWb)) {
                 int batchSize = 50;
                 int batchNumber = 1;
                 int batchSavedCount = 0;
