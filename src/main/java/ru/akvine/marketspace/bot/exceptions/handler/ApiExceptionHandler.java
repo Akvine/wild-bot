@@ -10,6 +10,7 @@ import ru.akvine.marketspace.bot.admin.dto.common.ErrorResponse;
 import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
 import ru.akvine.marketspace.bot.exceptions.AdvertAlreadyInPauseStateException;
 import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
+import ru.akvine.marketspace.bot.exceptions.SubscriptionException;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
 
 import static ru.akvine.marketspace.bot.constants.ApiErrorConstants.BLOCKED_ERROR;
@@ -43,6 +44,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage(),
                 exception.getMessage()
                 );
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({SubscriptionException.class})
+    public ResponseEntity<ErrorResponse> handleSubscriptionException(SubscriptionException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                ApiErrorConstants.SUBSCRIPTION_NOT_FOUND_ERROR,
+                exception.getMessage(),
+                exception.getMessage()
+        );
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 }

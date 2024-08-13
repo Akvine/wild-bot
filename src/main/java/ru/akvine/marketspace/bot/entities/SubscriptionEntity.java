@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Accessors(chain = true)
-@Table(name = "CLIENT_SUBSCRIPTION_ENTITY")
+@Table(name = "SUBSCRIPTION_ENTITY")
 @Entity
-public class ClientSubscriptionEntity extends BaseEntity {
+public class SubscriptionEntity extends BaseEntity {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clientSubscriptionEntitySeq")
-    @SequenceGenerator(name = "clientSubscriptionEntitySeq", sequenceName = "SEQ_CLIENT_SUBSCRIPTION_ENTITY", allocationSize = 1000)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subscriptionEntitySeq")
+    @SequenceGenerator(name = "subscriptionEntitySeq", sequenceName = "SEQ_SUBSCRIPTION_ENTITY", allocationSize = 1000)
     private Long id;
 
     @OneToOne

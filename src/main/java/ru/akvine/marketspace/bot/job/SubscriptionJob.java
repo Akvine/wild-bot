@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.marketspace.bot.constants.MDCConstants;
-import ru.akvine.marketspace.bot.entities.ClientSubscriptionEntity;
+import ru.akvine.marketspace.bot.entities.SubscriptionEntity;
 import ru.akvine.marketspace.bot.repositories.ClientSubscriptionRepository;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 
@@ -32,10 +32,10 @@ public class SubscriptionJob {
         MDC.put(MDCConstants.USERNAME, mdcName);
         MDC.put(MDCConstants.CHAT_ID, mdcChatId);
         logger.info("Start delete expired subscriptions...");
-        List<ClientSubscriptionEntity> subscriptions = clientSubscriptionRepository.findAll();
+        List<SubscriptionEntity> subscriptions = clientSubscriptionRepository.findAll();
         subscriptions
                 .stream()
-                .filter(ClientSubscriptionEntity::isExpired)
+                .filter(SubscriptionEntity::isExpired)
                 .forEach(clientSubscriptionRepository::delete);
         logger.info("End delete expired subscriptions");
     }
@@ -45,7 +45,7 @@ public class SubscriptionJob {
         MDC.put(MDCConstants.USERNAME, mdcName);
         MDC.put(MDCConstants.CHAT_ID, mdcChatId);
         logger.info("Start notify clients about expiring subscription...");
-        List<ClientSubscriptionEntity> subscriptions = clientSubscriptionRepository.findAll();
+        List<SubscriptionEntity> subscriptions = clientSubscriptionRepository.findAll();
         subscriptions
                 .stream()
                 .filter(subscription -> !subscription.isExpired())

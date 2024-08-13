@@ -98,13 +98,6 @@ public class ClientConverter {
                 .setUsernames(request.getUsernames());
     }
 
-    public Subscription convertToSubscription(SubscriptionRequest request) {
-        Preconditions.checkNotNull(request, "SubscriptionRequest is null");
-        return new Subscription()
-                .setChatId(request.getChatId())
-                .setUsername(request.getUsername());
-    }
-
     private BlockClientDto buildBlockClientDto(BlockClientEntry entry) {
         return new BlockClientDto()
                 .setUuid(entry.getUuid())

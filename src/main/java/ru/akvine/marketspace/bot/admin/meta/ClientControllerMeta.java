@@ -24,10 +24,4 @@ public interface ClientControllerMeta {
 
     @PostMapping(value = "/send/message")
     Response sendMessage(@Valid @RequestBody SendMessageRequest request);
-
-    @PostMapping(value = "/add/subscription")
-    Response addSubscription(@Valid @RequestBody SubscriptionRequest request);
-
-    @PostMapping(value = "/delete/subscription")
-    Response deleteSubscription(@Valid @RequestBody SubscriptionRequest request);
 }

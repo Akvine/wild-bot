@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
-import ru.akvine.marketspace.bot.entities.ClientSubscriptionEntity;
-import ru.akvine.marketspace.bot.exceptions.ClientSubscriptionException;
+import ru.akvine.marketspace.bot.entities.SubscriptionEntity;
+import ru.akvine.marketspace.bot.exceptions.SubscriptionException;
 import ru.akvine.marketspace.bot.repositories.ClientSubscriptionRepository;
-import ru.akvine.marketspace.bot.services.domain.ClientSubscriptionModel;
+import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
 import ru.akvine.marketspace.bot.services.dto.admin.client.Subscription;
 
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ClientSubscriptionService {
+public class SubscriptionService {
     private final ClientSubscriptionRepository clientSubscriptionRepository;
     private final ClientService clientService;
 
@@ -29,13 +29,34 @@ public class ClientSubscriptionService {
     private int expiresDaysAfter;
 
     @Nullable
-    public ClientSubscriptionModel getByChatIdOrNull(String chatId) {
+    public SubscriptionModel getByChatIdOrNull(String chatId) {
         Preconditions.checkNotNull(chatId, "chatId is null");
-        Optional<ClientSubscriptionEntity> clientSubscription = clientSubscriptionRepository.findByChatId(chatId);
-        return clientSubscription.map(ClientSubscriptionModel::new).orElse(null);
+        Optional<SubscriptionEntity> clientSubscription = clientSubscriptionRepository.findByChatId(chatId);
+        return clientSubscription.map(SubscriptionModel::new).orElse(null);
     }
 
-    public ClientSubscriptionModel add(Subscription subscription) {
+    public SubscriptionModel get(Subscription subscription) {
+        Preconditions.checkNotNull(subscription, "subscription is null");
+        logger.info("Get subscription by [{}]", subscription);
+
+        ClientEntity client;
+        if (StringUtils.isNotBlank(subscription.getUsername())) {
+            client = clientService.verifyExistsByUsername(subscription.getUsername());
+        } else {
+            client = clientService.verifyExistsByChatId(subscription.getChatId());
+        }
+
+        return new SubscriptionModel(verifyExistsByChatId(client.getChatId()));
+    }
+
+    public SubscriptionEntity verifyExistsByChatId(String chatId) {
+        Preconditions.checkNotNull(chatId, "chatId is null");
+        return clientSubscriptionRepository
+                .findByChatId(chatId)
+                .orElseThrow(() -> new SubscriptionException("Client subscription for chat with id = [" + chatId + "] not found!"));
+    }
+
+    public SubscriptionModel add(Subscription subscription) {
         Preconditions.checkNotNull(subscription, "subscription is null");
         logger.info("Add subscription by [{}]", subscription);
 
@@ -46,13 +67,13 @@ public class ClientSubscriptionService {
             client = clientService.verifyExistsByChatId(subscription.getChatId());
         }
 
-        ClientSubscriptionEntity clientSubscriptionToSave = new ClientSubscriptionEntity()
+        SubscriptionEntity clientSubscriptionToSave = new SubscriptionEntity()
                 .setClient(client)
                 .setExpiresAt(LocalDateTime.now().plusDays(expiresDaysAfter));
 
-        ClientSubscriptionEntity savedClientSubscription = clientSubscriptionRepository.save(clientSubscriptionToSave);
+        SubscriptionEntity savedClientSubscription = clientSubscriptionRepository.save(clientSubscriptionToSave);
         logger.info("Successful add subscription = [{}] to client with chat id = {}", savedClientSubscription, client.getChatId());
-        return new ClientSubscriptionModel(savedClientSubscription);
+        return new SubscriptionModel(savedClientSubscription);
     }
 
     @Transactional
@@ -68,10 +89,10 @@ public class ClientSubscriptionService {
         }
         String chatId = client.getChatId();
 
-        Optional<ClientSubscriptionEntity> subscriptionEntity = clientSubscriptionRepository.findByChatId(chatId);
+        Optional<SubscriptionEntity> subscriptionEntity = clientSubscriptionRepository.findByChatId(chatId);
         if (subscriptionEntity.isEmpty()) {
             String errorMessage = String.format("Client with chat id = [%s] has no subscription", client.getChatId());
-            throw new ClientSubscriptionException(errorMessage);
+            throw new SubscriptionException(errorMessage);
         }
 
         clientSubscriptionRepository.delete(subscriptionEntity.get());

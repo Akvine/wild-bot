@@ -43,8 +43,8 @@ public class TelegramExceptionHandler {
         return new SendMessage(chatId, errorMessage);
     }
 
-    @TelegramErrorHandler(ClientSubscriptionException.class)
-    public SendMessage handleClientSubscriptionException(String chatId, ClientSubscriptionException exception) {
+    @TelegramErrorHandler(SubscriptionException.class)
+    public SendMessage handleClientSubscriptionException(String chatId, SubscriptionException exception) {
         logger.info("Client's subscription is expired or has no. Message = [{}]", exception.getMessage());
         return new SendMessage(chatId, CLIENT_SUBSCRIPTION_MESSAGE);
     }

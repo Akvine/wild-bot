@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import ru.akvine.marketspace.bot.admin.dto.client.*;
-import ru.akvine.marketspace.bot.exceptions.ValidationException;
 import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
+import ru.akvine.marketspace.bot.exceptions.ValidationException;
 
 @Component
 public class ClientValidator extends AdminValidator {
@@ -60,22 +60,6 @@ public class ClientValidator extends AdminValidator {
         verifySecret(request);
         Preconditions.checkNotNull(request, "unblockClientRequest is null");
         verifyBlockRequest(request);
-    }
-
-    public void verifySubscriptionRequest(SubscriptionRequest request) {
-        verifySecret(request);
-        if (StringUtils.isBlank(request.getChatId()) && StringUtils.isBlank(request.getUsername())) {
-            throw new ValidationException(
-                    ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,
-                    "Username or chat id are not presented. Must  be only one of these params"
-            );
-        }
-        if (StringUtils.isNotBlank(request.getChatId()) && StringUtils.isNotBlank(request.getUsername())) {
-            throw new ValidationException(
-                    ApiErrorConstants.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
-                    "Username and chat id are presented. Must  be only one of these params"
-            );
-        }
     }
 
     private void verifyBlockRequest(BlockRequest request) {

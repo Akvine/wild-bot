@@ -3,12 +3,12 @@ package ru.akvine.marketspace.bot.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.akvine.marketspace.bot.entities.ClientSubscriptionEntity;
+import ru.akvine.marketspace.bot.entities.SubscriptionEntity;
 
 import java.util.Optional;
 
-public interface ClientSubscriptionRepository extends JpaRepository<ClientSubscriptionEntity, Long> {
-    @Query("from ClientSubscriptionEntity cse join cse.client csec " +
-            "where csec.chatId = :chatId")
-    Optional<ClientSubscriptionEntity> findByChatId(@Param("chatId") String chatId);
+public interface ClientSubscriptionRepository extends JpaRepository<SubscriptionEntity, Long> {
+    @Query("from SubscriptionEntity se join se.client sec " +
+            "where sec.chatId = :chatId")
+    Optional<SubscriptionEntity> findByChatId(@Param("chatId") String chatId);
 }

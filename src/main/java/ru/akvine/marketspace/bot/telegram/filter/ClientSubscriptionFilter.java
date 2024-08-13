@@ -4,25 +4,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.exceptions.ClientSubscriptionException;
-import ru.akvine.marketspace.bot.services.ClientSubscriptionService;
-import ru.akvine.marketspace.bot.services.domain.ClientSubscriptionModel;
+import ru.akvine.marketspace.bot.exceptions.SubscriptionException;
+import ru.akvine.marketspace.bot.services.SubscriptionService;
+import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
 
 @RequiredArgsConstructor
 @Slf4j
 public class ClientSubscriptionFilter extends MessageFilter {
-    private final ClientSubscriptionService clientSubscriptionService;
+    private final SubscriptionService subscriptionService;
 
     @Override
     public BotApiMethod<?> handle(Update update) {
         String chatId = getChatId(update);
         logger.debug("Update data was reached in ClientSubscriptionFilter for chat with id = {}", chatId);
-        ClientSubscriptionModel clientSubscription = clientSubscriptionService.getByChatIdOrNull(chatId);
+        SubscriptionModel clientSubscription = subscriptionService.getByChatIdOrNull(chatId);
         if (clientSubscription == null) {
-            throw new ClientSubscriptionException("Client has no subscription");
+            throw new SubscriptionException("Client has no subscription");
         }
-        if (clientSubscription.isExpiresAt()) {
-            throw new ClientSubscriptionException("Client subscription is expired");
+        if (clientSubscription.isExpired()) {
+            throw new SubscriptionException("Client subscription is expired");
         }
         return nextMessageFilter.handle(update);
     }
