@@ -5,10 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.akvine.marketspace.bot.job.CheckRunningAdvertsJob;
+import ru.akvine.marketspace.bot.job.SubscriptionJob;
 import ru.akvine.marketspace.bot.job.SyncAdvertJob;
 import ru.akvine.marketspace.bot.job.SyncCardJob;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
 import ru.akvine.marketspace.bot.repositories.CardRepository;
+import ru.akvine.marketspace.bot.repositories.ClientSubscriptionRepository;
 import ru.akvine.marketspace.bot.services.AdvertService;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
 import ru.akvine.marketspace.bot.services.CardService;
@@ -62,6 +64,17 @@ public class ScheduledConfig {
                 countersStorage,
                 advertStatisticService,
                 CheckRunningAdvertsJob.class.getSimpleName(),
+                SYSTEM
+        );
+    }
+
+    @Bean
+    public SubscriptionJob subscriptionJob(TelegramIntegrationService telegramIntegrationService,
+                                           ClientSubscriptionRepository clientSubscriptionRepository) {
+        return new SubscriptionJob(
+                telegramIntegrationService,
+                clientSubscriptionRepository,
+                SubscriptionJob.class.getSimpleName(),
                 SYSTEM
         );
     }

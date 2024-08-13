@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Data
 @Accessors(chain = true)
-public class Whitelist {
+public class Subscription {
     @Nullable
     private String chatId;
     @Nullable

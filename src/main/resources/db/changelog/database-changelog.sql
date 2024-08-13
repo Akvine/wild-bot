@@ -53,15 +53,15 @@ VALUES ('X');
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'CLIENT_ENTITY' and table_schema = 'public';
 CREATE TABLE CLIENT_ENTITY
 (
-    ID              BIGINT       NOT NULL,
-    UUID            VARCHAR(255) NOT NULL,
-    IS_DELETED      BOOLEAN      NOT NULL,
-    DELETED_DATE    TIMESTAMP,
-    FIRST_NAME      VARCHAR(255) NOT NULL,
-    LAST_NAME       VARCHAR(255),
-    CHAT_ID         VARCHAR(255) NOT NULL,
-    USERNAME        VARCHAR(255) NOT NULL,
-    IS_IN_WHITELIST BOOLEAN      NOT NULL,
+    ID                          BIGINT       NOT NULL,
+    UUID                        VARCHAR(255) NOT NULL,
+    IS_DELETED                  BOOLEAN      NOT NULL,
+    DELETED_DATE                TIMESTAMP,
+    FIRST_NAME                  VARCHAR(255) NOT NULL,
+    LAST_NAME                   VARCHAR(255),
+    CHAT_ID                     VARCHAR(255) NOT NULL,
+    USERNAME                    VARCHAR(255) NOT NULL,
+    AVAILABLE_TESTS_COUNT       INTEGER DEFAULT 0
     CREATED_DATE    TIMESTAMP    NOT NULL,
     UPDATED_DATE    TIMESTAMP,
     CONSTRAINT CLIENT_PKEY PRIMARY KEY (id)
@@ -169,16 +169,18 @@ CREATE UNIQUE INDEX BLOCKED_CREDENTIALS_UUID_INDEX ON BLOCKED_CREDENTIALS_ENTITY
 CREATE TABLE ADVERT_STATISTIC_ENTITY
 (
     ID                      BIGINT       NOT NULL,
-    VIEWS                   VARCHAR(255) NOT NULL,
-    CLICKS                  VARCHAR(255) NOT NULL,
-    CTR                     VARCHAR(255) NOT NULL,
-    CPC                     VARCHAR(255) NOT NULL,
-    SUM                     VARCHAR(255) NOT NULL,
-    ATBS                    VARCHAR(255) NOT NULL,
-    ORDERS                  VARCHAR(255) NOT NULL,
-    CR                      VARCHAR(255) NOT NULL,
-    SHKS                    VARCHAR(255) NOT NULL,
-    SUM_PRICE               VARCHAR(255) NOT NULL,
+    VIEWS                   VARCHAR(255),
+    CLICKS                  VARCHAR(255),
+    CTR                     VARCHAR(255),
+    CPC                     VARCHAR(255),
+    SUM                     VARCHAR(255),
+    ATBS                    VARCHAR(255),
+    ORDERS                  VARCHAR(255),
+    CR                      VARCHAR(255),
+    SHKS                    VARCHAR(255),
+    SUM_PRICE               VARCHAR(255),
+    PHOTO                   BYTEA,
+    IS_ACTIVE               BOOLEAN DEFAULT FALSE,
     CLIENT_ID               BIGINT       NOT NULL,
     ADVERT_ID               BIGINT       NOT NULL,
     CREATED_DATE            TIMESTAMP    NOT NULL,
@@ -195,68 +197,6 @@ CREATE INDEX ADVERT_STATISTIC_CLIENT_ID_INDEX ON ADVERT_STATISTIC_ENTITY (CLIENT
 
 --changeset akvine:TG-BOT-1-11
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
---precondition-sql-check expectedResult:1 select count(*) from information_schema.tables where upper(table_name) = 'CARD_PHOTO_ENTITY' and table_schema = 'public';
-DROP TABLE CARD_PHOTO_ENTITY;
-DROP SEQUENCE SEQ_CARD_PHOTO_ENTITY;
---rollback not required
-
---changeset akvine:TG-BOT-1-12
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' AND upper(column_name) = 'VIEWS' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN VIEWS DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-13
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' AND upper(column_name) = 'CLICKS' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN CLICKS DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-14
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' AND upper(column_name) = 'CTR' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN CTR DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-15
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' AND upper(column_name) = 'CPC' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN CPC DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-16
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'SUM' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN SUM DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-17
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'ATBS' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN ATBS DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-18
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'ORDERS' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN ORDERS DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-19
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'CR' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN CR DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-20
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'SHKS' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN SHKS DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-21
---precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'SUM_PRICE' AND is_nullable = 'NO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ALTER COLUMN SUM_PRICE DROP NOT NULL;
---rollback not required
-
---changeset akvine:TG-BOT-1-22
---precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'PHOTO';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ADD PHOTO BYTEA;
---rollback not required
-
---changeset akvine:TG-BOT-1-23
---preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'ITERATION_COUNTER_ENTITY' and table_schema = 'public';
 CREATE TABLE ITERATION_COUNTER_ENTITY
 (
@@ -271,22 +211,12 @@ CREATE SEQUENCE SEQ_ITERATION_COUNTER_ENTITY START WITH 1 INCREMENT BY 1000;
 CREATE UNIQUE INDEX ITERATION_COUNTER_ID_INDEX ON ITERATION_COUNTER_ENTITY (ID);
 CREATE UNIQUE INDEX ITERATION_COUNTER_ADVERT_ID_INDEX ON ITERATION_COUNTER_ENTITY (ADVERT_ID);
 
---changeset akvine:TG-BOT-1-24
---preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
---precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(table_name) = 'CLIENT_ENTITY' and upper(column_name) = 'AVAILABLE_TESTS_COUNT';
-ALTER TABLE CLIENT_ENTITY ADD COLUMN AVAILABLE_TESTS_COUNT INTEGER DEFAULT 0;
-
---changeset akvine:TG-BOT-1-25
---preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
---precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_STATISTIC_ENTITY' and upper(column_name) = 'IS_ACTIVE';
-ALTER TABLE ADVERT_STATISTIC_ENTITY ADD COLUMN IS_ACTIVE BOOLEAN DEFAULT FALSE;
-
---changeset akvine:TG-BOT-1-26
+--changeset akvine:TG-BOT-1-12
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(table_name) = 'ADVERT_ENTITY' and upper(column_name) = 'AVAILABLE_FOR_START';
 ALTER TABLE ADVERT_STATISTIC_ENTITY ADD COLUMN AVAILABLE_FOR_START TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
---changeset akvine:TG-BOT-1-27
+--changeset akvine:TG-BOT-1-13
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'CLIENT_SESSION_DATA_ENTITY' and table_schema = 'public';
 CREATE TABLE CLIENT_SESSION_DATA_ENTITY
@@ -307,7 +237,7 @@ CREATE SEQUENCE SEQ_CLIENT_SESSION_DATA_ENTITY START WITH 1 INCREMENT BY 1000;
 CREATE UNIQUE INDEX CLIENT_SESSION_DATA_ID_INDEX ON CLIENT_SESSION_DATA_ENTITY (ID);
 CREATE UNIQUE INDEX CLIENT_SESSION_DATA_CHAT_ID_INDEX ON CLIENT_SESSION_DATA_ENTITY (CHAT_ID);
 
---changeset akvine:TG-BOT-1-28
+--changeset akvine:TG-BOT-1-14
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'STATE_ENTITY' and table_schema = 'public';
 CREATE TABLE STATE_ENTITY

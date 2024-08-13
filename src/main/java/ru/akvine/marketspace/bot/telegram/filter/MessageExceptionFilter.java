@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.marketspace.bot.exceptions.*;
 
-import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -39,8 +39,8 @@ public class MessageExceptionFilter extends MessageFilter {
             if (exception instanceof AdvertStartException) {
                 return processStartAdvertException(chatId, (AdvertStartException) exception);
             }
-            if (exception instanceof ClientNotInWhitelistException) {
-                return processClientWhitelistException(chatId, exception.getMessage());
+            if (exception instanceof ClientSubscriptionException) {
+                return processClientSubscriptionException(chatId, exception.getMessage());
             }
             if (exception instanceof AdvertStartLimitException) {
                 return processAdvertStartLimitException(chatId);
@@ -88,9 +88,9 @@ public class MessageExceptionFilter extends MessageFilter {
         return new SendMessage(chatId, errorMessage);
     }
 
-    private SendMessage processClientWhitelistException(String chatId, String message) {
+    private SendMessage processClientSubscriptionException(String chatId, String message) {
         logger.info("Client with chat id = {} not in whitelist. Message = {}", chatId, message);
-        return new SendMessage(chatId, CLIENT_NOT_IN_WHITELIST_MESSAGE);
+        return new SendMessage(chatId, CLIENT_SUBSCRIPTION_MESSAGE);
     }
 
     private SendMessage processAdvertStartLimitException(String chatId) {

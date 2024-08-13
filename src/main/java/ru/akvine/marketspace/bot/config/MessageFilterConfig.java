@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.akvine.marketspace.bot.services.ClientService;
+import ru.akvine.marketspace.bot.services.ClientSubscriptionService;
 import ru.akvine.marketspace.bot.telegram.dispatcher.MessageDispatcher;
 import ru.akvine.marketspace.bot.telegram.filter.*;
 
@@ -12,6 +13,7 @@ import ru.akvine.marketspace.bot.telegram.filter.*;
 public class MessageFilterConfig {
     private final MessageDispatcher dispatcher;
     private final ClientService clientService;
+    private final ClientSubscriptionService clientSubscriptionService;
 
     @Bean
     public MessageFilter messageFilters() {
@@ -19,7 +21,7 @@ public class MessageFilterConfig {
         MessageExceptionFilter exceptionHandlerFilter = new MessageExceptionFilter();
         ClientFilter clientFilter = new ClientFilter(clientService);
         ClientBlockedFilter clientBlockedFilter = new ClientBlockedFilter(clientService);
-        ClientWhitelistFilter clientWhitelistFilter = new ClientWhitelistFilter(clientService);
+        ClientSubscriptionFilter clientSubscriptionFilter = new ClientSubscriptionFilter(clientSubscriptionService);
         MDCFilter mdcFilter = new MDCFilter(clientService);
 
         exceptionHandlerFilter.setNextMessageFilter(clientFilter);
@@ -28,9 +30,9 @@ public class MessageFilterConfig {
 
         mdcFilter.setNextMessageFilter(clientBlockedFilter);
 
-        clientBlockedFilter.setNextMessageFilter(clientWhitelistFilter);
+        clientBlockedFilter.setNextMessageFilter(clientSubscriptionFilter);
 
-        clientWhitelistFilter.setNextMessageFilter(updateConverterFilter);
+        clientSubscriptionFilter.setNextMessageFilter(updateConverterFilter);
 
         return exceptionHandlerFilter;
     }

@@ -12,7 +12,7 @@ import ru.akvine.marketspace.bot.services.CardService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.CardDto;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,7 +60,7 @@ public class SyncCardJob {
                         .filter(cardEntity -> uniqueCardsInDb.contains(cardEntity.getItemId()))
                         .forEach(cardEntity -> {
                             cardEntity.setDeleted(true);
-                            cardEntity.setDeletedDate(LocalDateTime.now());
+                            cardEntity.setDeletedDate(ZonedDateTime.now());
                             cardRepository.save(cardEntity);
                         });
             }

@@ -6,7 +6,7 @@ import ru.akvine.marketspace.bot.admin.dto.common.SecretRequest;
 
 @Data
 @Accessors(chain = true)
-public class WhitelistRequest extends SecretRequest {
+public class SubscriptionRequest extends SecretRequest {
     private String chatId;
 
     private String username;

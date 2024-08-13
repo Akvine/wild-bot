@@ -98,9 +98,9 @@ public class ClientConverter {
                 .setUsernames(request.getUsernames());
     }
 
-    public Whitelist convertToWhitelist(WhitelistRequest request) {
-        Preconditions.checkNotNull(request, "WhitelistRequest is null");
-        return new Whitelist()
+    public Subscription convertToSubscription(SubscriptionRequest request) {
+        Preconditions.checkNotNull(request, "SubscriptionRequest is null");
+        return new Subscription()
                 .setChatId(request.getChatId())
                 .setUsername(request.getUsername());
     }

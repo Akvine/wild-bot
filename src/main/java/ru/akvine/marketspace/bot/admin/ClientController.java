@@ -10,6 +10,7 @@ import ru.akvine.marketspace.bot.admin.dto.common.SecretRequest;
 import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
 import ru.akvine.marketspace.bot.admin.meta.ClientControllerMeta;
 import ru.akvine.marketspace.bot.admin.validator.ClientValidator;
+import ru.akvine.marketspace.bot.services.ClientSubscriptionService;
 import ru.akvine.marketspace.bot.services.admin.ClientAdminService;
 import ru.akvine.marketspace.bot.services.domain.ClientBean;
 import ru.akvine.marketspace.bot.services.dto.admin.client.*;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClientController implements ClientControllerMeta {
     private final ClientAdminService clientAdminService;
+    private final ClientSubscriptionService clientSubscriptionService;
     private final ClientValidator clientValidator;
     private final ClientConverter clientConverter;
 
@@ -63,18 +65,18 @@ public class ClientController implements ClientControllerMeta {
     }
 
     @Override
-    public Response addToWhiteList(@Valid WhitelistRequest request) {
-        clientValidator.verifyWhitelistRequest(request);
-        Whitelist whitelist = clientConverter.convertToWhitelist(request);
-        clientAdminService.addToWhiteList(whitelist);
+    public Response addSubscription(@Valid SubscriptionRequest request) {
+        clientValidator.verifySubscriptionRequest(request);
+        Subscription subscription = clientConverter.convertToSubscription(request);
+        clientSubscriptionService.add(subscription);
         return new SuccessfulResponse();
     }
 
     @Override
-    public Response deleteFromWhiteList(WhitelistRequest request) {
-        clientValidator.verifyWhitelistRequest(request);
-        Whitelist whitelist = clientConverter.convertToWhitelist(request);
-        clientAdminService.deleteFromWhiteList(whitelist);
+    public Response deleteSubscription(SubscriptionRequest request) {
+        clientValidator.verifySubscriptionRequest(request);
+        Subscription subscription = clientConverter.convertToSubscription(request);
+        clientSubscriptionService.delete(subscription);
         return new SuccessfulResponse();
     }
 }

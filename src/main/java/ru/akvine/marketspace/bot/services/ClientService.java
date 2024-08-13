@@ -4,12 +4,10 @@ import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
 import ru.akvine.marketspace.bot.exceptions.ClientNotFoundException;
-import ru.akvine.marketspace.bot.exceptions.ClientNotInWhitelistException;
 import ru.akvine.marketspace.bot.repositories.ClientRepository;
 import ru.akvine.marketspace.bot.services.domain.ClientBean;
 import ru.akvine.marketspace.bot.services.dto.ClientCreate;
@@ -57,32 +55,6 @@ public class ClientService {
             String errorMessage = String.format("Client with chat id = [%s] has blocked until = [%s]!", chatId, blockDateTime);
             throw new BlockedCredentialsException(errorMessage, blockDateTime.toLocalDate());
         }
-    }
-
-    public void checkIsInWhitelist(String chatId) {
-        logger.debug("Check client is in white list by chat id = {}", chatId);
-        ClientEntity client = verifyExistsByChatId(chatId);
-        String username = client.getUsername();
-        if (!client.isInWhiteList()) {
-            String errorMessage = String.format(
-                    "Client with chat id = [%s] and username = [%s] not in whitelist",
-                    chatId, username);
-            throw new ClientNotInWhitelistException(errorMessage);
-        }
-    }
-
-    public void addToWhitelist(String username) {
-        logger.info("Add username = {} to whitelist", username);
-        ClientEntity client = verifyExistsByUsername(username);
-        client.setInWhiteList(true);
-        clientRepository.save(client);
-    }
-
-    public void deleteFromWhitelist(String username) {
-        logger.info("Delete username = {} from whitelist", username);
-        ClientEntity client = verifyExistsByUsername(username);
-        client.setInWhiteList(false);
-        clientRepository.save(client);
     }
 
     public ClientEntity verifyExistsByClientUuid(String clientUuid) {

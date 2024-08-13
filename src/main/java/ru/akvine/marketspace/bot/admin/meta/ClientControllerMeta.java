@@ -25,9 +25,9 @@ public interface ClientControllerMeta {
     @PostMapping(value = "/send/message")
     Response sendMessage(@Valid @RequestBody SendMessageRequest request);
 
-    @PostMapping(value = "/add/whitelist")
-    Response addToWhiteList(@Valid @RequestBody WhitelistRequest request);
+    @PostMapping(value = "/add/subscription")
+    Response addSubscription(@Valid @RequestBody SubscriptionRequest request);
 
-    @PostMapping(value = "/delete/whitelist")
-    Response deleteFromWhiteList(@Valid @RequestBody WhitelistRequest request);
+    @PostMapping(value = "/delete/subscription")
+    Response deleteSubscription(@Valid @RequestBody SubscriptionRequest request);
 }

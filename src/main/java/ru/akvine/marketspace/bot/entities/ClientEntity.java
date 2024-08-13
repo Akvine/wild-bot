@@ -33,9 +33,6 @@ public class ClientEntity extends SoftBaseEntity {
     @Column(name = "LAST_NAME")
     private String lastName;
 
-    @Column(name = "IS_IN_WHITELIST", nullable = false)
-    private boolean inWhiteList;
-
     @Column(name = "AVAILABLE_TESTS_COUNT")
     private int availableTestsCount;
 

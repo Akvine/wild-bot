@@ -16,7 +16,7 @@ import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.Adv
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
 import ru.akvine.marketspace.bot.utils.MathUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,7 +69,7 @@ public class SyncAdvertJob {
                         .filter(advertEntity -> uniqueAdvertsInDb.contains(advertEntity.getAdvertId()))
                         .forEach(advertEntity -> {
                             advertEntity.setDeleted(true);
-                            advertEntity.setDeletedDate(LocalDateTime.now());
+                            advertEntity.setDeletedDate(ZonedDateTime.now());
                             advertRepository.save(advertEntity);
                         });
             }

@@ -5,10 +5,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 @UtilityClass
 public class DateUtils {
@@ -23,15 +21,6 @@ public class DateUtils {
         int minutesInDay = 24 * 60;
 
         return (long) years * daysInYear * minutesInDay;
-    }
-
-    @Nullable
-    public LocalDateTime dateToLocalDate(Date date) {
-        if (date == null) {
-            return null;
-        }
-
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
     @Nullable

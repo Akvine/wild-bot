@@ -12,7 +12,7 @@ import ru.akvine.marketspace.bot.flow.base.UpdateBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.akvine.marketspace.bot.config.TestConstants.CHAT_ID_2;
-import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
 import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.UNKNOWN_COMMAND_MESSAGE;
 
 @ExtendWith(SpringExtension.class)
@@ -37,7 +37,7 @@ public class BotFlowTest extends BaseTest {
         String chatId = message.getChatId();
 
         assertThat(text).isNotNull();
-        assertThat(text).isEqualTo(CLIENT_NOT_IN_WHITELIST_MESSAGE);
+        assertThat(text).isEqualTo(CLIENT_SUBSCRIPTION_MESSAGE);
         assertThat(chatId).isNotNull();
         assertThat(chatId).isEqualTo("1");
     }
