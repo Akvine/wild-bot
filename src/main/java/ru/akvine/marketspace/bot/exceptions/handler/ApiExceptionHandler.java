@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.exceptions.handler.api;
+package ru.akvine.marketspace.bot.exceptions.handler;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
