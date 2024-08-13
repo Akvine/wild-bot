@@ -3,6 +3,7 @@ package ru.akvine.marketspace.bot.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import ru.akvine.marketspace.bot.entities.base.SoftBaseEntity;
 
@@ -50,6 +51,7 @@ public class AdvertStatisticEntity extends SoftBaseEntity {
     private String sumPrice;
 
     @Column(name = "PHOTO")
+    @ToString.Exclude
     private byte[] photo;
 
     @Column(name = "IS_ACTIVE")
