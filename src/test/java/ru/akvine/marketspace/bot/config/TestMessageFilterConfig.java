@@ -4,6 +4,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(MessageFilterConfig.class)
+@Import(TelegramFilterConfig.class)
 public class TestMessageFilterConfig {
 }

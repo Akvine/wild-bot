@@ -11,7 +11,7 @@ import ru.akvine.marketspace.bot.telegram.filter.*;
 
 @Configuration
 @RequiredArgsConstructor
-public class MessageFilterConfig {
+public class TelegramFilterConfig {
     private final MessageDispatcher dispatcher;
     private final ClientService clientService;
     private final SubscriptionService subscriptionService;
