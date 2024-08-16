@@ -12,7 +12,7 @@ import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
 import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.managers.TelegramViewManager;
-import ru.akvine.marketspace.bot.resolvers.controllers.view.TelegramView;
+import ru.akvine.marketspace.bot.resolvers.controllers.views.TelegramView;
 
 import java.util.List;
 

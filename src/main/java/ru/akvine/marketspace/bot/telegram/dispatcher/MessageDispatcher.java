@@ -16,7 +16,7 @@ import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.command.CommandResolver;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
-import ru.akvine.marketspace.bot.resolvers.controllers.view.TelegramView;
+import ru.akvine.marketspace.bot.resolvers.controllers.views.TelegramView;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.util.List;
