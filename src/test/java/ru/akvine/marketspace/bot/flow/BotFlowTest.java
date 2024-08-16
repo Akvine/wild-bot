@@ -12,8 +12,8 @@ import ru.akvine.marketspace.bot.flow.base.UpdateBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.akvine.marketspace.bot.config.TestConstants.CHAT_ID_2;
-import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
-import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.UNKNOWN_COMMAND_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.UNKNOWN_COMMAND_MESSAGE;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("Bot flow tests")

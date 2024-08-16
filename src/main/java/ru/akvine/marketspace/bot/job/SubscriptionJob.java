@@ -12,6 +12,7 @@ import ru.akvine.marketspace.bot.repositories.SubscriptionRepository;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class SubscriptionJob {
                 .stream()
                 .filter(subscription -> !subscription.isExpired())
                 .filter(subscription -> !subscription.isNotifiedThatExpires())
-                .filter(subscription -> Duration.between(ZonedDateTime.now(), subscription.getExpiresAt()).toDays() <= notifyDaysBefore)
+                .filter(subscription -> Duration.between(LocalDateTime.now(), subscription.getExpiresAt()).toDays() <= notifyDaysBefore)
                 .forEach(subscription -> {
                     String chatId = subscription.getClient().getChatId();
                     long daysBeforeExpire = Duration.between(ZonedDateTime.now(), subscription.getExpiresAt()).toDays();

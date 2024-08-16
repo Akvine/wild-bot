@@ -22,14 +22,9 @@ public class HelpCommandResolver implements CommandResolver {
 
         StringBuilder sb = new StringBuilder();
         sb
-                .append("/start - запустить первую попавшуюся кампанию в паузе или готовую к запуску").append(NEW_LINE)
-                .append("/stop - остановить запущенную рекламную кампанию и снять метрики").append(NEW_LINE)
-                .append("/cancel - отменить действие").append(NEW_LINE)
-                .append("/stats - получить количество доступных тестов и список запущенных рекламных кампаний").append(NEW_LINE)
-                .append("/report - сгенерировать excel-отчет о проведенных тестах").append(NEW_LINE)
-                .append("/photo - получить фото карточки и статистику для опред. записи в отчете").append(NEW_LINE)
+                .append("/start - начать работу с ботом").append(NEW_LINE)
                 .append("/help - вывести список доступных команд").append(NEW_LINE)
-                .append("За доп. информацией обратитесь пожалуйств в поддержку: ").append(supportUsername);
+                .append("За доп. информацией обратитесь пожалуйста в поддержку: ").append(supportUsername);
         return new SendMessage(chatId, sb.toString());
     }
 

@@ -217,6 +217,7 @@ CREATE TABLE CLIENT_SESSION_DATA_ENTITY
 (
     ID                                      BIGINT       NOT NULL,
     CHAT_ID                                 VARCHAR(255) NOT NULL,
+    SELECTED_CARD_TYPE                      VARCHAR(64),
     SELECTED_CATEGORY_ID                    INTEGER      NOT NULL,
     UPLOADED_CARD_PHOTO                     BYTEA,
     IS_INPUT_NEW_CARD_PRICE_AND_DISCOUNT    BOOLEAN      NOT NULL,
@@ -232,22 +233,6 @@ CREATE UNIQUE INDEX CLIENT_SESSION_DATA_ID_INDEX ON CLIENT_SESSION_DATA_ENTITY (
 CREATE UNIQUE INDEX CLIENT_SESSION_DATA_CHAT_ID_INDEX ON CLIENT_SESSION_DATA_ENTITY (CHAT_ID);
 
 --changeset akvine:TG-BOT-1-13
---preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
---precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'STATE_ENTITY' and table_schema = 'public';
-CREATE TABLE STATE_ENTITY
-(
-    ID                      BIGINT       NOT NULL,
-    CHAT_ID                 VARCHAR(255) NOT NULL,
-    STATE                   VARCHAR(255),
-    CREATED_DATE            TIMESTAMP    NOT NULL,
-    UPDATED_DATE            TIMESTAMP,
-    CONSTRAINT STATE_PKEY PRIMARY KEY (id)
-);
-CREATE SEQUENCE SEQ_STATE_ENTITY START WITH 1 INCREMENT BY 1000;
-CREATE UNIQUE INDEX STATE_ID_INDEX ON STATE_ENTITY (ID);
-CREATE UNIQUE INDEX STATE_CHAT_ID_INDEX ON STATE_ENTITY (CHAT_ID);
-
---changeset akvine:TG-BOT-1-14
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'SUBSCRIPTION_ENTITY' and table_schema = 'public';
 CREATE TABLE SUBSCRIPTION_ENTITY

@@ -5,5 +5,5 @@ public final class DbLockConstants {
         throw new IllegalAccessException("Calling " + DbLockConstants.class.getSimpleName() + " constructor is prohibited!");
     }
 
-    public static final String UPLOAD_CARD_PHOTO_STATE = "UPLOAD_CARD_PHOTO_STATE_";
+    public static final String UPLOAD_PHOTO_LOCK = "UPLOAD_CARD_PHOTO_STATE_";
 }

@@ -86,34 +86,34 @@ public class ReportService {
         urlCell.setCellValue("ID статистики");
 
         Cell viewsCell = headersRow.createCell(1);
-        viewsCell.setCellValue("Просмотры (VIEWS)");
+        viewsCell.setCellValue("Просмотры (views)");
 
         Cell clicksCell = headersRow.createCell(2);
-        clicksCell.setCellValue("Клики (CLICKS)");
+        clicksCell.setCellValue("Клики (clicks)");
 
         Cell ctrCell = headersRow.createCell(3);
-        ctrCell.setCellValue("Показатель кликабельности (CTR)");
+        ctrCell.setCellValue("Показатель кликабельности (ctr)");
 
         Cell cpcCell = headersRow.createCell(4);
-        cpcCell.setCellValue("Средняя стоимость клика (CPC)");
+        cpcCell.setCellValue("Средняя стоимость клика (cpc)");
 
         Cell sumCell = headersRow.createCell(5);
         sumCell.setCellValue("Затраты");
 
         Cell atbsCell = headersRow.createCell(6);
-        atbsCell.setCellValue("Количество добавлений товаров в корзину (ATBS)");
+        atbsCell.setCellValue("Количество добавлений товаров в корзину (atbs)");
 
         Cell ordersCell = headersRow.createCell(7);
-        ordersCell.setCellValue("Количество заказов (ORDERS)");
+        ordersCell.setCellValue("Количество заказов (orders)");
 
         Cell crCell = headersRow.createCell(8);
-        crCell.setCellValue("Отношение количества заказов к общему количеству посещений кампании (CR)");
+        crCell.setCellValue("Отношение количества заказов к общему количеству посещений кампании (cr)");
 
         Cell shksCell = headersRow.createCell(9);
-        shksCell.setCellValue("Количество заказанных товаров (SHKS)");
+        shksCell.setCellValue("Количество заказанных товаров (shks)");
 
         Cell sumPriceCell = headersRow.createCell(10);
-        sumPriceCell.setCellValue("Заказов на сумму (SUM_PRICE)");
+        sumPriceCell.setCellValue("Заказов на сумму (sum_price)");
 
         Cell advertIdCell = headersRow.createCell(11);
         advertIdCell.setCellValue("Идентификатор рекламной кампании (Advert ID)");

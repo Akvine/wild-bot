@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
-import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
@@ -143,12 +142,7 @@ public class TelegramBotConfig {
 
     private List<BotCommand> initBotCommands() {
         return List.of(
-                new BotCommand("/start", "Запустить рекламную кампанию"),
-                new BotCommand("/stop", "Остановить запущенную рекламную кампанию и снять метрики"),
-                new BotCommand("/cancel", "Отменить действие"),
-                new BotCommand("/stats", "Получить количество доступных тестов и список запущенных рекламных кампаний"),
-                new BotCommand("/photo", "Получить фото карточки и статистику для опред. записи в отчете"),
-                new BotCommand("/report", "Сгенерировать отчет о проведенных тестах"),
+                new BotCommand("/start", "Начать работу с ботом"),
                 new BotCommand("/help", "Получение списка доступных команд")
         );
     }

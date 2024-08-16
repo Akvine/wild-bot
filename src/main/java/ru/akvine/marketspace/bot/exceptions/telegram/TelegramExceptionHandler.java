@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.marketspace.bot.exceptions.*;
 import ru.akvine.marketspace.bot.infrastructure.annotations.TelegramErrorHandler;
 
-import static ru.akvine.marketspace.bot.constants.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
 
 @Component
 @Slf4j

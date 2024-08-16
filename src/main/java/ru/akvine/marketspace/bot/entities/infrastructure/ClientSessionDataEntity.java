@@ -24,6 +24,9 @@ public class ClientSessionDataEntity extends BaseEntity {
     @Column(name = "CHAT_ID", nullable = false)
     private String chatId;
 
+    @Column(name = "SELECTED_CARD_TYPE")
+    private String selectedCardType;
+
     @Column(name = "SELECTED_CATEGORY_ID", nullable = false)
     private int selectedCategoryId;
 

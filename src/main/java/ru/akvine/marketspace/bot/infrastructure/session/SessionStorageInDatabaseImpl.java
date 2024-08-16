@@ -31,9 +31,9 @@ public class SessionStorageInDatabaseImpl implements SessionStorage<String, Clie
     public ClientSessionData save(ClientSessionData data) {
         ClientSessionDataEntity session = verifyExistsAndGet(data.getChatId());
         session
+                .setSelectedCardType(data.getSelectedCardType())
                 .setSelectedCategoryId(data.getSelectedCategoryId())
                 .setUploadedCardPhoto(data.getUploadedCardPhoto())
-                .setInputNewCardPriceAndDiscount(data.isInputNewCardPriceAndDiscount())
                 .setNewCardPrice(data.getNewCardPrice())
                 .setNewCardDiscount(data.getNewCardDiscount())
                 .setLockedAdvertId(data.getLockedAdvertId());

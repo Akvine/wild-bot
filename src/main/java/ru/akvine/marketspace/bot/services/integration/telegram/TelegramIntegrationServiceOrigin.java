@@ -69,8 +69,12 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
         }
     }
 
+    public void sendFile(String chatId, String fileName, byte[] file) {
+        sendFile(chatId, fileName, new ByteArrayInputStream(file));
+    }
+
     @Override
-    public void sendFile(InputStream file, String fileName, String chatId) {
+    public void sendFile(String chatId, String fileName, InputStream file) {
         logger.info("Send file with file name = [{}]", fileName);
 
         try {

@@ -24,12 +24,9 @@ public class UpdateConverterFilter extends MessageFilter {
         if (update.hasCallbackQuery()) {
             logger.debug("Message type for chat id = {} is [CALLBACK]", chatId);
             telegramUpdateData.setType(TelegramDataType.CALLBACK);
-        } else if (update.hasMessage() && StringUtils.isNotBlank(update.getMessage().getText())) {
+        } else {
             logger.debug("Message type for chat id = {} is [MESSAGE]", chatId);
             telegramUpdateData.setType(TelegramDataType.MESSAGE);
-        } else {
-            logger.debug("Unsupported message type for chat id = {}", chatId);
-            throw new UnsupportedUpdateTypeException("Unsupported update type");
         }
 
         return messageDispatcher.doDispatch(telegramUpdateData);

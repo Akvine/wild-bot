@@ -1,31 +1,39 @@
 package ru.akvine.marketspace.bot.telegram;
 
 import lombok.experimental.UtilityClass;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.BACK_BUTTON_TEXT;
 
 @UtilityClass
 public class KeyboardFactory {
-
-    public ReplyKeyboardMarkup getYesAndNoKeyboard() {
-        KeyboardRow row = new KeyboardRow();
-        row.add(new KeyboardButton("Изменить"));
-        row.add(new KeyboardButton("Не изменять"));
-
-        return getKeyboard(List.of(row));
+    public InlineKeyboardButton getBackButton() {
+        InlineKeyboardButton backButton = new InlineKeyboardButton();
+        backButton.setText(BACK_BUTTON_TEXT);
+        backButton.setCallbackData(BACK_BUTTON_TEXT);
+        return backButton;
     }
 
-    private ReplyKeyboardMarkup getKeyboard(List<KeyboardRow> rows) {
+    public InlineKeyboardMarkup getBackKeyboard() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> buttons = List.of(List.of(getBackButton()));
+        inlineKeyboardMarkup.setKeyboard(buttons);
+        return inlineKeyboardMarkup;
+    }
 
-        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setKeyboard(rows);
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(true);
+    public InlineKeyboardMarkup createVerticalKeyboard(InlineKeyboardButton... buttons) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
 
-        return replyKeyboardMarkup;
+        for (InlineKeyboardButton button : buttons) {
+            keyboard.add(List.of(button));
+        }
+
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        return inlineKeyboardMarkup;
     }
 }

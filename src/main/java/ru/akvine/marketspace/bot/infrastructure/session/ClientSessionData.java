@@ -15,6 +15,7 @@ public class ClientSessionData {
     private Long id;
     @Nullable
     private String chatId;
+    private String selectedCardType;
     private int selectedCategoryId;
     private byte[] uploadedCardPhoto;
     private boolean inputNewCardPriceAndDiscount;
@@ -28,9 +29,10 @@ public class ClientSessionData {
     public ClientSessionData(ClientSessionDataEntity clientSessionDataEntity) {
         this.id = clientSessionDataEntity.getId();
         this.chatId = clientSessionDataEntity.getChatId();
+        this.selectedCardType = clientSessionDataEntity.getSelectedCardType();
         this.selectedCategoryId = clientSessionDataEntity.getSelectedCategoryId();
-        this.uploadedCardPhoto = clientSessionDataEntity.getUploadedCardPhoto();
         this.inputNewCardPriceAndDiscount = clientSessionDataEntity.isInputNewCardPriceAndDiscount();
+        this.uploadedCardPhoto = clientSessionDataEntity.getUploadedCardPhoto();
         this.newCardPrice = clientSessionDataEntity.getNewCardPrice();
         this.newCardDiscount = clientSessionDataEntity.getNewCardDiscount();
         this.lockedAdvertId = clientSessionDataEntity.getLockedAdvertId();
