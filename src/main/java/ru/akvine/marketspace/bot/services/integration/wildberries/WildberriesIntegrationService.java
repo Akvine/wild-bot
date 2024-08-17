@@ -100,8 +100,9 @@ public interface WildberriesIntegrationService {
      * Изменение остатка товара (карточки) на складе
      *
      * @param request
+     * @param warehouseId - идентификатор склада
      */
-    void changeStocks(ChangeStocksRequest request);
+    void changeStocks(ChangeStocksRequest request, int warehouseId);
 
     /**
      * Получение полной статистики по кампании за определенные даты

@@ -45,6 +45,8 @@ public class CheckRunningAdvertsJob {
     private int maxIterationsBeforeIncreaseCpm;
     @Value("${advert.max.cpm}")
     private int advertMaxCpm;
+    @Value("${wildberries.warehouse.id}")
+    private int warehouseId;
 
     @Scheduled(fixedDelayString = "${check.advert.cron.milliseconds}")
     public void checkRunningAdverts() {
@@ -73,7 +75,7 @@ public class CheckRunningAdvertsJob {
                         .setStocks(List.of(new SkuDto()
                                 .setAmount(0)
                                 .setSku(cardEntity.getBarcode())));
-                wildberriesIntegrationService.changeStocks(request);
+                wildberriesIntegrationService.changeStocks(request, warehouseId);
 
                 String chatId = advert.getClient().getChatId();
                 advert.setStatus(AdvertStatus.PAUSE);

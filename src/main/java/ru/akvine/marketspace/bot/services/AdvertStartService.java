@@ -48,6 +48,8 @@ public class AdvertStartService {
     private int changeStocksCount;
     @Value("${advert.budget.min.sum}")
     private int budgetMinSum;
+    @Value("${wildberries.warehouse.id}")
+    private int warehouseId;
 
     private final static int CARD_MAIN_PHOTO_POSITION = 1;
 
@@ -113,7 +115,7 @@ public class AdvertStartService {
         ChangeStocksRequest changeStocksRequest = new ChangeStocksRequest().setStocks(List.of(new SkuDto()
                 .setSku(card.getBarcode())
                 .setAmount(changeStocksCount)));
-        wildberriesIntegrationService.changeStocks(changeStocksRequest);
+        wildberriesIntegrationService.changeStocks(changeStocksRequest, warehouseId);
 
         wildberriesIntegrationService.startAdvert(advertId);
 

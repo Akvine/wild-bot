@@ -54,9 +54,9 @@ public class SubscriptionJob {
                 .filter(subscription -> Duration.between(LocalDateTime.now(), subscription.getExpiresAt()).toDays() <= notifyDaysBefore)
                 .forEach(subscription -> {
                     String chatId = subscription.getClient().getChatId();
-                    long daysBeforeExpire = Duration.between(ZonedDateTime.now(), subscription.getExpiresAt()).toDays();
+                    long daysBeforeExpire = Duration.between(LocalDateTime.now(), subscription.getExpiresAt()).toDays();
                     String message = String.format(
-                            "Уважаемый пользователь! Уведомленяем вас о том, что через %s дней у вас заканчивается подписка на бота",
+                            "Уважаемый пользователь! Уведомляем вас о том, что через %s дня у вас заканчивается подписка на бота",
                             daysBeforeExpire);
                     telegramIntegrationService.sendMessage(chatId, message);
                     subscription.setNotifiedThatExpires(true);

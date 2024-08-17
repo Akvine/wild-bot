@@ -29,7 +29,6 @@ import java.util.List;
 public class AdvertStatisticService {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final AdvertStatisticRepository advertStatisticRepository;
-    // TODO : сделать все через clientService
     private final ClientRepository clientRepository;
     private final ClientService clientService;
     private final AdvertService advertService;

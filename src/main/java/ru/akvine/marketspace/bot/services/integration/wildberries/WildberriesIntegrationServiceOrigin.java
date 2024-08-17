@@ -23,8 +23,6 @@ import java.util.*;
 public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrationService {
     @Value("${wildberries.api.token}")
     private String apiToken;
-    @Value("${wildberries.warehouse.id}")
-    private int warehouseId;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -347,8 +345,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
     }
 
     @Override
-    public void changeStocks(ChangeStocksRequest request) {
-        logger.info("Change stocks by request {}", request);
+    public void changeStocks(ChangeStocksRequest request, int warehouseId) {
+        logger.info("Change stocks by request {} for warehouse with id = {}", request, warehouseId);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<ChangeStocksRequest> httpEntity = new HttpEntity<>(request, headers);
 
