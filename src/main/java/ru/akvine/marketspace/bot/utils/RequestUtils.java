@@ -1,13 +1,14 @@
 package ru.akvine.marketspace.bot.utils;
 
 import lombok.experimental.UtilityClass;
+import org.apache.commons.collections4.MapUtils;
 
 import java.util.Map;
 
 @UtilityClass
 public class RequestUtils {
     public String buildUri(String url, Map<String, String> queryParams) {
-        if (queryParams == null || queryParams.isEmpty()) {
+        if (MapUtils.isEmpty(queryParams)) {
             return url;
         }
 

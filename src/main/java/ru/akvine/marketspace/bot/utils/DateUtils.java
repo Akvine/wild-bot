@@ -1,6 +1,7 @@
 package ru.akvine.marketspace.bot.utils;
 
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
@@ -12,13 +13,16 @@ import java.time.temporal.ChronoUnit;
 public class DateUtils {
     public final static DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public long getMinutes(LocalDateTime fromDate, LocalDateTime toDate) {
+    public long getMinutes(@NotNull LocalDateTime fromDate, @NotNull LocalDateTime toDate) {
         return ChronoUnit.MINUTES.between(fromDate, toDate);
     }
 
     public long getMinutes(int years) {
         int daysInYear = 365;
         int minutesInDay = 24 * 60;
+
+        int leapYearsCount = years / 4;
+        daysInYear += leapYearsCount;
 
         return (long) years * daysInYear * minutesInDay;
     }

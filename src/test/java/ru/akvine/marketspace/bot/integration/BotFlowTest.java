@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.flow;
+package ru.akvine.marketspace.bot.integration;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,11 +7,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.flow.base.BaseTest;
-import ru.akvine.marketspace.bot.flow.base.UpdateBuilder;
+import ru.akvine.marketspace.bot.integration.base.BaseTest;
+import ru.akvine.marketspace.bot.integration.base.UpdateBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.akvine.marketspace.bot.config.TestConstants.CHAT_ID_2;
+import static ru.akvine.marketspace.bot.integration.config.TestConstants.CHAT_ID_2;
 import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
 import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.UNKNOWN_COMMAND_MESSAGE;
 

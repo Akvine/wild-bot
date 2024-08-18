@@ -1,10 +1,11 @@
-package ru.akvine.marketspace.bot.utils;
+package ru.akvine.marketspace.bot.unit.utils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.akvine.marketspace.bot.exceptions.ValidationException;
+import ru.akvine.marketspace.bot.utils.MathUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

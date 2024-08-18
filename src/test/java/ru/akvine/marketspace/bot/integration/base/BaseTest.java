@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.flow.base;
+package ru.akvine.marketspace.bot.integration.base;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

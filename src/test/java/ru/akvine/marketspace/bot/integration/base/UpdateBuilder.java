@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.flow.base;
+package ru.akvine.marketspace.bot.integration.base;
 
 import org.junit.platform.commons.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.Chat;
