@@ -46,7 +46,9 @@ public class IsChangePriceView implements TelegramView {
     @Override
     public String getMessage(String chatId) {
         return lockHelper.doWithLock(UPLOAD_PHOTO_LOCK + chatId, () -> {
-            AdvertModel advertBean = advertService.getFirst(sessionStorage.get(chatId).getSelectedCategoryId());
+            String selectedCardType = sessionStorage.get(chatId).getSelectedCardType();
+            int selectedCategoryId = sessionStorage.get(chatId).getSelectedCategoryId();
+            AdvertModel advertBean = advertService.getFirst(selectedCardType, selectedCategoryId);
             advertBean.setLocked(true);
             advertService.update(advertBean);
 

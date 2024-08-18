@@ -75,7 +75,6 @@ public class AdvertStartService {
 
         AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId);
         Integer advertTotalBudget = advertBudgetInfo.getTotal();
-
         if (advertTotalBudget < budgetMinSum) {
             wildberriesIntegrationService.advertBudgetDeposit(advertId, advertBudgetSumIncreaseValue);
             advertToStart.plusStartBudget(advertBudgetSumIncreaseValue);

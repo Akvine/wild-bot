@@ -15,13 +15,15 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
             "ae.deleted = false")
     List<AdvertEntity> findByStatuses(@Param("statuses") List<AdvertStatus> states);
 
-    @Query("from AdvertEntity ae join ae.card aec where ae.status in :statuses " +
+    @Query("from AdvertEntity ae join ae.card aec join aec.cardType aecct where ae.status in :statuses " +
             "and " +
+            "aecct.type = :cardType and " +
             "aec.categoryId = :categoryId " +
             "and " +
             "ae.deleted = false")
-    List<AdvertEntity> findByStatusesAndCategoryId(@Param("statuses") List<AdvertStatus> states,
-                                                   @Param("categoryId") Integer categoryId);
+    List<AdvertEntity> findByStatusesAndCardTypeAndCategoryId(@Param("statuses") List<AdvertStatus> states,
+                                                              @Param("cardType") String cardType,
+                                                              @Param("categoryId") Integer categoryId);
 
     @Query("from AdvertEntity ae join ae.client c where ae.status in :statuses " +
             "and " +

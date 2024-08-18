@@ -125,13 +125,14 @@ public class AdvertService {
         return updatedAdvert;
     }
 
-    public AdvertModel getFirst(Integer categoryId) {
-        Preconditions.checkNotNull(categoryId, "categoryId is null");
-        logger.info("Get first advert by category id = {}", categoryId);
+    public AdvertModel getFirst(String cardType, int categoryId) {
+        Preconditions.checkNotNull(cardType, "cardType is null");
+        logger.info("Get first advert by card type = {} and category id = {}", cardType, categoryId);
 
         List<AdvertModel> advertBeans = advertRepository
-                .findByStatusesAndCategoryId(
+                .findByStatusesAndCardTypeAndCategoryId(
                         List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START),
+                        cardType,
                         categoryId)
                 .stream()
                 .map(AdvertModel::new)
