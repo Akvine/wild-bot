@@ -14,7 +14,7 @@ public class FinishGenerationReportView implements TelegramView {
 
     @Override
     public String getMessage(String chatId) {
-        return "Ваш отчёт готов, вы можете перейти по команде  назад для запуска ещё одного теста";
+        return "Ваш отчёт готов, вы можете перейти по команде назад для запуска ещё одного теста";
     }
 
     @Override

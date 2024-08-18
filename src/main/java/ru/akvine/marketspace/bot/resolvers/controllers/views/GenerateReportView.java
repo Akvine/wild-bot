@@ -22,7 +22,7 @@ public class GenerateReportView implements TelegramView {
 
     @Override
     public String getMessage(String chatId) {
-        return "Бот  сгенерирует отчёт в формате Excel по всем  проведенным тестам";
+        return "Бот сгенерирует отчёт в формате Excel по всем  проведенным тестам";
     }
 
     @Override

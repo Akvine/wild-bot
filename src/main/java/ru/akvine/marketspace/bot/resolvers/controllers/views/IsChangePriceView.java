@@ -30,6 +30,8 @@ public class IsChangePriceView implements TelegramView {
     private final LockHelper lockHelper;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
+    private final static String NEW_LINE = "\n";
+
     @Override
     public InlineKeyboardMarkup getKeyboard(String chatId) {
         InlineKeyboardButton changePriceButton = new InlineKeyboardButton();
@@ -83,12 +85,11 @@ public class IsChangePriceView implements TelegramView {
     private String buildMessage(int price, int discount, double discountedPrice) {
         StringBuilder sb = new StringBuilder();
         sb
-                .append("Сейчас у карточки в рекламной кампании по выбранной категории следующая цена, скидка и скидочная цена: \n")
-                .append("1. Цена без скидки: ").append(price).append("\n")
-                .append("2. Скидка: ").append(discount).append("\n")
-                .append("3. Цена на сайте: ").append(discountedPrice).append("\n")
-                .append("Поменять цену и скидку у карточки перед запуском теста рекламной кампании?\n " +
-                        "(Введите \"Изменить\" или \"Не изменять\")");
+                .append("Сейчас у карточки в рекламной кампании по выбранной категории следующая цена, скидка и скидочная цена:").append(NEW_LINE)
+                .append("1. Цена без скидки: ").append(price).append(NEW_LINE)
+                .append("2. Скидка: ").append(discount).append(NEW_LINE)
+                .append("3. Цена на сайте: ").append(discountedPrice).append(NEW_LINE)
+                .append("Поменять цену и скидку у карточки перед запуском теста рекламной кампании?").append(NEW_LINE);
         return sb.toString();
     }
 }

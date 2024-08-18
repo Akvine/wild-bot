@@ -81,6 +81,7 @@ public class MessageDispatcher {
 
         SendMessage sendMessage = new SendMessage(chatId, message);
         sendMessage.enableMarkdown(true);
+        sendMessage.setParseMode("html");
         sendMessage.setReplyMarkup(keyboardMarkup);
         return sendMessage;
     }

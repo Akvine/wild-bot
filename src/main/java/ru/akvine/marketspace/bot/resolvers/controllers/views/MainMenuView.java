@@ -42,7 +42,7 @@ public class MainMenuView implements TelegramView {
                 .append(DOUBLE_TABULATION).append("2. Управлять ставками CPM \uD83D\uDCB0").append(NEW_LINE)
                 .append(DOUBLE_TABULATION).append("3. Настраивать цены и скидки на товары  \uD83C\uDFF7").append(NEW_LINE)
                 .append(DOUBLE_TABULATION).append("4. Выдавать QR-коды для пополнения  рекламного кабинета \uD83D\uDCF2").append(NEW_LINE)
-                .append(DOUBLE_TABULATION).append("5. Обеспечивать оптимальное  размещение рекламы и снятие  метрик\uD83D\uDCC8").append(NEW_LINE)
+                .append(DOUBLE_TABULATION).append("5. Обеспечивать оптимальное  размещение рекламы и снятие  метрик \uD83D\uDCC8").append(NEW_LINE)
                 .append("Я помогу вам заменить ручные тесты").append(NEW_LINE)
                 .append("автоматическими \uD83E\uDD16, чтобы вы могли").append(NEW_LINE)
                 .append("сосредоточиться на более важных задачах.").append(NEW_LINE)
