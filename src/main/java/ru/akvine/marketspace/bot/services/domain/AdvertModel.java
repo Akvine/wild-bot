@@ -24,8 +24,6 @@ public class AdvertModel extends SoftModel {
     private AdvertStatus status;
     private AdvertType type;
     private int cpm;
-    private int categoryId;
-    private int itemId;
     private Integer startBudgetSum;
     @Nullable
     private Integer checkBudgetSum;

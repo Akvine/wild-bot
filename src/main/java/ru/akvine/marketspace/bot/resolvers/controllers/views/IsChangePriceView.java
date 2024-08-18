@@ -54,7 +54,7 @@ public class IsChangePriceView implements TelegramView {
             session.setLockedAdvertId(advertBean.getExternalId());
             sessionStorage.save(session);
 
-            int nmId = advertBean.getItemId();
+            int nmId = advertBean.getCardModel().getItemId();
             GetGoodsRequest request = new GetGoodsRequest()
                     .setLimit(100)
                     .setFilterNmID(nmId);

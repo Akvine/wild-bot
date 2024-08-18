@@ -65,13 +65,13 @@ public class CardService {
                 .collect(Collectors.toList());
     }
 
-    public List<CardModel> list() {
-        logger.info("List clients");
+    public List<CardModel> getByType(String cardType) {
+        logger.info("List cards by cardType = {}", cardType);
         return cardRepository
-                .findAll()
+                .findByCardType(cardType)
                 .stream()
                 .map(CardModel::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public CardEntity verifyExistsByExternalId(int externalId) {

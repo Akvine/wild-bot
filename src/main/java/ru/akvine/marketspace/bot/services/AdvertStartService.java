@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.AdvertEntity;
 import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
-import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.exceptions.AdvertStartException;
@@ -16,6 +15,7 @@ import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
 import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.marketspace.bot.services.domain.AdvertModel;
+import ru.akvine.marketspace.bot.services.domain.CardModel;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
@@ -46,7 +46,7 @@ public class AdvertStartService {
     private int advertMinCpm;
     @Value("${wildberries.change.stocks.count}")
     private int changeStocksCount;
-    @Value("${advert.budget.min.sum}")
+    @Value("${advert.min.budget.sum}")
     private int budgetMinSum;
     @Value("${wildberries.warehouse.id}")
     private int warehouseId;
@@ -70,7 +70,7 @@ public class AdvertStartService {
     private AdvertModel startInternal(String chatId) {
         int advertId = sessionStorage.get(chatId).getLockedAdvertId();
         AdvertModel advertToStart = advertService.getByAdvertId(advertId);
-        CardEntity card = cardService.verifyExistsByExternalId(advertToStart.getItemId());
+        CardModel card = advertToStart.getCardModel();
         ClientEntity client = clientService.verifyExistsByChatId(chatId);
 
         AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId);
@@ -87,7 +87,7 @@ public class AdvertStartService {
         AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
                 .setAdvertId(advertId)
                 .setType(advertToStart.getType().getCode())
-                .setParam(advertToStart.getCategoryId())
+                .setParam(advertToStart.getCardModel().getCategoryId())
                 .setCpm(advertMinCpm);
         advertToStart.setCpm(advertMinCpm);
         wildberriesIntegrationService.changeAdvertCpm(request);
@@ -99,7 +99,7 @@ public class AdvertStartService {
             SetGoodPriceRequest setGoodPriceRequest = new SetGoodPriceRequest()
                     .setData(List.of(
                             new SetGoodDto()
-                                    .setNmID(advertToStart.getItemId())
+                                    .setNmID(card.getItemId())
                                     .setPrice(sessionStorage.get(chatId).getNewCardPrice())
                                     .setDiscount(sessionStorage.get(chatId).getNewCardDiscount())
                     ));
@@ -107,7 +107,7 @@ public class AdvertStartService {
         }
 
         AdvertUploadPhotoRequest uploadPhotoRequest = new AdvertUploadPhotoRequest()
-                .setNmId(advertToStart.getItemId())
+                .setNmId(card.getItemId())
                 .setPhotoNumber(CARD_MAIN_PHOTO_POSITION)
                 .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
         wildberriesIntegrationService.uploadPhoto(uploadPhotoRequest);

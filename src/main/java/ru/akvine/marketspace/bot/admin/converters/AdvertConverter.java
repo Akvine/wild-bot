@@ -67,7 +67,7 @@ public class AdvertConverter {
                 .setUuid(advertBean.getUuid())
                 .setName(advertBean.getName())
                 .setAdvertId(advertBean.getExternalId())
-                .setCategoryId(advertBean.getCategoryId())
+                .setCategoryId(advertBean.getCardModel().getCategoryId())
                 .setChangeTime(advertBean.getChangeTime())
                 .setCpm(advertBean.getCpm())
                 .setStartBudgetSum(advertBean.getStartBudgetSum())
