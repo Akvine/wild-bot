@@ -1,14 +1,14 @@
 package ru.akvine.marketspace.bot.telegram.filter;
 
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.marketspace.bot.enums.TelegramDataType;
-import ru.akvine.marketspace.bot.exceptions.UnsupportedUpdateTypeException;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 import ru.akvine.marketspace.bot.telegram.dispatcher.MessageDispatcher;
+import ru.akvine.marketspace.bot.utils.TelegramUtils;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -27,6 +27,9 @@ public class UpdateConverterFilter extends MessageFilter {
         } else {
             logger.debug("Message type for chat id = {} is [MESSAGE]", chatId);
             telegramUpdateData.setType(TelegramDataType.MESSAGE);
+            if (TelegramUtils.isOnlySticker(telegramUpdateData)) {
+                return new SendMessage(chatId, "Необходимо выбрать из меню или ввести команду!");
+            }
         }
 
         return messageDispatcher.doDispatch(telegramUpdateData);
