@@ -24,8 +24,8 @@ public final class TelegramButtonConstants {
 
     public final static String QUERY_QR_CODE_BUTTON_TEXT = "Запросить QR \uD83D\uDCF2";
 
-    public final static String MALE_BUTTON_TEXT = "Мужской \uD83D\uDC68";
-    public final static String FEMALE_BUTTON_TEXT = "Женский \uD83D\uDC69";
+    public final static String MALE_BUTTON_TEXT = "Мужской";
+    public final static String FEMALE_BUTTON_TEXT = "Женский";
 
     public final static String CHOOSE_CATEGORY_TEXT = "Выберите категорию: ";
 
