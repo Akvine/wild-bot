@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -18,6 +19,7 @@ import ru.akvine.marketspace.bot.resolvers.command.CommandResolver;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.resolvers.controllers.views.TelegramView;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
+import ru.akvine.marketspace.bot.utils.TelegramUtils;
 
 import java.util.List;
 
@@ -44,6 +46,10 @@ public class MessageDispatcher {
                 "Received in dispatcher message = [{}] with type = [{}]",
                 text, telegramData.getType()
         );
+
+        if (TelegramUtils.isSticker(telegramData)) {
+            return new SendMessage(chatId, "Бот не поддерживает стикеры :-(");
+        }
 
         if (StringUtils.isNotBlank(text) && text.startsWith("/")) {
             CommandResolver commandResolver = commandResolverManager
