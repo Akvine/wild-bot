@@ -55,7 +55,7 @@ public class TestsMainView implements TelegramView {
                 .append("созданную").append(NEW_LINE)
                 .append(LIST_STARTED_TESTS_BUTTON_TEXT).append("\uD83D\uDCB0: ").append(NEW_LINE)
                 .append("запросите вывод списка запущенных тестов").append(NEW_LINE)
-                .append(FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT).append("\uD83D\uDCF2: ").append(NEW_LINE)
+                .append(FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT).append(NEW_LINE)
                 .append("запросите QR-код для пополнения").append(NEW_LINE)
                 .append("рекламного кабинета, и бот выдаст его для").append(NEW_LINE)
                 .append("оплаты, пополнит счётчик тестов. ").append(NEW_LINE)

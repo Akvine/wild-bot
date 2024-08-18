@@ -7,6 +7,8 @@ import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
 
 @Component
 public class InstructionMenuView implements TelegramView {
+    private final static String NEW_LINE = "\n";
+
     @Override
     public InlineKeyboardMarkup getKeyboard(String chatId) {
         return KeyboardFactory.getBackKeyboard();
@@ -14,8 +16,24 @@ public class InstructionMenuView implements TelegramView {
 
     @Override
     public String getMessage(String chatId) {
-        return "Запуск рекламной кампании \uD83D\uDE80:выберите  категорию товара, и бот автоматически  создаст новую рекламную кампанию или  запустит уже созданную\n" +
-                "Управление ставками CPM \uD83D\uDCB0: бот будет  автоматически регулировать ставки для  оптимального размещения рекламы.\n Настройка цен и скидок \uD83C\uDFF7: введите  желаемую цену на товар, и бот рассчитает  необходимую скидку. \nПополнение рекламного кабинета \uD83D\uDCF2:  запросите QR-код для пополнения, и бот  выдаст его для оплаты.\n Оптимальное размещение рекламы \uD83D\uDCC8:  бот обеспечит лучшее размещение ваших  объявлений.";
+        StringBuilder sb = new StringBuilder();
+        sb
+                .append("<b>Запуск рекламной кампании</b>\uD83D\uDE80: выберите").append(NEW_LINE)
+                .append("категорию товара, и бот автоматически").append(NEW_LINE)
+                .append("создаст новую рекламную кампанию или").append(NEW_LINE)
+                .append("запустит уже cозданную").append(NEW_LINE)
+                .append("<b>Управление ставками CPM</b>\uD83D\uDCB0: бот будет").append(NEW_LINE)
+                .append("автоматически регулировать ставки для").append(NEW_LINE)
+                .append("оптимального размещения рекламы.").append(NEW_LINE)
+                .append("<b>Настройка цен и скидок</b>\uD83C\uDFF7: введите").append(NEW_LINE)
+                .append("желаемую цену на товар, и бот рассчитает").append(NEW_LINE)
+                .append("необходимую скидку.").append(NEW_LINE)
+                .append("<b>Пополнение рекламного кабинета</b>\uD83D\uDCF2:").append(NEW_LINE)
+                .append("запросите QR-код для пополнения, и бот").append(NEW_LINE)
+                .append("выдаст его для оплаты.").append(NEW_LINE)
+                .append("<b>Оптимальное размещение рекламы</b>\uD83D\uDCC8:").append(NEW_LINE)
+                .append("бот обеспечит лучшее размещение ваших  объявлений");
+        return sb.toString();
     }
 
     @Override

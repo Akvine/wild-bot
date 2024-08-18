@@ -11,6 +11,8 @@ import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstan
 
 @Component
 public class ChooseTypeView implements TelegramView {
+    private final static String NEW_LINE = "\n";
+
     @Override
     public InlineKeyboardMarkup getKeyboard(String chatId) {
         InlineKeyboardButton maleButton = new InlineKeyboardButton();
@@ -26,7 +28,11 @@ public class ChooseTypeView implements TelegramView {
 
     @Override
     public String getMessage(String chatId) {
-        return "Запуск рекламной кампании \uD83D\uDE80: \nВыберите в какой категории будет тестироваться товар:";
+        StringBuilder sb = new StringBuilder();
+        sb
+                .append("Запуск рекламной кампании \uD83D\uDE80:").append(NEW_LINE)
+                .append("Выберите в какой категории будет тестироваться товар:");
+        return sb.toString();
     }
 
     @Override

@@ -40,6 +40,7 @@ public abstract class StateResolver {
 
         SendMessage sendMessage = new SendMessage(chatId, message);
         sendMessage.enableMarkdown(true);
+        sendMessage.setParseMode("html");
         sendMessage.setReplyMarkup(keyboardMarkup);
         return sendMessage;
     }

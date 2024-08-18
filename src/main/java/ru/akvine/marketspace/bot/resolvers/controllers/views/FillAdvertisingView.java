@@ -10,6 +10,8 @@ import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstan
 
 @Component
 public class FillAdvertisingView implements TelegramView {
+    private final static String NEW_LINE = "\n";
+
     @Override
     public InlineKeyboardMarkup getKeyboard(String chatId) {
         InlineKeyboardButton queryQrCodeButton = new InlineKeyboardButton();
@@ -21,7 +23,13 @@ public class FillAdvertisingView implements TelegramView {
 
     @Override
     public String getMessage(String chatId) {
-        return "Пополнить рекламный кабинет \uD83D\uDCF2: \nЗапросите QR-код для пополнения  рекламного кабинета, и бот выдаст его для  оплаты, пополнит счётчик тестов. \n Стоимость одной попытки на тест: 500 руб.";
+        StringBuilder sb = new StringBuilder();
+        sb
+                .append("Пополнить рекламный кабинет \uD83D\uDCF2:").append(NEW_LINE)
+                .append("Запросите QR-код для пополнения").append(NEW_LINE)
+                .append("рекламного кабинета, и бот выдаст его для  оплаты, пополнит счётчик тестов.").append(NEW_LINE)
+                .append("Стоимость одной попытки на тест: 500 руб.");
+        return sb.toString();
     }
 
     @Override

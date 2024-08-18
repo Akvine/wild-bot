@@ -2,19 +2,33 @@ package ru.akvine.marketspace.bot.resolvers.controllers.views;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.akvine.marketspace.bot.enums.ClientState;
 import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
 
+import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT;
+
 @Component
 public class SubscriptionMenuView implements TelegramView {
+    private final static String NEW_LINE = "\n";
+
     @Override
     public InlineKeyboardMarkup getKeyboard(String chatId) {
-        return KeyboardFactory.getBackKeyboard();
+        InlineKeyboardButton paySubscriptionButton = new InlineKeyboardButton();
+        paySubscriptionButton.setText(PAY_SUBSCRIPTION_BUTTON_TEXT);
+        paySubscriptionButton.setCallbackData(PAY_SUBSCRIPTION_BUTTON_TEXT);
+
+        InlineKeyboardButton backButton = KeyboardFactory.getBackButton();
+        return KeyboardFactory.createVerticalKeyboard(paySubscriptionButton, backButton);
     }
 
     @Override
     public String getMessage(String chatId) {
-        return "Оформить подписку в два клика,  стоимость месячной подписки равно  4900 р";
+        StringBuilder sb = new StringBuilder();
+        sb
+                .append("Оформить подписку в два клика.").append(NEW_LINE)
+                .append("Стоимость месячной подписки составляет 4900 рублей");
+        return sb.toString();
     }
 
     @Override
