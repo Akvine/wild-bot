@@ -12,6 +12,10 @@ public class ByteUtils {
     private static final int BUFFER_SIZE = 1024;
 
     public byte[] convertToBytes(@NotNull InputStream inputStream) {
+        if (inputStream == null) {
+            throw new IllegalArgumentException("Input stream can't be null");
+        }
+
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
             byte[] buffer = new byte[BUFFER_SIZE];

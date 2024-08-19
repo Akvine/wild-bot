@@ -1,10 +1,7 @@
 package ru.akvine.marketspace.bot.integration.base;
 
 import org.junit.platform.commons.util.StringUtils;
-import org.telegram.telegrambots.meta.api.objects.Chat;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.*;
 
 public class UpdateBuilder {
     private final Update update;
@@ -17,6 +14,7 @@ public class UpdateBuilder {
     private String lastName;
     private String text;
     private Long chatId;
+    private String callbackData;
 
     public UpdateBuilder() {
         this.update = new Update();
@@ -59,7 +57,13 @@ public class UpdateBuilder {
         return this;
     }
 
+    public UpdateBuilder withCallbackData(String callbackData) {
+        this.callbackData = callbackData;
+        return this;
+    }
+
     public Update build() {
+        // TODO : написать более удобный билдер для Message и Callback
         if (StringUtils.isNotBlank(firstName)) {
             user.setFirstName(firstName);
         }
@@ -74,6 +78,19 @@ public class UpdateBuilder {
 
         if (StringUtils.isNotBlank(text)) {
             message.setText(text);
+        }
+
+        if (StringUtils.isNotBlank(callbackData)) {
+            CallbackQuery callbackQuery = new CallbackQuery();
+            callbackQuery.setData(callbackData);
+            Message callBackMessage = new Message();
+            callBackMessage.setChat(chat);
+            callbackQuery.setMessage(callBackMessage);
+            update.setCallbackQuery(callbackQuery);
+        }
+
+        if (StringUtils.isBlank(callbackData)) {
+            update.setCallbackQuery(null);
         }
 
         chat.setId(chatId);
