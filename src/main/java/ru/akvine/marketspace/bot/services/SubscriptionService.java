@@ -67,11 +67,19 @@ public class SubscriptionService {
             client = clientService.verifyExistsByChatId(subscription.getChatId());
         }
 
-        SubscriptionEntity clientSubscriptionToSave = new SubscriptionEntity()
+        SubscriptionEntity subscriptionEntity;
+        try {
+            subscriptionEntity = verifyExistsByChatId(client.getChatId());
+        } catch (SubscriptionException exception) {
+            subscriptionEntity = new SubscriptionEntity();
+        }
+
+        subscriptionEntity
                 .setClient(client)
                 .setExpiresAt(LocalDateTime.now().plusDays(expiresDaysAfter));
 
-        SubscriptionEntity savedClientSubscription = subscriptionRepository.save(clientSubscriptionToSave);
+
+        SubscriptionEntity savedClientSubscription = subscriptionRepository.save(subscriptionEntity);
         logger.info("Successful add subscription = [{}] to client with chat id = {}", savedClientSubscription, client.getChatId());
         return new SubscriptionModel(savedClientSubscription);
     }

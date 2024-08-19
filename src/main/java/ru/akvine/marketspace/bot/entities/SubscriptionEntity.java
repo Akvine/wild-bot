@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import ru.akvine.marketspace.bot.entities.base.BaseEntity;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @Table(name = "SUBSCRIPTION_ENTITY")
 @Entity
+@ToString
 public class SubscriptionEntity extends BaseEntity {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)

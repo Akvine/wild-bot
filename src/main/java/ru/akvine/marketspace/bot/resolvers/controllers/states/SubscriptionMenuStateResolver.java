@@ -9,8 +9,14 @@ import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.marketspace.bot.services.SubscriptionService;
+import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
+import ru.akvine.marketspace.bot.services.dto.admin.client.Subscription;
+import ru.akvine.marketspace.bot.services.integration.yookassa.YooKassaIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
+import ru.akvine.marketspace.bot.utils.DateUtils;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT;
@@ -18,11 +24,19 @@ import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstan
 @Component
 public class SubscriptionMenuStateResolver extends StateResolver {
     private final TelegramDataResolverManager dataResolverManager;
+    private final YooKassaIntegrationService yooKassaIntegrationService;
+    private final SubscriptionService subscriptionService;
 
     @Autowired
-    public SubscriptionMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage, TelegramViewManager viewManager, TelegramDataResolverManager dataResolverManager) {
+    public SubscriptionMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
+                                         TelegramViewManager viewManager,
+                                         TelegramDataResolverManager dataResolverManager,
+                                         YooKassaIntegrationService yooKassaIntegrationService,
+                                         SubscriptionService subscriptionService) {
         super(stateStorage, viewManager, dataResolverManager);
         this.dataResolverManager = dataResolverManager;
+        this.yooKassaIntegrationService = yooKassaIntegrationService;
+        this.subscriptionService = subscriptionService;
     }
 
     @Override
@@ -33,7 +47,25 @@ public class SubscriptionMenuStateResolver extends StateResolver {
         String text = resolver.extractText(telegramData.getData());
 
         if (text.equals(PAY_SUBSCRIPTION_BUTTON_TEXT)) {
-            return new SendMessage(chatId, "Возможность оформления подписки пока не добавлена :(");
+            boolean isSuccessfulPayment = yooKassaIntegrationService.tryPayment();
+            if (isSuccessfulPayment) {
+                DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+                SubscriptionModel existedSubscription = subscriptionService.getByChatIdOrNull(chatId);
+                if (existedSubscription != null) {
+                    String errorMessage = String.format(
+                            "Подписка еще активна до %s.\nОплатить можно будет только после этой даты",
+                            DateUtils.formatLocalDateTime(existedSubscription.getExpiresAt(), dateTimeFormatter));
+                    return new SendMessage(chatId, errorMessage);
+                }
+                Subscription subscription = new Subscription().setChatId(chatId);
+                SubscriptionModel subscriptionModel = subscriptionService.add(subscription);
+                String successfulPaymentMessage = String.format(
+                        "Платеж прошел успешно! :)\nПодписка оформлена до: %s",
+                        DateUtils.formatLocalDateTime(subscriptionModel.getExpiresAt(), dateTimeFormatter));
+                return new SendMessage(chatId, successfulPaymentMessage);
+            } else {
+                return new SendMessage(chatId, "Не удалось провести платеж");
+            }
         } else {
             return new SendMessage(chatId, "Нужно выбрать действие из меню");
         }

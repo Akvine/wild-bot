@@ -234,7 +234,6 @@ public class WorkflowTest extends BaseTest {
     @Test
     @DisplayName("Payment subscription")
     public void payment_subscription() {
-        String expectedMessage = "Возможность оформления подписки пока не добавлена :(";
         builder = new UpdateBuilder();
         builder.withChatId(CHAT_ID_7);
         Update update = builder.build();
@@ -258,7 +257,6 @@ public class WorkflowTest extends BaseTest {
         assertThat(text).isNotBlank();
         assertThat(chatId).isNotBlank();
         assertThat(chatId).isEqualTo(CHAT_ID_7);
-        assertThat(text).isEqualTo(expectedMessage);
     }
 
 }
