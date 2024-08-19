@@ -14,7 +14,7 @@ import ru.akvine.marketspace.bot.integration.base.UpdateBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.*;
 import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
-import static ru.akvine.marketspace.bot.services.integration.config.TestConstants.*;
+import static ru.akvine.marketspace.bot.integration.config.TestConstants.*;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("Bot workflow flow tests")

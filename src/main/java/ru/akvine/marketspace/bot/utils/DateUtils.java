@@ -14,6 +14,9 @@ public class DateUtils {
     public final static DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public long getMinutes(@NotNull LocalDateTime fromDate, @NotNull LocalDateTime toDate) {
+        if (fromDate == null || toDate == null) {
+            throw new IllegalArgumentException("[from and to] dates can't be null");
+        }
         return ChronoUnit.MINUTES.between(fromDate, toDate);
     }
 
