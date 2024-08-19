@@ -38,5 +38,6 @@ build/
 /tdumps
 *.tdump
 application-*.properties
+docker-compose-*.yml
 /src/main/resources/ssl/*.pfx
 /src/main/resources/logging/logback-spring-local.xml

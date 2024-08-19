@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  wild-bot:
+    image: wild-bot
+    container_name: wild-bot
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    build:
+      context: ..
+      dockerfile: ../Dockerfile
+    ports:
+      - "8106:8106"
+    depends_on:
+      - postgres-db
+    environment:
+      - SERVER_PORT=8106
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db/wild-bot
+
+  postgres-db:
+    container_name: postgres-db
+    image: postgres:15.1
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./src/main/resources/db/changelog/database-changelog.sql:/docker-entrypoint-initdb.d/database-changelog.sql
+    restart: unless-stopped
