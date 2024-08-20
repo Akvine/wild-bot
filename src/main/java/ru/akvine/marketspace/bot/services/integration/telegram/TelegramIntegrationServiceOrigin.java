@@ -19,7 +19,6 @@ import ru.akvine.marketspace.bot.telegram.bot.TelegramDevBot;
 import ru.akvine.marketspace.bot.utils.ByteUtils;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TelegramIntegrationServiceOrigin implements TelegramIntegrationService {
+    // TODO : нужно инжектить разных ботов в зависимости от среды
     private TelegramDevBot bot;
     private AbsSender absSender;
 

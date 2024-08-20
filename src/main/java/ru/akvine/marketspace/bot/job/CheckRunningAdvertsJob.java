@@ -11,7 +11,6 @@ import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.enums.AdvertStatus;
 import ru.akvine.marketspace.bot.repositories.AdvertRepository;
 import ru.akvine.marketspace.bot.services.AdvertStatisticService;
-import ru.akvine.marketspace.bot.services.CardService;
 import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
@@ -26,7 +25,6 @@ import java.util.List;
 @Slf4j
 public class CheckRunningAdvertsJob {
     private final AdvertRepository advertRepository;
-    private final CardService cardService;
     private final TelegramIntegrationService telegramIntegrationService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final CountersStorage countersStorage;
@@ -65,11 +63,11 @@ public class CheckRunningAdvertsJob {
 
             if (currentBudgetSum == 0 || differenceBudgetSum >= maxStartSumDifference) {
                 logger.info("Get statistic and pause advert with id = {}", advertId);
-                advertStatisticService.getAndSave(advert);
                 if (currentBudgetSum != 0) {
                     logger.info("Current budget for advert = [{}] not equals zero, pause advert", advert);
                     wildberriesIntegrationService.pauseAdvert(advertId);
                 }
+                advertStatisticService.getAndSave(advert);
                 CardEntity cardEntity = advert.getCard();
                 ChangeStocksRequest request = new ChangeStocksRequest()
                         .setStocks(List.of(new SkuDto()

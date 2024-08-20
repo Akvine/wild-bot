@@ -39,13 +39,11 @@ public class ScheduledConfig {
     @Bean
     public CheckRunningAdvertsJob checkRunningAdvertsJob(AdvertRepository advertRepository,
                                                          WildberriesIntegrationService wildberriesIntegrationService,
-                                                         CardService cardService,
                                                          CountersStorage countersStorage,
                                                          AdvertStatisticService advertStatisticService,
                                                          TelegramIntegrationService telegramIntegrationService) {
         return new CheckRunningAdvertsJob(
                 advertRepository,
-                cardService,
                 telegramIntegrationService,
                 wildberriesIntegrationService,
                 countersStorage,
