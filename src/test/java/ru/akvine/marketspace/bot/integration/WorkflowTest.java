@@ -8,12 +8,14 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants;
+import ru.akvine.marketspace.bot.enums.TelegramDataType;
 import ru.akvine.marketspace.bot.integration.base.BaseTest;
 import ru.akvine.marketspace.bot.integration.base.UpdateBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.*;
 import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
 import static ru.akvine.marketspace.bot.integration.config.TestConstants.*;
 
 @ExtendWith(SpringExtension.class)
@@ -37,7 +39,7 @@ public class WorkflowTest extends BaseTest {
         String chatId = message.getChatId();
 
         assertThat(text).isNotNull();
-        assertThat(text).isEqualTo(CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE);
+        assertThat(text).isEqualTo(CLIENT_NOT_IN_WHITELIST_MESSAGE);
         assertThat(chatId).isNotNull();
         assertThat(chatId).isEqualTo("1");
     }
@@ -74,22 +76,21 @@ public class WorkflowTest extends BaseTest {
 
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_3)
-                .withCallbackData(TelegramButtonConstants.TESTS_MENU)
-                .build();
+                .withText(TelegramButtonConstants.TESTS_MENU)
+                .build(TelegramDataType.CALLBACK);
 
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_3)
-                .withCallbackData(GENERATE_REPORT_BUTTON_TEXT)
-                .build();
-
+                .withText(GENERATE_REPORT_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_3)
-                .withCallbackData(START_GENERATION_BUTTON_TEXT)
-                .build();
+                .withText(START_GENERATION_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
 
         SendMessage successfulGenerateReportMessage =
                 (SendMessage) messageFilter.handle(callbackUpdate);
@@ -116,20 +117,20 @@ public class WorkflowTest extends BaseTest {
 
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_4)
-                .withCallbackData(TelegramButtonConstants.TESTS_MENU)
-                .build();
+                .withText(TelegramButtonConstants.TESTS_MENU)
+                .build(TelegramDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_4)
-                .withCallbackData(TelegramButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT)
-                .build();
+                .withText(TelegramButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_4)
-                .withCallbackData(QUERY_QR_CODE_BUTTON_TEXT)
-                .build();
+                .withText(QUERY_QR_CODE_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
         SendMessage fillAccountMessage = (SendMessage) messageFilter.handle(callbackUpdate);
 
         String text = fillAccountMessage.getText();
@@ -165,19 +166,18 @@ public class WorkflowTest extends BaseTest {
 
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_5)
-                .withCallbackData(TelegramButtonConstants.TESTS_MENU)
-                .build();
+                .withText(TelegramButtonConstants.TESTS_MENU)
+                .build(TelegramDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_5)
-                .withCallbackData(TelegramButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT)
-                .build();
+                .withText(TelegramButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         update = builder
                 .withChatId(CHAT_ID_5)
-                .withCallbackData(null)
                 .withText("-1")
                 .build();
         SendMessage getDetailInfoMessage = (SendMessage) messageFilter.handle(update);
@@ -218,8 +218,8 @@ public class WorkflowTest extends BaseTest {
 
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_6)
-                .withCallbackData(TelegramButtonConstants.INSTRUCTIONS_FOR_USE_BUTTON_TEXT)
-                .build();
+                .withText(TelegramButtonConstants.INSTRUCTIONS_FOR_USE_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
         SendMessage instructionsMessage = (SendMessage) messageFilter.handle(callbackUpdate);
 
         String text = instructionsMessage.getText();
@@ -241,14 +241,14 @@ public class WorkflowTest extends BaseTest {
 
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_7)
-                .withCallbackData(TelegramButtonConstants.ADD_SUBSCRIPTION_BUTTON_TEXT)
-                .build();
+                .withText(TelegramButtonConstants.ADD_SUBSCRIPTION_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_7)
-                .withCallbackData(TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT)
-                .build();
+                .withText(TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
         SendMessage subscriptionMessage = (SendMessage) messageFilter.handle(callbackUpdate);
 
         String text = subscriptionMessage.getText();
