@@ -47,14 +47,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 ApiErrorConstants.ADVERT_ALREADY_IN_PAUSE_STATE_ERROR,
                 exception.getMessage(),
                 exception.getMessage()
-                );
+        );
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({HasNoSubscriptionException.class})
-    public ResponseEntity<ErrorResponse> handleSubscriptionException(HasNoSubscriptionException exception) {
+    @ExceptionHandler(ClientNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleClientNotFoundException(ClientNotFoundException exception) {
         ErrorResponse errorResponse = new ErrorResponse(
-                ApiErrorConstants.SUBSCRIPTION_NOT_FOUND_ERROR,
+                ApiErrorConstants.CLIENT_NOT_FOUND_ERROR,
                 exception.getMessage(),
                 exception.getMessage()
         );

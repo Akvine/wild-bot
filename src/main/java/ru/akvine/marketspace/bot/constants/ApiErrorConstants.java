@@ -1,7 +1,9 @@
 package ru.akvine.marketspace.bot.constants;
 
 public final class ApiErrorConstants {
-    private ApiErrorConstants() throws IllegalAccessException {throw new IllegalAccessException("Calling " + ApiErrorConstants.class.getSimpleName() + " constructor is prohibited!");}
+    private ApiErrorConstants() throws IllegalAccessException {
+        throw new IllegalAccessException("Calling " + ApiErrorConstants.class.getSimpleName() + " constructor is prohibited!");
+    }
 
     public final static String GENERAL_ERROR = "general.error";
 
@@ -10,6 +12,8 @@ public final class ApiErrorConstants {
     public final static String ADVERT_ALREADY_IN_PAUSE_STATE_ERROR = "advert.already.inPause.state.error";
 
     public final static String SUBSCRIPTION_NOT_FOUND_ERROR = "subscription.notFound.error";
+
+    public final static String CLIENT_NOT_FOUND_ERROR = "client.notFound.error";
 
     public interface Validation {
         String BOTH_PARAMETERS_PRESENT_ERROR = "both.parameters.present.error";
