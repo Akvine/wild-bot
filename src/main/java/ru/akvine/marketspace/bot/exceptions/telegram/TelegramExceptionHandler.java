@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.marketspace.bot.exceptions.*;
 import ru.akvine.marketspace.bot.infrastructure.annotations.TelegramErrorHandler;
 
-import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.*;
 
 @Component
 @Slf4j
@@ -43,10 +43,10 @@ public class TelegramExceptionHandler {
         return new SendMessage(chatId, errorMessage);
     }
 
-    @TelegramErrorHandler(SubscriptionException.class)
-    public SendMessage handleClientSubscriptionException(String chatId, SubscriptionException exception) {
-        logger.info("Client's subscription is expired or has no. Message = [{}]", exception.getMessage());
-        return new SendMessage(chatId, CLIENT_SUBSCRIPTION_MESSAGE);
+    @TelegramErrorHandler(HasNoSubscriptionException.class)
+    public SendMessage handleClientSubscriptionException(String chatId, HasNoSubscriptionException exception) {
+        logger.info("Client has no subscription. Message = [{}]", exception.getMessage());
+        return new SendMessage(chatId, CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE);
     }
 
     @TelegramErrorHandler(AdvertStartLimitException.class)
@@ -74,5 +74,17 @@ public class TelegramExceptionHandler {
                 maxMegabytesSize, currentMegabytes
         );
         return new SendMessage(chatId, message);
+    }
+
+    @TelegramErrorHandler(WhitelistException.class)
+    public SendMessage handleWhitelistException(String chatId, WhitelistException exception) {
+        logger.info("Client not in whitelist");
+        return new SendMessage(chatId, CLIENT_NOT_IN_WHITELIST_MESSAGE);
+    }
+
+    @TelegramErrorHandler(SubscriptionExpiredException.class)
+    public SendMessage handleSubscriptionExpiredException(String chatId, SubscriptionExpiredException exception) {
+        logger.info("Client's subscription is expired");
+        return new SendMessage(chatId, CLIENT_SUBSCRIPTION_EXPIRED_MESSAGE);
     }
 }

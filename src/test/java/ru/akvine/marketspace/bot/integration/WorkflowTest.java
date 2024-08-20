@@ -13,7 +13,7 @@ import ru.akvine.marketspace.bot.integration.base.UpdateBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.*;
-import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_SUBSCRIPTION_MESSAGE;
+import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE;
 import static ru.akvine.marketspace.bot.integration.config.TestConstants.*;
 
 @ExtendWith(SpringExtension.class)
@@ -37,7 +37,7 @@ public class WorkflowTest extends BaseTest {
         String chatId = message.getChatId();
 
         assertThat(text).isNotNull();
-        assertThat(text).isEqualTo(CLIENT_SUBSCRIPTION_MESSAGE);
+        assertThat(text).isEqualTo(CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE);
         assertThat(chatId).isNotNull();
         assertThat(chatId).isEqualTo("1");
     }
@@ -56,7 +56,7 @@ public class WorkflowTest extends BaseTest {
         String chatId = message.getChatId();
 
         assertThat(text).isNotNull();
-        assertThat(text).isNotEqualTo(CLIENT_SUBSCRIPTION_MESSAGE);
+        assertThat(text).isNotEqualTo(CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE);
         assertThat(chatId).isNotNull();
         assertThat(chatId).isEqualTo(CHAT_ID_2);
     }

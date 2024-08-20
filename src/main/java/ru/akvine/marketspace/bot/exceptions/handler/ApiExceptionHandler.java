@@ -51,8 +51,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({SubscriptionException.class})
-    public ResponseEntity<ErrorResponse> handleSubscriptionException(SubscriptionException exception) {
+    @ExceptionHandler({HasNoSubscriptionException.class})
+    public ResponseEntity<ErrorResponse> handleSubscriptionException(HasNoSubscriptionException exception) {
         ErrorResponse errorResponse = new ErrorResponse(
                 ApiErrorConstants.SUBSCRIPTION_NOT_FOUND_ERROR,
                 exception.getMessage(),

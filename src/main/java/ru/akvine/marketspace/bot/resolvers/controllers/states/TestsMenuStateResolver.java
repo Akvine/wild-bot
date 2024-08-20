@@ -22,7 +22,8 @@ public class TestsMenuStateResolver extends StateResolver {
 
     @Autowired
     public TestsMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                  TelegramViewManager viewManager, TelegramDataResolverManager dataResolverManager,
+                                  TelegramViewManager viewManager,
+                                  TelegramDataResolverManager dataResolverManager,
                                   StartValidator startValidator) {
         super(stateStorage, viewManager, dataResolverManager);
         this.startValidator = startValidator;
@@ -30,6 +31,7 @@ public class TestsMenuStateResolver extends StateResolver {
 
     @Override
     public BotApiMethod<?> resolve(TelegramData telegramData) {
+        super.resolve(telegramData);
         TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(telegramData.getType());
         String chatId = resolver.extractChatId(telegramData.getData());
         String text = resolver.extractText(telegramData.getData());

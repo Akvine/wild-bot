@@ -20,6 +20,8 @@ public class ClientDto {
 
     private int availableTestsCount;
 
+    private boolean inWhitelist;
+
     private LocalDateTime createdDate;
 
     private LocalDateTime updatedDate;

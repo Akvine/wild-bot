@@ -28,4 +28,10 @@ public interface ClientControllerMeta {
 
     @PostMapping(value = "/send/message")
     Response sendMessage(@Valid @RequestBody SendMessageRequest request);
+
+    @PostMapping(value = "/whitelist/add")
+    Response addToWhitelist(@Valid @RequestBody WhitelistRequest request);
+
+    @PostMapping(value = "/whitelist/delete")
+    Response deleteFromWhitelist(@Valid @RequestBody WhitelistRequest request);
 }

@@ -29,6 +29,7 @@ public class ClientConverter {
                 .setFirstName(clientModel.getFirstName())
                 .setLastName(clientModel.getLastName())
                 .setAvailableTestsCount(clientModel.getAvailableTestsCount())
+                .setInWhitelist(clientModel.isInWhitelist())
                 .setCreatedDate(clientModel.getCreatedDate())
                 .setUpdatedDate(clientModel.getUpdatedDate())
                 .setDeletedDate(clientModel.getDeletedDate())
@@ -122,5 +123,12 @@ public class ClientConverter {
                 .setMinutes(entry.getMinutes())
                 .setBlockStartDate(entry.getBlockStartDate())
                 .setBlockEndDate(entry.getBlockEndDate());
+    }
+
+    public Whitelist convertToWhitelist(WhitelistRequest request) {
+        Preconditions.checkNotNull(request, "whitelistRequest is null");
+        return new Whitelist()
+                .setChatId(request.getChatId())
+                .setUsername(request.getUsername());
     }
 }

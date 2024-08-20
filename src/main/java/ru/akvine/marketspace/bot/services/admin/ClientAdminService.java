@@ -134,6 +134,38 @@ public class ClientAdminService {
         sendMessageInternal(activeClients, message);
     }
 
+    public void addToWhitelist(Whitelist whitelist) {
+        Preconditions.checkNotNull(whitelist, "whitelist is null");
+        logger.info("Add client to whitelist by {}", whitelist);
+
+        ClientEntity client;
+        if (StringUtils.isNotBlank(whitelist.getChatId())) {
+            client = clientService.verifyExistsByChatId(whitelist.getChatId());
+        } else {
+            client = clientService.verifyExistsByUsername(whitelist.getUsername());
+        }
+
+        client.setInWhitelist(true);
+        clientRepository.save(client);
+        logger.info("Successful add to whitelist client with chatId = {} and username = {}", client.getChatId(), client.getUsername());
+    }
+
+    public void deleteFromWhitelist(Whitelist whitelist) {
+        Preconditions.checkNotNull(whitelist, "whitelist is null");
+        logger.info("Delete client from whitelist by {}", whitelist);
+
+        ClientEntity client;
+        if (StringUtils.isNotBlank(whitelist.getChatId())) {
+            client = clientService.verifyExistsByChatId(whitelist.getChatId());
+        } else {
+            client = clientService.verifyExistsByUsername(whitelist.getUsername());
+        }
+
+        client.setInWhitelist(false);
+        clientRepository.save(client);
+        logger.info("Successful delete to whitelist client with chatId = {} and username = {}", client.getChatId(), client.getUsername());
+    }
+
     private void sendMessageInternal(List<ClientModel> activeClients, String message) {
         List<String> activeChatIds = activeClients
                 .stream()

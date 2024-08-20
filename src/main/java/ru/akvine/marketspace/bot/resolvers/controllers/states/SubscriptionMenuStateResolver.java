@@ -1,5 +1,6 @@
 package ru.akvine.marketspace.bot.resolvers.controllers.states;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -22,6 +23,7 @@ import java.util.List;
 import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT;
 
 @Component
+@Slf4j
 public class SubscriptionMenuStateResolver extends StateResolver {
     private final TelegramDataResolverManager dataResolverManager;
     private final YooKassaIntegrationService yooKassaIntegrationService;
@@ -41,15 +43,16 @@ public class SubscriptionMenuStateResolver extends StateResolver {
 
     @Override
     public BotApiMethod<?> resolve(TelegramData telegramData) {
-        super.resolve(telegramData);
         TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(telegramData.getType());
         String chatId = resolver.extractChatId(telegramData.getData());
         String text = resolver.extractText(telegramData.getData());
 
+        logger.info("[{}] state resolved", getState());
+
         if (text.equals(PAY_SUBSCRIPTION_BUTTON_TEXT)) {
             boolean isSuccessfulPayment = yooKassaIntegrationService.tryPayment();
             if (isSuccessfulPayment) {
-                DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
                 SubscriptionModel existedSubscription = subscriptionService.getByChatIdOrNull(chatId);
                 if (existedSubscription != null) {
                     String errorMessage = String.format(

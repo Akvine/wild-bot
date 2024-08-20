@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.marketspace.bot.entities.ClientEntity;
 import ru.akvine.marketspace.bot.entities.SubscriptionEntity;
-import ru.akvine.marketspace.bot.exceptions.SubscriptionException;
+import ru.akvine.marketspace.bot.exceptions.HasNoSubscriptionException;
 import ru.akvine.marketspace.bot.repositories.SubscriptionRepository;
 import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
 import ru.akvine.marketspace.bot.services.dto.admin.client.Subscription;
@@ -53,7 +53,7 @@ public class SubscriptionService {
         Preconditions.checkNotNull(chatId, "chatId is null");
         return subscriptionRepository
                 .findByChatId(chatId)
-                .orElseThrow(() -> new SubscriptionException("Client subscription for chat with id = [" + chatId + "] not found!"));
+                .orElseThrow(() -> new HasNoSubscriptionException("Client subscription for chat with id = [" + chatId + "] not found!"));
     }
 
     public SubscriptionModel add(Subscription subscription) {
@@ -70,7 +70,7 @@ public class SubscriptionService {
         SubscriptionEntity subscriptionEntity;
         try {
             subscriptionEntity = verifyExistsByChatId(client.getChatId());
-        } catch (SubscriptionException exception) {
+        } catch (HasNoSubscriptionException exception) {
             subscriptionEntity = new SubscriptionEntity();
         }
 
@@ -100,7 +100,7 @@ public class SubscriptionService {
         Optional<SubscriptionEntity> subscriptionEntity = subscriptionRepository.findByChatId(chatId);
         if (subscriptionEntity.isEmpty()) {
             String errorMessage = String.format("Client with chat id = [%s] has no subscription", client.getChatId());
-            throw new SubscriptionException(errorMessage);
+            throw new HasNoSubscriptionException(errorMessage);
         }
 
         subscriptionRepository.delete(subscriptionEntity.get());

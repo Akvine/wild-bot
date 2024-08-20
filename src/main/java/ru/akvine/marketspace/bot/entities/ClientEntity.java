@@ -36,6 +36,9 @@ public class ClientEntity extends SoftBaseEntity {
     @Column(name = "AVAILABLE_TESTS_COUNT")
     private int availableTestsCount;
 
+    @Column(name = "IS_IN_WHITELIST", nullable = false)
+    private boolean inWhitelist;
+
     @Transient
     public void increaseAvailableTestsCount(int addCount) {
         availableTestsCount += addCount;
