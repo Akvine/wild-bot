@@ -187,7 +187,7 @@ public class AdvertService {
                     .setBtype(DebitType.ACCOUNT.getCode())
                     .setOnPause(true)
                     .setCpm(advertMinCpm)
-                    .setNms(new int[]{cardBean.getItemId()});
+                    .setNms(new int[]{cardBean.getExternalId()});
             int advertId = wildberriesIntegrationService.createAdvert(request);
 
             AdvertEntity advertEntity = new AdvertEntity()
@@ -196,7 +196,7 @@ public class AdvertService {
                     .setChangeTime(new Date())
                     .setLocked(false)
                     .setCpm(advertMinCpm)
-                    .setExternalId(cardBean.getItemId())
+                    .setExternalId(cardBean.getExternalId())
                     .setStatus(AdvertStatus.PAUSE)
                     .setOrdinalStatus(AdvertStatus.PAUSE.getCode())
                     .setType(AdvertType.AUTO)

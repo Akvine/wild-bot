@@ -2,6 +2,7 @@ package ru.akvine.marketspace.bot.repositories;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.akvine.marketspace.bot.entities.CardEntity;
@@ -9,7 +10,7 @@ import ru.akvine.marketspace.bot.entities.CardEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface CardRepository extends JpaRepository<CardEntity, Long> {
+public interface CardRepository extends JpaRepository<CardEntity, Long>, JpaSpecificationExecutor<CardEntity> {
     @Query("from CardEntity ce where ce.deleted = false")
     @NotNull
     List<CardEntity> findAll();

@@ -3,6 +3,9 @@ package ru.akvine.marketspace.bot.services;
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.entities.CardTypeEntity;
@@ -10,7 +13,9 @@ import ru.akvine.marketspace.bot.exceptions.CardNotFoundException;
 import ru.akvine.marketspace.bot.exceptions.CardTypeNotFoundException;
 import ru.akvine.marketspace.bot.repositories.CardRepository;
 import ru.akvine.marketspace.bot.repositories.CardTypeRepository;
+import ru.akvine.marketspace.bot.repositories.specifications.CardSpecification;
 import ru.akvine.marketspace.bot.services.domain.CardModel;
+import ru.akvine.marketspace.bot.services.dto.admin.card.ListCards;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.CardCharacteristic;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SizeDto;
@@ -27,6 +32,7 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final CardTypeRepository cardTypeRepository;
+    private final CardSpecification cardSpecification;
 
     public List<CardModel> create(List<CardDto> cards) {
         Preconditions.checkNotNull(cards, "cards is null");
@@ -94,6 +100,22 @@ public class CardService {
         logger.info("Get cards by category id = {}", categoryId);
         return cardRepository
                 .findByCategoryId(categoryId)
+                .stream()
+                .map(CardModel::new)
+                .toList();
+    }
+
+    public List<CardModel> list(ListCards listCards) {
+        logger.info("List cards by {}", listCards);
+
+        Specification<CardEntity> specification = cardSpecification.build(listCards);
+        Pageable pageable = PageRequest.of(
+                listCards.getPage(),
+                listCards.getCount()
+        );
+
+        return cardRepository
+                .findAll(specification, pageable)
                 .stream()
                 .map(CardModel::new)
                 .toList();

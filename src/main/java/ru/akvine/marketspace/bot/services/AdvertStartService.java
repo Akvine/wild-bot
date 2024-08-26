@@ -98,7 +98,7 @@ public class AdvertStartService {
             SetGoodPriceRequest setGoodPriceRequest = new SetGoodPriceRequest()
                     .setData(List.of(
                             new SetGoodDto()
-                                    .setNmID(card.getItemId())
+                                    .setNmID(card.getExternalId())
                                     .setPrice(sessionStorage.get(chatId).getNewCardPrice())
                                     .setDiscount(sessionStorage.get(chatId).getNewCardDiscount())
                     ));
@@ -106,7 +106,7 @@ public class AdvertStartService {
         }
 
         AdvertUploadPhotoRequest uploadPhotoRequest = new AdvertUploadPhotoRequest()
-                .setNmId(card.getItemId())
+                .setNmId(card.getExternalId())
                 .setPhotoNumber(CARD_MAIN_PHOTO_POSITION)
                 .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
         wildberriesIntegrationService.uploadPhoto(uploadPhotoRequest);

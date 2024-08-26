@@ -3,7 +3,6 @@ package ru.akvine.marketspace.bot.services.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.jetbrains.annotations.Nullable;
 import ru.akvine.marketspace.bot.entities.CardEntity;
 import ru.akvine.marketspace.bot.services.domain.base.SoftModel;
 
@@ -13,10 +12,8 @@ import ru.akvine.marketspace.bot.services.domain.base.SoftModel;
 public class CardModel extends SoftModel {
     private Long id;
     private String uuid;
-    @Nullable
-    private String clientUuid;
-    private int itemId;
-    private String itemTitle;
+    private int externalId;
+    private String externalTitle;
     private String categoryTitle;
     private int categoryId;
     private String barcode;
@@ -25,8 +22,8 @@ public class CardModel extends SoftModel {
     public CardModel(CardEntity cardEntity) {
         this.id = cardEntity.getId();
         this.uuid = cardEntity.getUuid();
-        this.itemId = cardEntity.getExternalId();
-        this.itemTitle = cardEntity.getExternalTitle();
+        this.externalId = cardEntity.getExternalId();
+        this.externalTitle = cardEntity.getExternalTitle();
         this.categoryTitle = cardEntity.getCategoryTitle();
         this.categoryId = cardEntity.getCategoryId();
         this.barcode = cardEntity.getBarcode();
