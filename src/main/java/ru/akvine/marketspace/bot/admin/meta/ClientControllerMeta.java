@@ -34,4 +34,7 @@ public interface ClientControllerMeta {
 
     @PostMapping(value = "/whitelist/delete")
     Response deleteFromWhitelist(@Valid @RequestBody WhitelistRequest request);
+
+    @PostMapping(value = "/send/qr-code")
+    Response sendQrCode(@Valid @RequestBody SendQrCodeRequest request);
 }

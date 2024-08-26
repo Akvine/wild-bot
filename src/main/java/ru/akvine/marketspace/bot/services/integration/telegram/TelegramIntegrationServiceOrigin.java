@@ -3,6 +3,7 @@ package ru.akvine.marketspace.bot.services.integration.telegram;
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -113,12 +114,25 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
     @Override
     public void sendImage(String chatId, InputStream image) {
+       sendImage(chatId, image, null);
+    }
+
+    @Override
+    public void sendImage(String chatId, byte[] image, String caption) {
+        sendImage(chatId, new ByteArrayInputStream(image), caption);
+    }
+
+    @Override
+    public void sendImage(String chatId, InputStream image, String caption) {
         try {
             SendPhoto sendPhoto = new SendPhoto();
             InputFile inputFile = new InputFile();
             inputFile.setMedia(image, "photo");
             sendPhoto.setChatId(chatId);
             sendPhoto.setPhoto(inputFile);
+            if (StringUtils.isNotBlank(caption)) {
+                sendPhoto.setCaption(caption);
+            }
 
             absSender.execute(sendPhoto);
         } catch (Exception exception) {

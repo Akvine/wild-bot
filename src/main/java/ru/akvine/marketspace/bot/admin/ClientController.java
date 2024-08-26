@@ -84,4 +84,14 @@ public class ClientController implements ClientControllerMeta {
         clientAdminService.deleteFromWhitelist(whitelist);
         return new SuccessfulResponse();
     }
+
+    @Override
+    public Response sendQrCode(@Valid SendQrCodeRequest request) {
+        clientValidator.verifySecret(request);
+        clientAdminService.sendQrCode(
+                request.getChatId(),
+                request.getText(),
+                request.getCaption());
+        return new SuccessfulResponse();
+    }
 }

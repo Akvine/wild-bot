@@ -63,4 +63,22 @@ public interface TelegramIntegrationService {
      * @param image  изображение
      */
     void sendImage(String chatId, InputStream image);
+
+    /**
+     * Отправка изображения пользователю
+     *
+     * @param chatId  идентификатор пользователя
+     * @param image   изображение
+     * @param caption Подпись к фотографии
+     */
+    void sendImage(String chatId, byte[] image, String caption);
+
+    /**
+     * Отправка изображения пользователю
+     *
+     * @param chatId  идентификатор пользователя
+     * @param image   изображение
+     * @param caption Подпись к фотографии
+     */
+    void sendImage(String chatId, InputStream image, String caption);
 }

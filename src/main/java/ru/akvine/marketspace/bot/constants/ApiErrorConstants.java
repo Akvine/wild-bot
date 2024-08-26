@@ -11,13 +11,14 @@ public final class ApiErrorConstants {
 
     public final static String ADVERT_ALREADY_IN_PAUSE_STATE_ERROR = "advert.already.inPause.state.error";
 
-    public final static String SUBSCRIPTION_NOT_FOUND_ERROR = "subscription.notFound.error";
-
     public final static String CLIENT_NOT_FOUND_ERROR = "client.notFound.error";
+
+    public final static String RESOURCE_NOT_FOUND_ERROR = "resource.notFound.error";
 
     public interface Validation {
         String BOTH_PARAMETERS_PRESENT_ERROR = "both.parameters.present.error";
         String BOTH_PARAMETERS_BLANK_ERROR = "both.parameters.blank.error";
+        String FIELD_NOT_PRESENTED_ERROR = "field.not.presented.error";
 
         String BAD_CREDENTIALS_ERROR = "bad.credentials.error";
 

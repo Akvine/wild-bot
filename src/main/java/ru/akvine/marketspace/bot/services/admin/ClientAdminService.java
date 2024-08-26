@@ -1,6 +1,7 @@
 package ru.akvine.marketspace.bot.services.admin;
 
 import com.google.common.base.Preconditions;
+import io.nayuki.qrcodegen.QrCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +17,10 @@ import ru.akvine.marketspace.bot.services.domain.ClientModel;
 import ru.akvine.marketspace.bot.services.dto.admin.client.*;
 import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.utils.DateUtils;
+import ru.akvine.marketspace.bot.utils.QrCodeUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -164,6 +168,14 @@ public class ClientAdminService {
         client.setInWhitelist(false);
         clientRepository.save(client);
         logger.info("Successful delete to whitelist client with chatId = {} and username = {}", client.getChatId(), client.getUsername());
+    }
+
+    public void sendQrCode(String chatId, String text, String caption) {
+        logger.info("Send qr code to chat with id = {} and text = {}", chatId, text);
+        clientService.verifyExistsByChatId(chatId);
+        QrCode qrCode = QrCode.encodeText(text, QrCode.Ecc.HIGH);
+        byte[] image = QrCodeUtils.convertQrCodeToBytes(qrCode);
+        telegramIntegrationService.sendImage(chatId, image, caption);
     }
 
     private void sendMessageInternal(List<ClientModel> activeClients, String message) {
