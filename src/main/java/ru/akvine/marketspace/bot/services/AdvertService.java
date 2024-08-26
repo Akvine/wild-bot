@@ -19,6 +19,8 @@ import ru.akvine.marketspace.bot.services.domain.CardModel;
 import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertCreateRequest;
 import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertDto;
+import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
+import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SkuDto;
 import ru.akvine.marketspace.bot.utils.UUIDGenerator;
 
 import java.time.LocalDateTime;
@@ -41,6 +43,10 @@ public class AdvertService {
     private int advertBudgetSumIncrease;
     @Value("${advert.min.cpm}")
     private int advertMinCpm;
+    @Value("${wildberries.warehouse.id}")
+    private int warehouseId;
+    @Value("${wildberries.change.stocks.count}")
+    private int changeStocksCount;
 
     public void saveAll(List<AdvertDto> adverts) {
         Preconditions.checkNotNull(adverts, "loadedAdverts is null");
@@ -165,6 +171,13 @@ public class AdvertService {
         if (createAdvertsByApi) {
             logger.info("Create advert with category id = {} by API", categoryId);
             CardModel cardBean = cardService.getFirst(categoryId);
+            wildberriesIntegrationService.changeStocks(new ChangeStocksRequest()
+                    .setStocks(List.of(
+                            new SkuDto()
+                                    .setAmount(changeStocksCount)
+                                    .setSku(cardBean.getBarcode())
+                    )), warehouseId);
+
             String advertName = "Created by API: " + LocalDateTime.now();
             AdvertCreateRequest request = new AdvertCreateRequest()
                     .setSubjectId(categoryId)

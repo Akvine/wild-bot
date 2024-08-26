@@ -11,4 +11,5 @@ public final class TestConstants {
     public final static String CHAT_ID_5 = "5";
     public final static String CHAT_ID_6 = "6";
     public final static String CHAT_ID_7 = "7";
+    public final static String CHAT_ID_8 = "8";
 }

@@ -259,4 +259,36 @@ public class WorkflowTest extends BaseTest {
         assertThat(chatId).isEqualTo(CHAT_ID_7);
     }
 
+    @Test
+    @DisplayName("Start test - without changing price")
+    public void start_test() {
+        builder = new UpdateBuilder();
+        builder.withChatId(CHAT_ID_8);
+        Update update = builder.build();
+        messageFilter.handle(update);
+
+        Update callbackUpdate = builder
+                .withText(TelegramButtonConstants.TESTS_MENU)
+                .build(TelegramDataType.CALLBACK);
+        messageFilter.handle(callbackUpdate);
+
+        callbackUpdate = builder
+                .withText(TelegramButtonConstants.START_TEST_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
+        messageFilter.handle(callbackUpdate);
+
+        callbackUpdate = builder
+                .withText(TelegramButtonConstants.MALE_BUTTON_TEXT)
+                .build(TelegramDataType.CALLBACK);
+        messageFilter.handle(callbackUpdate);
+
+        String categoryId = "2";
+        callbackUpdate = builder
+                .withText(categoryId)
+                .build(TelegramDataType.CALLBACK);
+        messageFilter.handle(callbackUpdate);
+
+
+    }
+
 }

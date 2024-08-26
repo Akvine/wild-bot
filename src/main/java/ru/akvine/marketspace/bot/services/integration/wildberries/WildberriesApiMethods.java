@@ -17,7 +17,7 @@ public enum WildberriesApiMethods {
     GET_ADVERT_STATISTIC("https://advert-api.wb.ru", "/adv/v1/auto/stat" ),
     UPLOAD_CARD_PHOTO("https://suppliers-api.wildberries.ru","/content/v3/media/file"),
     ADVERT_BUDGET_INFO("https://advert-api.wb.ru","/adv/v1/budget"),
-    CHANGE_CARD_STOCKS("https://suppliers-api.wildberries.ru", "/api/v3/stocks/"),
+    CHANGE_CARD_STOCKS("https://marketplace-api.wildberries.ru", "/api/v3/stocks/"),
     GET_ADVERTS_FULL_STATISTIC("https://advert-api.wb.ru", "/adv/v2/fullstats"),
     GET_GOODS("https://discounts-prices-api.wildberries.ru", "/api/v2/list/goods/filter"),
     SET_GOODS_PRICE_AND_DISCOUNT("https://discounts-prices-api.wildberries.ru", "/api/v2/upload/task"),
