@@ -14,6 +14,7 @@ public final class ApiErrorConstants {
     public final static String CLIENT_NOT_FOUND_ERROR = "client.notFound.error";
 
     public final static String RESOURCE_NOT_FOUND_ERROR = "resource.notFound.error";
+    public final static String JSON_BODY_INVALID_ERROR = "json.body.invalid.error";
 
     public interface Validation {
         String BOTH_PARAMETERS_PRESENT_ERROR = "both.parameters.present.error";

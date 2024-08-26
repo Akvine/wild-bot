@@ -1,9 +1,7 @@
 package ru.akvine.marketspace.bot.exceptions.api;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -90,6 +88,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 ApiErrorConstants.Validation.FIELD_NOT_PRESENTED_ERROR,
                 errorMessage,
                 errorMessage);
+        return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        logger.info("Error while parsing json body");
+        String errorMessage = "Error while parsing json body";
+        ErrorResponse errorResponse = new ErrorResponse(
+                ApiErrorConstants.JSON_BODY_INVALID_ERROR,
+                errorMessage,
+                errorMessage
+        );
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 }
