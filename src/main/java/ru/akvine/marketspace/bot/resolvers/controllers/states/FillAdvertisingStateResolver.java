@@ -9,6 +9,7 @@ import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.util.List;
@@ -21,8 +22,9 @@ public class FillAdvertisingStateResolver extends StateResolver {
     @Autowired
     public FillAdvertisingStateResolver(TelegramDataResolverManager dataResolverManager,
                                         StateStorage<String, List<ClientState>> stateStorage,
-                                        TelegramViewManager telegramViewManager) {
-        super(stateStorage, telegramViewManager, dataResolverManager);
+                                        TelegramViewManager telegramViewManager,
+                                        TelegramIntegrationService telegramIntegrationService) {
+        super(stateStorage, telegramViewManager, dataResolverManager, telegramIntegrationService);
     }
 
     @Override

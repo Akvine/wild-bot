@@ -4,5 +4,6 @@ public enum TelegramApiMethods {
     DOWNLOAD_PHOTO,
     SEND_FILE,
     SEND_MESSAGE,
-    SEND_IMAGE
+    SEND_IMAGE,
+    ANSWER_CALLBACK
 }

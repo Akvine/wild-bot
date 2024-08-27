@@ -13,6 +13,7 @@ import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.services.SubscriptionService;
 import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
 import ru.akvine.marketspace.bot.services.dto.admin.client.Subscription;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.services.integration.yookassa.YooKassaIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 import ru.akvine.marketspace.bot.utils.DateUtils;
@@ -34,8 +35,9 @@ public class SubscriptionMenuStateResolver extends StateResolver {
                                          TelegramViewManager viewManager,
                                          TelegramDataResolverManager dataResolverManager,
                                          YooKassaIntegrationService yooKassaIntegrationService,
-                                         SubscriptionService subscriptionService) {
-        super(stateStorage, viewManager, dataResolverManager);
+                                         SubscriptionService subscriptionService,
+                                         TelegramIntegrationService telegramIntegrationService) {
+        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
         this.dataResolverManager = dataResolverManager;
         this.yooKassaIntegrationService = yooKassaIntegrationService;
         this.subscriptionService = subscriptionService;

@@ -17,6 +17,7 @@ import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.command.CommandResolver;
 import ru.akvine.marketspace.bot.resolvers.controllers.views.TelegramView;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class MessageDispatcher {
     private final TelegramDataResolverManager resolverManager;
 
     private final CommandResolverManager commandResolverManager;
+    private final TelegramIntegrationService telegramIntegrationService;
 
     public BotApiMethod<?> doDispatch(TelegramData telegramData) {
         TelegramDataResolver resolver = resolverManager.getTelegramDataResolvers().get(telegramData.getType());
@@ -63,6 +65,7 @@ public class MessageDispatcher {
         if (stateStorage.containsState(chatId) && stateStorage.statesCount(chatId) > 1) {
             if (StringUtils.isNotBlank(text) && text.equals(BACK_BUTTON_TEXT)) {
                 ClientState previousState = stateStorage.removeCurrentAndGetPrevious(chatId);
+                telegramIntegrationService.answerCallback(telegramData);
                 return formMessage(chatId, previousState);
             }
         }

@@ -12,6 +12,7 @@ import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.services.CardTypeService;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.util.List;
@@ -29,8 +30,9 @@ public class ChooseTypeStateResolver extends StateResolver {
                                    TelegramViewManager viewManager,
                                    StateStorage<String, List<ClientState>> stateStorage,
                                    SessionStorage<String, ClientSessionData> sessionStorage,
-                                   CardTypeService cardTypeService) {
-        super(stateStorage, viewManager, dataResolverManager);
+                                   CardTypeService cardTypeService,
+                                   TelegramIntegrationService telegramIntegrationService) {
+        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.cardTypeService = cardTypeService;
     }

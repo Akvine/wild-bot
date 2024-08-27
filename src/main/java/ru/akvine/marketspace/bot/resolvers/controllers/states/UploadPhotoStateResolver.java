@@ -36,7 +36,7 @@ public class UploadPhotoStateResolver extends StateResolver {
                                     TelegramPhotoHelper telegramPhotoHelper,
                                     TelegramIntegrationService telegramIntegrationService,
                                     PhotoValidator photoValidator) {
-        super(stateStorage, viewManager, dataResolverManager);
+        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.telegramPhotoHelper = telegramPhotoHelper;
         this.telegramIntegrationService = telegramIntegrationService;

@@ -11,6 +11,7 @@ import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.controllers.views.TelegramView;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.util.List;
@@ -21,10 +22,12 @@ public abstract class StateResolver {
     protected final StateStorage<String, List<ClientState>> stateStorage;
     protected final TelegramViewManager viewManager;
     protected final TelegramDataResolverManager dataResolverManager;
+    private final TelegramIntegrationService telegramIntegrationService;
 
     public BotApiMethod<?> resolve(TelegramData telegramData) {
         TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(telegramData.getType());
         String chatId = resolver.extractChatId(telegramData.getData());
+        telegramIntegrationService.answerCallback(telegramData);
         logger.info("[{}] state resolved", getState());
         return new SendMessage(chatId, "Method used only for logging");
     }

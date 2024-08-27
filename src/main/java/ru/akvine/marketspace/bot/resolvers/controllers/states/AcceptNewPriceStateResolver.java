@@ -13,6 +13,7 @@ import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.services.AdvertStartService;
 import ru.akvine.marketspace.bot.services.domain.AdvertModel;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.time.LocalDateTime;
@@ -31,8 +32,9 @@ public class AcceptNewPriceStateResolver extends StateResolver {
                                        SessionStorage<String, ClientSessionData> sessionStorage,
                                        AdvertStartService advertStartService,
                                        TelegramViewManager telegramViewManager,
-                                       StateStorage<String, List<ClientState>> stateStorage) {
-        super(stateStorage, telegramViewManager, dataResolverManager);
+                                       StateStorage<String, List<ClientState>> stateStorage,
+                                       TelegramIntegrationService telegramIntegrationService) {
+        super(stateStorage, telegramViewManager, dataResolverManager, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.advertStartService = advertStartService;
     }

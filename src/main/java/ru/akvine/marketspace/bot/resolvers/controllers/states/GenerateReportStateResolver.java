@@ -30,7 +30,7 @@ public class GenerateReportStateResolver extends StateResolver {
                                        TelegramDataResolverManager dataResolverManager,
                                        ReportService reportService,
                                        TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewManager, dataResolverManager);
+        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
         this.reportService = reportService;
         this.telegramIntegrationService = telegramIntegrationService;
     }

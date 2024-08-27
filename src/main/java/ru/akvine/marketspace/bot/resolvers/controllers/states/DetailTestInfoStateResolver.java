@@ -31,7 +31,7 @@ public class DetailTestInfoStateResolver extends StateResolver {
                                        TelegramIntegrationService telegramIntegrationService,
                                        TelegramViewManager telegramViewManager,
                                        StateStorage<String, List<ClientState>> stateStorage) {
-        super(stateStorage, telegramViewManager, dataResolverManager);
+        super(stateStorage, telegramViewManager, dataResolverManager, telegramIntegrationService);
         this.advertStatisticService = advertStatisticService;
         this.clientService = clientService;
         this.telegramIntegrationService = telegramIntegrationService;

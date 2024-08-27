@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -15,7 +16,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import ru.akvine.marketspace.bot.enums.TelegramDataType;
 import ru.akvine.marketspace.bot.exceptions.IntegrationException;
+import ru.akvine.marketspace.bot.telegram.TelegramData;
 import ru.akvine.marketspace.bot.telegram.bot.TelegramDevBot;
 import ru.akvine.marketspace.bot.utils.ByteUtils;
 
@@ -47,6 +50,24 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
     }
 
     @Override
+    public void answerCallback(TelegramData telegramData) {
+        if (telegramData.getType() == TelegramDataType.CALLBACK) {
+            try {
+                absSender.execute(
+                        AnswerCallbackQuery.builder()
+                                .callbackQueryId(telegramData.getData().getCallbackQuery().getId())
+                                .build()
+                );
+            } catch (Exception exception) {
+                String errorMessage = String.format(
+                        "Error while calling telegram api method = [%s]. Message = %s",
+                        TelegramApiMethods.ANSWER_CALLBACK, exception.getMessage());
+                throw new IntegrationException(errorMessage);
+            }
+        }
+    }
+
+                               @Override
     public byte[] downloadPhoto(String photoId, String chatId) {
         Preconditions.checkNotNull(photoId, "photoId is null");
         logger.info("Download photo with id = [{}] for chat with id = {}", photoId, chatId);

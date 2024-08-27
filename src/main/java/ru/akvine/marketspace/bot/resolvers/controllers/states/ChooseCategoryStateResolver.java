@@ -11,6 +11,7 @@ import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.util.List;
@@ -23,8 +24,9 @@ public class ChooseCategoryStateResolver extends StateResolver {
     public ChooseCategoryStateResolver(TelegramDataResolverManager dataResolverManager,
                                        TelegramViewManager viewManager,
                                        StateStorage<String, List<ClientState>> stateStorage,
-                                       SessionStorage<String, ClientSessionData> sessionStorage) {
-        super(stateStorage, viewManager, dataResolverManager);
+                                       SessionStorage<String, ClientSessionData> sessionStorage,
+                                       TelegramIntegrationService telegramIntegrationService) {
+        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
     }
 

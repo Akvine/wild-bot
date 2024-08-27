@@ -1,9 +1,19 @@
 package ru.akvine.marketspace.bot.services.integration.telegram;
 
+import ru.akvine.marketspace.bot.telegram.TelegramData;
+
 import java.io.InputStream;
 import java.util.List;
 
 public interface TelegramIntegrationService {
+
+    /**
+     * Отправить answerCallback
+     *
+     * @param telegramData данные, отправленные пользователем
+     */
+    void answerCallback(TelegramData telegramData);
+
     /**
      * Загрузить фото, которое отправил пользователь с сервера телеграмма через API
      *

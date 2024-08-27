@@ -14,6 +14,7 @@ import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.marketspace.bot.services.SubscriptionService;
 import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.util.List;
@@ -29,8 +30,9 @@ public class MainMenuStateResolver extends StateResolver {
     public MainMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
                                  TelegramViewManager viewManager,
                                  TelegramDataResolverManager dataResolverManager,
-                                 SubscriptionService subscriptionService) {
-        super(stateStorage, viewManager, dataResolverManager);
+                                 SubscriptionService subscriptionService,
+                                 TelegramIntegrationService telegramIntegrationService) {
+        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
         this.subscriptionService = subscriptionService;
     }
 

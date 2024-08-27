@@ -10,6 +10,7 @@ import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.controllers.validators.StartValidator;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.util.List;
@@ -24,8 +25,9 @@ public class TestsMenuStateResolver extends StateResolver {
     public TestsMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
                                   TelegramViewManager viewManager,
                                   TelegramDataResolverManager dataResolverManager,
-                                  StartValidator startValidator) {
-        super(stateStorage, viewManager, dataResolverManager);
+                                  StartValidator startValidator,
+                                  TelegramIntegrationService telegramIntegrationService) {
+        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
         this.startValidator = startValidator;
     }
 

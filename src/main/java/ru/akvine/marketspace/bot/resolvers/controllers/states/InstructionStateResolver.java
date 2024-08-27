@@ -9,6 +9,7 @@ import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
 import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
 import ru.akvine.marketspace.bot.managers.TelegramViewManager;
 import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.marketspace.bot.telegram.TelegramData;
 
 import java.util.List;
@@ -20,8 +21,9 @@ public class InstructionStateResolver extends StateResolver {
     public InstructionStateResolver(
             TelegramViewManager viewManager,
             StateStorage<String, List<ClientState>> stateStorage,
-            TelegramDataResolverManager dataResolverManager) {
-        super(stateStorage, viewManager, dataResolverManager);
+            TelegramDataResolverManager dataResolverManager,
+            TelegramIntegrationService telegramIntegrationService) {
+        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
     }
 
     @Override
