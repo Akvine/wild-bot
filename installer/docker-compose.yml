@@ -28,5 +28,5 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./src/main/resources/db/changelog/database-changelog.sql:/docker-entrypoint-initdb.d/database-changelog.sql
+      - ./config/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
     restart: unless-stopped
