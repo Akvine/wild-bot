@@ -16,10 +16,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.generics.TelegramBot;
 import ru.akvine.wild.bot.enums.TelegramDataType;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
 import ru.akvine.wild.bot.telegram.TelegramData;
 import ru.akvine.wild.bot.telegram.bot.TelegramDevBot;
+import ru.akvine.wild.bot.telegram.bot.TelegramProductionBot;
 import ru.akvine.wild.bot.utils.ByteUtils;
 
 import java.io.ByteArrayInputStream;
@@ -32,12 +34,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TelegramIntegrationServiceOrigin implements TelegramIntegrationService {
-    // TODO : нужно инжектить разных ботов в зависимости от среды
-    private TelegramDevBot bot;
+    private TelegramBot bot;
     private AbsSender absSender;
 
     @Value("${telegram.bot.token}")
     private String botToken;
+    @Value("${telegram.bot.dev.mode.enabled}")
+    private boolean isDevModeEnabled;
 
     @Autowired
     public void setBot(@Lazy TelegramDevBot bot) {
@@ -67,7 +70,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
         }
     }
 
-                               @Override
+    @Override
     public byte[] downloadPhoto(String photoId, String chatId) {
         Preconditions.checkNotNull(photoId, "photoId is null");
         logger.info("Download photo with id = [{}] for chat with id = {}", photoId, chatId);
@@ -75,7 +78,12 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
         try {
             GetFile getFileRequest = new GetFile();
             getFileRequest.setFileId(photoId);
-            File file = bot.execute(getFileRequest);
+            File file;
+            if (isDevModeEnabled) {
+                file = ((TelegramDevBot) bot).execute(getFileRequest);
+            } else {
+                file = ((TelegramProductionBot) bot).execute(getFileRequest);
+            }
 
             String fileUrl = file.getFileUrl(botToken);
 
@@ -118,7 +126,11 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
         try {
             for (String chatId : chatIds) {
-                bot.execute(new SendMessage(chatId, message));
+                if (isDevModeEnabled) {
+                    ((TelegramDevBot) bot).execute(new SendMessage(chatId, message));
+                } else {
+                    ((TelegramProductionBot) bot).execute(new SendMessage(chatId, message));
+                }
             }
         } catch (Exception exception) {
             String errorMessage = String.format(
@@ -135,7 +147,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
     @Override
     public void sendImage(String chatId, InputStream image) {
-       sendImage(chatId, image, null);
+        sendImage(chatId, image, null);
     }
 
     @Override
