@@ -17,7 +17,7 @@ services:
       - postgres-db
     environment:
       - SERVER_PORT=8106
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db/wild-bot
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db/wild_bot
 
   postgres-db:
     container_name: postgres-db

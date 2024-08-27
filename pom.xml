@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ru.akvine</groupId>
-	<artifactId>marketspace-bot</artifactId>
+	<artifactId>wild-bot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>marketspace-bot</name>
-	<description>Marketspace telegram bot</description>
+	<name>wild-bot</name>
+	<description>Wild telegram bot</description>
 	<url/>
 	<licenses>
 		<license/>
