@@ -1,9 +1,9 @@
-package ru.akvine.marketspace.bot.services.domain;
+package ru.akvine.wild.bot.services.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
-import ru.akvine.marketspace.bot.services.domain.base.SoftModel;
+import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
+import ru.akvine.wild.bot.services.domain.base.SoftModel;
 
 @Data
 @Accessors(chain = true)

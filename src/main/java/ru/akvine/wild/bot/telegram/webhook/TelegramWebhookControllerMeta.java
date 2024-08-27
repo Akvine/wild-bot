@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.telegram.webhook;
+package ru.akvine.wild.bot.telegram.webhook;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

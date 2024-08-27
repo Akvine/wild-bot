@@ -1,8 +1,8 @@
-package ru.akvine.marketspace.bot.utils;
+package ru.akvine.wild.bot.utils;
 
 import lombok.experimental.UtilityClass;
 import org.apache.poi.ss.usermodel.Workbook;
-import ru.akvine.marketspace.bot.exceptions.POIException;
+import ru.akvine.wild.bot.exceptions.POIException;
 
 import java.io.ByteArrayOutputStream;
 

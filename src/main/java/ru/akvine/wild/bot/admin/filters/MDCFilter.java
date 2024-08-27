@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.admin.filters;
+package ru.akvine.wild.bot.admin.filters;
 
 
 import jakarta.servlet.*;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.constants.MDCConstants;
+import ru.akvine.wild.bot.constants.MDCConstants;
 
 import java.io.IOException;
 

@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.validators;
+package ru.akvine.wild.bot.resolvers.controllers.validators;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.exceptions.AdvertStartLimitException;
-import ru.akvine.marketspace.bot.services.AdvertService;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.exceptions.AdvertStartLimitException;
+import ru.akvine.wild.bot.services.AdvertService;
 
 import java.util.List;
 

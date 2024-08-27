@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services.integration.wildberries;
+package ru.akvine.wild.bot.services.integration.wildberries;
 
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import ru.akvine.marketspace.bot.exceptions.IntegrationException;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.*;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.*;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
-import ru.akvine.marketspace.bot.utils.RequestUtils;
+import ru.akvine.wild.bot.exceptions.IntegrationException;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.card.*;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
+import ru.akvine.wild.bot.utils.RequestUtils;
 
 import java.util.*;
 

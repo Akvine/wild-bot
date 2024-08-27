@@ -1,8 +1,8 @@
-package ru.akvine.marketspace.bot.infrastructure.state;
+package ru.akvine.wild.bot.infrastructure.state;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.exceptions.NoStateException;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.infrastructure.exceptions.NoStateException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

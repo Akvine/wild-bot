@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.type;
+package ru.akvine.wild.bot.services.integration.wildberries.dto.card.type;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

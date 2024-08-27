@@ -1,8 +1,8 @@
-package ru.akvine.marketspace.bot.utils;
+package ru.akvine.wild.bot.utils;
 
 import lombok.experimental.UtilityClass;
-import ru.akvine.marketspace.bot.exceptions.ValidationException;
-import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
+import ru.akvine.wild.bot.exceptions.ValidationException;
+import ru.akvine.wild.bot.constants.ApiErrorConstants;
 
 @UtilityClass
 public class MathUtils {

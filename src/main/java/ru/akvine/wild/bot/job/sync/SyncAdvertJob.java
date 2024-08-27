@@ -1,18 +1,18 @@
-package ru.akvine.marketspace.bot.job.sync;
+package ru.akvine.wild.bot.job.sync;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.entities.AdvertEntity;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.repositories.AdvertRepository;
-import ru.akvine.marketspace.bot.services.AdvertService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertDto;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertListResponse;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
-import ru.akvine.marketspace.bot.utils.MathUtils;
+import ru.akvine.wild.bot.entities.AdvertEntity;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.repositories.AdvertRepository;
+import ru.akvine.wild.bot.services.AdvertService;
+import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertListResponse;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
+import ru.akvine.wild.bot.utils.MathUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;

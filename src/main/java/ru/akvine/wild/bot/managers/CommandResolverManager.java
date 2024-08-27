@@ -1,9 +1,9 @@
-package ru.akvine.marketspace.bot.managers;
+package ru.akvine.wild.bot.managers;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.akvine.marketspace.bot.enums.Command;
-import ru.akvine.marketspace.bot.resolvers.command.CommandResolver;
+import ru.akvine.wild.bot.enums.Command;
+import ru.akvine.wild.bot.resolvers.command.CommandResolver;
 
 import java.util.Map;
 

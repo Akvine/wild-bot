@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services.integration.wildberries;
+package ru.akvine.wild.bot.services.integration.wildberries;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

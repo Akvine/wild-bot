@@ -1,6 +1,6 @@
-package ru.akvine.marketspace.bot.infrastructure.state;
+package ru.akvine.wild.bot.infrastructure.state;
 
-import ru.akvine.marketspace.bot.enums.ClientState;
+import ru.akvine.wild.bot.enums.ClientState;
 
 public interface StateStorage<T, R> {
     void add(T identifier, ClientState state);

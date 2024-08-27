@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.config;
+package ru.akvine.wild.bot.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,15 +16,15 @@ import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScope
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.akvine.marketspace.bot.exceptions.TelegramConfigurationException;
-import ru.akvine.marketspace.bot.telegram.bot.TelegramDevBot;
-import ru.akvine.marketspace.bot.telegram.bot.TelegramDummyBot;
-import ru.akvine.marketspace.bot.telegram.bot.TelegramProductionBot;
-import ru.akvine.marketspace.bot.telegram.filter.MessageFilter;
-import ru.akvine.marketspace.bot.telegram.webhook.dto.GetWebhookInfoResponse;
-import ru.akvine.marketspace.bot.telegram.webhook.dto.GetWebhookRequest;
-import ru.akvine.marketspace.bot.telegram.webhook.dto.SetWebhookRequest;
-import ru.akvine.marketspace.bot.telegram.webhook.dto.SetWebhookResponse;
+import ru.akvine.wild.bot.exceptions.TelegramConfigurationException;
+import ru.akvine.wild.bot.telegram.bot.TelegramDevBot;
+import ru.akvine.wild.bot.telegram.bot.TelegramDummyBot;
+import ru.akvine.wild.bot.telegram.bot.TelegramProductionBot;
+import ru.akvine.wild.bot.telegram.filter.MessageFilter;
+import ru.akvine.wild.bot.telegram.webhook.dto.GetWebhookInfoResponse;
+import ru.akvine.wild.bot.telegram.webhook.dto.GetWebhookRequest;
+import ru.akvine.wild.bot.telegram.webhook.dto.SetWebhookRequest;
+import ru.akvine.wild.bot.telegram.webhook.dto.SetWebhookResponse;
 
 import java.util.List;
 import java.util.Objects;

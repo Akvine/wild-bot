@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.infrastructure.annotations;
+package ru.akvine.wild.bot.infrastructure.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,6 @@
-package ru.akvine.marketspace.bot.services.integration.telegram;
+package ru.akvine.wild.bot.services.integration.telegram;
 
-import ru.akvine.marketspace.bot.telegram.TelegramData;
+import ru.akvine.wild.bot.telegram.TelegramData;
 
 import java.io.InputStream;
 import java.util.List;

@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.services;
+package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.akvine.marketspace.bot.services.dto.AggregateCard;
-import ru.akvine.marketspace.bot.services.domain.CardModel;
+import ru.akvine.wild.bot.services.dto.AggregateCard;
+import ru.akvine.wild.bot.services.domain.CardModel;
 
 import java.util.List;
 import java.util.stream.Collectors;

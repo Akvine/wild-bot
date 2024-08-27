@@ -1,13 +1,13 @@
-package ru.akvine.marketspace.bot.infrastructure.counter;
+package ru.akvine.wild.bot.infrastructure.counter;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.exceptions.ValidationException;
-import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
-import ru.akvine.marketspace.bot.services.AdvertService;
-import ru.akvine.marketspace.bot.services.domain.AdvertModel;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.exceptions.ValidationException;
+import ru.akvine.wild.bot.constants.ApiErrorConstants;
+import ru.akvine.wild.bot.services.AdvertService;
+import ru.akvine.wild.bot.services.domain.AdvertModel;
 
 import java.util.List;
 import java.util.Map;

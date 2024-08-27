@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.infrastructure.session;
+package ru.akvine.wild.bot.infrastructure.session;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
-import ru.akvine.marketspace.bot.entities.infrastructure.ClientSessionDataEntity;
+import ru.akvine.wild.bot.entities.infrastructure.ClientSessionDataEntity;
 
 import java.time.LocalDateTime;
 

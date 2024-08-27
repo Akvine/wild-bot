@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.config;
+package ru.akvine.wild.bot.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

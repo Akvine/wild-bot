@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.constants.telegram;
+package ru.akvine.wild.bot.constants.telegram;
 
 public final class TelegramMessageErrorConstants {
     private TelegramMessageErrorConstants() throws IllegalAccessException {

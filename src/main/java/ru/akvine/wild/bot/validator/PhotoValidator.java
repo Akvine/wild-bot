@@ -1,12 +1,12 @@
-package ru.akvine.marketspace.bot.validator;
+package ru.akvine.wild.bot.validator;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.exceptions.ImageReadException;
-import ru.akvine.marketspace.bot.exceptions.PhotoDimensionsValidationException;
-import ru.akvine.marketspace.bot.exceptions.PhotoSizeValidationException;
-import ru.akvine.marketspace.bot.utils.InformationAmountUtils;
-import ru.akvine.marketspace.bot.utils.MathUtils;
+import ru.akvine.wild.bot.exceptions.ImageReadException;
+import ru.akvine.wild.bot.exceptions.PhotoDimensionsValidationException;
+import ru.akvine.wild.bot.exceptions.PhotoSizeValidationException;
+import ru.akvine.wild.bot.utils.InformationAmountUtils;
+import ru.akvine.wild.bot.utils.MathUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

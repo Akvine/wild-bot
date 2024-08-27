@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.services;
+package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.akvine.marketspace.bot.entities.CardTypeEntity;
-import ru.akvine.marketspace.bot.exceptions.CardTypeNotFoundException;
-import ru.akvine.marketspace.bot.repositories.CardTypeRepository;
+import ru.akvine.wild.bot.entities.CardTypeEntity;
+import ru.akvine.wild.bot.exceptions.CardTypeNotFoundException;
+import ru.akvine.wild.bot.repositories.CardTypeRepository;
 
 @Service
 @RequiredArgsConstructor

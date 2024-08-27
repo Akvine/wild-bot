@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.entities;
+package ru.akvine.wild.bot.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ru.akvine.marketspace.bot.entities.base.SoftBaseEntity;
+import ru.akvine.wild.bot.entities.base.SoftBaseEntity;
 
 @Getter
 @Setter

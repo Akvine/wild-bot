@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services.domain.base;
+package ru.akvine.wild.bot.services.domain.base;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

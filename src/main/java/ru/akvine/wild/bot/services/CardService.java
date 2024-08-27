@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services;
+package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
@@ -7,19 +7,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.akvine.marketspace.bot.entities.CardEntity;
-import ru.akvine.marketspace.bot.entities.CardTypeEntity;
-import ru.akvine.marketspace.bot.exceptions.CardNotFoundException;
-import ru.akvine.marketspace.bot.exceptions.CardTypeNotFoundException;
-import ru.akvine.marketspace.bot.repositories.CardRepository;
-import ru.akvine.marketspace.bot.repositories.CardTypeRepository;
-import ru.akvine.marketspace.bot.repositories.specifications.CardSpecification;
-import ru.akvine.marketspace.bot.services.domain.CardModel;
-import ru.akvine.marketspace.bot.services.dto.admin.card.ListCards;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.CardCharacteristic;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.CardDto;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SizeDto;
-import ru.akvine.marketspace.bot.utils.UUIDGenerator;
+import ru.akvine.wild.bot.entities.CardEntity;
+import ru.akvine.wild.bot.entities.CardTypeEntity;
+import ru.akvine.wild.bot.exceptions.CardNotFoundException;
+import ru.akvine.wild.bot.exceptions.CardTypeNotFoundException;
+import ru.akvine.wild.bot.repositories.CardRepository;
+import ru.akvine.wild.bot.repositories.CardTypeRepository;
+import ru.akvine.wild.bot.repositories.specifications.CardSpecification;
+import ru.akvine.wild.bot.services.domain.CardModel;
+import ru.akvine.wild.bot.services.dto.admin.card.ListCards;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardCharacteristic;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SizeDto;
+import ru.akvine.wild.bot.utils.UUIDGenerator;
 
 import java.util.List;
 import java.util.NoSuchElementException;

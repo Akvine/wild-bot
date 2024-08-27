@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services;
+package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
 import io.micrometer.common.util.StringUtils;
@@ -8,12 +8,12 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.akvine.marketspace.bot.entities.ClientEntity;
-import ru.akvine.marketspace.bot.entities.SubscriptionEntity;
-import ru.akvine.marketspace.bot.exceptions.HasNoSubscriptionException;
-import ru.akvine.marketspace.bot.repositories.SubscriptionRepository;
-import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
-import ru.akvine.marketspace.bot.services.dto.admin.client.Subscription;
+import ru.akvine.wild.bot.entities.ClientEntity;
+import ru.akvine.wild.bot.entities.SubscriptionEntity;
+import ru.akvine.wild.bot.exceptions.HasNoSubscriptionException;
+import ru.akvine.wild.bot.repositories.SubscriptionRepository;
+import ru.akvine.wild.bot.services.domain.SubscriptionModel;
+import ru.akvine.wild.bot.services.dto.admin.client.Subscription;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

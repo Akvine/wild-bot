@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.entities;
+package ru.akvine.wild.bot.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

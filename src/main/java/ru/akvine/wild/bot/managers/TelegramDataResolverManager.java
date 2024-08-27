@@ -1,9 +1,9 @@
-package ru.akvine.marketspace.bot.managers;
+package ru.akvine.wild.bot.managers;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.akvine.marketspace.bot.enums.TelegramDataType;
-import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.wild.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 
 import java.util.Map;
 

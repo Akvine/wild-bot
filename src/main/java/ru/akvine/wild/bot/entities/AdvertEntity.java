@@ -1,12 +1,12 @@
-package ru.akvine.marketspace.bot.entities;
+package ru.akvine.wild.bot.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ru.akvine.marketspace.bot.entities.base.SoftBaseEntity;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.enums.AdvertType;
+import ru.akvine.wild.bot.entities.base.SoftBaseEntity;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.enums.AdvertType;
 
 import java.time.LocalDateTime;
 import java.util.Date;

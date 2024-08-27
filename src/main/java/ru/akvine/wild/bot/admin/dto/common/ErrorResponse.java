@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.admin.dto.common;
+package ru.akvine.wild.bot.admin.dto.common;
 
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;

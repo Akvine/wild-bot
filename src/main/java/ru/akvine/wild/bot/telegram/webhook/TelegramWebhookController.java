@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.telegram.webhook;
+package ru.akvine.wild.bot.telegram.webhook;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.telegram.bot.TelegramProductionBot;
+import ru.akvine.wild.bot.telegram.bot.TelegramProductionBot;
 
 @RestController
 @RequiredArgsConstructor

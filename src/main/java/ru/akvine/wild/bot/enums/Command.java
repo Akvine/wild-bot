@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.enums;
+package ru.akvine.wild.bot.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

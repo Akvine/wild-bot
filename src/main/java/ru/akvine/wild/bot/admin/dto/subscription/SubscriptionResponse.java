@@ -1,8 +1,8 @@
-package ru.akvine.marketspace.bot.admin.dto.subscription;
+package ru.akvine.wild.bot.admin.dto.subscription;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
+import ru.akvine.wild.bot.admin.dto.common.SuccessfulResponse;
 
 import java.time.LocalDateTime;
 

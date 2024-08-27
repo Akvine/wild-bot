@@ -1,7 +1,7 @@
-package ru.akvine.marketspace.bot.resolvers.data;
+package ru.akvine.wild.bot.resolvers.data;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.enums.TelegramDataType;
 
 public interface TelegramDataResolver {
     String extractChatId(Update update);

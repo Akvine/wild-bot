@@ -1,17 +1,17 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.views;
+package ru.akvine.wild.bot.resolvers.controllers.views;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
-import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
-import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
-import ru.akvine.marketspace.bot.utils.WildberriesUtils;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
+import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
+import ru.akvine.wild.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.utils.WildberriesUtils;
 
-import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
-import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
 
 @Component
 @RequiredArgsConstructor

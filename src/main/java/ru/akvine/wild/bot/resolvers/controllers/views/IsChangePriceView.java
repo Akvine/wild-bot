@@ -1,26 +1,26 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.views;
+package ru.akvine.wild.bot.resolvers.controllers.views;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.helpers.LockHelper;
-import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
-import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
-import ru.akvine.marketspace.bot.services.AdvertService;
-import ru.akvine.marketspace.bot.services.domain.AdvertModel;
-import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.GetGoodsRequest;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.GetGoodsResponse;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.GoodDto;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.GoodSizeDto;
-import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.helpers.LockHelper;
+import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
+import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
+import ru.akvine.wild.bot.services.AdvertService;
+import ru.akvine.wild.bot.services.domain.AdvertModel;
+import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GetGoodsRequest;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GetGoodsResponse;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GoodDto;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GoodSizeDto;
+import ru.akvine.wild.bot.telegram.KeyboardFactory;
 
-import static ru.akvine.marketspace.bot.constants.DbLockConstants.UPLOAD_PHOTO_LOCK;
-import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
-import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.DbLockConstants.UPLOAD_PHOTO_LOCK;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
 
 @Component
 @RequiredArgsConstructor

@@ -1,9 +1,9 @@
-package ru.akvine.marketspace.bot.admin.validator;
+package ru.akvine.wild.bot.admin.validator;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.admin.dto.common.SecretRequest;
-import ru.akvine.marketspace.bot.exceptions.BadCredentialsException;
+import ru.akvine.wild.bot.admin.dto.common.SecretRequest;
+import ru.akvine.wild.bot.exceptions.BadCredentialsException;
 
 @Component
 public class AdminValidator {

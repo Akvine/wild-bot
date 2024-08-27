@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.repositories;
+package ru.akvine.wild.bot.repositories;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.akvine.marketspace.bot.entities.CardEntity;
+import ru.akvine.wild.bot.entities.CardEntity;
 
 import java.util.List;
 import java.util.Optional;

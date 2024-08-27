@@ -1,8 +1,8 @@
-package ru.akvine.marketspace.bot.admin.dto.advert;
+package ru.akvine.wild.bot.admin.dto.advert;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
+import ru.akvine.wild.bot.admin.dto.common.SuccessfulResponse;
 
 import java.util.List;
 

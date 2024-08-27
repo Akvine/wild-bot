@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.helpers;
+package ru.akvine.wild.bot.helpers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

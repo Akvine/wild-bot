@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.infrastructure.session;
+package ru.akvine.wild.bot.infrastructure.session;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
-import ru.akvine.marketspace.bot.entities.infrastructure.ClientSessionDataEntity;
-import ru.akvine.marketspace.bot.infrastructure.exceptions.NoSessionException;
-import ru.akvine.marketspace.bot.repositories.infrastructure.ClientSessionDataRepository;
+import ru.akvine.wild.bot.entities.infrastructure.ClientSessionDataEntity;
+import ru.akvine.wild.bot.infrastructure.exceptions.NoSessionException;
+import ru.akvine.wild.bot.repositories.infrastructure.ClientSessionDataRepository;
 
 @RequiredArgsConstructor
 @Slf4j

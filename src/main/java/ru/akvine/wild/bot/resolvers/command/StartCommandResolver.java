@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.resolvers.command;
+package ru.akvine.wild.bot.resolvers.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.enums.Command;
-import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
-import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
-import ru.akvine.marketspace.bot.managers.TelegramViewManager;
-import ru.akvine.marketspace.bot.resolvers.controllers.views.TelegramView;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.enums.Command;
+import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
+import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
+import ru.akvine.wild.bot.infrastructure.state.StateStorage;
+import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
 
 import java.util.List;
 

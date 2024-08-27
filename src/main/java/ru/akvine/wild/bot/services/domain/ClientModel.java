@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.services.domain;
+package ru.akvine.wild.bot.services.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
-import ru.akvine.marketspace.bot.entities.ClientEntity;
-import ru.akvine.marketspace.bot.services.domain.base.SoftModel;
+import ru.akvine.wild.bot.entities.ClientEntity;
+import ru.akvine.wild.bot.services.domain.base.SoftModel;
 
 @Data
 @Accessors(chain = true)

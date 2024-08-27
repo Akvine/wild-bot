@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services.integration.yookassa;
+package ru.akvine.wild.bot.services.integration.yookassa;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

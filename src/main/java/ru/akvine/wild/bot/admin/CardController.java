@@ -1,16 +1,16 @@
-package ru.akvine.marketspace.bot.admin;
+package ru.akvine.wild.bot.admin;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
-import ru.akvine.marketspace.bot.admin.converters.CardConverter;
-import ru.akvine.marketspace.bot.admin.dto.card.ListCardsRequest;
-import ru.akvine.marketspace.bot.admin.dto.common.Response;
-import ru.akvine.marketspace.bot.admin.meta.CardControllerMeta;
-import ru.akvine.marketspace.bot.admin.validator.AdminValidator;
-import ru.akvine.marketspace.bot.services.CardService;
-import ru.akvine.marketspace.bot.services.domain.CardModel;
-import ru.akvine.marketspace.bot.services.dto.admin.card.ListCards;
+import ru.akvine.wild.bot.admin.converters.CardConverter;
+import ru.akvine.wild.bot.admin.dto.card.ListCardsRequest;
+import ru.akvine.wild.bot.admin.dto.common.Response;
+import ru.akvine.wild.bot.admin.meta.CardControllerMeta;
+import ru.akvine.wild.bot.admin.validator.AdminValidator;
+import ru.akvine.wild.bot.services.CardService;
+import ru.akvine.wild.bot.services.domain.CardModel;
+import ru.akvine.wild.bot.services.dto.admin.card.ListCards;
 
 import java.util.List;
 

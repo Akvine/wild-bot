@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.job;
+package ru.akvine.wild.bot.job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,10 +6,10 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
-import ru.akvine.marketspace.bot.constants.MDCConstants;
-import ru.akvine.marketspace.bot.entities.SubscriptionEntity;
-import ru.akvine.marketspace.bot.repositories.SubscriptionRepository;
-import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.constants.MDCConstants;
+import ru.akvine.wild.bot.entities.SubscriptionEntity;
+import ru.akvine.wild.bot.repositories.SubscriptionRepository;
+import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

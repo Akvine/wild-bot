@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.infrastructure.exceptions;
+package ru.akvine.wild.bot.infrastructure.exceptions;
 
 public class NoStateException extends RuntimeException {
     public NoStateException(String message) {

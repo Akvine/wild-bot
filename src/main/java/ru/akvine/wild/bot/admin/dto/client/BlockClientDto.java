@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.admin.dto.client;
+package ru.akvine.wild.bot.admin.dto.client;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

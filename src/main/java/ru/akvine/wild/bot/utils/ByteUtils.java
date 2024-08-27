@@ -1,8 +1,8 @@
-package ru.akvine.marketspace.bot.utils;
+package ru.akvine.wild.bot.utils;
 
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
-import ru.akvine.marketspace.bot.exceptions.ByteConvertException;
+import ru.akvine.wild.bot.exceptions.ByteConvertException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;

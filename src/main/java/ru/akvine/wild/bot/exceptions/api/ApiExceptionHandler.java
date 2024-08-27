@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.exceptions.api;
+package ru.akvine.wild.bot.exceptions.api;
 
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -9,15 +9,15 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import ru.akvine.marketspace.bot.admin.dto.common.ErrorResponse;
-import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
-import ru.akvine.marketspace.bot.exceptions.*;
+import ru.akvine.wild.bot.admin.dto.common.ErrorResponse;
+import ru.akvine.wild.bot.constants.ApiErrorConstants;
+import ru.akvine.wild.bot.exceptions.*;
 
 import java.util.List;
 
-import static ru.akvine.marketspace.bot.constants.ApiErrorConstants.BLOCKED_ERROR;
-import static ru.akvine.marketspace.bot.constants.ApiErrorConstants.GENERAL_ERROR;
-import static ru.akvine.marketspace.bot.constants.ApiErrorConstants.Validation.BAD_CREDENTIALS_ERROR;
+import static ru.akvine.wild.bot.constants.ApiErrorConstants.BLOCKED_ERROR;
+import static ru.akvine.wild.bot.constants.ApiErrorConstants.GENERAL_ERROR;
+import static ru.akvine.wild.bot.constants.ApiErrorConstants.Validation.BAD_CREDENTIALS_ERROR;
 
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {

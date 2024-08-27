@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.exceptions;
+package ru.akvine.wild.bot.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

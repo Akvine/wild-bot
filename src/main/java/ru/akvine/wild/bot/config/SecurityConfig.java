@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.config;
+package ru.akvine.wild.bot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import ru.akvine.marketspace.bot.admin.filters.MDCFilter;
+import ru.akvine.wild.bot.admin.filters.MDCFilter;
 
 @Configuration
 public class SecurityConfig {

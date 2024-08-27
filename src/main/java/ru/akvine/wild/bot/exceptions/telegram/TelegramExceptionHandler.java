@@ -1,13 +1,13 @@
-package ru.akvine.marketspace.bot.exceptions.telegram;
+package ru.akvine.wild.bot.exceptions.telegram;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import ru.akvine.marketspace.bot.exceptions.*;
-import ru.akvine.marketspace.bot.infrastructure.annotations.TelegramErrorHandler;
+import ru.akvine.wild.bot.exceptions.*;
+import ru.akvine.wild.bot.infrastructure.annotations.TelegramErrorHandler;
 
-import static ru.akvine.marketspace.bot.constants.telegram.TelegramMessageErrorConstants.*;
+import static ru.akvine.wild.bot.constants.telegram.TelegramMessageErrorConstants.*;
 
 @Component
 @Slf4j

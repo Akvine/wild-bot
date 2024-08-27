@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services.integration.telegram;
+package ru.akvine.wild.bot.services.integration.telegram;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +16,11 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import ru.akvine.marketspace.bot.enums.TelegramDataType;
-import ru.akvine.marketspace.bot.exceptions.IntegrationException;
-import ru.akvine.marketspace.bot.telegram.TelegramData;
-import ru.akvine.marketspace.bot.telegram.bot.TelegramDevBot;
-import ru.akvine.marketspace.bot.utils.ByteUtils;
+import ru.akvine.wild.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.exceptions.IntegrationException;
+import ru.akvine.wild.bot.telegram.TelegramData;
+import ru.akvine.wild.bot.telegram.bot.TelegramDevBot;
+import ru.akvine.wild.bot.utils.ByteUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

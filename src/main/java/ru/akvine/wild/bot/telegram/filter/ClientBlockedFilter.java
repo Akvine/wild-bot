@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.telegram.filter;
+package ru.akvine.wild.bot.telegram.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.services.ClientService;
+import ru.akvine.wild.bot.services.ClientService;
 
 @RequiredArgsConstructor
 @Slf4j

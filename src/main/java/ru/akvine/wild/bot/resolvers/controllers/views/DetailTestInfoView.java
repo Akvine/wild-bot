@@ -1,9 +1,9 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.views;
+package ru.akvine.wild.bot.resolvers.controllers.views;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.telegram.KeyboardFactory;
 
 @Component
 public class DetailTestInfoView implements TelegramView {

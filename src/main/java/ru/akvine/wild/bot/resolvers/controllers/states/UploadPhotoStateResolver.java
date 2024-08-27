@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.states;
+package ru.akvine.wild.bot.resolvers.controllers.states;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,17 +6,17 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.helpers.TelegramPhotoHelper;
-import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
-import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
-import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
-import ru.akvine.marketspace.bot.managers.TelegramViewManager;
-import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
-import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.marketspace.bot.telegram.TelegramData;
-import ru.akvine.marketspace.bot.validator.PhotoValidator;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.helpers.TelegramPhotoHelper;
+import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
+import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
+import ru.akvine.wild.bot.infrastructure.state.StateStorage;
+import ru.akvine.wild.bot.managers.TelegramDataResolverManager;
+import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.telegram.TelegramData;
+import ru.akvine.wild.bot.validator.PhotoValidator;
 
 import java.util.List;
 

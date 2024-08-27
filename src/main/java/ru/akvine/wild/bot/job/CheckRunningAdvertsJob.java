@@ -1,22 +1,22 @@
-package ru.akvine.marketspace.bot.job;
+package ru.akvine.wild.bot.job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import ru.akvine.marketspace.bot.constants.MDCConstants;
-import ru.akvine.marketspace.bot.entities.AdvertEntity;
-import ru.akvine.marketspace.bot.entities.CardEntity;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.repositories.AdvertRepository;
-import ru.akvine.marketspace.bot.services.AdvertStatisticService;
-import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
-import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.SkuDto;
+import ru.akvine.wild.bot.constants.MDCConstants;
+import ru.akvine.wild.bot.entities.AdvertEntity;
+import ru.akvine.wild.bot.entities.CardEntity;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.repositories.AdvertRepository;
+import ru.akvine.wild.bot.services.AdvertStatisticService;
+import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
+import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

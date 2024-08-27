@@ -1,26 +1,26 @@
-package ru.akvine.marketspace.bot.services.admin;
+package ru.akvine.wild.bot.services.admin;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import ru.akvine.marketspace.bot.entities.AdvertEntity;
-import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.exceptions.AdvertAlreadyInPauseStateException;
-import ru.akvine.marketspace.bot.services.AdvertService;
-import ru.akvine.marketspace.bot.services.AdvertStatisticService;
-import ru.akvine.marketspace.bot.services.domain.AdvertModel;
-import ru.akvine.marketspace.bot.services.domain.AdvertStatisticModel;
-import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
-import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
-import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
-import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertDto;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
-import ru.akvine.marketspace.bot.utils.DateUtils;
+import ru.akvine.wild.bot.entities.AdvertEntity;
+import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.exceptions.AdvertAlreadyInPauseStateException;
+import ru.akvine.wild.bot.services.AdvertService;
+import ru.akvine.wild.bot.services.AdvertStatisticService;
+import ru.akvine.wild.bot.services.domain.AdvertModel;
+import ru.akvine.wild.bot.services.domain.AdvertStatisticModel;
+import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
+import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
+import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
+import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
+import ru.akvine.wild.bot.utils.DateUtils;
 
 import java.util.List;
 

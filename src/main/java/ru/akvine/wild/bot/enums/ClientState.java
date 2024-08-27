@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.enums;
+package ru.akvine.wild.bot.enums;
 
 public enum ClientState {
     MAIN_MENU,

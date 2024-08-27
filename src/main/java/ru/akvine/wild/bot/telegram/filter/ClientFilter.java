@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.telegram.filter;
+package ru.akvine.wild.bot.telegram.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,9 +6,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.domain.ClientModel;
-import ru.akvine.marketspace.bot.services.dto.ClientCreate;
+import ru.akvine.wild.bot.services.ClientService;
+import ru.akvine.wild.bot.services.domain.ClientModel;
+import ru.akvine.wild.bot.services.dto.ClientCreate;
 
 @RequiredArgsConstructor
 @Slf4j

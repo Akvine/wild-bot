@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.telegram.webhook.dto;
+package ru.akvine.wild.bot.telegram.webhook.dto;
 
 import lombok.Getter;
 

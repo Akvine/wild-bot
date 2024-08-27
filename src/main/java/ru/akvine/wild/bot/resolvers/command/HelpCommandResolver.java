@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.resolvers.command;
+package ru.akvine.wild.bot.resolvers.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import ru.akvine.marketspace.bot.enums.Command;
+import ru.akvine.wild.bot.enums.Command;
 
 @Component
 @RequiredArgsConstructor

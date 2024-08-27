@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.telegram.bot;
+package ru.akvine.wild.bot.telegram.bot;
 
 import lombok.Setter;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.telegram.filter.MessageFilter;
+import ru.akvine.wild.bot.telegram.filter.MessageFilter;
 
 @Setter
 public class TelegramProductionBot extends TelegramWebhookBot {

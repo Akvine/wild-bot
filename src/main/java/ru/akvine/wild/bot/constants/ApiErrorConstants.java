@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.constants;
+package ru.akvine.wild.bot.constants;
 
 public final class ApiErrorConstants {
     private ApiErrorConstants() throws IllegalAccessException {

@@ -1,15 +1,15 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.views;
+package ru.akvine.wild.bot.resolvers.controllers.views;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.akvine.marketspace.bot.resolvers.controllers.converters.StartedAdvertsConverter;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.services.AdvertService;
-import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.domain.AdvertModel;
-import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.resolvers.controllers.converters.StartedAdvertsConverter;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.services.AdvertService;
+import ru.akvine.wild.bot.services.ClientService;
+import ru.akvine.wild.bot.services.domain.AdvertModel;
+import ru.akvine.wild.bot.telegram.KeyboardFactory;
 
 import java.util.List;
 

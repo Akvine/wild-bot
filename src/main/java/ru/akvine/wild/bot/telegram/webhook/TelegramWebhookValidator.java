@@ -1,8 +1,8 @@
-package ru.akvine.marketspace.bot.telegram.webhook;
+package ru.akvine.wild.bot.telegram.webhook;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.exceptions.BadCredentialsException;
+import ru.akvine.wild.bot.exceptions.BadCredentialsException;
 
 @Component
 public class TelegramWebhookValidator {

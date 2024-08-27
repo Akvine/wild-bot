@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.exceptions;
+package ru.akvine.wild.bot.exceptions;
 
 public class UnsupportedUpdateTypeException extends RuntimeException {
     public UnsupportedUpdateTypeException(String message) {

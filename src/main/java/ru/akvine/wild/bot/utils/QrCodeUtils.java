@@ -1,8 +1,8 @@
-package ru.akvine.marketspace.bot.utils;
+package ru.akvine.wild.bot.utils;
 
 import io.nayuki.qrcodegen.QrCode;
 import lombok.experimental.UtilityClass;
-import ru.akvine.marketspace.bot.exceptions.ByteConvertException;
+import ru.akvine.wild.bot.exceptions.ByteConvertException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

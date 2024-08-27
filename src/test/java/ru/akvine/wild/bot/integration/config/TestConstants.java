@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.integration.config;
+package ru.akvine.wild.bot.integration.config;
 
 public final class TestConstants {
     private TestConstants() {

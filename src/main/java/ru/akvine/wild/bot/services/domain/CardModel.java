@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.services.domain;
+package ru.akvine.wild.bot.services.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import ru.akvine.marketspace.bot.entities.CardEntity;
-import ru.akvine.marketspace.bot.services.domain.base.SoftModel;
+import ru.akvine.wild.bot.entities.CardEntity;
+import ru.akvine.wild.bot.services.domain.base.SoftModel;
 
 @Data
 @Accessors(chain = true)

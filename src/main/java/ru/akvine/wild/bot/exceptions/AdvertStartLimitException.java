@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.exceptions;
+package ru.akvine.wild.bot.exceptions;
 
 public class AdvertStartLimitException extends RuntimeException {
     public AdvertStartLimitException(String message) {

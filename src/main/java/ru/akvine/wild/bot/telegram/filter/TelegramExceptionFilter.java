@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.telegram.filter;
+package ru.akvine.wild.bot.telegram.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.exceptions.TelegramHandlingException;
-import ru.akvine.marketspace.bot.exceptions.telegram.TelegramExceptionHandler;
-import ru.akvine.marketspace.bot.infrastructure.annotations.TelegramErrorHandler;
+import ru.akvine.wild.bot.exceptions.TelegramHandlingException;
+import ru.akvine.wild.bot.exceptions.telegram.TelegramExceptionHandler;
+import ru.akvine.wild.bot.infrastructure.annotations.TelegramErrorHandler;
 
 import java.lang.reflect.Method;
 

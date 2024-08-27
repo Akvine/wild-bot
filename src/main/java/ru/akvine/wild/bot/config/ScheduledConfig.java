@@ -1,22 +1,22 @@
-package ru.akvine.marketspace.bot.config;
+package ru.akvine.wild.bot.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
-import ru.akvine.marketspace.bot.job.CheckRunningAdvertsJob;
-import ru.akvine.marketspace.bot.job.SubscriptionJob;
-import ru.akvine.marketspace.bot.job.sync.GlobalSyncJob;
-import ru.akvine.marketspace.bot.job.sync.SyncAdvertJob;
-import ru.akvine.marketspace.bot.job.sync.SyncCardJob;
-import ru.akvine.marketspace.bot.job.sync.SyncCardTypeJob;
-import ru.akvine.marketspace.bot.repositories.AdvertRepository;
-import ru.akvine.marketspace.bot.repositories.SubscriptionRepository;
-import ru.akvine.marketspace.bot.services.AdvertStatisticService;
-import ru.akvine.marketspace.bot.services.CardService;
-import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
+import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
+import ru.akvine.wild.bot.job.CheckRunningAdvertsJob;
+import ru.akvine.wild.bot.job.SubscriptionJob;
+import ru.akvine.wild.bot.job.sync.GlobalSyncJob;
+import ru.akvine.wild.bot.job.sync.SyncAdvertJob;
+import ru.akvine.wild.bot.job.sync.SyncCardJob;
+import ru.akvine.wild.bot.job.sync.SyncCardTypeJob;
+import ru.akvine.wild.bot.repositories.AdvertRepository;
+import ru.akvine.wild.bot.repositories.SubscriptionRepository;
+import ru.akvine.wild.bot.services.AdvertStatisticService;
+import ru.akvine.wild.bot.services.CardService;
+import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 
 @Configuration
 @EnableScheduling

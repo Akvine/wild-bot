@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.infrastructure.session;
+package ru.akvine.wild.bot.infrastructure.session;
 
 import org.hibernate.SessionException;
 

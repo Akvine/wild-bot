@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.admin.dto.advert;
+package ru.akvine.wild.bot.admin.dto.advert;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

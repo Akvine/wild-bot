@@ -1,8 +1,8 @@
-package ru.akvine.marketspace.bot.integration.base;
+package ru.akvine.wild.bot.integration.base;
 
 import org.junit.platform.commons.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.*;
-import ru.akvine.marketspace.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.enums.TelegramDataType;
 
 public class UpdateBuilder {
     private final Update update;

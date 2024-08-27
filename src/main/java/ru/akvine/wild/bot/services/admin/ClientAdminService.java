@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services.admin;
+package ru.akvine.wild.bot.services.admin;
 
 import com.google.common.base.Preconditions;
 import io.nayuki.qrcodegen.QrCode;
@@ -7,17 +7,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import ru.akvine.marketspace.bot.entities.BlockedCredentialsEntity;
-import ru.akvine.marketspace.bot.entities.ClientEntity;
-import ru.akvine.marketspace.bot.exceptions.ClientNotFoundException;
-import ru.akvine.marketspace.bot.repositories.ClientRepository;
-import ru.akvine.marketspace.bot.services.BlockingService;
-import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.services.domain.ClientModel;
-import ru.akvine.marketspace.bot.services.dto.admin.client.*;
-import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.marketspace.bot.utils.DateUtils;
-import ru.akvine.marketspace.bot.utils.QrCodeUtils;
+import ru.akvine.wild.bot.entities.BlockedCredentialsEntity;
+import ru.akvine.wild.bot.entities.ClientEntity;
+import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
+import ru.akvine.wild.bot.repositories.ClientRepository;
+import ru.akvine.wild.bot.services.BlockingService;
+import ru.akvine.wild.bot.services.ClientService;
+import ru.akvine.wild.bot.services.domain.ClientModel;
+import ru.akvine.wild.bot.services.dto.admin.client.*;
+import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.utils.DateUtils;
+import ru.akvine.wild.bot.utils.QrCodeUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

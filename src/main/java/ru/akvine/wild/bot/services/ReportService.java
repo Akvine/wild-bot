@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services;
+package ru.akvine.wild.bot.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,9 +8,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import ru.akvine.marketspace.bot.entities.AdvertStatisticEntity;
-import ru.akvine.marketspace.bot.repositories.AdvertStatisticRepository;
-import ru.akvine.marketspace.bot.utils.POIUtils;
+import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
+import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
+import ru.akvine.wild.bot.utils.POIUtils;
 
 import java.util.List;
 

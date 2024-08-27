@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.repositories.specifications;
+package ru.akvine.wild.bot.repositories.specifications;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.entities.CardEntity;
-import ru.akvine.marketspace.bot.services.dto.admin.card.ListCards;
+import ru.akvine.wild.bot.entities.CardEntity;
+import ru.akvine.wild.bot.services.dto.admin.card.ListCards;
 
 @Component
 public class CardSpecification {

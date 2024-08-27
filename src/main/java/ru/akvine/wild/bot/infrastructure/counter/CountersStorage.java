@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.infrastructure.counter;
+package ru.akvine.wild.bot.infrastructure.counter;
 
 public interface CountersStorage {
     int ZERO_COUNT_INIT = 0;

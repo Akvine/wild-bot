@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.converters;
+package ru.akvine.wild.bot.resolvers.controllers.converters;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.akvine.marketspace.bot.services.dto.AggregateCard;
-import ru.akvine.marketspace.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.services.dto.AggregateCard;
+import ru.akvine.wild.bot.telegram.KeyboardFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;

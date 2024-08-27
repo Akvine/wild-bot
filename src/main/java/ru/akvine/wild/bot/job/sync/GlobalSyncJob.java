@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.job.sync;
+package ru.akvine.wild.bot.job.sync;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import ru.akvine.marketspace.bot.constants.MDCConstants;
+import ru.akvine.wild.bot.constants.MDCConstants;
 
 @Slf4j
 public class GlobalSyncJob {

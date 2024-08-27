@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.validator;
+package ru.akvine.wild.bot.validator;
 
 public interface Validator<T> {
     void validate(T obj);

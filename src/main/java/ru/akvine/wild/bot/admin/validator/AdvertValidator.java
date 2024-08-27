@@ -1,14 +1,14 @@
-package ru.akvine.marketspace.bot.admin.validator;
+package ru.akvine.wild.bot.admin.validator;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.admin.dto.advert.ListAdvertRequest;
-import ru.akvine.marketspace.bot.admin.dto.advert.PauseAdvertRequest;
-import ru.akvine.marketspace.bot.admin.dto.advert.RenameAdvertRequest;
-import ru.akvine.marketspace.bot.exceptions.ValidationException;
-import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
-import ru.akvine.marketspace.bot.validator.AdvertStatusValidator;
+import ru.akvine.wild.bot.admin.dto.advert.ListAdvertRequest;
+import ru.akvine.wild.bot.admin.dto.advert.PauseAdvertRequest;
+import ru.akvine.wild.bot.admin.dto.advert.RenameAdvertRequest;
+import ru.akvine.wild.bot.exceptions.ValidationException;
+import ru.akvine.wild.bot.constants.ApiErrorConstants;
+import ru.akvine.wild.bot.validator.AdvertStatusValidator;
 
 @Component
 @RequiredArgsConstructor

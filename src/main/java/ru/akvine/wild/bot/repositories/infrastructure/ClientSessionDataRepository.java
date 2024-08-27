@@ -1,9 +1,9 @@
-package ru.akvine.marketspace.bot.repositories.infrastructure;
+package ru.akvine.wild.bot.repositories.infrastructure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.akvine.marketspace.bot.entities.infrastructure.ClientSessionDataEntity;
+import ru.akvine.wild.bot.entities.infrastructure.ClientSessionDataEntity;
 
 import java.util.Optional;
 

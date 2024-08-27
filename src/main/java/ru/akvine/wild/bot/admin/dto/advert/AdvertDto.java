@@ -1,9 +1,9 @@
-package ru.akvine.marketspace.bot.admin.dto.advert;
+package ru.akvine.wild.bot.admin.dto.advert;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.enums.AdvertType;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.enums.AdvertType;
 
 import java.time.LocalDateTime;
 import java.util.Date;

@@ -1,14 +1,14 @@
-package ru.akvine.marketspace.bot.admin.converters;
+package ru.akvine.wild.bot.admin.converters;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.admin.dto.advert.*;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.services.domain.AdvertModel;
-import ru.akvine.marketspace.bot.services.domain.AdvertStatisticModel;
-import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
-import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
-import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
+import ru.akvine.wild.bot.admin.dto.advert.*;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.services.domain.AdvertModel;
+import ru.akvine.wild.bot.services.domain.AdvertStatisticModel;
+import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
+import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
+import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
 
 import java.util.List;
 import java.util.stream.Collectors;

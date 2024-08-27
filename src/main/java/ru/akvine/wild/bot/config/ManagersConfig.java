@@ -1,18 +1,18 @@
-package ru.akvine.marketspace.bot.config;
+package ru.akvine.wild.bot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.enums.Command;
-import ru.akvine.marketspace.bot.enums.TelegramDataType;
-import ru.akvine.marketspace.bot.managers.CommandResolverManager;
-import ru.akvine.marketspace.bot.managers.StateResolverManager;
-import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
-import ru.akvine.marketspace.bot.managers.TelegramViewManager;
-import ru.akvine.marketspace.bot.resolvers.command.CommandResolver;
-import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
-import ru.akvine.marketspace.bot.resolvers.controllers.views.TelegramView;
-import ru.akvine.marketspace.bot.resolvers.controllers.states.StateResolver;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.enums.Command;
+import ru.akvine.wild.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.managers.CommandResolverManager;
+import ru.akvine.wild.bot.managers.StateResolverManager;
+import ru.akvine.wild.bot.managers.TelegramDataResolverManager;
+import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.resolvers.command.CommandResolver;
+import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
+import ru.akvine.wild.bot.resolvers.controllers.states.StateResolver;
 
 import java.util.List;
 import java.util.Map;

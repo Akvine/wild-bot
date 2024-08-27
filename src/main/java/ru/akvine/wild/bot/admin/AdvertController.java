@@ -1,22 +1,22 @@
-package ru.akvine.marketspace.bot.admin;
+package ru.akvine.wild.bot.admin;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
-import ru.akvine.marketspace.bot.admin.converters.AdvertConverter;
-import ru.akvine.marketspace.bot.admin.dto.advert.ListAdvertRequest;
-import ru.akvine.marketspace.bot.admin.dto.advert.PauseAdvertRequest;
-import ru.akvine.marketspace.bot.admin.dto.advert.RenameAdvertRequest;
-import ru.akvine.marketspace.bot.admin.dto.common.Response;
-import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
-import ru.akvine.marketspace.bot.admin.meta.AdvertControllerMeta;
-import ru.akvine.marketspace.bot.admin.validator.AdvertValidator;
-import ru.akvine.marketspace.bot.services.admin.AdvertAdminService;
-import ru.akvine.marketspace.bot.services.domain.AdvertModel;
-import ru.akvine.marketspace.bot.services.domain.AdvertStatisticModel;
-import ru.akvine.marketspace.bot.services.dto.admin.advert.ListAdvert;
-import ru.akvine.marketspace.bot.services.dto.admin.advert.PauseAdvert;
-import ru.akvine.marketspace.bot.services.dto.admin.advert.RenameAdvert;
+import ru.akvine.wild.bot.admin.converters.AdvertConverter;
+import ru.akvine.wild.bot.admin.dto.advert.ListAdvertRequest;
+import ru.akvine.wild.bot.admin.dto.advert.PauseAdvertRequest;
+import ru.akvine.wild.bot.admin.dto.advert.RenameAdvertRequest;
+import ru.akvine.wild.bot.admin.dto.common.Response;
+import ru.akvine.wild.bot.admin.dto.common.SuccessfulResponse;
+import ru.akvine.wild.bot.admin.meta.AdvertControllerMeta;
+import ru.akvine.wild.bot.admin.validator.AdvertValidator;
+import ru.akvine.wild.bot.services.admin.AdvertAdminService;
+import ru.akvine.wild.bot.services.domain.AdvertModel;
+import ru.akvine.wild.bot.services.domain.AdvertStatisticModel;
+import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
+import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
+import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
 
 import java.util.List;
 

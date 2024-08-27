@@ -1,15 +1,15 @@
-package ru.akvine.marketspace.bot.job.sync;
+package ru.akvine.wild.bot.job.sync;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.entities.CardTypeEntity;
-import ru.akvine.marketspace.bot.exceptions.IntegrationException;
-import ru.akvine.marketspace.bot.repositories.CardTypeRepository;
-import ru.akvine.marketspace.bot.services.integration.wildberries.WildberriesIntegrationService;
-import ru.akvine.marketspace.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
+import ru.akvine.wild.bot.entities.CardTypeEntity;
+import ru.akvine.wild.bot.exceptions.IntegrationException;
+import ru.akvine.wild.bot.repositories.CardTypeRepository;
+import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
+import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
 
 import java.util.ArrayList;
 import java.util.List;

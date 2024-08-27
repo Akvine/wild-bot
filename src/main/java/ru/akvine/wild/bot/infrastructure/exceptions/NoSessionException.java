@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.infrastructure.exceptions;
+package ru.akvine.wild.bot.infrastructure.exceptions;
 
 public class NoSessionException extends RuntimeException {
     public NoSessionException(String message) {

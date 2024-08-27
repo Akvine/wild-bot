@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.validator;
+package ru.akvine.wild.bot.validator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.enums.AdvertStatus;
-import ru.akvine.marketspace.bot.exceptions.ValidationException;
-import ru.akvine.marketspace.bot.constants.ApiErrorConstants;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.exceptions.ValidationException;
+import ru.akvine.wild.bot.constants.ApiErrorConstants;
 
 @Component
 public class AdvertStatusValidator implements Validator<String> {

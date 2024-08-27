@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.enums;
+package ru.akvine.wild.bot.enums;
 
 public enum AdvertStatus {
     IN_REMOVAL(-1),

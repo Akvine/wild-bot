@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.admin.converters;
+package ru.akvine.wild.bot.admin.converters;
 
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.admin.dto.subscription.SubscriptionRequest;
-import ru.akvine.marketspace.bot.admin.dto.subscription.SubscriptionResponse;
-import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
-import ru.akvine.marketspace.bot.services.dto.admin.client.Subscription;
+import ru.akvine.wild.bot.admin.dto.subscription.SubscriptionRequest;
+import ru.akvine.wild.bot.admin.dto.subscription.SubscriptionResponse;
+import ru.akvine.wild.bot.services.domain.SubscriptionModel;
+import ru.akvine.wild.bot.services.dto.admin.client.Subscription;
 
 @Component
 public class SubscriptionConverter {

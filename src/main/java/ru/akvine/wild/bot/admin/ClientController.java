@@ -1,18 +1,18 @@
-package ru.akvine.marketspace.bot.admin;
+package ru.akvine.wild.bot.admin;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
-import ru.akvine.marketspace.bot.admin.converters.ClientConverter;
-import ru.akvine.marketspace.bot.admin.dto.client.*;
-import ru.akvine.marketspace.bot.admin.dto.common.Response;
-import ru.akvine.marketspace.bot.admin.dto.common.SecretRequest;
-import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
-import ru.akvine.marketspace.bot.admin.meta.ClientControllerMeta;
-import ru.akvine.marketspace.bot.admin.validator.ClientValidator;
-import ru.akvine.marketspace.bot.services.admin.ClientAdminService;
-import ru.akvine.marketspace.bot.services.domain.ClientModel;
-import ru.akvine.marketspace.bot.services.dto.admin.client.*;
+import ru.akvine.wild.bot.admin.converters.ClientConverter;
+import ru.akvine.wild.bot.admin.dto.client.*;
+import ru.akvine.wild.bot.admin.dto.common.Response;
+import ru.akvine.wild.bot.admin.dto.common.SecretRequest;
+import ru.akvine.wild.bot.admin.dto.common.SuccessfulResponse;
+import ru.akvine.wild.bot.admin.meta.ClientControllerMeta;
+import ru.akvine.wild.bot.admin.validator.ClientValidator;
+import ru.akvine.wild.bot.services.admin.ClientAdminService;
+import ru.akvine.wild.bot.services.domain.ClientModel;
+import ru.akvine.wild.bot.services.dto.admin.client.*;
 
 import java.util.List;
 

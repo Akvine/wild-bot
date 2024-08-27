@@ -1,13 +1,13 @@
-package ru.akvine.marketspace.bot.services;
+package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.akvine.marketspace.bot.entities.BlockedCredentialsEntity;
-import ru.akvine.marketspace.bot.exceptions.BlockedCredentialsException;
-import ru.akvine.marketspace.bot.repositories.BlockedCredentialsRepository;
-import ru.akvine.marketspace.bot.utils.DateUtils;
+import ru.akvine.wild.bot.entities.BlockedCredentialsEntity;
+import ru.akvine.wild.bot.exceptions.BlockedCredentialsException;
+import ru.akvine.wild.bot.repositories.BlockedCredentialsRepository;
+import ru.akvine.wild.bot.utils.DateUtils;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;

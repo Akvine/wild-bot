@@ -1,12 +1,12 @@
-package ru.akvine.marketspace.bot.admin.converters;
+package ru.akvine.wild.bot.admin.converters;
 
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.admin.dto.card.CardDto;
-import ru.akvine.marketspace.bot.admin.dto.card.ListCardsRequest;
-import ru.akvine.marketspace.bot.admin.dto.card.ListCardsResponse;
-import ru.akvine.marketspace.bot.services.domain.CardModel;
-import ru.akvine.marketspace.bot.services.dto.admin.card.ListCards;
+import ru.akvine.wild.bot.admin.dto.card.CardDto;
+import ru.akvine.wild.bot.admin.dto.card.ListCardsRequest;
+import ru.akvine.wild.bot.admin.dto.card.ListCardsResponse;
+import ru.akvine.wild.bot.services.domain.CardModel;
+import ru.akvine.wild.bot.services.dto.admin.card.ListCards;
 
 import java.util.List;
 

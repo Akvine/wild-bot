@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.entities.base;
+package ru.akvine.wild.bot.entities.base;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

@@ -1,20 +1,20 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.views;
+package ru.akvine.wild.bot.resolvers.controllers.views;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
-import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
-import ru.akvine.marketspace.bot.resolvers.controllers.converters.StartConverter;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.services.CardAggregateService;
-import ru.akvine.marketspace.bot.services.CardService;
-import ru.akvine.marketspace.bot.services.domain.CardModel;
-import ru.akvine.marketspace.bot.services.dto.AggregateCard;
+import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
+import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
+import ru.akvine.wild.bot.resolvers.controllers.converters.StartConverter;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.services.CardAggregateService;
+import ru.akvine.wild.bot.services.CardService;
+import ru.akvine.wild.bot.services.domain.CardModel;
+import ru.akvine.wild.bot.services.dto.AggregateCard;
 
 import java.util.List;
 
-import static ru.akvine.marketspace.bot.constants.telegram.TelegramButtonConstants.CHOOSE_CATEGORY_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHOOSE_CATEGORY_TEXT;
 
 @Component
 @RequiredArgsConstructor

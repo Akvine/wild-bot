@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.telegram.bot;
+package ru.akvine.wild.bot.telegram.bot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;

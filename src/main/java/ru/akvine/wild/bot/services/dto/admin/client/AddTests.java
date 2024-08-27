@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services.dto.admin.client;
+package ru.akvine.wild.bot.services.dto.admin.client;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

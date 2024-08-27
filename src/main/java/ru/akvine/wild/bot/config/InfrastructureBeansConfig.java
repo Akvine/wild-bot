@@ -1,21 +1,21 @@
-package ru.akvine.marketspace.bot.config;
+package ru.akvine.wild.bot.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorage;
-import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorageInDatabaseImpl;
-import ru.akvine.marketspace.bot.infrastructure.counter.CountersStorageInMemoryImpl;
-import ru.akvine.marketspace.bot.infrastructure.session.ClientSessionData;
-import ru.akvine.marketspace.bot.infrastructure.session.SessionStorage;
-import ru.akvine.marketspace.bot.infrastructure.session.SessionStorageInDatabaseImpl;
-import ru.akvine.marketspace.bot.infrastructure.session.SessionStorageInMemoryImpl;
-import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
-import ru.akvine.marketspace.bot.infrastructure.state.StateStorageInMemoryImpl;
-import ru.akvine.marketspace.bot.repositories.infrastructure.ClientSessionDataRepository;
-import ru.akvine.marketspace.bot.repositories.infrastructure.IterationCounterRepository;
-import ru.akvine.marketspace.bot.services.AdvertService;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
+import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInDatabaseImpl;
+import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInMemoryImpl;
+import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
+import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
+import ru.akvine.wild.bot.infrastructure.session.SessionStorageInDatabaseImpl;
+import ru.akvine.wild.bot.infrastructure.session.SessionStorageInMemoryImpl;
+import ru.akvine.wild.bot.infrastructure.state.StateStorage;
+import ru.akvine.wild.bot.infrastructure.state.StateStorageInMemoryImpl;
+import ru.akvine.wild.bot.repositories.infrastructure.ClientSessionDataRepository;
+import ru.akvine.wild.bot.repositories.infrastructure.IterationCounterRepository;
+import ru.akvine.wild.bot.services.AdvertService;
 
 import java.util.List;
 

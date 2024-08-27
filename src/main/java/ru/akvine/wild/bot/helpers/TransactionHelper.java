@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.helpers;
+package ru.akvine.wild.bot.helpers;
 
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;

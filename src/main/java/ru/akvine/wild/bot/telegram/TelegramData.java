@@ -1,9 +1,9 @@
-package ru.akvine.marketspace.bot.telegram;
+package ru.akvine.wild.bot.telegram;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.enums.TelegramDataType;
 
 @Data
 @Accessors(chain = true)

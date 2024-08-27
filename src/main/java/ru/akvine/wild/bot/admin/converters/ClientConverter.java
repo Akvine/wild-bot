@@ -1,12 +1,12 @@
-package ru.akvine.marketspace.bot.admin.converters;
+package ru.akvine.wild.bot.admin.converters;
 
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.admin.dto.client.*;
-import ru.akvine.marketspace.bot.services.domain.ClientModel;
-import ru.akvine.marketspace.bot.services.dto.admin.client.*;
-import ru.akvine.marketspace.bot.utils.DateUtils;
+import ru.akvine.wild.bot.admin.dto.client.*;
+import ru.akvine.wild.bot.services.domain.ClientModel;
+import ru.akvine.wild.bot.services.dto.admin.client.*;
+import ru.akvine.wild.bot.utils.DateUtils;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

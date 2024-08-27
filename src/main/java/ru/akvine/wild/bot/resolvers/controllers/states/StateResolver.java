@@ -1,18 +1,18 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.states;
+package ru.akvine.wild.bot.resolvers.controllers.states;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.akvine.marketspace.bot.enums.ClientState;
-import ru.akvine.marketspace.bot.infrastructure.state.StateStorage;
-import ru.akvine.marketspace.bot.managers.TelegramDataResolverManager;
-import ru.akvine.marketspace.bot.managers.TelegramViewManager;
-import ru.akvine.marketspace.bot.resolvers.controllers.views.TelegramView;
-import ru.akvine.marketspace.bot.resolvers.data.TelegramDataResolver;
-import ru.akvine.marketspace.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.marketspace.bot.telegram.TelegramData;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.infrastructure.state.StateStorage;
+import ru.akvine.wild.bot.managers.TelegramDataResolverManager;
+import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
+import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.telegram.TelegramData;
 
 import java.util.List;
 

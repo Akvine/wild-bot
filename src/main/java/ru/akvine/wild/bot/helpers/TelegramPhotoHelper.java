@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.helpers;
+package ru.akvine.wild.bot.helpers;
 
 import com.google.common.base.Preconditions;
 import org.springframework.stereotype.Component;

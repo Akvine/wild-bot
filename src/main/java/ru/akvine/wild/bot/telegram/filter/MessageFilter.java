@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.telegram.filter;
+package ru.akvine.wild.bot.telegram.filter;
 
 import lombok.Setter;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;

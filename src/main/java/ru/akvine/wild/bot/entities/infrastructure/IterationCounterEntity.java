@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.entities.infrastructure;
+package ru.akvine.wild.bot.entities.infrastructure;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ru.akvine.marketspace.bot.entities.base.BaseEntity;
+import ru.akvine.wild.bot.entities.base.BaseEntity;
 
 @Getter
 @Setter

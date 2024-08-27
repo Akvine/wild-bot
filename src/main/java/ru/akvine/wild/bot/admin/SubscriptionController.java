@@ -1,16 +1,16 @@
-package ru.akvine.marketspace.bot.admin;
+package ru.akvine.wild.bot.admin;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
-import ru.akvine.marketspace.bot.admin.converters.SubscriptionConverter;
-import ru.akvine.marketspace.bot.admin.dto.subscription.SubscriptionRequest;
-import ru.akvine.marketspace.bot.admin.dto.common.Response;
-import ru.akvine.marketspace.bot.admin.dto.common.SuccessfulResponse;
-import ru.akvine.marketspace.bot.admin.meta.SubscriptionControllerMeta;
-import ru.akvine.marketspace.bot.admin.validator.SubscriptionValidator;
-import ru.akvine.marketspace.bot.services.SubscriptionService;
-import ru.akvine.marketspace.bot.services.domain.SubscriptionModel;
-import ru.akvine.marketspace.bot.services.dto.admin.client.Subscription;
+import ru.akvine.wild.bot.admin.converters.SubscriptionConverter;
+import ru.akvine.wild.bot.admin.dto.subscription.SubscriptionRequest;
+import ru.akvine.wild.bot.admin.dto.common.Response;
+import ru.akvine.wild.bot.admin.dto.common.SuccessfulResponse;
+import ru.akvine.wild.bot.admin.meta.SubscriptionControllerMeta;
+import ru.akvine.wild.bot.admin.validator.SubscriptionValidator;
+import ru.akvine.wild.bot.services.SubscriptionService;
+import ru.akvine.wild.bot.services.domain.SubscriptionModel;
+import ru.akvine.wild.bot.services.dto.admin.client.Subscription;
 
 @RestController
 @RequiredArgsConstructor

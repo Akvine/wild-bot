@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.utils;
+package ru.akvine.wild.bot.utils;
 
 import lombok.experimental.UtilityClass;
 import org.apache.commons.collections4.MapUtils;

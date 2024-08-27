@@ -1,4 +1,4 @@
-package ru.akvine.marketspace.bot.services.integration.telegram;
+package ru.akvine.wild.bot.services.integration.telegram;
 
 public enum TelegramApiMethods {
     DOWNLOAD_PHOTO,

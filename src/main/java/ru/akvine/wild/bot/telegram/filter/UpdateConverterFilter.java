@@ -1,14 +1,14 @@
-package ru.akvine.marketspace.bot.telegram.filter;
+package ru.akvine.wild.bot.telegram.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.marketspace.bot.enums.TelegramDataType;
-import ru.akvine.marketspace.bot.telegram.TelegramData;
-import ru.akvine.marketspace.bot.telegram.dispatcher.MessageDispatcher;
-import ru.akvine.marketspace.bot.utils.TelegramUtils;
+import ru.akvine.wild.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.telegram.TelegramData;
+import ru.akvine.wild.bot.telegram.dispatcher.MessageDispatcher;
+import ru.akvine.wild.bot.utils.TelegramUtils;
 
 @RequiredArgsConstructor
 @Slf4j

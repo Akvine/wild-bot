@@ -1,10 +1,10 @@
-package ru.akvine.marketspace.bot.admin.dto.common;
+package ru.akvine.wild.bot.admin.dto.common;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import ru.akvine.marketspace.bot.utils.UUIDGenerator;
+import ru.akvine.wild.bot.utils.UUIDGenerator;
 /**
  * Successful response status
  */

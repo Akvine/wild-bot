@@ -1,11 +1,11 @@
-package ru.akvine.marketspace.bot.resolvers.controllers.converters;
+package ru.akvine.wild.bot.resolvers.controllers.converters;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.akvine.marketspace.bot.services.domain.AdvertModel;
-import ru.akvine.marketspace.bot.utils.DateUtils;
+import ru.akvine.wild.bot.services.domain.AdvertModel;
+import ru.akvine.wild.bot.utils.DateUtils;
 
 import java.util.List;
 

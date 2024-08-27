@@ -1,12 +1,12 @@
-package ru.akvine.marketspace.bot.config;
+package ru.akvine.wild.bot.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.akvine.marketspace.bot.exceptions.telegram.TelegramExceptionHandler;
-import ru.akvine.marketspace.bot.services.ClientService;
-import ru.akvine.marketspace.bot.telegram.dispatcher.MessageDispatcher;
-import ru.akvine.marketspace.bot.telegram.filter.*;
+import ru.akvine.wild.bot.exceptions.telegram.TelegramExceptionHandler;
+import ru.akvine.wild.bot.services.ClientService;
+import ru.akvine.wild.bot.telegram.dispatcher.MessageDispatcher;
+import ru.akvine.wild.bot.telegram.filter.*;
 
 @Configuration
 @RequiredArgsConstructor
