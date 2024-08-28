@@ -9,6 +9,7 @@ import ru.akvine.wild.bot.services.domain.AdvertStatisticModel;
 import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
+import ru.akvine.wild.bot.services.dto.admin.advert.UpdateAdvert;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +61,12 @@ public class AdvertConverter {
                 .setAdvertId(request.getAdvertId() == null ? null : request.getAdvertId())
                 .setAdvertUuid(StringUtils.isBlank(request.getAdvertUuid()) ? null : request.getAdvertUuid())
                 .setName(request.getName());
+    }
+
+    public UpdateAdvert convertToUpdateAdvert(UpdateAdvertRequest request) {
+        return new UpdateAdvert()
+                .setAdvertId(request.getAdvertId())
+                .setAvailableForStart(request.getAvailableForStart());
     }
 
     private AdvertDto convertToAdvertDto(AdvertModel advertBean) {

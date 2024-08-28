@@ -9,6 +9,7 @@ import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.exceptions.AdvertAlreadyInPauseStateException;
+import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.services.AdvertService;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
@@ -16,6 +17,7 @@ import ru.akvine.wild.bot.services.domain.AdvertStatisticModel;
 import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
+import ru.akvine.wild.bot.services.dto.admin.advert.UpdateAdvert;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
@@ -32,6 +34,7 @@ public class AdvertAdminService {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final TelegramIntegrationService telegramIntegrationService;
     private final AdvertStatisticService advertStatisticService;
+    private final CountersStorage countersStorage;
 
     private final static int ADVERT_PAUSE_STATUS_CODE = 11;
 
@@ -78,6 +81,8 @@ public class AdvertAdminService {
         advertEntity.setLocked(false);
         AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));
 
+        countersStorage.delete(advertId);
+
         logger.info("Successful pause advert = [{}]", updatedAdvert);
         return advertStatisticBean;
     }
@@ -123,6 +128,8 @@ public class AdvertAdminService {
         advertEntity.setAvailableForStart(DateUtils.getStartOfNextDay());
         AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));
 
+        countersStorage.delete(advertId);
+
         logger.info("Successful force pause advert = [{}]", updatedAdvert);
     }
 
@@ -147,5 +154,17 @@ public class AdvertAdminService {
         advertService.update(new AdvertModel(advertEntity));
 
         logger.info("Successful rename advert = [{}]", renameAdvert);
+    }
+
+    public AdvertModel update(UpdateAdvert updateAdvert) {
+        Preconditions.checkNotNull(updateAdvert, "updateAdvert is null");
+        logger.info("Update advert by {}", updateAdvert);
+
+        AdvertModel advertToUpdate = advertService.getByAdvertId(updateAdvert.getAdvertId());
+        if (updateAdvert.getAvailableForStart() != null) {
+            advertToUpdate.setAvailableForStart(updateAdvert.getAvailableForStart());
+        }
+
+        return advertService.update(advertToUpdate);
     }
 }

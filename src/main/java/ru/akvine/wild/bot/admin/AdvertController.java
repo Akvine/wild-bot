@@ -7,6 +7,7 @@ import ru.akvine.wild.bot.admin.converters.AdvertConverter;
 import ru.akvine.wild.bot.admin.dto.advert.ListAdvertRequest;
 import ru.akvine.wild.bot.admin.dto.advert.PauseAdvertRequest;
 import ru.akvine.wild.bot.admin.dto.advert.RenameAdvertRequest;
+import ru.akvine.wild.bot.admin.dto.advert.UpdateAdvertRequest;
 import ru.akvine.wild.bot.admin.dto.common.Response;
 import ru.akvine.wild.bot.admin.dto.common.SuccessfulResponse;
 import ru.akvine.wild.bot.admin.meta.AdvertControllerMeta;
@@ -17,6 +18,7 @@ import ru.akvine.wild.bot.services.domain.AdvertStatisticModel;
 import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
+import ru.akvine.wild.bot.services.dto.admin.advert.UpdateAdvert;
 
 import java.util.List;
 
@@ -57,5 +59,13 @@ public class AdvertController implements AdvertControllerMeta {
         RenameAdvert renameAdvert = advertConverter.convertToRenameAdvert(request);
         advertAdminService.renameAdvert(renameAdvert);
         return new SuccessfulResponse();
+    }
+
+    @Override
+    public Response update(@Valid UpdateAdvertRequest request) {
+        advertValidator.verifySecret(request);
+        UpdateAdvert updateAdvert = advertConverter.convertToUpdateAdvert(request);
+        AdvertModel updatedAdvert = advertAdminService.update(updateAdvert);
+        return advertConverter.convertToAdvertListResponse(List.of(updatedAdvert));
     }
 }
