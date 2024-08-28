@@ -92,10 +92,10 @@ public class ReportService {
         clicksCell.setCellValue("Клики (clicks)");
 
         Cell ctrCell = headersRow.createCell(3);
-        ctrCell.setCellValue("Показатель кликабельности (ctr)");
+        ctrCell.setCellValue("CTR");
 
         Cell cpcCell = headersRow.createCell(4);
-        cpcCell.setCellValue("Средняя стоимость клика (cpc)");
+        cpcCell.setCellValue("CPC");
 
         Cell sumCell = headersRow.createCell(5);
         sumCell.setCellValue("Затраты");

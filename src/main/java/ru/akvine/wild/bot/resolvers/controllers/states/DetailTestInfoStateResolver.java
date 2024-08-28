@@ -76,9 +76,9 @@ public class DetailTestInfoStateResolver extends StateResolver {
         sb.append("1. ID: ").append(advertStatistic.getId()).append("\n");
         sb.append("2. Просмотры: ").append(advertStatistic.getViews()).append("\n");
         sb.append("3. Клики: ").append(advertStatistic.getClicks()).append("\n");
-        sb.append("4. Показатель кликабельности (ctr): ").append(advertStatistic.getCtr()).append("\n");
+        sb.append("4. CTR: ").append(advertStatistic.getCtr()).append("\n");
         sb.append("5. Затраты: ").append(advertStatistic.getSum()).append("\n");
-        sb.append("6. Средняя стоимость клика (cpc): ").append(advertStatistic.getCpc()).append("\n");
+        sb.append("6. CPC: ").append(advertStatistic.getCpc()).append("\n");
         sb.append("7. Количество добавлений товаров в корзину (atbs): ").append(advertStatistic.getAtbs()).append("\n");
         sb.append("8. Количество заказов: (orders): ").append(advertStatistic.getOrders()).append("\n");
         sb.append("9. Отношение количества заказов к общему количеству посещений кампании (cr): ").append(advertStatistic.getCr()).append("\n");
