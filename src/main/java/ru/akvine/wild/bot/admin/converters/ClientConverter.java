@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.admin.dto.client.*;
 import ru.akvine.wild.bot.services.domain.ClientModel;
+import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
 import ru.akvine.wild.bot.utils.DateUtils;
 
@@ -130,5 +131,13 @@ public class ClientConverter {
         return new Whitelist()
                 .setChatId(request.getChatId())
                 .setUsername(request.getUsername());
+    }
+
+    public GenerateQrCode convertToGenerateQrCode(SendQrCodeRequest request) {
+        Preconditions.checkNotNull(request, "SendQrCodeRequest is null");
+        return new GenerateQrCode()
+                .setUrl(request.getUrl())
+                .setChatId(request.getChatId())
+                .setCaption(request.getCaption());
     }
 }

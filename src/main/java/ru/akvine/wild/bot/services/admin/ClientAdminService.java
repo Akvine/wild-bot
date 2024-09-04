@@ -1,28 +1,31 @@
 package ru.akvine.wild.bot.services.admin;
 
 import com.google.common.base.Preconditions;
-import io.nayuki.qrcodegen.QrCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.akvine.wild.bot.entities.BlockedCredentialsEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
+import ru.akvine.wild.bot.managers.QrCodeGenerationServiceManager;
 import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.services.BlockingService;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
+import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
+import ru.akvine.wild.bot.services.integration.qrcode.GenerateQrCodeRequest;
+import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
+import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.utils.DateUtils;
-import ru.akvine.wild.bot.utils.QrCodeUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +37,29 @@ public class ClientAdminService {
     // TODO : лучше делать обновление сущности в ClientService, так по канону
     private final ClientRepository clientRepository;
     private final TelegramIntegrationService telegramIntegrationService;
+    private final QrCodeGenerationServiceManager qrCodeGenerationServiceManager;
+
+    @Value("${qrcode.external.service.integration.enabled}")
+    private boolean qrCodeExternalServiceIntegrationEnabled;
+    @Value("${qraft.request.param.ecl}")
+    private String errorCorrectionLevel;
+    @Value("${qraft.request.param.qr.size}")
+    private int qrSize;
+    @Value("${qraft.request.param.border.size}")
+    private int borderSize;
+    @Value("${qraft.request.param.radiusFactor}")
+    private int radiusFactor;
+    @Value("${qraft.request.param.cornerBlockRadiusFactor}")
+    private double cornerBlockRadiusFactor;
+    @Value("${qraft.request.param.roundInnerCorners}")
+    private boolean roundInnerCorners;
+    @Value("${qraft.request.param.roundOuterCorners}")
+    private boolean roundOuterCorners;
+    @Value("${qraft.request.param.cornerBlocksAsCircles}")
+    private boolean cornerBlocksAsCircles;
+    @Value("${qraft.request.param.image.type}")
+    private String imageType;
+
 
     public List<ClientModel> list() {
         return clientService.getAll();
@@ -170,11 +196,48 @@ public class ClientAdminService {
         logger.info("Successful delete to whitelist client with chatId = {} and username = {}", client.getChatId(), client.getUsername());
     }
 
-    public void sendQrCode(String chatId, String text, String caption) {
-        logger.info("Send qr code to chat with id = {} and text = {}", chatId, text);
+    public void sendQrCode(GenerateQrCode generateQrCode) {
+        String chatId = generateQrCode.getChatId();
+        String url = generateQrCode.getUrl();
+        String caption = generateQrCode.getCaption();
+
+        logger.info("Send qr code to chat with id = {} and url = {}", chatId, url);
         clientService.verifyExistsByChatId(chatId);
-        QrCode qrCode = QrCode.encodeText(text, QrCode.Ecc.HIGH);
-        byte[] image = QrCodeUtils.convertQrCodeToBytes(qrCode);
+
+        Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap = qrCodeGenerationServiceManager
+                .getServicesMap();
+        GenerateQrCodeRequest request = new GenerateQrCodeRequest()
+                .setUrl(url)
+                .setQrSize(qrSize)
+                .setBorderSize(borderSize)
+                .setRadiusFactor(radiusFactor)
+                .setErrorCorrectionLevel(errorCorrectionLevel)
+                .setCornerBlockRadiusFactor(cornerBlockRadiusFactor)
+                .setRoundInnerCorners(roundInnerCorners)
+                .setRoundOuterCorners(roundOuterCorners)
+                .setCornerBlocksAsCircles(cornerBlocksAsCircles)
+                .setImageType(imageType);
+
+        byte[] image;
+        if (qrCodeExternalServiceIntegrationEnabled) {
+            try {
+                image = serviceMap
+                        .get(QrCodeGenerationServiceType.EXTERNAL)
+                        .generateQrCode(request);
+            } catch (Exception exception) {
+                logger.error("Some error was occurred while calling external qr code generation service. " +
+                        "Generate message by internal service. Message = [{}]", exception.getMessage());
+                image = serviceMap
+                        .get(QrCodeGenerationServiceType.INTERNAL)
+                        .generateQrCode(request);
+            }
+        } else {
+            image = serviceMap
+                    .get(QrCodeGenerationServiceType.INTERNAL)
+                    .generateQrCode(request);
+        }
+
+        logger.info("Successful generate qr code");
         telegramIntegrationService.sendImage(chatId, image, caption);
     }
 

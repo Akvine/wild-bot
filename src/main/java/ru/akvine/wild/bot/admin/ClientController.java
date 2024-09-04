@@ -12,6 +12,7 @@ import ru.akvine.wild.bot.admin.meta.ClientControllerMeta;
 import ru.akvine.wild.bot.admin.validator.ClientValidator;
 import ru.akvine.wild.bot.services.admin.ClientAdminService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
+import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
 
 import java.util.List;
@@ -88,10 +89,8 @@ public class ClientController implements ClientControllerMeta {
     @Override
     public Response sendQrCode(@Valid SendQrCodeRequest request) {
         clientValidator.verifySecret(request);
-        clientAdminService.sendQrCode(
-                request.getChatId(),
-                request.getText(),
-                request.getCaption());
+        GenerateQrCode generateQrCode = clientConverter.convertToGenerateQrCode(request);
+        clientAdminService.sendQrCode(generateQrCode);
         return new SuccessfulResponse();
     }
 }

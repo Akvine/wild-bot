@@ -5,14 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.enums.Command;
 import ru.akvine.wild.bot.enums.TelegramDataType;
-import ru.akvine.wild.bot.managers.CommandResolverManager;
-import ru.akvine.wild.bot.managers.StateResolverManager;
-import ru.akvine.wild.bot.managers.TelegramDataResolverManager;
-import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.managers.*;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
 import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
 import ru.akvine.wild.bot.resolvers.controllers.states.StateResolver;
+import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
+import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
 
 import java.util.List;
 import java.util.Map;
@@ -53,5 +52,13 @@ public class ManagersConfig {
                 .stream()
                 .collect(toMap(TelegramView::byState, identity()));
         return new TelegramViewManager(keyboardMap);
+    }
+
+    @Bean
+    public QrCodeGenerationServiceManager qrCodeGenerationServiceManager(List<QrCodeGenerationService> qrCodeGenerationServices) {
+        Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap = qrCodeGenerationServices
+                .stream()
+                .collect(toMap(QrCodeGenerationService::getType, identity()));
+        return new QrCodeGenerationServiceManager(serviceMap);
     }
 }
