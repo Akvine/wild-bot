@@ -7,14 +7,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.job.CheckRunningAdvertsJob;
 import ru.akvine.wild.bot.job.SubscriptionJob;
-import ru.akvine.wild.bot.job.sync.GlobalSyncJob;
-import ru.akvine.wild.bot.job.sync.SyncAdvertJob;
-import ru.akvine.wild.bot.job.sync.SyncCardJob;
-import ru.akvine.wild.bot.job.sync.SyncCardTypeJob;
+import ru.akvine.wild.bot.job.sync.*;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.CardService;
+import ru.akvine.wild.bot.services.integration.property.PropertyService;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 
@@ -62,5 +60,11 @@ public class ScheduledConfig {
                 SubscriptionJob.class.getSimpleName(),
                 SYSTEM
         );
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "sync.application.properties.enabled", havingValue = "true")
+    public SyncPropertiesJob syncPropertiesJob(PropertyService propertyService) {
+        return new SyncPropertiesJob(propertyService);
     }
 }

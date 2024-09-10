@@ -39,8 +39,8 @@ public class ClientAdminService {
     private final TelegramIntegrationService telegramIntegrationService;
     private final QrCodeGenerationServiceManager qrCodeGenerationServiceManager;
 
-    @Value("${qrcode.external.service.integration.enabled}")
-    private boolean qrCodeExternalServiceIntegrationEnabled;
+    @Value("${qraft.integration.enabled}")
+    private boolean qraftIntegrationEnabled;
     @Value("${qraft.request.param.ecl}")
     private String errorCorrectionLevel;
     @Value("${qraft.request.param.qr.size}")
@@ -219,7 +219,7 @@ public class ClientAdminService {
                 .setImageType(imageType);
 
         byte[] image;
-        if (qrCodeExternalServiceIntegrationEnabled) {
+        if (qraftIntegrationEnabled) {
             try {
                 image = serviceMap
                         .get(QrCodeGenerationServiceType.EXTERNAL)

@@ -7,9 +7,10 @@ import ru.akvine.wild.bot.enums.Command;
 import ru.akvine.wild.bot.enums.TelegramDataType;
 import ru.akvine.wild.bot.managers.*;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
-import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
-import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
 import ru.akvine.wild.bot.resolvers.controllers.states.StateResolver;
+import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
+import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.wild.bot.resolvers.property.PropertyParser;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
 
@@ -60,5 +61,13 @@ public class ManagersConfig {
                 .stream()
                 .collect(toMap(QrCodeGenerationService::getType, identity()));
         return new QrCodeGenerationServiceManager(serviceMap);
+    }
+
+    @Bean
+    public PropertyParseManager propertyParseManager(List<PropertyParser<?>> propertyParsers) {
+        Map<Class<?>, PropertyParser<?>> propertiesMap = propertyParsers
+                .stream()
+                .collect(toMap(PropertyParser::getType, identity()));
+        return new PropertyParseManager(propertiesMap);
     }
 }
