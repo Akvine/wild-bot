@@ -1,4 +1,4 @@
-package ru.akvine.wild.bot.helpers;
+package ru.akvine.wild.bot.infrastructure.lock.distributed;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class LockHelper {
+public class DataBaseLockProvider {
     private final ConcurrentOperationsHelper concurrentOperationsHelper;
     private final SLockProvider sLockProvider;
     private final TransactionTemplate transactionTemplate;

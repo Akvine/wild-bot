@@ -6,4 +6,6 @@ public final class DbLockConstants {
     }
 
     public static final String UPLOAD_PHOTO_LOCK = "UPLOAD_CARD_PHOTO_STATE_";
+
+    public static final String DEFAULT_PROCESS_DB_LOCK = "LOCK_by_DB";
 }

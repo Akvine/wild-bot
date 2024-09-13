@@ -6,7 +6,7 @@ import org.springframework.util.CollectionUtils;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.helpers.LockHelper;
+import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.services.AdvertService;
@@ -27,7 +27,7 @@ import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP
 public class IsChangePriceView implements TelegramView {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final AdvertService advertService;
-    private final LockHelper lockHelper;
+    private final DataBaseLockProvider dataBaseLockProvider;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
     private final static String NEW_LINE = "\n";
@@ -47,7 +47,7 @@ public class IsChangePriceView implements TelegramView {
 
     @Override
     public String getMessage(String chatId) {
-        return lockHelper.doWithLock(UPLOAD_PHOTO_LOCK + chatId, () -> {
+        return dataBaseLockProvider.doWithLock(UPLOAD_PHOTO_LOCK + chatId, () -> {
             String selectedCardType = sessionStorage.get(chatId).getSelectedCardType();
             int selectedCategoryId = sessionStorage.get(chatId).getSelectedCategoryId();
             AdvertModel advertBean = advertService.getFirst(selectedCardType, selectedCategoryId);
