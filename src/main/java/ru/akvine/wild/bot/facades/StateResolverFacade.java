@@ -3,7 +3,7 @@ package ru.akvine.wild.bot.facades;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.resolvers.controllers.states.StateResolver;
+import ru.akvine.wild.bot.controllers.states.StateResolver;
 
 import java.util.Map;
 

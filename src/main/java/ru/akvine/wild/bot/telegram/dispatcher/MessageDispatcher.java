@@ -15,7 +15,7 @@ import ru.akvine.wild.bot.facades.StateResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
-import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
+import ru.akvine.wild.bot.controllers.views.TelegramView;
 import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.telegram.TelegramData;

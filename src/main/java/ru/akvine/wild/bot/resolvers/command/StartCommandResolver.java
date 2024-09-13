@@ -12,7 +12,7 @@ import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
-import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
+import ru.akvine.wild.bot.controllers.views.TelegramView;
 
 import java.util.List;
 
