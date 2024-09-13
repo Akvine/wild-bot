@@ -11,8 +11,8 @@ import ru.akvine.wild.bot.helpers.TelegramPhotoHelper;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.managers.TelegramDataResolverManager;
-import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
+import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.telegram.TelegramData;
@@ -30,13 +30,13 @@ public class UploadPhotoStateResolver extends StateResolver {
 
     @Autowired
     public UploadPhotoStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                    TelegramViewManager viewManager,
-                                    TelegramDataResolverManager dataResolverManager,
+                                    TelegramViewFacade viewFacade,
+                                    TelegramDataResolverFacade dataResolverFacade,
                                     SessionStorage<String, ClientSessionData> sessionStorage,
                                     TelegramPhotoHelper telegramPhotoHelper,
                                     TelegramIntegrationService telegramIntegrationService,
                                     PhotoValidator photoValidator) {
-        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
+        super(stateStorage, viewFacade, dataResolverFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.telegramPhotoHelper = telegramPhotoHelper;
         this.telegramIntegrationService = telegramIntegrationService;
@@ -46,7 +46,7 @@ public class UploadPhotoStateResolver extends StateResolver {
     @Override
     public BotApiMethod<?> resolve(TelegramData telegramData) {
         super.resolve(telegramData);
-        TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(telegramData.getType());
+        TelegramDataResolver resolver = dataResolverFacade.getTelegramDataResolvers().get(telegramData.getType());
         String chatId = resolver.extractChatId(telegramData.getData());
         logger.info("[{}] state resolved", getState());
 

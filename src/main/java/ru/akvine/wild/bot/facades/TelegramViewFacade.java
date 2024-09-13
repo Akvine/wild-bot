@@ -1,4 +1,4 @@
-package ru.akvine.wild.bot.managers;
+package ru.akvine.wild.bot.facades;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-public class TelegramViewManager {
+public class TelegramViewFacade {
     private final Map<ClientState, TelegramView> eventMap;
 }

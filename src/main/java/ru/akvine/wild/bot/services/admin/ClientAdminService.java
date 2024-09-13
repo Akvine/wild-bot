@@ -10,7 +10,7 @@ import org.springframework.util.CollectionUtils;
 import ru.akvine.wild.bot.entities.BlockedCredentialsEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
-import ru.akvine.wild.bot.managers.QrCodeGenerationServiceManager;
+import ru.akvine.wild.bot.facades.QrCodeGenerationServiceFacade;
 import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.services.BlockingService;
 import ru.akvine.wild.bot.services.ClientService;
@@ -37,7 +37,7 @@ public class ClientAdminService {
     // TODO : лучше делать обновление сущности в ClientService, так по канону
     private final ClientRepository clientRepository;
     private final TelegramIntegrationService telegramIntegrationService;
-    private final QrCodeGenerationServiceManager qrCodeGenerationServiceManager;
+    private final QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade;
 
     @Value("${qraft.integration.enabled}")
     private boolean qraftIntegrationEnabled;
@@ -204,7 +204,7 @@ public class ClientAdminService {
         logger.info("Send qr code to chat with id = {} and url = {}", chatId, url);
         clientService.verifyExistsByChatId(chatId);
 
-        Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap = qrCodeGenerationServiceManager
+        Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap = qrCodeGenerationServiceFacade
                 .getServicesMap();
         GenerateQrCodeRequest request = new GenerateQrCodeRequest()
                 .setUrl(url)

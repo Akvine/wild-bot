@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.enums.Command;
 import ru.akvine.wild.bot.enums.TelegramDataType;
-import ru.akvine.wild.bot.managers.*;
+import ru.akvine.wild.bot.facades.*;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
 import ru.akvine.wild.bot.resolvers.controllers.states.StateResolver;
 import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
@@ -21,53 +21,53 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
 @Configuration
-public class ManagersConfig {
+public class FacadesConfig {
 
     @Bean
-    public TelegramDataResolverManager telegramDataResolverManager(List<TelegramDataResolver> resolvers) {
+    public TelegramDataResolverFacade telegramDataResolverFacade(List<TelegramDataResolver> resolvers) {
         Map<TelegramDataType, TelegramDataResolver> updateDataExtractorMap = resolvers
                 .stream()
                 .collect(toMap(TelegramDataResolver::getType, identity()));
-        return new TelegramDataResolverManager(updateDataExtractorMap);
+        return new TelegramDataResolverFacade(updateDataExtractorMap);
     }
 
     @Bean
-    public StateResolverManager stateResolverManager(List<StateResolver> stateResolvers) {
+    public StateResolverFacade stateResolverFacade(List<StateResolver> stateResolvers) {
         Map<ClientState, StateResolver> stateResolversMap = stateResolvers
                 .stream()
                 .collect(toMap(StateResolver::getState, identity()));
-        return new StateResolverManager(stateResolversMap);
+        return new StateResolverFacade(stateResolversMap);
     }
 
     @Bean
-    public CommandResolverManager commandResolverManager(List<CommandResolver> commandResolvers) {
+    public CommandResolverFacade commandResolverFacade(List<CommandResolver> commandResolvers) {
         Map<Command, CommandResolver> commandResolverMap = commandResolvers
                 .stream()
                 .collect(toMap(CommandResolver::getCommand, identity()));
-        return new CommandResolverManager(commandResolverMap);
+        return new CommandResolverFacade(commandResolverMap);
     }
 
     @Bean
-    public TelegramViewManager telegramEventManager(List<TelegramView> telegramViews) {
+    public TelegramViewFacade telegramEventFacade(List<TelegramView> telegramViews) {
         Map<ClientState, TelegramView> keyboardMap = telegramViews
                 .stream()
                 .collect(toMap(TelegramView::byState, identity()));
-        return new TelegramViewManager(keyboardMap);
+        return new TelegramViewFacade(keyboardMap);
     }
 
     @Bean
-    public QrCodeGenerationServiceManager qrCodeGenerationServiceManager(List<QrCodeGenerationService> qrCodeGenerationServices) {
+    public QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade(List<QrCodeGenerationService> qrCodeGenerationServices) {
         Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap = qrCodeGenerationServices
                 .stream()
                 .collect(toMap(QrCodeGenerationService::getType, identity()));
-        return new QrCodeGenerationServiceManager(serviceMap);
+        return new QrCodeGenerationServiceFacade(serviceMap);
     }
 
     @Bean
-    public PropertyParseManager propertyParseManager(List<PropertyParser<?>> propertyParsers) {
+    public PropertyParseFacade propertyParseFacade(List<PropertyParser<?>> propertyParsers) {
         Map<Class<?>, PropertyParser<?>> propertiesMap = propertyParsers
                 .stream()
                 .collect(toMap(PropertyParser::getType, identity()));
-        return new PropertyParseManager(propertiesMap);
+        return new PropertyParseFacade(propertiesMap);
     }
 }

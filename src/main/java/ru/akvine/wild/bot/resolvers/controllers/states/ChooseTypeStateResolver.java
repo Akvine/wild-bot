@@ -8,8 +8,8 @@ import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.managers.TelegramDataResolverManager;
-import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
+import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.services.CardTypeService;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
@@ -26,13 +26,13 @@ public class ChooseTypeStateResolver extends StateResolver {
     private final CardTypeService cardTypeService;
 
     @Autowired
-    public ChooseTypeStateResolver(TelegramDataResolverManager dataResolverManager,
-                                   TelegramViewManager viewManager,
+    public ChooseTypeStateResolver(TelegramDataResolverFacade dataResolverFacade,
+                                   TelegramViewFacade viewFacade,
                                    StateStorage<String, List<ClientState>> stateStorage,
                                    SessionStorage<String, ClientSessionData> sessionStorage,
                                    CardTypeService cardTypeService,
                                    TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewManager, dataResolverManager, telegramIntegrationService);
+        super(stateStorage, viewFacade, dataResolverFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.cardTypeService = cardTypeService;
     }
@@ -40,7 +40,7 @@ public class ChooseTypeStateResolver extends StateResolver {
     @Override
     public BotApiMethod<?> resolve(TelegramData telegramData) {
         super.resolve(telegramData);
-        TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(telegramData.getType());
+        TelegramDataResolver resolver = dataResolverFacade.getTelegramDataResolvers().get(telegramData.getType());
         String chatId = resolver.extractChatId(telegramData.getData());
         String text = resolver.extractText(telegramData.getData());
 

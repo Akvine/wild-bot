@@ -8,8 +8,8 @@ import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.exceptions.AdvertStatisticNotFoundException;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.managers.TelegramDataResolverManager;
-import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
+import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.ClientService;
@@ -25,13 +25,13 @@ public class DetailTestInfoStateResolver extends StateResolver {
     private final TelegramIntegrationService telegramIntegrationService;
 
     @Autowired
-    public DetailTestInfoStateResolver(TelegramDataResolverManager dataResolverManager,
+    public DetailTestInfoStateResolver(TelegramDataResolverFacade dataResolverFacade,
                                        AdvertStatisticService advertStatisticService,
                                        ClientService clientService,
                                        TelegramIntegrationService telegramIntegrationService,
-                                       TelegramViewManager telegramViewManager,
+                                       TelegramViewFacade telegramViewFacade,
                                        StateStorage<String, List<ClientState>> stateStorage) {
-        super(stateStorage, telegramViewManager, dataResolverManager, telegramIntegrationService);
+        super(stateStorage, telegramViewFacade, dataResolverFacade, telegramIntegrationService);
         this.advertStatisticService = advertStatisticService;
         this.clientService = clientService;
         this.telegramIntegrationService = telegramIntegrationService;
@@ -40,7 +40,7 @@ public class DetailTestInfoStateResolver extends StateResolver {
     @Override
     public BotApiMethod<?> resolve(TelegramData telegramData) {
         super.resolve(telegramData);
-        TelegramDataResolver resolver = dataResolverManager.getTelegramDataResolvers().get(telegramData.getType());
+        TelegramDataResolver resolver = dataResolverFacade.getTelegramDataResolvers().get(telegramData.getType());
         String chatId = resolver.extractChatId(telegramData.getData());
         String text = resolver.extractText(telegramData.getData());
 

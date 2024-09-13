@@ -10,10 +10,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.enums.Command;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.managers.CommandResolverManager;
-import ru.akvine.wild.bot.managers.StateResolverManager;
-import ru.akvine.wild.bot.managers.TelegramDataResolverManager;
-import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.facades.CommandResolverFacade;
+import ru.akvine.wild.bot.facades.StateResolverFacade;
+import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
+import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
 import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
 import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
@@ -29,16 +29,16 @@ import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.BACK
 @Slf4j
 public class MessageDispatcher {
     private final StateStorage<String, List<ClientState>> stateStorage;
-    private final TelegramViewManager telegramViewManager;
+    private final TelegramViewFacade telegramViewFacade;
 
-    private final StateResolverManager stateResolverManager;
-    private final TelegramDataResolverManager resolverManager;
+    private final StateResolverFacade stateResolverFacade;
+    private final TelegramDataResolverFacade resolverFacade;
 
-    private final CommandResolverManager commandResolverManager;
+    private final CommandResolverFacade commandResolverFacade;
     private final TelegramIntegrationService telegramIntegrationService;
 
     public BotApiMethod<?> doDispatch(TelegramData telegramData) {
-        TelegramDataResolver resolver = resolverManager.getTelegramDataResolvers().get(telegramData.getType());
+        TelegramDataResolver resolver = resolverFacade.getTelegramDataResolvers().get(telegramData.getType());
         String chatId = resolver.extractChatId(telegramData.getData());
         String text = resolver.extractText(telegramData.getData());
 
@@ -48,7 +48,7 @@ public class MessageDispatcher {
         );
 
         if (StringUtils.isNotBlank(text) && text.startsWith("/")) {
-            CommandResolver commandResolver = commandResolverManager
+            CommandResolver commandResolver = commandResolverFacade
                     .getCommandResolvers()
                     .get(Command.getByText(text));
             if (commandResolver == null) {
@@ -70,7 +70,7 @@ public class MessageDispatcher {
             }
         }
 
-        return stateResolverManager
+        return stateResolverFacade
                 .getStateResolvers()
                 .get(stateStorage.getCurrent(chatId))
                 .resolve(telegramData);
@@ -78,7 +78,7 @@ public class MessageDispatcher {
 
 
     private SendMessage formMessage(String chatId, ClientState state) {
-        TelegramView view = telegramViewManager.getEventMap().get(state);
+        TelegramView view = telegramViewFacade.getEventMap().get(state);
         String message = view.getMessage(chatId);
         InlineKeyboardMarkup keyboardMarkup = view.getKeyboard(chatId);
 

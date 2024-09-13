@@ -11,7 +11,7 @@ import ru.akvine.wild.bot.enums.Command;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.managers.TelegramViewManager;
+import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.resolvers.controllers.views.TelegramView;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 public class StartCommandResolver implements CommandResolver {
     private final StateStorage<String, List<ClientState>> stateStorage;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
-    private final TelegramViewManager telegramViewManager;
+    private final TelegramViewFacade telegramViewFacade;
 
     @Override
     public BotApiMethod<?> resolve(String chatId, String text) {
@@ -37,7 +37,7 @@ public class StartCommandResolver implements CommandResolver {
 
         ClientState startState = ClientState.MAIN_MENU;
         stateStorage.add(chatId, startState);
-        TelegramView view = telegramViewManager.getEventMap().get(startState);
+        TelegramView view = telegramViewFacade.getEventMap().get(startState);
         String message = view.getMessage(chatId);
         InlineKeyboardMarkup keyboardMarkup = view.getKeyboard(chatId);
 

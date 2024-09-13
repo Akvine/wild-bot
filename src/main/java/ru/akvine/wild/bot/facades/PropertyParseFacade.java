@@ -1,4 +1,4 @@
-package ru.akvine.wild.bot.managers;
+package ru.akvine.wild.bot.facades;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,6 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Getter
-public class PropertyParseManager {
+public class PropertyParseFacade {
    private final Map<Class<?>, PropertyParser<?>> propertyParsers;
 }
