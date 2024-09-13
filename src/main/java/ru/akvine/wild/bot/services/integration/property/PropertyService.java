@@ -16,10 +16,7 @@ import ru.akvine.wild.bot.services.integration.property.dto.GetPropertiesRequest
 import ru.akvine.wild.bot.services.integration.property.dto.PropertyDto;
 import ru.akvine.wild.bot.services.integration.property.dto.PropertyResponse;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -115,5 +112,9 @@ public class PropertyService {
         });
 
         logger.info("Successful sync properties from custodian service...");
+    }
+
+    public Map<String, String> getProperties() {
+        return Collections.unmodifiableMap(applicationProperties);
     }
 }
