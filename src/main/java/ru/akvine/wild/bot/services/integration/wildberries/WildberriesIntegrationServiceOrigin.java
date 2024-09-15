@@ -1,9 +1,12 @@
 package ru.akvine.wild.bot.services.integration.wildberries;
 
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,6 +23,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Profile("!local")
 public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrationService {
     @Value("${wildberries.api.token}")
     private String apiToken;
@@ -553,5 +557,30 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         headers.add(HttpHeaders.AUTHORIZATION, apiToken);
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         return headers;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private enum WildberriesApiMethods {
+        GET_CARD_LIST("https://suppliers-api.wildberries.ru","/content/v2/get/cards/list?locale=ru"),
+        GET_ADVERTS("https://advert-api.wb.ru", "/adv/v1/promotion/count"),
+        ADVERT_BUDGET_DEPOSIT("https://advert-api.wb.ru","/adv/v1/budget/deposit"),
+        START_ADVERT("https://advert-api.wb.ru", "/adv/v0/start"),
+        PAUSE_ADVERT("https://advert-api.wb.ru","/adv/v0/pause"),
+        CHANGE_ADVERT_CPM("https://advert-api.wb.ru", "/adv/v0/cpm"),
+        RENAME_ADVERT("https://advert-api.wb.ru", "/adv/v0/rename"),
+        GET_ADVERTS_INFO( "https://advert-api.wb.ru", "/adv/v1/promotion/adverts"),
+        GET_ADVERT_STATISTIC("https://advert-api.wb.ru", "/adv/v1/auto/stat" ),
+        UPLOAD_CARD_PHOTO("https://suppliers-api.wildberries.ru","/content/v3/media/file"),
+        ADVERT_BUDGET_INFO("https://advert-api.wb.ru","/adv/v1/budget"),
+        CHANGE_CARD_STOCKS("https://marketplace-api.wildberries.ru", "/api/v3/stocks/"),
+        GET_ADVERTS_FULL_STATISTIC("https://advert-api.wb.ru", "/adv/v2/fullstats"),
+        GET_GOODS("https://discounts-prices-api.wildberries.ru", "/api/v2/list/goods/filter"),
+        SET_GOODS_PRICE_AND_DISCOUNT("https://discounts-prices-api.wildberries.ru", "/api/v2/upload/task"),
+        CREATE_AUTO_ADVERT("https://advert-api.wildberries.ru", "/adv/v1/save-ad"),
+        GET_CARD_TYPES("https://content-api.wildberries.ru", "/content/v2/directory/kinds");
+
+        private final String url;
+        private final String method;
     }
 }
