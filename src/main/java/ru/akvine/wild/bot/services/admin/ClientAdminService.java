@@ -17,7 +17,7 @@ import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
-import ru.akvine.wild.bot.services.integration.qrcode.GenerateQrCodeRequest;
+import ru.akvine.wild.bot.services.integration.qrcode.dto.GenerateQrCodeRequest;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;

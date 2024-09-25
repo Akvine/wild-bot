@@ -1,6 +1,5 @@
-package ru.akvine.wild.bot.services.integration.qrcode;
+package ru.akvine.wild.bot.services.integration.trimly;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -10,44 +9,40 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
-import ru.akvine.wild.bot.services.integration.qrcode.dto.GenerateQrCodeRequest;
+import ru.akvine.wild.bot.services.integration.trimly.dto.ShortUrlRequest;
+import ru.akvine.wild.bot.services.integration.trimly.dto.ShortUrlResponse;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
-public class QRaftIntegrationService implements QrCodeGenerationService {
-    private final RestTemplate restTemplate = new RestTemplate();
-
-    @Value("${qraft.generate.qrcode.url}")
+public class TrimlyIntegrationOriginService implements TrimlyIntegrationService {
+    @Value("${trimly.url}")
     private String url;
-    @Value("${qraft.generate.qrcode.method}")
+    @Value("${trimly.method}")
     private String method;
 
-    @Override
-    public byte[] generateQrCode(GenerateQrCodeRequest request) {
-        logger.info("Generate qr code in QRaft service by request = {}", request);
+    private final RestTemplate restTemplate = new RestTemplate();
 
+    @Override
+    public ShortUrlResponse createTempShortUrl(String originUrl) {
+        logger.info("Generate short link in Trimly");
+
+        ShortUrlRequest request = new ShortUrlRequest(originUrl);
         HttpHeaders headers = buildHttpHeaders();
-        HttpEntity<GenerateQrCodeRequest> httpEntity = new HttpEntity<>(request, headers);
-        ResponseEntity<byte[]> response;
+        HttpEntity<ShortUrlRequest> httpEntity = new HttpEntity<>(request, headers);
+        ResponseEntity<ShortUrlResponse> response;
         try {
             response = restTemplate.postForEntity(
                     url + method,
                     httpEntity,
-                    byte[].class);
+                    ShortUrlResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling QRaft api method = [%s]. Message = [%s]",
+                    "Error while calling Trimly api method = [%s]. Message = [%s]",
                     transformMethod(method), exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
 
         return response.getBody();
-    }
-
-    @Override
-    public QrCodeGenerationServiceType getType() {
-        return QrCodeGenerationServiceType.EXTERNAL;
     }
 
     private HttpHeaders buildHttpHeaders() {

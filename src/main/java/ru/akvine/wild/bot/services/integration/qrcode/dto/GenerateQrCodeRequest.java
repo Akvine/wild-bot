@@ -1,4 +1,4 @@
-package ru.akvine.wild.bot.services.integration.qrcode;
+package ru.akvine.wild.bot.services.integration.qrcode.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

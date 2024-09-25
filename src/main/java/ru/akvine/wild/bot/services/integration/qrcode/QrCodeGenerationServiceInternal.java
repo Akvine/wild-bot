@@ -3,6 +3,7 @@ package ru.akvine.wild.bot.services.integration.qrcode;
 import io.nayuki.qrcodegen.QrCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.akvine.wild.bot.services.integration.qrcode.dto.GenerateQrCodeRequest;
 import ru.akvine.wild.bot.utils.QrCodeUtils;
 
 @Slf4j
