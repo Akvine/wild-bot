@@ -79,7 +79,7 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
 
     @Override
     public AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request) {
-        return null;
+        return new AdvertUploadPhotoResponse();
     }
 
     @Override
