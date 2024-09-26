@@ -249,3 +249,121 @@ CREATE TABLE SUBSCRIPTION_ENTITY
 CREATE SEQUENCE SEQ_SUBSCRIPTION_ENTITY START WITH 1 INCREMENT BY 1000;
 CREATE UNIQUE INDEX SUBSCRIPTION_ID_INDEX ON SUBSCRIPTION_ENTITY (ID);
 CREATE UNIQUE INDEX SUBSCRIPTION_CLIENT_ID_INDEX ON SUBSCRIPTION_ENTITY (CLIENT_ID);
+
+--changeset akvine:TG-BOT-1-14
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'SPRING_SESSION' and table_schema = 'public';
+CREATE TABLE SPRING_SESSION
+(
+    PRIMARY_ID            VARCHAR(36)    NOT NULL,
+    SESSION_ID            VARCHAR(36),
+    CREATION_TIME         NUMERIC(19, 0) NOT NULL,
+    LAST_ACCESS_TIME      NUMERIC(19, 0) NOT NULL,
+    MAX_INACTIVE_INTERVAL NUMERIC(10, 0) NOT NULL,
+    EXPIRY_TIME           NUMERIC(19, 0) NOT NULL,
+    PRINCIPAL_NAME        VARCHAR(100),
+    CONSTRAINT SPRING_SESSION_PK PRIMARY KEY (PRIMARY_ID)
+);
+CREATE INDEX SPRING_SESSION_INDX ON SPRING_SESSION(LAST_ACCESS_TIME);
+--rollback not required
+
+--changeset akvine:TG-BOT-1-15
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'SPRING_SESSION_ATTRIBUTES' and table_schema = 'public';
+CREATE TABLE SPRING_SESSION_ATTRIBUTES
+(
+    SESSION_PRIMARY_ID VARCHAR(36),
+    ATTRIBUTE_NAME     VARCHAR(200),
+    ATTRIBUTE_BYTES    BYTEA,
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY (SESSION_PRIMARY_ID, ATTRIBUTE_NAME),
+    CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (SESSION_PRIMARY_ID) REFERENCES SPRING_SESSION (PRIMARY_ID) ON DELETE CASCADE
+);
+CREATE INDEX SPRING_SESSION_ATTRIBUTES_INDX on SPRING_SESSION_ATTRIBUTES (SESSION_PRIMARY_ID);
+--rollback not required
+
+--changeset akvine:TG-BOT-1-16
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'AUTH_ACTION_ENTITY' and table_schema = 'public';
+CREATE TABLE AUTH_ACTION_ENTITY
+(
+    ID                        BIGINT                              NOT NULL,
+    SESSION_ID                VARCHAR(144)                        NOT NULL,
+    LOGIN                     VARCHAR(64)                         NOT NULL,
+    STARTED_DATE              TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    ACTION_EXPIRED_AT         TIMESTAMP                           NOT NULL,
+    PWD_INVALID_ATTEMPTS_LEFT INTEGER                             NOT NULL,
+    OTP_COUNT_LEFT            INTEGER                             NOT NULL,
+    OTP_NUMBER                INTEGER,
+    OTP_LAST_UPDATE           TIMESTAMP,
+    OTP_EXPIRED_AT            TIMESTAMP,
+    OTP_INVALID_ATTEMPTS_LEFT INTEGER                             NOT NULL,
+    OTP_VALUE                 VARCHAR(32),
+    CONSTRAINT AUTH_ACTION_PK PRIMARY KEY (ID)
+);
+CREATE SEQUENCE SEQ_AUTH_ACTION_ENTITY START WITH 1 INCREMENT BY 1000;
+CREATE UNIQUE INDEX AUTH_ACTION_INDX on AUTH_ACTION_ENTITY (LOGIN);
+CREATE INDEX AUTH_ACTION_EXP_INDX on AUTH_ACTION_ENTITY (ACTION_EXPIRED_AT);
+--rollback not required
+
+--changeset akvine:TG-BOT-1-17
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'REGISTRATION_ACTION_ENTITY' and table_schema = 'public';
+CREATE TABLE REGISTRATION_ACTION_ENTITY
+(
+    ID                        BIGINT                              NOT NULL,
+    SESSION_ID                VARCHAR(144)                        NOT NULL,
+    LOGIN                     VARCHAR(64)                         NOT NULL,
+    STARTED_DATE              TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    ACTION_EXPIRED_AT         TIMESTAMP                           NOT NULL,
+    STATE                     VARCHAR(32)                         NOT NULL,
+    OTP_COUNT_LEFT            INTEGER                             NOT NULL,
+    OTP_NUMBER                INTEGER,
+    OTP_LAST_UPDATE           TIMESTAMP,
+    OTP_EXPIRED_AT            TIMESTAMP,
+    OTP_INVALID_ATTEMPTS_LEFT INTEGER                             NOT NULL,
+    OTP_VALUE                 VARCHAR(32),
+    CONSTRAINT REGISTRATION_ACTION_PK PRIMARY KEY (ID)
+);
+CREATE SEQUENCE SEQ_REGISTRATION_ACTION_ENTITY START WITH 1 INCREMENT BY 1000;
+CREATE UNIQUE INDEX REGISTRATION_ACTION_LOGIN_INDX ON REGISTRATION_ACTION_ENTITY (LOGIN);
+CREATE INDEX REGISTRATION_ACTION_AEA_INDX ON REGISTRATION_ACTION_ENTITY (ACTION_EXPIRED_AT);
+--rollback not required
+
+--changeset akvine:TG-BOT-1-18
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'OTP_COUNTER_ENTITY' and table_schema = 'public';
+CREATE TABLE OTP_COUNTER_ENTITY
+(
+    ID           BIGINT                              NOT NULL,
+    LOGIN        VARCHAR(64)                         NOT NULL,
+    LAST_UPDATED TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    OTP_VALUE    BIGINT    DEFAULT 1                 NOT NULL,
+    CONSTRAINT OTP_COUNTER_PK PRIMARY KEY (ID)
+);
+CREATE SEQUENCE SEQ_OTP_COUNTER_ENTITY START WITH 1 INCREMENT BY 1000;
+CREATE UNIQUE INDEX OTP_COUNTER_LOGIN_INDX ON OTP_COUNTER_ENTITY (LOGIN);
+--rollback not required
+
+--changeset akvine:TG-BOT-1-19
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'ACCESS_RESTORE_ACTION_ENTITY' and table_schema = 'public';
+CREATE TABLE ACCESS_RESTORE_ACTION_ENTITY
+(
+    ID                        BIGINT                              NOT NULL,
+    SESSION_ID                VARCHAR(144)                        NOT NULL,
+    LOGIN                     VARCHAR(64)                         NOT NULL,
+    STARTED_DATE              TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    ACTION_EXPIRED_AT         TIMESTAMP                           NOT NULL,
+    STATE                     VARCHAR(32)                         NOT NULL,
+    OTP_COUNT_LEFT            INTEGER                             NOT NULL,
+    OTP_NUMBER                INTEGER,
+    OTP_LAST_UPDATE           TIMESTAMP,
+    OTP_EXPIRED_AT            TIMESTAMP,
+    OTP_INVALID_ATTEMPTS_LEFT INTEGER                             NOT NULL,
+    OTP_VALUE                 VARCHAR(32),
+    CONSTRAINT ACCESS_RESTORE_ACTION_PK PRIMARY KEY (ID)
+);
+CREATE SEQUENCE SEQ_ACCESS_RESTORE_ACTION_ENTITY START WITH 1 INCREMENT BY 1000;
+CREATE UNIQUE INDEX ACCESS_RESTORE_LOGIN_INDX on ACCESS_RESTORE_ACTION_ENTITY (LOGIN);
+CREATE INDEX ACCESS_RESTORE_EXP_INDX on ACCESS_RESTORE_ACTION_ENTITY (ACTION_EXPIRED_AT);
+--rollback not required

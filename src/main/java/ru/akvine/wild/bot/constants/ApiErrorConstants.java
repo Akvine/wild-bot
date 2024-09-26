@@ -5,6 +5,8 @@ public final class ApiErrorConstants {
         throw new IllegalAccessException("Calling " + ApiErrorConstants.class.getSimpleName() + " constructor is prohibited!");
     }
 
+    public final static String NO_SESSION_ERROR = "no.session.error";
+
     public final static String GENERAL_ERROR = "general.error";
 
     public final static String BLOCKED_ERROR = "blocked.error";
@@ -28,6 +30,12 @@ public final class ApiErrorConstants {
 
         String MAX_CLIENTS_SEND_MESSAGE_COUNT_ERROR = "max.clients.sendMessage.count.error";
 
+        String EMAIL_BLANK_ERROR = "email.blank.error";
+        String EMAIL_INVALID_ERROR = "email.invalid.error";
+
         String LESS_THEN_MIN_VALUE_ERROR = "less.than.min.value.error";
+
+        String REGISTRATION_PASSWORD_BLANK_ERROR = "registration.password.blank.error";
+        String REGISTRATION_PASSWORD_INVALID_ERROR = "registration.password.invalid.error";
     }
 }
