@@ -12,7 +12,7 @@ import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
 import ru.akvine.wild.bot.facades.QrCodeGenerationServiceFacade;
 import ru.akvine.wild.bot.repositories.ClientRepository;
-import ru.akvine.wild.bot.services.BlockingService;
+import ru.akvine.wild.bot.services.ClientBlockingService;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ClientAdminService {
-    private final BlockingService blockingService;
+    private final ClientBlockingService clientBlockingService;
     private final ClientService clientService;
     // TODO : лучше делать обновление сущности в ClientService, так по канону
     private final ClientRepository clientRepository;
@@ -92,7 +92,7 @@ public class ClientAdminService {
         }
 
         LocalDateTime blockDate = LocalDateTime.now().plusMinutes(minutes);
-        blockingService.setBlock(uuid, minutes);
+        clientBlockingService.setBlock(uuid, minutes);
 
         return new BlockClientFinish()
                 .setUuid(uuid)
@@ -101,7 +101,7 @@ public class ClientAdminService {
     }
 
     public List<BlockClientEntry> listBlocked() {
-        List<BlockedCredentialsEntity> list = blockingService.list();
+        List<BlockedCredentialsEntity> list = clientBlockingService.list();
 
         return list.stream().map(obj -> {
             LocalDateTime start = obj.getBlockStartDate();
@@ -129,7 +129,7 @@ public class ClientAdminService {
             uuid = clientService.verifyExistsByUsername(unblockClient.getUsername()).getUuid();
         }
 
-        blockingService.removeBlock(uuid);
+        clientBlockingService.removeBlock(uuid);
     }
 
     public void sendMessage(SendMessage sendMessage) {

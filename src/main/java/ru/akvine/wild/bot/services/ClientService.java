@@ -22,7 +22,7 @@ import java.util.Optional;
 @Slf4j
 public class ClientService {
     private final ClientRepository clientRepository;
-    private final BlockingService blockingService;
+    private final ClientBlockingService clientBlockingService;
 
     @Nullable
     public ClientModel findByChatId(String chatId) {
@@ -50,7 +50,7 @@ public class ClientService {
     public void checkIsBlocked(String chatId) {
         logger.debug("Check client is blocked by chat id = {}", chatId);
         String uuid = verifyExistsByChatId(chatId).getUuid();
-        LocalDateTime blockDateTime = blockingService.getEndBlockDate(uuid);
+        LocalDateTime blockDateTime = clientBlockingService.getEndBlockDate(uuid);
         if (blockDateTime != null) {
             String errorMessage = String.format("Client with chat id = [%s] has blocked until = [%s]!", chatId, blockDateTime);
             throw new BlockedCredentialsException(errorMessage, blockDateTime.toLocalDate());

@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.BlockedCredentialsEntity;
-import ru.akvine.wild.bot.exceptions.BlockedCredentialsException;
 import ru.akvine.wild.bot.repositories.BlockedCredentialsRepository;
 import ru.akvine.wild.bot.utils.DateUtils;
 
@@ -18,7 +17,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class BlockingService {
+public class ClientBlockingService {
     private final BlockedCredentialsRepository blockedCredentialsRepository;
 
     public void setBlock(String uuid, Long minutes) {

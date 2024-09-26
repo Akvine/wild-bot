@@ -22,7 +22,7 @@ public abstract class OtpActionService<T extends OneTimePasswordable> {
     @Autowired
     protected DataBaseLockProvider lockProvider;
     @Autowired
-    protected BlockingService blockingService;
+    protected SupportBlockingService supportBlockingService;
     @Autowired
     protected OtpService otpService;
     @Autowired
@@ -114,7 +114,7 @@ public abstract class OtpActionService<T extends OneTimePasswordable> {
     }
 
     protected void verifyNotBlocked(String login) {
-        LocalDateTime unblockDate = blockingService.getUnblockDate(login);
+        LocalDateTime unblockDate = supportBlockingService.getUnblockDate(login);
         if (unblockDate == null || unblockDate.isBefore(LocalDateTime.now())) {
             return;
         }
@@ -125,7 +125,7 @@ public abstract class OtpActionService<T extends OneTimePasswordable> {
 
     protected void handleNoMoreNewOtp(T action) {
         String login = action.getLogin();
-        blockingService.setBlock(login);
+        supportBlockingService.setBlock(login);
         logger.info("Client with email = {} reached limit of maximum otp generation for {} and set blocked!", login, getActionName());
         getRepository().delete(action);
         logger.info("Blocked client's action = {} for email = {}[id = {}] removed from DB", login, getActionName(), action.getId());
@@ -179,7 +179,7 @@ public abstract class OtpActionService<T extends OneTimePasswordable> {
 
     protected void handleNoMoreOtpInvalidAttemptsLeft(T action) {
         String login = action.getLogin();
-        blockingService.setBlock(login);
+        supportBlockingService.setBlock(login);
         logger.info("Client with email = {} reached limit for invalid otp input and set blocked!", login);
         getRepository().delete(action);
         logger.info("Blocked client's action = {} for email = {}[id = {}] removed from DB", login, getActionName(), action.getId());

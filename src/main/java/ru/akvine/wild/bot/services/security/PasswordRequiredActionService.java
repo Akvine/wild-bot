@@ -41,7 +41,7 @@ public abstract class PasswordRequiredActionService <T extends AccountPasswordab
 
     protected void handleNoMorePasswordInvalidAttemptsLeft(T action) {
         String login = action.getLogin();
-        blockingService.setBlock(login);
+        supportBlockingService.setBlock(login);
         logger.info("Client with email = {} reached limit for invalid password input and set blocked", login);
         getRepository().delete(action);
         logger.info("Blocked client's with email = {} {}[id={}] removed from DB", login, getActionName(), action.getId());

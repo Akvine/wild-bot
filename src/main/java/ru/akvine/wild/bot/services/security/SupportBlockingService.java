@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class BlockingService {
+public class SupportBlockingService {
     private final BlockedCredentialsRepository blockedCredentialsRepository;
 
     private ConcurrentHashMap<String, BlockTime> blockedCache = new ConcurrentHashMap<>();
