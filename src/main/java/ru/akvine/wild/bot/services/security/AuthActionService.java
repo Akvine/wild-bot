@@ -121,7 +121,7 @@ public class AuthActionService extends PasswordRequiredActionService<AuthActionE
         if (!otpCreateNewAction.isCredentialsValid()) {
             authActionEntity.decrementPwdInvalidAttemptsLeft();
             getRepository().save(authActionEntity);
-            throw new BadCredentialsException("Invalid password");
+            throw new BadCredentialsException("Invalid credentials");
         }
         return updateNewOtpAndSend(authActionEntity);
     }

@@ -38,4 +38,17 @@ public final class ApiErrorConstants {
         String REGISTRATION_PASSWORD_BLANK_ERROR = "registration.password.blank.error";
         String REGISTRATION_PASSWORD_INVALID_ERROR = "registration.password.invalid.error";
     }
+
+    public interface Security {
+        String INVALID_ATTEMPT_ERROR = "invalid.attempt.error";
+        String INVALID_SESSION_ERROR = "invalid.session.error";
+        String ACTION_NOT_STARTED_ERROR = "action.not.started.error";
+        String INVALID_STATE_ERROR = "invalid.state.error";
+        String OTP_EXPIRED_ERROR = "otp.expired.error";
+        String LIMIT_REACHED_ERROR = "otp.no.more.new.codes.error";
+        String BAD_CREDENTIALS_ERROR = "bad.credentials.error";
+        String BLOCKED_ERROR = "blocked.error";
+        String OTP_AUTH_REQUIRED = "otp.auth.required";
+        String PASSWORDS_EQUAL_ERROR = "passwords.equal.error";
+    }
 }

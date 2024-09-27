@@ -78,7 +78,7 @@ public class ClientConverter {
     public BlockClientResponse convertToBlockClientResponse(BlockClientFinish finish) {
         Preconditions.checkNotNull(finish, "blockClientFinish is null");
         return new BlockClientResponse()
-                .setUuid(finish.getUuid())
+                .setChatId(finish.getChatId())
                 .setDateTime(finish.getDateTime())
                 .setMinutes(finish.getMinutes());
     }
@@ -120,7 +120,7 @@ public class ClientConverter {
 
     private BlockClientDto buildBlockClientDto(BlockClientEntry entry) {
         return new BlockClientDto()
-                .setUuid(entry.getUuid())
+                .setUuid(entry.getChatId())
                 .setMinutes(entry.getMinutes())
                 .setBlockStartDate(entry.getBlockStartDate())
                 .setBlockEndDate(entry.getBlockEndDate());

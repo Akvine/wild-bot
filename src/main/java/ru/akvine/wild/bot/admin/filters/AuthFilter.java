@@ -12,7 +12,7 @@ import java.io.IOException;
 @Component
 public class AuthFilter extends GenericFilter {
     @Value("${security.two.factor.authentication.enabled}")
-    private boolean twoFactorAuthEnabled;
+    private Boolean twoFactorAuthEnabled;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

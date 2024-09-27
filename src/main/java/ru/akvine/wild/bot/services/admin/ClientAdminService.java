@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import ru.akvine.wild.bot.entities.BlockedCredentialsEntity;
+import ru.akvine.wild.bot.entities.ClientBlockedCredentialsEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
 import ru.akvine.wild.bot.facades.QrCodeGenerationServiceFacade;
@@ -80,36 +80,35 @@ public class ClientAdminService {
     public BlockClientFinish blockClient(BlockClientStart start) {
         Preconditions.checkNotNull(start, "blockClientStart is null");
         long minutes = start.getMinutes();
-        String uuid;
+        String chatId;
 
         if (StringUtils.isNotBlank(start.getUuid())) {
-            clientService.verifyExistsByClientUuid(start.getUuid());
-            uuid = start.getUuid();
+            chatId = clientService.verifyExistsByClientUuid(start.getUuid()).getChatId();
         } else if (StringUtils.isNotBlank(start.getChatId())) {
-            uuid = clientService.verifyExistsByChatId(start.getChatId()).getUuid();
+            chatId = clientService.verifyExistsByChatId(start.getChatId()).getChatId();
         } else {
-            uuid = clientService.verifyExistsByUsername(start.getUsername()).getUuid();
+            chatId = clientService.verifyExistsByUsername(start.getUsername()).getChatId();
         }
 
         LocalDateTime blockDate = LocalDateTime.now().plusMinutes(minutes);
-        clientBlockingService.setBlock(uuid, minutes);
+        clientBlockingService.setBlock(chatId, minutes);
 
         return new BlockClientFinish()
-                .setUuid(uuid)
+                .setChatId(chatId)
                 .setDateTime(blockDate)
                 .setMinutes(minutes);
     }
 
     public List<BlockClientEntry> listBlocked() {
-        List<BlockedCredentialsEntity> list = clientBlockingService.list();
+        List<ClientBlockedCredentialsEntity> list = clientBlockingService.list();
 
         return list.stream().map(obj -> {
             LocalDateTime start = obj.getBlockStartDate();
             LocalDateTime end = obj.getBlockEndDate();
-            String uuid = obj.getUuid();
+            String chatId = obj.getChatId();
             long minutes = DateUtils.getMinutes(start, end);
             return new BlockClientEntry()
-                    .setUuid(uuid)
+                    .setChatId(chatId)
                     .setBlockStartDate(start)
                     .setBlockEndDate(end)
                     .setMinutes(minutes);
@@ -118,18 +117,17 @@ public class ClientAdminService {
 
     public void unblockClient(UnblockClient unblockClient) {
         Preconditions.checkNotNull(unblockClient, "unblockClient is null");
-        String uuid;
+        String chatId;
 
         if (StringUtils.isNotBlank(unblockClient.getUuid())) {
-            clientService.verifyExistsByClientUuid(unblockClient.getUuid());
-            uuid = unblockClient.getUuid();
+            chatId = clientService.verifyExistsByClientUuid(unblockClient.getUuid()).getChatId();
         } else if (StringUtils.isNotBlank(unblockClient.getChatId())) {
-            uuid = clientService.verifyExistsByChatId(unblockClient.getChatId()).getUuid();
+            chatId = clientService.verifyExistsByChatId(unblockClient.getChatId()).getChatId();
         } else {
-            uuid = clientService.verifyExistsByUsername(unblockClient.getUsername()).getUuid();
+            chatId = clientService.verifyExistsByUsername(unblockClient.getUsername()).getChatId();
         }
 
-        clientBlockingService.removeBlock(uuid);
+        clientBlockingService.removeBlock(chatId);
     }
 
     public void sendMessage(SendMessage sendMessage) {

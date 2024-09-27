@@ -6,27 +6,24 @@ import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.admin.dto.advert.ListAdvertRequest;
 import ru.akvine.wild.bot.admin.dto.advert.PauseAdvertRequest;
 import ru.akvine.wild.bot.admin.dto.advert.RenameAdvertRequest;
-import ru.akvine.wild.bot.exceptions.ValidationException;
 import ru.akvine.wild.bot.constants.ApiErrorConstants;
+import ru.akvine.wild.bot.exceptions.ValidationException;
 import ru.akvine.wild.bot.validator.AdvertStatusValidator;
 
 @Component
 @RequiredArgsConstructor
-public class AdvertValidator extends AdminValidator {
+public class AdvertValidator  {
     private final AdvertStatusValidator advertStatusValidator;
 
     public void verifyPauseAdvertRequest(PauseAdvertRequest request) {
-        verifySecret(request);
         verifyUuidAndIdParams(request.getAdvertUuid(), request.getAdvertId());
     }
 
     public void verifyListAdvertRequest(ListAdvertRequest request) {
-        verifySecret(request);
         request.getStatuses().forEach(advertStatusValidator::validate);
     }
 
     public void verifyRenameAdvertRequest(RenameAdvertRequest request) {
-        verifySecret(request);
         verifyUuidAndIdParams(request.getAdvertUuid(), request.getAdvertId());
     }
 

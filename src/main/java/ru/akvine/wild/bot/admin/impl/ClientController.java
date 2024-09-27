@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.akvine.wild.bot.admin.converters.ClientConverter;
 import ru.akvine.wild.bot.admin.dto.client.*;
 import ru.akvine.wild.bot.admin.dto.common.Response;
-import ru.akvine.wild.bot.admin.dto.common.SecretRequest;
 import ru.akvine.wild.bot.admin.dto.common.SuccessfulResponse;
 import ru.akvine.wild.bot.admin.meta.ClientControllerMeta;
 import ru.akvine.wild.bot.admin.validator.ClientValidator;
@@ -25,8 +24,7 @@ public class ClientController implements ClientControllerMeta {
     private final ClientConverter clientConverter;
 
     @Override
-    public Response list(@Valid SecretRequest secretRequest) {
-        clientValidator.verifySecret(secretRequest);
+    public Response list() {
         List<ClientModel> clients = clientAdminService.list();
         return clientConverter.convertToClientListResponse(clients);
     }
@@ -48,8 +46,7 @@ public class ClientController implements ClientControllerMeta {
     }
 
     @Override
-    public Response listBlocked(@Valid SecretRequest request) {
-        clientValidator.verifySecret(request);
+    public Response listBlocked() {
         List<BlockClientEntry> blocked = clientAdminService.listBlocked();
         return clientConverter.convertToListBlockClientResponse(blocked);
     }
@@ -72,7 +69,6 @@ public class ClientController implements ClientControllerMeta {
 
     @Override
     public Response addToWhitelist(@Valid WhitelistRequest request) {
-        clientValidator.verifySecret(request);
         Whitelist whitelist = clientConverter.convertToWhitelist(request);
         clientAdminService.addToWhitelist(whitelist);
         return new SuccessfulResponse();
@@ -80,7 +76,6 @@ public class ClientController implements ClientControllerMeta {
 
     @Override
     public Response deleteFromWhitelist(@Valid WhitelistRequest request) {
-        clientValidator.verifySecret(request);
         Whitelist whitelist = clientConverter.convertToWhitelist(request);
         clientAdminService.deleteFromWhitelist(whitelist);
         return new SuccessfulResponse();
@@ -88,7 +83,6 @@ public class ClientController implements ClientControllerMeta {
 
     @Override
     public Response sendQrCode(@Valid SendQrCodeRequest request) {
-        clientValidator.verifySecret(request);
         GenerateQrCode generateQrCode = clientConverter.convertToGenerateQrCode(request);
         clientAdminService.sendQrCode(generateQrCode);
         return new SuccessfulResponse();

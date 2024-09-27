@@ -7,9 +7,8 @@ import ru.akvine.wild.bot.constants.ApiErrorConstants;
 import ru.akvine.wild.bot.exceptions.ValidationException;
 
 @Component
-public class SubscriptionValidator extends AdminValidator {
+public class SubscriptionValidator {
     public void verifySubscriptionRequest(SubscriptionRequest request) {
-        verifySecret(request);
         if (StringUtils.isBlank(request.getChatId()) && StringUtils.isBlank(request.getUsername())) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 public class BlockClientEntry {
-    private String uuid;
+    private String chatId;
     private long minutes;
     private LocalDateTime blockStartDate;
     private LocalDateTime blockEndDate;

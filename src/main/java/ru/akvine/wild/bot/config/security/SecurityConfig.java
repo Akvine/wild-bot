@@ -24,13 +24,15 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           AuthFilter authFilter,
+                                           MDCFilter mdcFilter) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/security/**").permitAll()
+                        .requestMatchers("/security/two/factor/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -40,8 +42,8 @@ public class SecurityConfig {
                     logout.logoutSuccessHandler(restSuccessLogoutHandler());
                     logout.invalidateHttpSession(true);
                 })
-                .addFilterBefore(new AuthFilter(), BasicAuthenticationFilter.class)
-                .addFilterAfter(new MDCFilter(), BasicAuthenticationFilter.class);
+                .addFilterBefore(authFilter, BasicAuthenticationFilter.class)
+                .addFilterAfter(mdcFilter, BasicAuthenticationFilter.class);
         return http.build();
     }
 

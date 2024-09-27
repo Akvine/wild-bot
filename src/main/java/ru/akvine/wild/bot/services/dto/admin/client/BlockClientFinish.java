@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 public class BlockClientFinish {
-    private String uuid;
+    private String chatId;
     private LocalDateTime dateTime;
     private long minutes;
 }

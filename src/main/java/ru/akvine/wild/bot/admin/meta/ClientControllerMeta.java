@@ -7,12 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.akvine.wild.bot.admin.dto.client.*;
 import ru.akvine.wild.bot.admin.dto.common.Response;
-import ru.akvine.wild.bot.admin.dto.common.SecretRequest;
 
 @RequestMapping(value = "/admin/clients")
 public interface ClientControllerMeta {
     @GetMapping
-    Response list(@Valid @RequestBody SecretRequest secretRequest);
+    Response list();
 
     @PostMapping(value = "/add/tests")
     Response addTests(@Valid @RequestBody AddTestsRequest request);
@@ -24,7 +23,7 @@ public interface ClientControllerMeta {
     Response unblock(@Valid @RequestBody UnblockClientRequest request);
 
     @PostMapping(value = "/block/list")
-    Response listBlocked(@Valid @RequestBody SecretRequest request);
+    Response listBlocked();
 
     @PostMapping(value = "/send/message")
     Response sendMessage(@Valid @RequestBody SendMessageRequest request);

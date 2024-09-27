@@ -8,19 +8,19 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "BLOCKED_CREDENTIALS_ENTITY")
+@Table(name = "CLIENT_BLOCKED_CREDENTIALS_ENTITY")
 @Getter
 @Setter
 @Accessors(chain = true)
-public class BlockedCredentialsEntity {
+public class ClientBlockedCredentialsEntity {
     @Id
     @Column(name = "ID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "blockedCredentialsEntitySequence")
-    @SequenceGenerator(name = "blockedCredentialsEntitySequence", sequenceName = "SEQ_BLOCKED_CREDENTIALS_ENTITY", allocationSize = 1000)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clientBlockedCredentialsEntitySequence")
+    @SequenceGenerator(name = "clientBlockedCredentialsEntitySequence", sequenceName = "SEQ_CLIENT_BLOCKED_CREDENTIALS_ENTITY", allocationSize = 1000)
     private Long id;
 
-    @Column(name = "UUID", nullable = false)
-    private String uuid;
+    @Column(name = "CHAT_ID", nullable = false)
+    private String chatId;
 
     @Column(name = "BLOCK_START_DATE", nullable = false)
     private LocalDateTime blockStartDate;

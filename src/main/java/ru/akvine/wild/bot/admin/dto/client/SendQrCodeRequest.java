@@ -4,11 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.akvine.wild.bot.admin.dto.common.SecretRequest;
 
 @Data
 @Accessors(chain = true)
-public class SendQrCodeRequest extends SecretRequest {
+public class SendQrCodeRequest {
     @NotBlank
     @Size(max = 255)
     private String url;

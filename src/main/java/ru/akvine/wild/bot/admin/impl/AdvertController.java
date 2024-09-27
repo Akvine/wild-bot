@@ -63,7 +63,6 @@ public class AdvertController implements AdvertControllerMeta {
 
     @Override
     public Response update(@Valid UpdateAdvertRequest request) {
-        advertValidator.verifySecret(request);
         UpdateAdvert updateAdvert = advertConverter.convertToUpdateAdvert(request);
         AdvertModel updatedAdvert = advertAdminService.update(updateAdvert);
         return advertConverter.convertToAdvertListResponse(List.of(updatedAdvert));

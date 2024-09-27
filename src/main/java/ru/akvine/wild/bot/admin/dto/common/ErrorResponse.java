@@ -29,6 +29,12 @@ public class ErrorResponse implements Response {
      */
     private final String message;
 
+    public ErrorResponse(String code, String message) {
+        this.message = message;
+        this.code = code;
+        this.description = message;
+    }
+
     public ErrorResponse(String code, String description, String message) {
         this.code = code;
         this.description = description;

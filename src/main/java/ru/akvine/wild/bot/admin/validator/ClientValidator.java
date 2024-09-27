@@ -10,12 +10,11 @@ import ru.akvine.wild.bot.constants.ApiErrorConstants;
 import ru.akvine.wild.bot.exceptions.ValidationException;
 
 @Component
-public class ClientValidator extends AdminValidator {
+public class ClientValidator {
     @Value("${max.clients.send.message.count}")
     private int maxClientsSendMessageCount;
 
     public void verifyAddTestsRequest(AddTestsRequest request) {
-        verifySecret(request);
 
         if (StringUtils.isBlank(request.getUsername()) && StringUtils.isBlank(request.getChatId())) {
             throw new ValidationException(
@@ -33,7 +32,6 @@ public class ClientValidator extends AdminValidator {
     }
 
     public void verifySendMessageRequest(SendMessageRequest request) {
-        verifySecret(request);
 
         if (!CollectionUtils.isEmpty(request.getChatIds()) && request.getChatIds().size() > maxClientsSendMessageCount) {
             String errorMessage = String.format(
@@ -51,13 +49,11 @@ public class ClientValidator extends AdminValidator {
     }
 
     public void verifyBlockClientRequest(BlockClientRequest request) {
-        verifySecret(request);
         Preconditions.checkNotNull(request, "blockClientRequest is null");
         verifyBlockRequest(request);
     }
 
     public void verifyUnblockClientRequest(UnblockClientRequest request) {
-        verifySecret(request);
         Preconditions.checkNotNull(request, "unblockClientRequest is null");
         verifyBlockRequest(request);
     }
