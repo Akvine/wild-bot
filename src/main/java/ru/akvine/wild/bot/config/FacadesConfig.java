@@ -4,17 +4,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.akvine.wild.bot.controllers.states.StateResolver;
 import ru.akvine.wild.bot.controllers.views.TelegramView;
-import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.enums.Command;
-import ru.akvine.wild.bot.enums.SensitiveDataType;
-import ru.akvine.wild.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.enums.*;
 import ru.akvine.wild.bot.facades.*;
+import ru.akvine.wild.bot.facades.proxy.WildberriesProxiesFacade;
 import ru.akvine.wild.bot.infrastructure.property.maskers.PropertyMasker;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
 import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.resolvers.property.PropertyParser;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
+import ru.akvine.wild.bot.services.integration.wildberries.proxy.WildberriesIntegrationServiceProxy;
 
 import java.util.List;
 import java.util.Map;
@@ -79,5 +78,13 @@ public class FacadesConfig {
                 .stream()
                 .collect(toMap(PropertyMasker::getType, identity()));
         return new SensitivePropertyMaskersFacade(map);
+    }
+
+    @Bean
+    public WildberriesProxiesFacade wildberriesProxiesFacade(List<WildberriesIntegrationServiceProxy> proxies) {
+        Map<ProxyType, WildberriesIntegrationServiceProxy> proxiesMap = proxies
+                .stream()
+                .collect(toMap(WildberriesIntegrationServiceProxy::getType, identity()));
+        return new WildberriesProxiesFacade(proxiesMap);
     }
 }

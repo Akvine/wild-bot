@@ -1,16 +1,7 @@
-package ru.akvine.wild.bot.services.integration.wildberries;
+package ru.akvine.wild.bot.services.integration.wildberries.proxy;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import ru.akvine.wild.bot.exceptions.IntegrationException;
+import ru.akvine.wild.bot.enums.ProxyType;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
@@ -19,15 +10,7 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTyp
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
-@Profile("local")
-@Qualifier("origin")
-public class WildberriesIntegrationServiceEmulator implements WildberriesIntegrationService {
-    @Value("${wildberries.api.token}")
-    private String apiToken;
-
-    private final RestTemplate restTemplate = new RestTemplate();
+public class WildberriesIntegrationSecurityService extends WildberriesIntegrationServiceProxy {
 
     @Override
     public List<CardDto> getCards() {
@@ -81,7 +64,7 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
 
     @Override
     public AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request) {
-        return new AdvertUploadPhotoResponse();
+        return null;
     }
 
     @Override
@@ -116,42 +99,12 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
 
     @Override
     public CardTypeResponse getTypes() {
-        logger.info("Get card types");
-
-        HttpHeaders headers = buildHttpHeadersInternal();
-        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-
-        ResponseEntity<CardTypeResponse> responseEntity;
-        try {
-            responseEntity = restTemplate.exchange(
-                    WildberriesApiMethods.GET_CARD_TYPES.getUrl() + WildberriesApiMethods.GET_CARD_TYPES.getMethod(),
-                    HttpMethod.GET,
-                    httpEntity,
-                    CardTypeResponse.class
-            );
-        } catch (Exception exception) {
-            String errorMessage = String.format(
-                    "Error while calling wb api method = [%s]. Message = [%s]",
-                    WildberriesApiMethods.GET_CARD_TYPES, exception.getMessage());
-            throw new IntegrationException(errorMessage);
-        }
-
-        return responseEntity.getBody();
+        System.out.println("System security");
+        return targetObject.getTypes();
     }
 
-    private HttpHeaders buildHttpHeadersInternal() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, apiToken);
-        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-        return headers;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    private enum WildberriesApiMethods {
-        GET_CARD_TYPES("http://localhost:8083/api/cards/types", "/content/v2/directory/kinds");
-
-        private final String url;
-        private final String method;
+    @Override
+    public ProxyType getType() {
+        return ProxyType.SECURITY;
     }
 }
