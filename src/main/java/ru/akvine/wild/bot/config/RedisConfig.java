@@ -17,6 +17,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import ru.akvine.wild.bot.config.properties.RedisConfigProperties;
+import ru.akvine.wild.bot.services.integration.redis.RedisOperationService;
+import ru.akvine.wild.bot.services.integration.redis.RedisOperationServiceBuilder;
 
 import java.time.Duration;
 
@@ -69,5 +71,11 @@ public class RedisConfig {
                     .setPassword(properties.getPassword());
         }
         return Redisson.create(config);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true")
+    public <T> RedisOperationService<T> redisOperationService(RedissonClient redissonClient) {
+        return new RedisOperationServiceBuilder<T>(redissonClient).build();
     }
 }
