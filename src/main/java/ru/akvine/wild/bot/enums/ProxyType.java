@@ -15,7 +15,11 @@ public enum ProxyType {
     IDEMPOTENCE("idempotence"),
     METRICS("metrics"),
     PRECONDITIONS("preconditions"),
-    BENCHMARK("benchmark");
+    BENCHMARK("benchmark"),
+    TRACING("tracing"),
+    TRANSACTIONAL("transactional"),
+    RETRY("retry"),
+    EXCEPTION("exception");
 
     private final String value;
 
@@ -34,6 +38,10 @@ public enum ProxyType {
             case "metrics" -> METRICS;
             case "preconditions" -> PRECONDITIONS;
             case "benchmark" -> BENCHMARK;
+            case "tracing" -> TRACING;
+            case "transactional" -> TRANSACTIONAL;
+            case "retry" -> RETRY;
+            case "exception" -> EXCEPTION;
             default -> throw new IllegalArgumentException("Proxy type with value = [" + value + "] is not supported!");
         };
     }

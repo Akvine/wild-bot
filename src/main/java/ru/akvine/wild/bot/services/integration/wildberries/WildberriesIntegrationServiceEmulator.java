@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.akvine.wild.bot.constants.ProxyConstants;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Profile("local")
-@Qualifier("origin")
+@Qualifier(ProxyConstants.ORIGIN_BEAN_NAME)
 public class WildberriesIntegrationServiceEmulator implements WildberriesIntegrationService {
     @Value("${wildberries.api.token}")
     private String apiToken;

@@ -1,13 +1,11 @@
 package ru.akvine.wild.bot.config;
 
-import jakarta.annotation.Priority;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import ru.akvine.wild.bot.constants.ProxyConstants;
 import ru.akvine.wild.bot.enums.ProxyType;
 import ru.akvine.wild.bot.facades.proxy.WildberriesProxiesFacade;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
@@ -21,7 +19,7 @@ public class ProxyConfig {
     @Bean
     @Primary
     public WildberriesIntegrationService wildberriesIntegrationService(WildberriesProxiesFacade proxies,
-                                                                       @Qualifier("origin") WildberriesIntegrationService wildberriesIntegrationService,
+                                                                       @Qualifier(ProxyConstants.ORIGIN_BEAN_NAME) WildberriesIntegrationService wildberriesIntegrationService,
                                                                        @Value("${wildberries.proxies}") List<String> enabledProxyTypes) {
         WildberriesIntegrationService targetObject = wildberriesIntegrationService;
         for (String enabledProxyType : enabledProxyTypes) {
