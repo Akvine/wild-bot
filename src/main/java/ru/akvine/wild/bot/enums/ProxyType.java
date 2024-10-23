@@ -19,7 +19,8 @@ public enum ProxyType {
     TRACING("tracing"),
     TRANSACTIONAL("transactional"),
     RETRY("retry"),
-    EXCEPTION("exception");
+    EXCEPTION("exception"),
+    RATELIMITING("ratelimiting");
 
     private final String value;
 
@@ -42,6 +43,7 @@ public enum ProxyType {
             case "transactional" -> TRANSACTIONAL;
             case "retry" -> RETRY;
             case "exception" -> EXCEPTION;
+            case "ratelimiting" -> RATELIMITING;
             default -> throw new IllegalArgumentException("Proxy type with value = [" + value + "] is not supported!");
         };
     }
