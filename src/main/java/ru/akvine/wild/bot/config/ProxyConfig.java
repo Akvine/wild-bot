@@ -11,6 +11,7 @@ import ru.akvine.wild.bot.facades.proxy.WildberriesProxiesFacade;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.proxy.WildberriesIntegrationServiceProxy;
 
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -21,6 +22,7 @@ public class ProxyConfig {
     public WildberriesIntegrationService wildberriesIntegrationService(WildberriesProxiesFacade proxies,
                                                                        @Qualifier(ProxyConstants.ORIGIN_BEAN_NAME) WildberriesIntegrationService wildberriesIntegrationService,
                                                                        @Value("${wildberries.proxies}") List<String> enabledProxyTypes) {
+        Collections.reverse(enabledProxyTypes);
         WildberriesIntegrationService targetObject = wildberriesIntegrationService;
         for (String enabledProxyType : enabledProxyTypes) {
             ProxyType type = ProxyType.safeValueOf(enabledProxyType);

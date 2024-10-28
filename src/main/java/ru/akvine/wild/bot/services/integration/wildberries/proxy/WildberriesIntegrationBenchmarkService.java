@@ -1,20 +1,38 @@
 package ru.akvine.wild.bot.services.integration.wildberries.proxy;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 import ru.akvine.wild.bot.enums.ProxyType;
+import ru.akvine.wild.bot.exceptions.IntegrationException;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
-public class WildberriesIntegrationSecurityService extends WildberriesIntegrationServiceProxy {
+@Slf4j
+public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrationServiceProxy {
+    @Override
+    public ProxyType getType() {
+        return ProxyType.BENCHMARK;
+    }
 
     @Override
     public List<CardDto> getCards() {
-        return List.of();
+        StopWatch timeMeter = new StopWatch();
+        timeMeter.start();
+
+        List<CardDto> cards = targetObject.getCards();
+
+        timeMeter.stop();
+        double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
+
+        logger.info("Get cards execution time seconds: {}", executionTime);
+        return cards;
     }
 
     @Override
@@ -99,12 +117,20 @@ public class WildberriesIntegrationSecurityService extends WildberriesIntegratio
 
     @Override
     public CardTypeResponse getTypes() {
-        System.out.println("System security");
-        return targetObject.getTypes();
-    }
+        StopWatch timeMeter = new StopWatch();
+        timeMeter.start();
+        try {
+            CardTypeResponse response = targetObject.getTypes();
 
-    @Override
-    public ProxyType getType() {
-        return ProxyType.SECURITY;
+            timeMeter.stop();
+            double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
+            logger.info("Get cards types execution time seconds: {}", executionTime);
+            return response;
+        } catch (IntegrationException exception) {
+            timeMeter.stop();
+            throw new IntegrationException(exception);
+        } finally {
+            timeMeter.stop();
+        }
     }
 }
