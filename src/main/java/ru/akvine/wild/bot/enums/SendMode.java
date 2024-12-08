@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.enums;
 
-public enum RequestType {
+public enum SendMode {
     SYNC,
     ASYNC
 }
