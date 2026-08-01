@@ -7,12 +7,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.property.printers.PropertiesPrinter;
 import ru.akvine.wild.bot.job.CheckRunningAdvertsJob;
+import ru.akvine.wild.bot.job.MaxBotLongPoolingJob;
 import ru.akvine.wild.bot.job.PrintPropertiesJob;
 import ru.akvine.wild.bot.job.SubscriptionJob;
 import ru.akvine.wild.bot.job.sync.*;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
+import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
 import ru.akvine.wild.bot.services.integration.property.PropertyService;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
@@ -74,5 +76,10 @@ public class ScheduledConfig {
     public PrintPropertiesJob printPropertiesJob(PropertyService propertyService,
                                                  PropertiesPrinter propertiesPrinter) {
         return new PrintPropertiesJob(propertyService, propertiesPrinter);
+    }
+
+    @Bean
+    public MaxBotLongPoolingJob maxBotLongPoolingJob(MaxIntegrationService maxIntegrationService) {
+        return new MaxBotLongPoolingJob(maxIntegrationService);
     }
 }
