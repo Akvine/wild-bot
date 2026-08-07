@@ -1,6 +1,8 @@
 package ru.akvine.wild.bot.services.integration.max;
 
-import ru.akvine.wild.bot.services.integration.max.dto.LongPoolingSubscriptionResponse;
+import ru.akvine.wild.bot.services.integration.max.dto.Message;
+import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
+import ru.akvine.wild.bot.services.integration.max.dto.response.LongPoolingSubscriptionResponse;
 import ru.akvine.wild.bot.services.integration.max.dto.Update;
 
 public interface MaxIntegrationService {
@@ -11,4 +13,17 @@ public interface MaxIntegrationService {
      * @return {@link LongPoolingSubscriptionResponse}
      */
     Update[] updates();
+
+    /**
+     * Метод получения сообщений из chatId
+     *
+     * @param chatId уникальный идентификатор чата в боте
+     * @return список сообщений
+     */
+    Message[] getMessages(String chatId);
+
+    /**
+     * Метод по отправке сообщений
+     */
+    void sendMessage(String chatId, SendMessageRequest request);
 }

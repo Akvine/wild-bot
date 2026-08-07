@@ -1,33 +1,28 @@
 package ru.akvine.wild.bot.controllers.views;
 
+import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
-import ru.akvine.wild.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
 import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
 
 @View
-public class MainMenuView implements TelegramView {
+@RequiredArgsConstructor
+public class MainMenuView implements BotView {
     private final static String NEW_LINE = "\n";
     private final static String DOUBLE_TABULATION = "\t\t";
 
+    private final BotKeyboardFactoryFacade facade;
+
     @Override
-    public InlineKeyboardMarkup getKeyboard(String chatId) {
-        InlineKeyboardButton menuButton = new InlineKeyboardButton();
-        menuButton.setText(TESTS_MENU);
-        menuButton.setCallbackData(TESTS_MENU);
-
-        InlineKeyboardButton instructionsForUseButton = new InlineKeyboardButton();
-        instructionsForUseButton.setText(INSTRUCTIONS_FOR_USE_BUTTON_TEXT);
-        instructionsForUseButton.setCallbackData(INSTRUCTIONS_FOR_USE_BUTTON_TEXT);
-
-        InlineKeyboardButton addSubscriptionButton = new InlineKeyboardButton();
-        addSubscriptionButton.setText(ADD_SUBSCRIPTION_BUTTON_TEXT);
-        addSubscriptionButton.setCallbackData(ADD_SUBSCRIPTION_BUTTON_TEXT);
-
-        return KeyboardFactory.createVerticalKeyboard(menuButton, instructionsForUseButton, addSubscriptionButton);
+    public InlineKeyboard getKeyboard(String chatId, BotType botType) {
+        return facade.resolve(botType, byState()).create(chatId);
     }
 
     @Override

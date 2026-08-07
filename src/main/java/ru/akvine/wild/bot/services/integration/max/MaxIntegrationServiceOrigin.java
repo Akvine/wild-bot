@@ -16,13 +16,19 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
-import ru.akvine.wild.bot.services.integration.max.dto.LongPoolingSubscriptionResponse;
+import ru.akvine.wild.bot.services.integration.max.dto.Message;
 import ru.akvine.wild.bot.services.integration.max.dto.Update;
+import ru.akvine.wild.bot.services.integration.max.dto.request.GetMessagesRequest;
+import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
+import ru.akvine.wild.bot.services.integration.max.dto.response.GetMessagesResponse;
+import ru.akvine.wild.bot.services.integration.max.dto.response.LongPoolingSubscriptionResponse;
+import ru.akvine.wild.bot.utils.RequestUtils;
 
 import javax.net.ssl.SSLContext;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 @Service
 public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
@@ -48,10 +54,12 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
     public Update[] updates() {
         HttpHeaders headers = buildHttpHeaders();
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
+
         ResponseEntity<LongPoolingSubscriptionResponse> response;
         try {
-            response = restTemplate.exchange(maxUrl + MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET.getMethod(),
-                    HttpMethod.GET,
+            response = restTemplate.exchange(
+                    maxUrl + MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET.getEndpoint(),
+                    MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET.getMethod(),
                     httpEntity,
                     LongPoolingSubscriptionResponse.class);
 
@@ -62,8 +70,57 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
             return response.getBody().getUpdates();
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while calling max api method = [%s]. Message = %s",
+                    "Error while calling MAX api method = [%s]. Message = %s",
                     MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+    }
+
+    @Override
+    public Message[] getMessages(String chatId) {
+        HttpHeaders headers = buildHttpHeaders();
+        HttpEntity<GetMessagesRequest> httpEntity = new HttpEntity<>(headers);
+
+        String url = RequestUtils.buildUri(maxUrl + MaxApiMethods.GET_MESSAGES.getEndpoint(),
+                Map.of("chat_id", chatId));
+        ResponseEntity<GetMessagesResponse> response;
+        try {
+            response = restTemplate.exchange(
+                    url,
+                    MaxApiMethods.GET_MESSAGES.getMethod(),
+                    httpEntity,
+                    GetMessagesResponse.class);
+
+            if (response.getBody() == null) {
+                return new Message[0];
+            }
+
+            return response.getBody().getMessages();
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling MAX api method = [%s]. Message = %s",
+                    MaxApiMethods.GET_MESSAGES, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+    }
+
+    @Override
+    public void sendMessage(String chatId, SendMessageRequest request) {
+        HttpHeaders headers = buildHttpHeaders();
+        HttpEntity<SendMessageRequest> httpEntity = new HttpEntity<>(request, headers);
+
+        String url = RequestUtils.buildUri(maxUrl + MaxApiMethods.SEND_MESSAGE.getEndpoint(),
+                Map.of("chat_id", chatId));
+        try {
+            restTemplate.exchange(
+                    url,
+                    MaxApiMethods.SEND_MESSAGE.getMethod(),
+                    httpEntity,
+                    GetMessagesResponse.class);
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling MAX api method = [%s]. Message = %s",
+                    MaxApiMethods.SEND_MESSAGE, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
     }
@@ -105,8 +162,12 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
     @AllArgsConstructor
     @Getter
     enum MaxApiMethods {
-        LONG_POOLING_SUBSCRIPTIONS_GET("/updates");
+        LONG_POOLING_SUBSCRIPTIONS_GET("/updates", HttpMethod.GET),
 
-        private final String method;
+        GET_MESSAGES("/messages", HttpMethod.GET),
+        SEND_MESSAGE("/messages", HttpMethod.POST);
+
+        private final String endpoint;
+        private final HttpMethod method;
     }
 }

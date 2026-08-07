@@ -2,20 +2,19 @@ package ru.akvine.wild.bot.controllers.states;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.akvine.wild.bot.bot.dto.Payload;
+import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.exceptions.HasNoSubscriptionException;
 import ru.akvine.wild.bot.exceptions.SubscriptionExpiredException;
-import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.services.SubscriptionService;
 import ru.akvine.wild.bot.services.domain.SubscriptionModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.wild.bot.telegram.TelegramData;
 
 import java.util.List;
 
@@ -29,30 +28,37 @@ public class MainMenuStateResolver extends StateResolver {
     @Autowired
     public MainMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
                                  TelegramViewFacade viewFacade,
-                                 TelegramDataResolverFacade dataResolverFacade,
                                  SubscriptionService subscriptionService,
                                  TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, dataResolverFacade, telegramIntegrationService);
+        super(stateStorage, viewFacade, telegramIntegrationService);
         this.subscriptionService = subscriptionService;
     }
 
     @Override
-    public BotApiMethod<?> resolve(TelegramData telegramData) {
-        super.resolve(telegramData);
-        TelegramDataResolver resolver = dataResolverFacade.getTelegramDataResolvers().get(telegramData.getType());
-        String chatId = resolver.extractChatId(telegramData.getData());
-        String text = resolver.extractText(telegramData.getData());
+    public Response resolve(Payload payload) {
+        super.resolve(payload);
+        String chatId = payload.getChatId();
+        String text = payload.getMessage().getText();
+        BotType botType = payload.getBotType();
 
         if (text.equals(TESTS_MENU)) {
             checkSubscription(chatId);
-            return setNextState(chatId, ClientState.TESTS_MENU);
+            return setNextState(chatId, ClientState.TESTS_MENU, botType);
         } else if (text.equals(INSTRUCTIONS_FOR_USE_BUTTON_TEXT)) {
             checkSubscription(chatId);
-            return setNextState(chatId, ClientState.INSTRUCTIONS_MENU);
+            return setNextState(chatId, ClientState.INSTRUCTIONS_MENU, botType);
         } else if (text.equals(ADD_SUBSCRIPTION_BUTTON_TEXT)) {
-            return setNextState(chatId, ClientState.SUBSCRIBE_MENU);
+            return setNextState(chatId, ClientState.SUBSCRIBE_MENU, botType);
         } else {
-            return new SendMessage(chatId, "Выберите действие из меню");
+
+            Response response = new Response(chatId, botType);
+            if (botType == BotType.TELEGRAM) {
+                return response.setTelegramResponse(
+                        new SendMessage(chatId, "Необходимо выбрать действие из меню!")
+                );
+            }
+
+            return response.setMaxSendMessage();
         }
     }
 

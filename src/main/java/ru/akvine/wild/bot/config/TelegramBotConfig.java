@@ -17,10 +17,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.akvine.wild.bot.exceptions.TelegramConfigurationException;
+import ru.akvine.wild.bot.facades.BotDtoConverterFacade;
 import ru.akvine.wild.bot.telegram.bot.TelegramDevBot;
 import ru.akvine.wild.bot.telegram.bot.TelegramDummyBot;
 import ru.akvine.wild.bot.telegram.bot.TelegramProductionBot;
-import ru.akvine.wild.bot.telegram.filter.MessageFilter;
+import ru.akvine.wild.bot.bot.filter.MessageFilter;
 import ru.akvine.wild.bot.telegram.webhook.dto.GetWebhookInfoResponse;
 import ru.akvine.wild.bot.telegram.webhook.dto.GetWebhookRequest;
 import ru.akvine.wild.bot.telegram.webhook.dto.SetWebhookRequest;
@@ -56,6 +57,7 @@ public class TelegramBotConfig {
 
     private final Environment environment;
     private final RestTemplate restTemplate = new RestTemplate();
+    private final BotDtoConverterFacade converters;
 
     @Bean
     public DefaultBotOptions defaultBotOptions() {
@@ -84,7 +86,8 @@ public class TelegramBotConfig {
             TelegramDevBot bot = new TelegramDevBot(defaultBotOptions,
                     botToken,
                     botUsername,
-                    startMessageFilter);
+                    startMessageFilter,
+                    converters);
             List<BotCommand> listCommands = initBotCommands();
             bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);

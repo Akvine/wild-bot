@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
+import ru.akvine.wild.bot.bot.dto.Payload;
+import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.helpers.TelegramPhotoHelper;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
@@ -31,12 +33,11 @@ public class UploadPhotoStateResolver extends StateResolver {
     @Autowired
     public UploadPhotoStateResolver(StateStorage<String, List<ClientState>> stateStorage,
                                     TelegramViewFacade viewFacade,
-                                    TelegramDataResolverFacade dataResolverFacade,
                                     SessionStorage<String, ClientSessionData> sessionStorage,
                                     TelegramPhotoHelper telegramPhotoHelper,
                                     TelegramIntegrationService telegramIntegrationService,
                                     PhotoValidator photoValidator) {
-        super(stateStorage, viewFacade, dataResolverFacade, telegramIntegrationService);
+        super(stateStorage, viewFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.telegramPhotoHelper = telegramPhotoHelper;
         this.telegramIntegrationService = telegramIntegrationService;
@@ -44,25 +45,32 @@ public class UploadPhotoStateResolver extends StateResolver {
     }
 
     @Override
-    public BotApiMethod<?> resolve(TelegramData telegramData) {
-        super.resolve(telegramData);
-        TelegramDataResolver resolver = dataResolverFacade.getTelegramDataResolvers().get(telegramData.getType());
-        String chatId = resolver.extractChatId(telegramData.getData());
+    public Response resolve(Payload payload) {
+        super.resolve(payload);
+        String chatId = payload.getChatId();
+        BotType botType = payload.getBotType();
+
         logger.info("[{}] state resolved", getState());
 
-        if (telegramData.getData().getMessage().getPhoto() == null) {
-            return new SendMessage(chatId, "Необходимо загрузить фотографию!");
-        }
+        Response response = new Response(chatId, botType);
+        byte[] photo = null;
+        if (botType == BotType.TELEGRAM) {
+            if (payload.getMessage().getPhoto() == null) {
+                return response.setTelegramResponse(new SendMessage(chatId, "Необходимо загрузить фотографию!"));
+            }
 
-        PhotoSize photoSize = telegramPhotoHelper.resolve(telegramData.getData().getMessage().getPhoto());
-        byte[] photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
-        photoValidator.validate(photo);
+            PhotoSize photoSize = telegramPhotoHelper.resolve(payload.getMessage().getPhoto());
+            photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
+            photoValidator.validate(photo);
+        } else {
+            implement_this
+        }
 
         ClientSessionData session = sessionStorage.get(chatId);
         session.setUploadedCardPhoto(photo);
         sessionStorage.save(session);
 
-        return setNextState(chatId, ClientState.IS_CHANGE_PRICE_MENU);
+        return setNextState(chatId, ClientState.IS_CHANGE_PRICE_MENU, botType);
     }
 
     @Override

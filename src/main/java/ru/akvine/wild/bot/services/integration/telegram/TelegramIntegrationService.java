@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.services.integration.telegram;
 
+import ru.akvine.wild.bot.enums.BotDataType;
 import ru.akvine.wild.bot.telegram.TelegramData;
 
 import java.io.InputStream;
@@ -12,7 +13,7 @@ public interface TelegramIntegrationService {
      *
      * @param telegramData данные, отправленные пользователем
      */
-    void answerCallback(TelegramData telegramData);
+    void answerCallback(BotDataType type, String callbackQuery);
 
     /**
      * Загрузить фото, которое отправил пользователь с сервера телеграмма через API

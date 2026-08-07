@@ -3,8 +3,10 @@ package ru.akvine.wild.bot.controllers.states;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.akvine.wild.bot.bot.dto.Payload;
+import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
@@ -26,23 +28,22 @@ public class ChooseTypeStateResolver extends StateResolver {
     private final CardTypeService cardTypeService;
 
     @Autowired
-    public ChooseTypeStateResolver(TelegramDataResolverFacade dataResolverFacade,
-                                   TelegramViewFacade viewFacade,
+    public ChooseTypeStateResolver(TelegramViewFacade viewFacade,
                                    StateStorage<String, List<ClientState>> stateStorage,
                                    SessionStorage<String, ClientSessionData> sessionStorage,
                                    CardTypeService cardTypeService,
                                    TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, dataResolverFacade, telegramIntegrationService);
+        super(stateStorage, viewFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.cardTypeService = cardTypeService;
     }
 
     @Override
-    public BotApiMethod<?> resolve(TelegramData telegramData) {
-        super.resolve(telegramData);
-        TelegramDataResolver resolver = dataResolverFacade.getTelegramDataResolvers().get(telegramData.getType());
-        String chatId = resolver.extractChatId(telegramData.getData());
-        String text = resolver.extractText(telegramData.getData());
+    public Response resolve(Payload payload) {
+        super.resolve(payload);
+        String chatId = payload.getChatId();
+        String text = payload.getMessage().getText();
+        BotType botType = payload.getBotType();
 
         if (text.equals(MALE_BUTTON_TEXT)) {
             String cardType = cardTypeService.verifyExistsByType(text).getType();
@@ -50,16 +51,23 @@ public class ChooseTypeStateResolver extends StateResolver {
             ClientSessionData sessionData = sessionStorage.get(chatId);
             sessionData.setSelectedCardType(cardType);
             sessionStorage.save(sessionData);
-            return setNextState(chatId, ClientState.CHOOSE_CATEGORY_MENU);
+            return setNextState(chatId, ClientState.CHOOSE_CATEGORY_MENU, botType);
         } else if (text.equals(FEMALE_BUTTON_TEXT)) {
             String cardType = cardTypeService.verifyExistsByType(text).getType();
             sessionStorage.init(chatId);
             ClientSessionData sessionData = sessionStorage.get(chatId);
             sessionData.setSelectedCardType(cardType);
             sessionStorage.save(sessionData);
-            return setNextState(chatId, ClientState.CHOOSE_CATEGORY_MENU);
+            return setNextState(chatId, ClientState.CHOOSE_CATEGORY_MENU, botType);
         } else {
-            return new SendMessage(chatId, "Выберите действие из меню");
+            Response response = new Response(chatId, botType);
+            if (botType == BotType.TELEGRAM) {
+                return response.setTelegramResponse(
+                        new SendMessage(chatId, "Необходимо выбрать действие из меню!")
+                );
+            }
+
+            return response.setMaxSendMessage();
         }
     }
 

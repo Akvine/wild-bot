@@ -5,7 +5,7 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.akvine.wild.bot.telegram.filter.MessageFilter;
+import ru.akvine.wild.bot.bot.filter.MessageFilter;
 
 @Setter
 public class TelegramProductionBot extends TelegramWebhookBot {

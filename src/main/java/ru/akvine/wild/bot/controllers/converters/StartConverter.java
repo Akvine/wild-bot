@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.akvine.wild.bot.services.dto.AggregateCard;
-import ru.akvine.wild.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +24,7 @@ public class StartConverter {
                     return List.of(button);
                 }).collect(Collectors.toList());
 
-        buttons.add(List.of(KeyboardFactory.getBackButton()));
+        buttons.add(List.of(TelegramKeyboardFactory.getBackButton()));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }

@@ -5,7 +5,6 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.controllers.validators.StartValidator;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;

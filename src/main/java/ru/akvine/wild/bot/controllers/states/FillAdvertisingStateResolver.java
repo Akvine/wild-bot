@@ -1,16 +1,15 @@
 package ru.akvine.wild.bot.controllers.states;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.akvine.wild.bot.bot.dto.Payload;
+import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.wild.bot.telegram.TelegramData;
 
 import java.util.List;
 
@@ -20,24 +19,32 @@ import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.QUER
 public class FillAdvertisingStateResolver extends StateResolver {
 
     @Autowired
-    public FillAdvertisingStateResolver(TelegramDataResolverFacade dataResolverFacade,
-                                        StateStorage<String, List<ClientState>> stateStorage,
+    public FillAdvertisingStateResolver(StateStorage<String, List<ClientState>> stateStorage,
                                         TelegramViewFacade telegramViewFacade,
                                         TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, telegramViewFacade, dataResolverFacade, telegramIntegrationService);
+        super(stateStorage, telegramViewFacade, telegramIntegrationService);
     }
 
     @Override
-    public BotApiMethod<?> resolve(TelegramData telegramData) {
-        super.resolve(telegramData);
-        TelegramDataResolver resolver = dataResolverFacade.getTelegramDataResolvers().get(telegramData.getType());
-        String chatId = resolver.extractChatId(telegramData.getData());
-        String text = resolver.extractText(telegramData.getData());
+    public Response resolve(Payload payload) {
+        super.resolve(payload);
+        String chatId = payload.getChatId();
+        String text = payload.getMessage().getText();
+        BotType botType = payload.getBotType();
 
+        Response response = new Response(chatId, botType);
         if (text.equals(QUERY_QR_CODE_BUTTON_TEXT)) {
-            return new SendMessage(chatId, "Спасибо! В ближайшее время бот отправит вам QR-код на пополнение бюджета :-)");
+            if (botType == BotType.TELEGRAM) {
+                return response.setTelegramResponse(new SendMessage(chatId, "Спасибо! В ближайшее время бот отправит вам QR-код на пополнение бюджета :-)"));
+            }
+
+            return implements_this;
         } else {
-            return new SendMessage(chatId, "Вывберите действие из меню");
+            if (botType == BotType.TELEGRAM) {
+                return response.setTelegramResponse(new SendMessage(chatId, "Вывберите действие из меню"));
+            }
+
+            return implements_this;
         }
     }
 

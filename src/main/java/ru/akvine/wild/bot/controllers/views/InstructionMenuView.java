@@ -1,17 +1,22 @@
 package ru.akvine.wild.bot.controllers.views;
 
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import lombok.RequiredArgsConstructor;
+import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
-import ru.akvine.wild.bot.telegram.KeyboardFactory;
 
 @View
-public class InstructionMenuView implements TelegramView {
+@RequiredArgsConstructor
+public class InstructionMenuView implements BotView {
     private final static String NEW_LINE = "\n";
 
+    private final BotKeyboardFactoryFacade facade;
+
     @Override
-    public InlineKeyboardMarkup getKeyboard(String chatId) {
-        return KeyboardFactory.getBackKeyboard();
+    public InlineKeyboard getKeyboard(String chatId, BotType botType) {
+        return facade.resolve(botType, byState()).create(chatId);
     }
 
     @Override

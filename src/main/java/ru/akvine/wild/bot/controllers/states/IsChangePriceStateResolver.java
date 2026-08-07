@@ -3,8 +3,10 @@ package ru.akvine.wild.bot.controllers.states;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.akvine.wild.bot.bot.dto.Payload;
+import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
@@ -32,30 +34,42 @@ public class IsChangePriceStateResolver extends StateResolver {
                                       TelegramViewFacade viewFacade,
                                       SessionStorage<String, ClientSessionData> sessionStorage,
                                       AdvertStartService advertStartService,
-                                      TelegramDataResolverFacade dataResolverFacade,
                                       TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, dataResolverFacade, telegramIntegrationService);
+        super(stateStorage, viewFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.advertStartService = advertStartService;
     }
 
     @Override
-    public BotApiMethod<?> resolve(TelegramData telegramData) {
-        super.resolve(telegramData);
-        TelegramDataResolver resolver = dataResolverFacade.getTelegramDataResolvers().get(telegramData.getType());
-        String chatId = resolver.extractChatId(telegramData.getData());
-        String text = resolver.extractText(telegramData.getData());
+    public Response resolve(Payload payload) {
+        super.resolve(payload);
+        String chatId = payload.getChatId();
+        String text = payload.getMessage().getText();
+        BotType botType = payload.getBotType();
 
+        Response response = new Response(chatId, botType);
         if (text.equals(CHANGE_PRICE_BUTTON_TEXT)) {
             ClientSessionData sessionData = sessionStorage.get(chatId);
             sessionData.setInputNewCardPriceAndDiscount(true);
             sessionStorage.save(sessionData);
-            return setNextState(chatId, ClientState.INPUT_NEW_PRICE_MENU);
+            return setNextState(chatId, ClientState.INPUT_NEW_PRICE_MENU, botType);
         } else if (text.equals(KEEP_PRICE_BUTTON_TEXT)) {
             AdvertModel startedAdvert = advertStartService.start(chatId);
-            return buildMessage(chatId, startedAdvert);
+
+            if (botType == BotType.TELEGRAM) {
+                SendMessage message = new SendMessage(chatId, buildMessage(startedAdvert));
+                return response.setTelegramResponse(message);
+            }
+
+            return response.setMaxSendMessage();
         } else {
-            return new SendMessage(chatId, "Необходимо выбрать действие из меню!");
+            if (botType == BotType.TELEGRAM) {
+                return response.setTelegramResponse(
+                        new SendMessage(chatId, "Необходимо выбрать действие из меню!")
+                );
+            }
+
+            return response.setMaxSendMessage();
         }
     }
 
@@ -64,7 +78,7 @@ public class IsChangePriceStateResolver extends StateResolver {
         return ClientState.IS_CHANGE_PRICE_MENU;
     }
 
-    private SendMessage buildMessage(String chatId, AdvertModel startedAdvert) {
+    private String buildMessage(AdvertModel startedAdvert) {
         int advertId = startedAdvert.getExternalId();
         int startCpm = startedAdvert.getCpm();
         Integer startBudgetSum = startedAdvert.getStartBudgetSum();
@@ -79,6 +93,6 @@ public class IsChangePriceStateResolver extends StateResolver {
                         """,
                 advertId, startCpm, startBudgetSum, nextCheckDateTime);
 
-        return new SendMessage(chatId, message);
+        return message;
     }
 }

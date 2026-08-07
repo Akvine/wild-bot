@@ -3,16 +3,17 @@ package ru.akvine.wild.bot.controllers.states;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
+import ru.akvine.wild.bot.bot.dto.Payload;
+import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.controllers.views.BotView;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.controllers.views.TelegramView;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.wild.bot.telegram.TelegramData;
 
 import java.util.List;
 
@@ -21,29 +22,38 @@ import java.util.List;
 public abstract class StateResolver {
     protected final StateStorage<String, List<ClientState>> stateStorage;
     protected final TelegramViewFacade viewFacade;
-    protected final TelegramDataResolverFacade dataResolverFacade;
     private final TelegramIntegrationService telegramIntegrationService;
 
     @Nullable
-    public BotApiMethod<?> resolve(TelegramData telegramData) {
-        telegramIntegrationService.answerCallback(telegramData);
+    public Response resolve(Payload payload) {
+        if (payload.getBotType() == BotType.TELEGRAM) {
+            telegramIntegrationService.answerCallback(payload.getBotDataType(), payload.getTelegramCallbackQueryId());
+        }
+
         logger.info("[{}] state resolved", getState());
         return null;
     }
 
     public abstract ClientState getState();
 
-    protected SendMessage setNextState(String chatId, ClientState nextState) {
+    protected Response setNextState(String chatId, ClientState nextState, BotType botType) {
         stateStorage.add(chatId, nextState);
-        TelegramView telegramView = viewFacade.getEventMap().get(nextState);
+        BotView botView = viewFacade.getEventMap().get(nextState);
 
-        String message = telegramView.getMessage(chatId);
-        InlineKeyboardMarkup keyboardMarkup = telegramView.getKeyboard(chatId);
+        String message = botView.getMessage(chatId);
+        InlineKeyboard keyboard = botView.getKeyboard(chatId, botType);
 
-        SendMessage sendMessage = new SendMessage(chatId, message);
-        sendMessage.enableMarkdown(true);
-        sendMessage.setParseMode("html");
-        sendMessage.setReplyMarkup(keyboardMarkup);
-        return sendMessage;
+        Response response = new Response(chatId, botType);
+        if (botType == BotType.TELEGRAM) {
+            SendMessage sendMessage = new SendMessage(chatId, message);
+            sendMessage.enableMarkdown(true);
+            sendMessage.setParseMode("html");
+            sendMessage.setReplyMarkup(keyboard.getTelegramKeyboard());
+            response.setTelegramResponse(sendMessage);
+        } else {
+            implement_this
+        }
+
+        return response;
     }
 }

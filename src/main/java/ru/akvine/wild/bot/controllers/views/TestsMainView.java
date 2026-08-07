@@ -1,48 +1,27 @@
 package ru.akvine.wild.bot.controllers.views;
 
+import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
-import ru.akvine.wild.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
 import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
 
 @View
-public class TestsMainView implements TelegramView {
+@RequiredArgsConstructor
+public class TestsMainView implements BotView {
     private final static String NEW_LINE = "\n";
 
+    private final BotKeyboardFactoryFacade facade;
+
     @Override
-    public InlineKeyboardMarkup getKeyboard(String chatId) {
-        InlineKeyboardButton startTestButton = new InlineKeyboardButton();
-        startTestButton.setText(START_TEST_BUTTON_TEXT);
-        startTestButton.setCallbackData(START_TEST_BUTTON_TEXT);
-
-        InlineKeyboardButton listStartedTestsButton = new InlineKeyboardButton();
-        listStartedTestsButton.setText(LIST_STARTED_TESTS_BUTTON_TEXT);
-        listStartedTestsButton.setCallbackData(LIST_STARTED_TESTS_BUTTON_TEXT);
-
-        InlineKeyboardButton fillAdvertisingAccountButton = new InlineKeyboardButton();
-        fillAdvertisingAccountButton.setText(FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT);
-        fillAdvertisingAccountButton.setCallbackData(FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT);
-
-        InlineKeyboardButton generateReportButton = new InlineKeyboardButton();
-        generateReportButton.setText(GENERATE_REPORT_BUTTON_TEXT);
-        generateReportButton.setCallbackData(GENERATE_REPORT_BUTTON_TEXT);
-
-        InlineKeyboardButton detailTestInfoButton = new InlineKeyboardButton();
-        detailTestInfoButton.setText(DETAIL_TEST_INFORMATION_BUTTON_TEXT);
-        detailTestInfoButton.setCallbackData(DETAIL_TEST_INFORMATION_BUTTON_TEXT);
-
-        InlineKeyboardButton backButton = KeyboardFactory.getBackButton();
-
-        return KeyboardFactory.createVerticalKeyboard(
-                startTestButton,
-                listStartedTestsButton,
-                fillAdvertisingAccountButton,
-                generateReportButton,
-                detailTestInfoButton,
-                backButton);
+    public InlineKeyboard getKeyboard(String chatId, BotType botType) {
+        return facade.resolve(botType, byState()).create(chatId);
     }
 
     @Override

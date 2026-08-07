@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.util.CollectionUtils;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
@@ -16,7 +19,7 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GetGoodsRe
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GetGoodsResponse;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GoodDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GoodSizeDto;
-import ru.akvine.wild.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
 import static ru.akvine.wild.bot.constants.DbLockConstants.UPLOAD_PHOTO_LOCK;
 import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
@@ -24,25 +27,19 @@ import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP
 
 @View
 @RequiredArgsConstructor
-public class IsChangePriceView implements TelegramView {
+public class IsChangePriceView implements BotView {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final AdvertService advertService;
     private final DataBaseLockProvider dataBaseLockProvider;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
+    private final BotKeyboardFactoryFacade facade;
+
     private final static String NEW_LINE = "\n";
 
     @Override
-    public InlineKeyboardMarkup getKeyboard(String chatId) {
-        InlineKeyboardButton changePriceButton = new InlineKeyboardButton();
-        changePriceButton.setText(CHANGE_PRICE_BUTTON_TEXT);
-        changePriceButton.setCallbackData(CHANGE_PRICE_BUTTON_TEXT);
-
-        InlineKeyboardButton keepPriceButton = new InlineKeyboardButton();
-        keepPriceButton.setText(KEEP_PRICE_BUTTON_TEXT);
-        keepPriceButton.setCallbackData(KEEP_PRICE_BUTTON_TEXT);
-
-        return KeyboardFactory.createVerticalKeyboard(changePriceButton, keepPriceButton, KeyboardFactory.getBackButton());
+    public InlineKeyboard getKeyboard(String chatId, BotType botType) {
+        return facade.resolve(botType, byState()).create(chatId);
     }
 
     @Override

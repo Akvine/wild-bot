@@ -17,9 +17,8 @@ import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.generics.TelegramBot;
-import ru.akvine.wild.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.enums.BotDataType;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
-import ru.akvine.wild.bot.telegram.TelegramData;
 import ru.akvine.wild.bot.telegram.bot.TelegramDevBot;
 import ru.akvine.wild.bot.telegram.bot.TelegramProductionBot;
 import ru.akvine.wild.bot.utils.ByteUtils;
@@ -53,12 +52,12 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
     }
 
     @Override
-    public void answerCallback(TelegramData telegramData) {
-        if (telegramData.getType() == TelegramDataType.CALLBACK) {
+    public void answerCallback(BotDataType botDataType, String callbackQueryId) {
+        if (botDataType == BotDataType.CALLBACK) {
             try {
                 absSender.execute(
                         AnswerCallbackQuery.builder()
-                                .callbackQueryId(telegramData.getData().getCallbackQuery().getId())
+                                .callbackQueryId(callbackQueryId)
                                 .build()
                 );
             } catch (Exception exception) {

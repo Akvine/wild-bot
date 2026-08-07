@@ -1,24 +1,22 @@
 package ru.akvine.wild.bot.controllers.views;
 
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import lombok.RequiredArgsConstructor;
+import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
-import ru.akvine.wild.bot.telegram.KeyboardFactory;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.QUERY_QR_CODE_BUTTON_TEXT;
 
 @View
-public class FillAdvertisingView implements TelegramView {
+@RequiredArgsConstructor
+public class FillAdvertisingView implements BotView {
     private final static String NEW_LINE = "\n";
 
-    @Override
-    public InlineKeyboardMarkup getKeyboard(String chatId) {
-        InlineKeyboardButton queryQrCodeButton = new InlineKeyboardButton();
-        queryQrCodeButton.setText(QUERY_QR_CODE_BUTTON_TEXT);
-        queryQrCodeButton.setCallbackData(QUERY_QR_CODE_BUTTON_TEXT);
+    private final BotKeyboardFactoryFacade facade;
 
-        return KeyboardFactory.createVerticalKeyboard(queryQrCodeButton, KeyboardFactory.getBackButton());
+    @Override
+    public InlineKeyboard getKeyboard(String chatId, BotType botType) {
+        return facade.resolve(botType, byState()).create(chatId);
     }
 
     @Override

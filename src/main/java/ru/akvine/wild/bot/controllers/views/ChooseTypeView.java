@@ -1,29 +1,28 @@
 package ru.akvine.wild.bot.controllers.views;
 
+import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
-import ru.akvine.wild.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
 import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FEMALE_BUTTON_TEXT;
 import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.MALE_BUTTON_TEXT;
 
 @View
-public class ChooseTypeView implements TelegramView {
+@RequiredArgsConstructor
+public class ChooseTypeView implements BotView {
     private final static String NEW_LINE = "\n";
 
+    private final BotKeyboardFactoryFacade facade;
+
     @Override
-    public InlineKeyboardMarkup getKeyboard(String chatId) {
-        InlineKeyboardButton maleButton = new InlineKeyboardButton();
-        maleButton.setText(MALE_BUTTON_TEXT);
-        maleButton.setCallbackData(MALE_BUTTON_TEXT);
-
-        InlineKeyboardButton femaleButton = new InlineKeyboardButton();
-        femaleButton.setText(FEMALE_BUTTON_TEXT);
-        femaleButton.setCallbackData(FEMALE_BUTTON_TEXT);
-
-        return KeyboardFactory.createVerticalKeyboard(maleButton, femaleButton, KeyboardFactory.getBackButton());
+    public InlineKeyboard getKeyboard(String chatId, BotType botType) {
+       return facade.resolve(botType, byState()).create(chatId);
     }
 
     @Override

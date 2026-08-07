@@ -21,4 +21,6 @@ public class Update {
 
     @JsonProperty(value = "is_channel")
     private boolean channel;
+
+    private Message message;
 }

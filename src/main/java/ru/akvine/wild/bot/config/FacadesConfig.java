@@ -2,14 +2,15 @@ package ru.akvine.wild.bot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.akvine.wild.bot.bot.converter.BotDtoConverter;
+import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.controllers.states.StateResolver;
-import ru.akvine.wild.bot.controllers.views.TelegramView;
+import ru.akvine.wild.bot.controllers.views.BotView;
 import ru.akvine.wild.bot.enums.*;
 import ru.akvine.wild.bot.facades.*;
 import ru.akvine.wild.bot.facades.proxy.WildberriesProxiesFacade;
 import ru.akvine.wild.bot.infrastructure.property.maskers.PropertyMasker;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
-import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.resolvers.property.PropertyParser;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
@@ -23,14 +24,6 @@ import static java.util.stream.Collectors.toMap;
 
 @Configuration
 public class FacadesConfig {
-
-    @Bean
-    public TelegramDataResolverFacade telegramDataResolverFacade(List<TelegramDataResolver> resolvers) {
-        Map<TelegramDataType, TelegramDataResolver> updateDataExtractorMap = resolvers
-                .stream()
-                .collect(toMap(TelegramDataResolver::getType, identity()));
-        return new TelegramDataResolverFacade(updateDataExtractorMap);
-    }
 
     @Bean
     public StateResolverFacade stateResolverFacade(List<StateResolver> stateResolvers) {
@@ -49,10 +42,10 @@ public class FacadesConfig {
     }
 
     @Bean
-    public TelegramViewFacade telegramEventFacade(List<TelegramView> telegramViews) {
-        Map<ClientState, TelegramView> keyboardMap = telegramViews
+    public TelegramViewFacade telegramEventFacade(List<BotView> botViews) {
+        Map<ClientState, BotView> keyboardMap = botViews
                 .stream()
-                .collect(toMap(TelegramView::byState, identity()));
+                .collect(toMap(BotView::byState, identity()));
         return new TelegramViewFacade(keyboardMap);
     }
 
@@ -86,5 +79,21 @@ public class FacadesConfig {
                 .stream()
                 .collect(toMap(WildberriesIntegrationServiceProxy::getType, identity()));
         return new WildberriesProxiesFacade(proxiesMap);
+    }
+
+    @Bean
+    public BotDtoConverterFacade botDtoConverterFacade(List<BotDtoConverter<?, ?>> converters) {
+        Map<BotType, BotDtoConverter<?, ?>> convertersMap = converters
+                .stream()
+                .collect(toMap(BotDtoConverter::getType, identity()));
+        return new BotDtoConverterFacade(convertersMap);
+    }
+
+    @Bean
+    public BotKeyboardFactoryFacade botKeyboardFactoryFacade(List<BotKeyboardFactory> factoriesList) {
+        Map<String, BotKeyboardFactory> factories = factoriesList
+                .stream()
+                .collect(toMap(BotKeyboardFactory::getUniqueIdentifier, identity()));
+        return new BotKeyboardFactoryFacade(factories);
     }
 }

@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.akvine.wild.bot.bot.dto.Payload;
+import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramDataResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
@@ -26,28 +28,26 @@ import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.PAY_
 @State
 @Slf4j
 public class SubscriptionMenuStateResolver extends StateResolver {
-    private final TelegramDataResolverFacade dataResolverFacade;
     private final YooKassaIntegrationService yooKassaIntegrationService;
     private final SubscriptionService subscriptionService;
 
     @Autowired
     public SubscriptionMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
                                          TelegramViewFacade viewFacade,
-                                         TelegramDataResolverFacade dataResolverFacade,
                                          YooKassaIntegrationService yooKassaIntegrationService,
                                          SubscriptionService subscriptionService,
                                          TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, dataResolverFacade, telegramIntegrationService);
-        this.dataResolverFacade = dataResolverFacade;
+        super(stateStorage, viewFacade, telegramIntegrationService);
         this.yooKassaIntegrationService = yooKassaIntegrationService;
         this.subscriptionService = subscriptionService;
     }
 
     @Override
-    public BotApiMethod<?> resolve(TelegramData telegramData) {
-        TelegramDataResolver resolver = dataResolverFacade.getTelegramDataResolvers().get(telegramData.getType());
-        String chatId = resolver.extractChatId(telegramData.getData());
-        String text = resolver.extractText(telegramData.getData());
+    public Response resolve(Payload payload) {
+        super.resolve(payload);
+        String chatId = payload.getChatId();
+        String text = payload.getMessage().getText();
+        BotType botType = payload.getBotType();
 
         logger.info("[{}] state resolved", getState());
 

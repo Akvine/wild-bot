@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants;
-import ru.akvine.wild.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.enums.BotDataType;
 import ru.akvine.wild.bot.integration.base.BaseTest;
 import ru.akvine.wild.bot.integration.base.UpdateBuilder;
 
@@ -77,20 +77,20 @@ public class WorkflowTest extends BaseTest {
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_3)
                 .withText(TelegramButtonConstants.TESTS_MENU)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
 
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_3)
                 .withText(GENERATE_REPORT_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_3)
                 .withText(START_GENERATION_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
 
         SendMessage successfulGenerateReportMessage =
                 (SendMessage) messageFilter.handle(callbackUpdate);
@@ -118,19 +118,19 @@ public class WorkflowTest extends BaseTest {
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_4)
                 .withText(TelegramButtonConstants.TESTS_MENU)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_4)
                 .withText(TelegramButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_4)
                 .withText(QUERY_QR_CODE_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         SendMessage fillAccountMessage = (SendMessage) messageFilter.handle(callbackUpdate);
 
         String text = fillAccountMessage.getText();
@@ -167,13 +167,13 @@ public class WorkflowTest extends BaseTest {
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_5)
                 .withText(TelegramButtonConstants.TESTS_MENU)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_5)
                 .withText(TelegramButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         update = builder
@@ -219,7 +219,7 @@ public class WorkflowTest extends BaseTest {
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_6)
                 .withText(TelegramButtonConstants.INSTRUCTIONS_FOR_USE_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         SendMessage instructionsMessage = (SendMessage) messageFilter.handle(callbackUpdate);
 
         String text = instructionsMessage.getText();
@@ -242,13 +242,13 @@ public class WorkflowTest extends BaseTest {
         Update callbackUpdate = builder
                 .withChatId(CHAT_ID_7)
                 .withText(TelegramButtonConstants.ADD_SUBSCRIPTION_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withChatId(CHAT_ID_7)
                 .withText(TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         SendMessage subscriptionMessage = (SendMessage) messageFilter.handle(callbackUpdate);
 
         String text = subscriptionMessage.getText();
@@ -269,23 +269,23 @@ public class WorkflowTest extends BaseTest {
 
         Update callbackUpdate = builder
                 .withText(TelegramButtonConstants.TESTS_MENU)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withText(TelegramButtonConstants.START_TEST_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         callbackUpdate = builder
                 .withText(TelegramButtonConstants.MALE_BUTTON_TEXT)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         String categoryId = "2";
         callbackUpdate = builder
                 .withText(categoryId)
-                .build(TelegramDataType.CALLBACK);
+                .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
 

@@ -2,7 +2,7 @@ package ru.akvine.wild.bot.integration.base;
 
 import org.junit.platform.commons.util.StringUtils;
 import org.telegram.telegrambots.meta.api.objects.*;
-import ru.akvine.wild.bot.enums.TelegramDataType;
+import ru.akvine.wild.bot.enums.BotDataType;
 
 public class UpdateBuilder {
     private final Update update;
@@ -58,10 +58,10 @@ public class UpdateBuilder {
     }
 
     public Update build() {
-        return build(TelegramDataType.MESSAGE);
+        return build(BotDataType.MESSAGE);
     }
 
-    public Update build(TelegramDataType type) {
+    public Update build(BotDataType type) {
         if (StringUtils.isNotBlank(firstName)) {
             user.setFirstName(firstName);
         }
@@ -78,7 +78,7 @@ public class UpdateBuilder {
             message.setText(text);
         }
 
-        if (type == TelegramDataType.CALLBACK) {
+        if (type == BotDataType.CALLBACK) {
             CallbackQuery callbackQuery = new CallbackQuery();
             callbackQuery.setData(text);
 

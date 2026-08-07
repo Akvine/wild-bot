@@ -1,23 +1,25 @@
 package ru.akvine.wild.bot.controllers.views;
 
+import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
-import ru.akvine.wild.bot.telegram.KeyboardFactory;
+import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
 import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.START_GENERATION_BUTTON_TEXT;
 
 @View
-public class GenerateReportView implements TelegramView {
-    @Override
-    public InlineKeyboardMarkup getKeyboard(String chatId) {
-        InlineKeyboardButton startGenerationButton = new InlineKeyboardButton();
-        startGenerationButton.setText(START_GENERATION_BUTTON_TEXT);
-        startGenerationButton.setCallbackData(START_GENERATION_BUTTON_TEXT);
+@RequiredArgsConstructor
+public class GenerateReportView implements BotView {
+    private final BotKeyboardFactoryFacade facade;
 
-        InlineKeyboardButton backButton = KeyboardFactory.getBackButton();
-        return KeyboardFactory.createVerticalKeyboard(startGenerationButton, backButton);
+    @Override
+    public InlineKeyboard getKeyboard(String chatId, BotType botType) {
+        return facade.resolve(botType, byState()).create(chatId);
     }
 
     @Override

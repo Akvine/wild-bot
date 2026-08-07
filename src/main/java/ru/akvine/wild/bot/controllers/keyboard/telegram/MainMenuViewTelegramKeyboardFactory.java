@@ -1,0 +1,45 @@
+package ru.akvine.wild.bot.controllers.keyboard.telegram;
+
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
+import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
+import ru.akvine.wild.bot.enums.BotType;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
+
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.ADD_SUBSCRIPTION_BUTTON_TEXT;
+
+@Component
+public class MainMenuViewTelegramKeyboardFactory implements BotKeyboardFactory {
+
+    @Override
+    public InlineKeyboard create(String chatId) {
+        InlineKeyboardButton menuButton = new InlineKeyboardButton();
+        menuButton.setText(TESTS_MENU);
+        menuButton.setCallbackData(TESTS_MENU);
+
+        InlineKeyboardButton instructionsForUseButton = new InlineKeyboardButton();
+        instructionsForUseButton.setText(INSTRUCTIONS_FOR_USE_BUTTON_TEXT);
+        instructionsForUseButton.setCallbackData(INSTRUCTIONS_FOR_USE_BUTTON_TEXT);
+
+        InlineKeyboardButton addSubscriptionButton = new InlineKeyboardButton();
+        addSubscriptionButton.setText(ADD_SUBSCRIPTION_BUTTON_TEXT);
+        addSubscriptionButton.setCallbackData(ADD_SUBSCRIPTION_BUTTON_TEXT);
+
+        InlineKeyboardMarkup markup = TelegramKeyboardFactory.createVerticalKeyboard(menuButton, instructionsForUseButton, addSubscriptionButton);
+        return new InlineKeyboard(markup);
+    }
+
+    @Override
+    public BotType getByType() {
+        return BotType.TELEGRAM;
+    }
+
+    @Override
+    public ClientState getByState() {
+        return ClientState.MAIN_MENU;
+    }
+}
