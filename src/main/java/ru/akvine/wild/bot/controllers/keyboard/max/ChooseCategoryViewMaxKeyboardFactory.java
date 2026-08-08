@@ -1,8 +1,7 @@
-package ru.akvine.wild.bot.controllers.keyboard.telegram;
+package ru.akvine.wild.bot.controllers.keyboard.max;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
 import ru.akvine.wild.bot.controllers.converters.StartConverter;
 import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
@@ -14,12 +13,13 @@ import ru.akvine.wild.bot.services.CardAggregateService;
 import ru.akvine.wild.bot.services.CardService;
 import ru.akvine.wild.bot.services.domain.CardModel;
 import ru.akvine.wild.bot.services.dto.AggregateCard;
+import ru.akvine.wild.bot.services.integration.max.dto.Button;
 
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class ChooseCategoryViewTelegramKeyboardFactory implements BotKeyboardFactory {
+public class ChooseCategoryViewMaxKeyboardFactory implements BotKeyboardFactory {
     private final StartConverter startConverter;
     private final CardService cardService;
     private final CardAggregateService cardAggregateService;
@@ -30,13 +30,13 @@ public class ChooseCategoryViewTelegramKeyboardFactory implements BotKeyboardFac
         String selectedCardType = sessionStorage.get(chatId).getSelectedCardType();
         List<CardModel> cards = cardService.getByType(selectedCardType);
         List<AggregateCard> aggregateCards = cardAggregateService.aggregateByCategory(cards);
-        InlineKeyboardMarkup keyboardMarkup = startConverter.buildCategories(aggregateCards);
-        return new InlineKeyboard(keyboardMarkup);
+        Button[][] keyboard = startConverter.buildMaxCategories(aggregateCards);
+        return new InlineKeyboard(keyboard);
     }
 
     @Override
     public BotType getByType() {
-        return BotType.TELEGRAM;
+        return BotType.MAX;
     }
 
     @Override

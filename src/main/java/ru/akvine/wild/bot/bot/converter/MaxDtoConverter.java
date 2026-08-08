@@ -8,6 +8,7 @@ import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotDataType;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.services.integration.max.dto.Attachment;
+import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.max.dto.Update;
 import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
 
@@ -40,18 +41,11 @@ public class MaxDtoConverter implements BotDtoConverter<Update, SendMessageReque
 
     @Override
     public SendMessageRequest toResponse(Response response) {
-        SendMessageRequest request = new SendMessageRequest().setText(response.getMaxText());
+        MaxSendMessage maxSendMessage = response.getMaxSendMessage();
+        SendMessageRequest request = new SendMessageRequest().setText(maxSendMessage.getText());
 
-        if (CollectionUtils.isEmpty(response.getAttachments())) {
-            int attachmentSize = response.getAttachments().size();
-            Attachment[] attachments = new Attachment[attachmentSize];
-            for (int i = 0; i < attachmentSize; ++i) {
-                attachments[i] = new Attachment()
-                        .setType(response.getAttachments().get(i).getType())
-                        .setPayload(response.getAttachments().get(i).getPayload());
-            }
-
-            request.setAttachments(attachments);
+        if (CollectionUtils.isNotEmpty(maxSendMessage.getAttachments())) {
+            request.setAttachments(maxSendMessage.getAttachments().toArray(new Attachment[0]));
         }
 
         return request;

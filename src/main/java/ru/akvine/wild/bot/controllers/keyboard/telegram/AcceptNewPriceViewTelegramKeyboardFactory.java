@@ -25,7 +25,7 @@ public class AcceptNewPriceViewTelegramKeyboardFactory implements BotKeyboardFac
         keepPriceButton.setCallbackData(KEEP_PRICE_BUTTON_TEXT);
 
         InlineKeyboardMarkup keyboardMarkup = TelegramKeyboardFactory.createVerticalKeyboard(changePriceButton, keepPriceButton, TelegramKeyboardFactory.getBackButton());
-        return new InlineKeyboard().setTelegramKeyboard(keyboardMarkup);
+        return new InlineKeyboard(keyboardMarkup);
     }
 
     @Override

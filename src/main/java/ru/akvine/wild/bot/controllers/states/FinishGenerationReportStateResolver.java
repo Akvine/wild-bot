@@ -34,7 +34,7 @@ public class FinishGenerationReportStateResolver extends StateResolver {
             return response.setTelegramResponse(new SendMessage(chatId, "Вывберите действие из меню"));
         }
 
-        return implements_this;
+        return response.setText("Вывберите действие из меню");
     }
 
     @Override

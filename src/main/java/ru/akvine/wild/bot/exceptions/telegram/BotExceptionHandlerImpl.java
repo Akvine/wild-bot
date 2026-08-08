@@ -4,10 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.*;
 import ru.akvine.wild.bot.infrastructure.annotations.ErrorHandler;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramMessageErrorConstants.*;
+import static ru.akvine.wild.bot.constants.telegram.BotMessageErrorConstants.*;
 
 /**
  *
@@ -25,69 +27,69 @@ public class BotExceptionHandlerImpl {
     private int maxMegabytesSize;
 
     @ErrorHandler(BlockedCredentialsException.class)
-    public SendMessage handleBlockedCredentialsException(String chatId, BlockedCredentialsException exception) {
+    public Response handleBlockedCredentialsException(String chatId, BotType botType, BlockedCredentialsException exception) {
         logger.info("Client is blocked. Message = [{}]", exception.getMessage());
-        return new SendMessage(chatId, exception.getMessage());
+        return new Response(chatId, exception.getMessage(), botType);
     }
 
     @ErrorHandler(AdvertNotFoundException.class)
-    public SendMessage handleAdvertNotFoundException(String chatId, AdvertNotFoundException exception) {
+    public Response handleAdvertNotFoundException(String chatId, BotType botType, AdvertNotFoundException exception) {
         logger.warn("Has no advert. Message = [{}]", exception.getMessage());
-        return new SendMessage(chatId, "Рекламная кампания для запуска не найдена. Попробуйте позже...");
+        return new Response(chatId, "Рекламная кампания для запуска не найдена. Попробуйте позже...", botType);
     }
 
     @ErrorHandler(AdvertStartException.class)
-    public SendMessage handleAdvertStartException(String chatId, AdvertStartException exception) {
+    public Response handleAdvertStartException(String chatId, BotType botType, AdvertStartException exception) {
         logger.warn("Error while starting advert, message = {}", exception.getMessage());
         String errorMessage = String.format(
                 "При запуске рекламной кампании произошла ошибка. \nПожалуйста, обратитесь в поддержку: %s",
                 supportUrl
         );
-        return new SendMessage(chatId, errorMessage);
+        return new Response(chatId, errorMessage, botType);
     }
 
     @ErrorHandler(HasNoSubscriptionException.class)
-    public SendMessage handleClientSubscriptionException(String chatId, HasNoSubscriptionException exception) {
+    public Response handleClientSubscriptionException(String chatId, BotType botType, HasNoSubscriptionException exception) {
         logger.info("Client has no subscription. Message = [{}]", exception.getMessage());
-        return new SendMessage(chatId, CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE);
+        return new Response(chatId, CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE, botType);
     }
 
     @ErrorHandler(AdvertStartLimitException.class)
-    public SendMessage handleAdvertStartLimitException(String chatId, AdvertStartLimitException exception) {
+    public Response handleAdvertStartLimitException(String chatId, BotType botType, AdvertStartLimitException exception) {
         logger.info("Start advert limit is reached");
-        return new SendMessage(chatId, "Превышен лимит по запуску рекламных кампаний!");
+        return new Response(chatId, "Превышен лимит по запуску рекламных кампаний!", botType);
     }
 
     @ErrorHandler(PhotoDimensionsValidationException.class)
-    public SendMessage handlePhotoDimensionsValidationException(String chatId, PhotoDimensionsValidationException exception) {
+    public Response handlePhotoDimensionsValidationException(String chatId, BotType botType, PhotoDimensionsValidationException exception) {
         logger.info("Photo dimensions validation error. Message = [{}]", exception.getMessage());
         String message = String.format(
                 "Неверный размер изображения!\nМинимум: %sx%s. Фактический: %sx%s",
                 minWidth, minHeight, exception.getWidth(), exception.getHeight()
         );
-        return new SendMessage(chatId, message);
+        return new Response(chatId, message, botType);
     }
 
     @ErrorHandler(PhotoSizeValidationException.class)
-    public SendMessage handlePhotoSizeValidationException(String chatId, PhotoSizeValidationException exception) {
+    public Response handlePhotoSizeValidationException(String chatId, BotType botType, PhotoSizeValidationException exception) {
         double currentMegabytes = exception.getMegabytes();
         logger.info("Photo size validation error. Message = [{}]", exception.getMessage());
         String message = String.format(
                 "Размер изображения слишком большой!\nМаксимум %s. Фактический: %s",
                 maxMegabytesSize, currentMegabytes
         );
-        return new SendMessage(chatId, message);
+        return new Response(chatId, message, botType);
     }
 
     @ErrorHandler(WhitelistException.class)
-    public SendMessage handleWhitelistException(String chatId, WhitelistException exception) {
+    public Response handleWhitelistException(String chatId, BotType botType, WhitelistException exception) {
         logger.info("Client not in whitelist");
-        return new SendMessage(chatId, CLIENT_NOT_IN_WHITELIST_MESSAGE);
+        return new Response(chatId, CLIENT_NOT_IN_WHITELIST_MESSAGE, botType);
     }
 
     @ErrorHandler(SubscriptionExpiredException.class)
-    public SendMessage handleSubscriptionExpiredException(String chatId, SubscriptionExpiredException exception) {
+    public Response handleSubscriptionExpiredException(String chatId, BotType botType, SubscriptionExpiredException exception) {
         logger.info("Client's subscription is expired");
-        return new SendMessage(chatId, CLIENT_SUBSCRIPTION_EXPIRED_MESSAGE);
+        return new Response(chatId, CLIENT_SUBSCRIPTION_EXPIRED_MESSAGE, botType);
     }
 }

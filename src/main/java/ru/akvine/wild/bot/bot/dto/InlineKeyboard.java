@@ -9,13 +9,13 @@ import ru.akvine.wild.bot.services.integration.max.dto.Button;
 @Accessors(chain = true)
 public class InlineKeyboard {
     private InlineKeyboardMarkup telegramKeyboard;
-    private Button[] maxButtons;
+    private Button[][] maxButtons;
 
     public InlineKeyboard(InlineKeyboardMarkup telegramKeyboard) {
         this.telegramKeyboard = telegramKeyboard;
     }
 
-    public InlineKeyboard(Button[] maxButtons) {
+    public InlineKeyboard(Button[][] maxButtons) {
         this.maxButtons = maxButtons;
     }
 }

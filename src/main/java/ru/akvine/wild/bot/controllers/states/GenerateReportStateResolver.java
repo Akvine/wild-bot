@@ -1,7 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
@@ -10,10 +9,9 @@ import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.services.ReportService;
+import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.wild.bot.telegram.TelegramData;
 
 import java.util.List;
 
@@ -54,7 +52,7 @@ public class GenerateReportStateResolver extends StateResolver {
                 return response.setTelegramResponse(new SendMessage(chatId, "Вывберите действие из главного меню"));
             }
 
-            return implement_this;
+            return response.setMaxSendMessage(new MaxSendMessage().setChatId(chatId).setText("Вывберите действие из главного меню"));
         }
     }
 

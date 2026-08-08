@@ -1,7 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
@@ -12,10 +11,8 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.services.CardTypeService;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.wild.bot.telegram.TelegramData;
 
 import java.util.List;
 
@@ -67,7 +64,7 @@ public class ChooseTypeStateResolver extends StateResolver {
                 );
             }
 
-            return response.setMaxSendMessage();
+            return response.setText("Необходимо выбрать действие из меню!");
         }
     }
 

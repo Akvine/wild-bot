@@ -1,7 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
@@ -12,11 +11,9 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
 import ru.akvine.wild.bot.services.AdvertStartService;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.wild.bot.telegram.TelegramData;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,7 +58,7 @@ public class IsChangePriceStateResolver extends StateResolver {
                 return response.setTelegramResponse(message);
             }
 
-            return response.setMaxSendMessage();
+            return response.setText("Необходимо выбрать действие из меню!");
         } else {
             if (botType == BotType.TELEGRAM) {
                 return response.setTelegramResponse(
@@ -69,7 +66,7 @@ public class IsChangePriceStateResolver extends StateResolver {
                 );
             }
 
-            return response.setMaxSendMessage();
+            return response.setText("Необходимо выбрать действие из меню!");
         }
     }
 

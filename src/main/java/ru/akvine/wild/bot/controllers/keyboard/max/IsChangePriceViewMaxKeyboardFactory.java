@@ -12,14 +12,13 @@ import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHAN
 import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
 
 @Component
-public class AcceptNewPriceViewMaxKeyboardFactory implements BotKeyboardFactory {
+public class IsChangePriceViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId) {
         Button changePriceButton = MaxKeyboardFactory.callbackButton(CHANGE_PRICE_BUTTON_TEXT);
         Button keepPriceButton = MaxKeyboardFactory.callbackButton(KEEP_PRICE_BUTTON_TEXT);
 
-        Button[][] keyboard = MaxKeyboardFactory.createVerticalKeyboard(
-                changePriceButton, keepPriceButton, MaxKeyboardFactory.getBackButton());
+        Button[][] keyboard = MaxKeyboardFactory.createVerticalKeyboard(changePriceButton, keepPriceButton, MaxKeyboardFactory.getBackButton());
         return new InlineKeyboard(keyboard);
     }
 
@@ -30,6 +29,6 @@ public class AcceptNewPriceViewMaxKeyboardFactory implements BotKeyboardFactory 
 
     @Override
     public ClientState getByState() {
-        return ClientState.ACCEPT_NEW_PRICE_MENU;
+        return ClientState.IS_CHANGE_PRICE_MENU;
     }
 }

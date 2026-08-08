@@ -35,7 +35,7 @@ public class InstructionStateResolver extends StateResolver {
             return response.setTelegramResponse(new SendMessage(chatId, "Выберите действие из меню"));
         }
 
-        return ;
+        return response.setText("Выберите действие из меню");
     }
 
     @Override

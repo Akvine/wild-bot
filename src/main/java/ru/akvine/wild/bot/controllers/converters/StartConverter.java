@@ -3,9 +3,12 @@ package ru.akvine.wild.bot.controllers.converters;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.services.dto.AggregateCard;
+import ru.akvine.wild.bot.services.integration.max.dto.Button;
 import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,5 +30,19 @@ public class StartConverter {
         buttons.add(List.of(TelegramKeyboardFactory.getBackButton()));
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
+    }
+
+    public Button[][] buildMaxCategories(List<AggregateCard> aggregateCards) {
+        Button[][] buttons = aggregateCards
+                .stream()
+                .map(aggregateCard -> new Button[]{
+                        MaxKeyboardFactory.callbackButton(aggregateCard.getCategoryTitle())
+                                .setPayload(String.valueOf(aggregateCard.getCategoryId()))
+                })
+                .toArray(Button[][]::new);
+
+        Button[][] withBackButton = Arrays.copyOf(buttons, buttons.length + 1);
+        withBackButton[buttons.length] = new Button[]{MaxKeyboardFactory.getBackButton()};
+        return withBackButton;
     }
 }

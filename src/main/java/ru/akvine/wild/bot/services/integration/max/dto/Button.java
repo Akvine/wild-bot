@@ -9,4 +9,5 @@ public class Button {
     private String type;
     private String text;
     private String url;
+    private String payload;
 }

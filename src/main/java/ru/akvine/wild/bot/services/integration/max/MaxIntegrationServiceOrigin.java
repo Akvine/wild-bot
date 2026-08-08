@@ -125,6 +125,11 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
         }
     }
 
+    @Override
+    public void downloadPhoto() {
+
+    }
+
 
     private HttpHeaders buildHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();

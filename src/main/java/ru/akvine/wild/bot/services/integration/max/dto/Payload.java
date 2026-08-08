@@ -6,5 +6,10 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class Payload {
-    private Button[] buttons;
+    /**
+     * Кнопки клавиатуры, сгруппированные по рядам — внешний массив это ряды, внутренний
+     * это кнопки внутри одного ряда (см. схему {@code attachments[].payload.buttons}
+     * в MAX Bot API: POST /messages).
+     */
+    private Button[][] buttons;
 }

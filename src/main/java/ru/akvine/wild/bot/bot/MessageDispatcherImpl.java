@@ -16,7 +16,9 @@ import ru.akvine.wild.bot.facades.CommandResolverFacade;
 import ru.akvine.wild.bot.facades.StateResolverFacade;
 import ru.akvine.wild.bot.facades.TelegramViewFacade;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
+import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
+import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
 import java.util.List;
@@ -94,7 +96,13 @@ public class MessageDispatcherImpl implements MessageDispatcher {
             sendMessage.setReplyMarkup(keyboard.getTelegramKeyboard());
             response.setTelegramResponse(sendMessage);
         } else {
-            implement_this
+            MaxSendMessage maxSendMessage = new MaxSendMessage()
+                    .setChatId(chatId)
+                    .setText(message);
+            if (keyboard.getMaxButtons() != null) {
+                maxSendMessage.setAttachments(List.of(MaxKeyboardFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
+            }
+            response.setMaxSendMessage(maxSendMessage);
         }
 
         return response;

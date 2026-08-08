@@ -2,7 +2,6 @@ package ru.akvine.wild.bot.controllers.states;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -15,9 +14,8 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.resolvers.data.TelegramDataResolver;
+import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-import ru.akvine.wild.bot.telegram.TelegramData;
 import ru.akvine.wild.bot.validator.PhotoValidator;
 
 import java.util.List;
@@ -63,7 +61,12 @@ public class UploadPhotoStateResolver extends StateResolver {
             photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
             photoValidator.validate(photo);
         } else {
-            implement_this
+            // TODO: у MAX пока нет ни поля для фото-вложения в унифицированном Message,
+            // ни метода скачивания вложений в MaxIntegrationService - загрузка фото карточки
+            // поддерживается только через Telegram-версию бота.
+            return response.setMaxSendMessage(new MaxSendMessage()
+                    .setChatId(chatId)
+                    .setText("Загрузка фото пока не поддерживается в MAX — используйте Telegram-версию бота."));
         }
 
         ClientSessionData session = sessionStorage.get(chatId);

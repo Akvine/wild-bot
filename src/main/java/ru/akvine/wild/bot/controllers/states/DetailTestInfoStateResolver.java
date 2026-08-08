@@ -13,6 +13,7 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.ClientService;
+import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class DetailTestInfoStateResolver extends StateResolver {
                 return response.setTelegramResponse(new SendMessage(chatId, "Необходимо ввести целое число!"));
             }
 
-            return implement_this;
+            return response.setMaxSendMessage(new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести целое число!"));
         }
 
         long clientId = clientService.getByChatId(chatId).getId();
@@ -66,7 +67,7 @@ public class DetailTestInfoStateResolver extends StateResolver {
                 return response.setTelegramResponse(new SendMessage(chatId, "В отчете нет строки с ID = " + statisticId));
             }
 
-            return implement_this;
+            return response.setMaxSendMessage(new MaxSendMessage().setChatId(chatId).setText("В отчете нет строки с ID = " + statisticId));
         }
 
         byte[] photo = advertStatisticEntity.getPhoto();
@@ -77,7 +78,7 @@ public class DetailTestInfoStateResolver extends StateResolver {
             return response.setTelegramResponse(new SendMessage(chatId, statisticMessage));
         }
 
-        return implement_this;
+        return response.setMaxSendMessage(new MaxSendMessage().setChatId(chatId).setText(statisticMessage));
     }
 
     @Override

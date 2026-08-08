@@ -11,7 +11,6 @@ public interface TelegramIntegrationService {
     /**
      * Отправить answerCallback
      *
-     * @param telegramData данные, отправленные пользователем
      */
     void answerCallback(BotDataType type, String callbackQuery);
 

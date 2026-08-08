@@ -38,13 +38,13 @@ public class FillAdvertisingStateResolver extends StateResolver {
                 return response.setTelegramResponse(new SendMessage(chatId, "Спасибо! В ближайшее время бот отправит вам QR-код на пополнение бюджета :-)"));
             }
 
-            return implements_this;
+            return response.setText("Спасибо! В ближайшее время бот отправит вам QR-код на пополнение бюджета :-)");
         } else {
             if (botType == BotType.TELEGRAM) {
                 return response.setTelegramResponse(new SendMessage(chatId, "Вывберите действие из меню"));
             }
 
-            return implements_this;
+            return response.setText("Вывберите действие из меню");
         }
     }
 

@@ -23,7 +23,7 @@ public class AcceptNewPriceView implements BotView {
 
     @Override
     public InlineKeyboard getKeyboard(String chatId, BotType botType) {
-        return botKeyboardFactoryFacade.resolve(botType, byState()).create();
+        return botKeyboardFactoryFacade.resolve(botType, byState()).create(chatId);
     }
 
     @Override

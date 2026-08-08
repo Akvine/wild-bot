@@ -14,8 +14,8 @@ import ru.akvine.wild.bot.integration.base.UpdateBuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
-import static ru.akvine.wild.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE;
-import static ru.akvine.wild.bot.constants.telegram.TelegramMessageErrorConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
+import static ru.akvine.wild.bot.constants.telegram.BotMessageErrorConstants.CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE;
+import static ru.akvine.wild.bot.constants.telegram.BotMessageErrorConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
 import static ru.akvine.wild.bot.integration.config.TestConstants.*;
 
 @ExtendWith(SpringExtension.class)

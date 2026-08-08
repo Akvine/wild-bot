@@ -97,7 +97,8 @@ public class TelegramBotConfig {
             TelegramProductionBot bot = new TelegramProductionBot(
                     defaultBotOptions,
                     botToken,
-                    startMessageFilter
+                    startMessageFilter,
+                    converters
             );
             bot.setBotUsername(botUsername);
             bot.setBotPath(botPath);

@@ -8,18 +8,16 @@ import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.START_GENERATION_BUTTON_TEXT;
 
 @Component
-public class AcceptNewPriceViewMaxKeyboardFactory implements BotKeyboardFactory {
+public class GenerateReportViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId) {
-        Button changePriceButton = MaxKeyboardFactory.callbackButton(CHANGE_PRICE_BUTTON_TEXT);
-        Button keepPriceButton = MaxKeyboardFactory.callbackButton(KEEP_PRICE_BUTTON_TEXT);
+        Button startGenerationButton = MaxKeyboardFactory.callbackButton(START_GENERATION_BUTTON_TEXT);
+        Button backButton = MaxKeyboardFactory.getBackButton();
 
-        Button[][] keyboard = MaxKeyboardFactory.createVerticalKeyboard(
-                changePriceButton, keepPriceButton, MaxKeyboardFactory.getBackButton());
+        Button[][] keyboard = MaxKeyboardFactory.createVerticalKeyboard(startGenerationButton, backButton);
         return new InlineKeyboard(keyboard);
     }
 
@@ -30,6 +28,6 @@ public class AcceptNewPriceViewMaxKeyboardFactory implements BotKeyboardFactory 
 
     @Override
     public ClientState getByState() {
-        return ClientState.ACCEPT_NEW_PRICE_MENU;
+        return ClientState.GENERATE_REPORT_MENU;
     }
 }

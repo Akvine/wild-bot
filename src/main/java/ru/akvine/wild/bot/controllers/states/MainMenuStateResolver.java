@@ -58,7 +58,7 @@ public class MainMenuStateResolver extends StateResolver {
                 );
             }
 
-            return response.setMaxSendMessage();
+            return response.setText("Необходимо выбрать действие из меню!");
         }
     }
 
