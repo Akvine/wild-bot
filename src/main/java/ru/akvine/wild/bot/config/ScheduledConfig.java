@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import ru.akvine.wild.bot.job.CheckRunningAdvertsJob;
 import ru.akvine.wild.bot.job.MaxBotLongPoolingJob;
 import ru.akvine.wild.bot.job.PrintPropertiesJob;
 import ru.akvine.wild.bot.job.SubscriptionJob;
+import ru.akvine.wild.bot.job.monitoring.HikariPoolMetricsJob;
 import ru.akvine.wild.bot.job.sync.*;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
@@ -85,5 +87,11 @@ public class ScheduledConfig {
                                                      MessageFilter messageFilter,
                                                      BotDtoConverterFacade converters) {
         return new MaxBotLongPoolingJob(maxIntegrationService, messageFilter, converters);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "hikari.pool.metrics.log.enabled", havingValue = "true")
+    public HikariPoolMetricsJob hikariPoolMetricsJob(HikariDataSource hikariDataSource) {
+        return new HikariPoolMetricsJob(hikariDataSource);
     }
 }
