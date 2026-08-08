@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.ClientHasBeenDeletedException;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
@@ -17,6 +18,7 @@ public class ClientFilter extends MessageFilter {
     @Override
     public Response handle(Payload payload) {
         String chatId = payload.getChatId();
+        BotType botType = payload.getBotType();
 
         logger.debug("Payload was reached in ClientFilter for chat with id = [{}]. Type = [{}]", chatId,
                 payload.getBotType());
@@ -24,6 +26,7 @@ public class ClientFilter extends MessageFilter {
         if (clientBean == null) {
             ClientCreate clientCreate = new ClientCreate(
                     chatId,
+                    botType,
                     payload.getUsername(),
                     payload.getFirstName(),
                     payload.getLastName()

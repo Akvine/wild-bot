@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.entities.base.SoftBaseEntity;
+import ru.akvine.wild.bot.enums.BotType;
 
 @Getter
 @Setter
@@ -38,6 +39,10 @@ public class ClientEntity extends SoftBaseEntity {
 
     @Column(name = "IS_IN_WHITELIST", nullable = false)
     private boolean inWhitelist;
+
+    @Column(name = "BOT_TYPE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BotType botType;
 
     @Transient
     public void increaseAvailableTestsCount(int addCount) {

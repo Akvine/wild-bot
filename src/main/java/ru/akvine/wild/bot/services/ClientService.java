@@ -42,7 +42,8 @@ public class ClientService {
                 .setChatId(clientCreate.getChatId())
                 .setUsername(clientCreate.getUsername())
                 .setFirstName(clientCreate.getFirstName())
-                .setLastName(clientCreate.getLastName());
+                .setLastName(clientCreate.getLastName())
+                .setBotType(clientCreate.getBotType());
 
         return new ClientModel(clientRepository.save(clientEntity));
     }

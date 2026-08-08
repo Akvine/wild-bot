@@ -1,7 +1,9 @@
 package ru.akvine.wild.bot.bot.converter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.akvine.wild.bot.bot.dto.Message;
@@ -23,20 +25,17 @@ public class TelegramDtoConverter implements BotDtoConverter<Update, BotApiMetho
 
             payload.setFirstName(user.getFirstName());
             payload.setLastName(user.getLastName());
-            payload.setLastName(user.getUserName());
+            payload.setUsername(user.getUserName());
         }
 
+        payload.setMessage(new Message());
         if (update.hasCallbackQuery()) {
             payload.setBotDataType(BotDataType.CALLBACK);
             payload.setTelegramCallbackQueryId(update.getCallbackQuery().getId());
+            payload.getMessage().setText(update.getCallbackQuery().getData());
         } else {
+            payload.getMessage().setText(update.getMessage().getText());
             payload.setBotDataType(BotDataType.MESSAGE);
-        }
-
-        if (update.getMessage() != null) {
-            payload.setMessage(
-                    new Message()
-                            .setText(update.getMessage().getText()));
         }
 
         return payload;
@@ -44,6 +43,10 @@ public class TelegramDtoConverter implements BotDtoConverter<Update, BotApiMetho
 
     @Override
     public BotApiMethod<?> toResponse(Response response) {
+        if (response.getTelegramResponse() == null) {
+            return new SendMessage(response.getChatId(), response.getText());
+        }
+
         return response.getTelegramResponse();
     }
 

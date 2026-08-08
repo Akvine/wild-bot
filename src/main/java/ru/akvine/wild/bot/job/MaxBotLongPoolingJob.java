@@ -18,7 +18,7 @@ public class MaxBotLongPoolingJob {
     private final MessageFilter startMessageFilter;
     private final BotDtoConverterFacade facade;
 
-    @Scheduled(fixedDelay = 500)
+    @Scheduled(fixedDelayString = "${max.bot.dev.mode.long.pooling.cron.seconds}")
     public void checkUpdates() {
         Update[] updates = maxIntegrationService.updates();
         if (updates.length != 0) {

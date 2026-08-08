@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.wild.bot.entities.ClientEntity;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.services.domain.base.SoftModel;
 
 @Data
@@ -20,6 +21,7 @@ public class ClientModel extends SoftModel {
     private String lastName;
     private int availableTestsCount;
     private boolean inWhitelist;
+    private BotType botType;
 
     public ClientModel(ClientEntity clientEntity) {
         this.id = clientEntity.getId();
@@ -30,6 +32,7 @@ public class ClientModel extends SoftModel {
         this.lastName = clientEntity.getLastName();
         this.availableTestsCount = clientEntity.getAvailableTestsCount();
         this.inWhitelist = clientEntity.isInWhitelist();
+        this.botType = clientEntity.getBotType();
 
         this.createdDate = clientEntity.getCreatedDate();
         this.updatedDate = clientEntity.getUpdatedDate();

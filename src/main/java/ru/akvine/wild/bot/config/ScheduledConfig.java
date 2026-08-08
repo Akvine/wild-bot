@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -83,6 +84,7 @@ public class ScheduledConfig {
     }
 
     @Bean
+    @ConditionalOnExpression("${max.bot.enabled:false} && ${max.bot.dev.mode.enabled:false}")
     public MaxBotLongPoolingJob maxBotLongPoolingJob(MaxIntegrationService maxIntegrationService,
                                                      MessageFilter messageFilter,
                                                      BotDtoConverterFacade converters) {
