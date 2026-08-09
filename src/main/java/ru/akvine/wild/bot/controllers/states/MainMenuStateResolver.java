@@ -9,7 +9,7 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.exceptions.HasNoSubscriptionException;
 import ru.akvine.wild.bot.exceptions.SubscriptionExpiredException;
-import ru.akvine.wild.bot.facades.TelegramViewFacade;
+import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.SubscriptionService;
@@ -27,7 +27,7 @@ public class MainMenuStateResolver extends StateResolver {
 
     @Autowired
     public MainMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                 TelegramViewFacade viewFacade,
+                                 BotViewFacade viewFacade,
                                  SubscriptionService subscriptionService,
                                  TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);

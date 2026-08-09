@@ -9,6 +9,6 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-public class TelegramViewFacade {
+public class BotViewFacade {
     private final Map<ClientState, BotView> eventMap;
 }

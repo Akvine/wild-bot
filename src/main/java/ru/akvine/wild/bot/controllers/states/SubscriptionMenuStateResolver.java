@@ -6,7 +6,7 @@ import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramViewFacade;
+import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.SubscriptionService;
@@ -29,7 +29,7 @@ public class SubscriptionMenuStateResolver extends StateResolver {
 
     @Autowired
     public SubscriptionMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                         TelegramViewFacade viewFacade,
+                                         BotViewFacade viewFacade,
                                          YooKassaIntegrationService yooKassaIntegrationService,
                                          SubscriptionService subscriptionService,
                                          TelegramIntegrationService telegramIntegrationService) {

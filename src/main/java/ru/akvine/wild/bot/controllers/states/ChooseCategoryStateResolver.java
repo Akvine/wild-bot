@@ -5,7 +5,7 @@ import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramViewFacade;
+import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
@@ -19,7 +19,7 @@ public class ChooseCategoryStateResolver extends StateResolver {
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
     @Autowired
-    public ChooseCategoryStateResolver(TelegramViewFacade viewFacade,
+    public ChooseCategoryStateResolver(BotViewFacade viewFacade,
                                        StateStorage<String, List<ClientState>> stateStorage,
                                        SessionStorage<String, ClientSessionData> sessionStorage,
                                        TelegramIntegrationService telegramIntegrationService) {

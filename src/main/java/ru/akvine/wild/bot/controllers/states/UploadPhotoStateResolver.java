@@ -8,7 +8,7 @@ import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramViewFacade;
+import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.helpers.TelegramPhotoHelper;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
@@ -30,7 +30,7 @@ public class UploadPhotoStateResolver extends StateResolver {
 
     @Autowired
     public UploadPhotoStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                    TelegramViewFacade viewFacade,
+                                    BotViewFacade viewFacade,
                                     SessionStorage<String, ClientSessionData> sessionStorage,
                                     TelegramPhotoHelper telegramPhotoHelper,
                                     TelegramIntegrationService telegramIntegrationService,

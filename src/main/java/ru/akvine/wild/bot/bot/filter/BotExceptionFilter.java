@@ -53,14 +53,16 @@ public class BotExceptionFilter extends MessageFilter {
         logger.error("Some error occurred. Message = [{}]. StackTrace: {}", exception.getMessage(), exception.getStackTrace());
         Response response = new Response();
 
-        String messageToUser = String.format(
-                "Произошла неизвестная ошибка :( \nПожалуйста, обратитесь в поддержку: %s",
-                supportUrl
-        );
+        String messageToUser;
         if (botType == BotType.TELEGRAM) {
+            messageToUser = String.format(
+                    "Произошла неизвестная ошибка :( \nПожалуйста, обратитесь в поддержку: %s",
+                    supportUrl
+            );
             return response.setTelegramResponse(new SendMessage(chatId, messageToUser));
         }
 
+        messageToUser = "Произошла неизвестная ошибка :( \nПожалуйста, обратитесь в поддержку";
         return response.setMaxSendMessage(
                 new MaxSendMessage()
                         .setChatId(chatId)

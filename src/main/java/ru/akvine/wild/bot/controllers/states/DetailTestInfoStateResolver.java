@@ -8,7 +8,7 @@ import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.exceptions.AdvertStatisticNotFoundException;
-import ru.akvine.wild.bot.facades.TelegramViewFacade;
+import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
@@ -28,9 +28,9 @@ public class DetailTestInfoStateResolver extends StateResolver {
     public DetailTestInfoStateResolver(AdvertStatisticService advertStatisticService,
                                        ClientService clientService,
                                        TelegramIntegrationService telegramIntegrationService,
-                                       TelegramViewFacade telegramViewFacade,
+                                       BotViewFacade botViewFacade,
                                        StateStorage<String, List<ClientState>> stateStorage) {
-        super(stateStorage, telegramViewFacade, telegramIntegrationService);
+        super(stateStorage, botViewFacade, telegramIntegrationService);
         this.advertStatisticService = advertStatisticService;
         this.clientService = clientService;
         this.telegramIntegrationService = telegramIntegrationService;

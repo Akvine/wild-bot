@@ -14,7 +14,7 @@ import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.enums.Command;
 import ru.akvine.wild.bot.facades.CommandResolverFacade;
 import ru.akvine.wild.bot.facades.StateResolverFacade;
-import ru.akvine.wild.bot.facades.TelegramViewFacade;
+import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
@@ -30,7 +30,7 @@ import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.BACK
 @Slf4j
 public class MessageDispatcherImpl implements MessageDispatcher {
     private final StateStorage<String, List<ClientState>> stateStorage;
-    private final TelegramViewFacade botViewFacade;
+    private final BotViewFacade botViewFacade;
 
     private final StateResolverFacade stateResolverFacade;
 

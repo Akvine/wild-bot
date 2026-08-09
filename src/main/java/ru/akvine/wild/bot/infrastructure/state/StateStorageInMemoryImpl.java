@@ -12,32 +12,32 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class StateStorageInMemoryImpl implements StateStorage<String, List<ClientState>> {
-    private final static Map<String, List<ClientState>> states = new ConcurrentHashMap<>();
+    private final static Map<String, List<ClientState>> STATES = new ConcurrentHashMap<>();
 
     @Override
     public void add(String chatId, ClientState state) {
         if (!containsState(chatId)) {
-            states.put(chatId, new ArrayList<>(Arrays.asList(state)));
+            STATES.put(chatId, new ArrayList<>(Arrays.asList(state)));
         } else {
-            states.get(chatId).add(state);
+            STATES.get(chatId).add(state);
         }
     }
 
     @Override
     public boolean containsState(String chatId) {
-        return states.containsKey(chatId);
+        return STATES.containsKey(chatId);
     }
 
     @Override
     public ClientState getCurrent(String chatId) {
         validate(chatId);
-        return states.get(chatId).getLast();
+        return STATES.get(chatId).getLast();
     }
 
     @Override
     public void removeCurrent(String chatId) {
         validate(chatId);
-        states.get(chatId).removeLast();
+        STATES.get(chatId).removeLast();
     }
 
     @Override
@@ -49,12 +49,12 @@ public class StateStorageInMemoryImpl implements StateStorage<String, List<Clien
     @Override
     public void close(String chatId) {
         validate(chatId);
-        states.remove(chatId);
+        STATES.remove(chatId);
     }
 
     @Override
     public int statesCount(String chatId) {
-        return states.get(chatId).size();
+        return STATES.get(chatId).size();
     }
 
     private void validate(String chatId) {

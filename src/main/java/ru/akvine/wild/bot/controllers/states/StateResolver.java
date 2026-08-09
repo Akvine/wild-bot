@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.controllers.views.BotView;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.facades.TelegramViewFacade;
+import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
@@ -23,7 +22,7 @@ import java.util.List;
 @Slf4j
 public abstract class StateResolver {
     protected final StateStorage<String, List<ClientState>> stateStorage;
-    protected final TelegramViewFacade viewFacade;
+    protected final BotViewFacade viewFacade;
     private final TelegramIntegrationService telegramIntegrationService;
 
     @Nullable

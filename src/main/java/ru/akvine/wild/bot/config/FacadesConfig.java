@@ -42,11 +42,11 @@ public class FacadesConfig {
     }
 
     @Bean
-    public TelegramViewFacade telegramEventFacade(List<BotView> botViews) {
+    public BotViewFacade telegramEventFacade(List<BotView> botViews) {
         Map<ClientState, BotView> keyboardMap = botViews
                 .stream()
                 .collect(toMap(BotView::byState, identity()));
-        return new TelegramViewFacade(keyboardMap);
+        return new BotViewFacade(keyboardMap);
     }
 
     @Bean
