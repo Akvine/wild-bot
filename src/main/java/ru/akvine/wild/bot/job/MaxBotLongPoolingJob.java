@@ -23,7 +23,9 @@ public class MaxBotLongPoolingJob {
         Update[] updates = maxIntegrationService.updates();
         if (updates.length != 0) {
             Update update = updates[0];
-            Message[] messages = maxIntegrationService.getMessages(update.getChatId());
+            Message[] messages = maxIntegrationService.getMessages(
+                    update.getUpdateMessage().getRecipient().getChatId()
+            );
 
             if (messages.length != 0) {
                 update.setMessage(messages[0]);

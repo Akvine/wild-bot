@@ -8,7 +8,7 @@ import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.BotHandlingException;
-import ru.akvine.wild.bot.exceptions.telegram.BotExceptionHandlerImpl;
+import ru.akvine.wild.bot.exceptions.telegram.BotExceptionHandler;
 import ru.akvine.wild.bot.infrastructure.annotations.ErrorHandler;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 
@@ -20,7 +20,7 @@ public class BotExceptionFilter extends MessageFilter {
     @Value("${telegram.bot.support.url}")
     private String supportUrl;
 
-    private final BotExceptionHandlerImpl botExceptionHandlerImpl;
+    private final BotExceptionHandler botExceptionHandler;
 
     @Override
     public Response handle(Payload payload) {
@@ -31,12 +31,12 @@ public class BotExceptionFilter extends MessageFilter {
                     chatId, payload.getBotType());
             return nextMessageFilter.handle(payload);
         } catch (Exception exception) {
-            Method[] methods = botExceptionHandlerImpl.getClass().getDeclaredMethods();
+            Method[] methods = botExceptionHandler.getClass().getDeclaredMethods();
             for (Method method : methods) {
                 ErrorHandler errorAnnotation = method.getAnnotation(ErrorHandler.class);
                 try {
                     if (errorAnnotation != null && errorAnnotation.value().isInstance(exception)) {
-                        return (Response) method.invoke(botExceptionHandlerImpl, chatId, botType, exception);
+                        return (Response) method.invoke(botExceptionHandler, chatId, botType, exception);
                     }
                 } catch (Exception invokeException) {
                     logger.error("Error while handling exception. Message: {}. StackTrace: {}",

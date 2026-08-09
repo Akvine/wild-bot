@@ -21,19 +21,20 @@ public class MaxDtoConverter implements BotDtoConverter<Update, SendMessageReque
         Payload payload = new Payload()
                 .setChatId(getChatId(update))
                 .setBotType(getType())
-                .setFirstName(update.getUser().getFirstName())
-                .setLastName(update.getUser().getLastName())
-                .setLastName(update.getUser().getUsername());
+                .setFirstName(update.getUpdateMessage().getSender().getFirstName())
+                .setLastName(update.getUpdateMessage().getSender().getLastName());
 
         if (CALLBACK_PAYLOAD_TYPE.equalsIgnoreCase(update.getUpdateType())) {
             payload.setBotDataType(BotDataType.CALLBACK);
+            if (update.getCallback() != null && update.getCallback().getPayload() != null) {
+                payload.setMessage(new Message().setText(update.getCallback().getPayload()));
+            }
         } else {
             payload.setBotDataType(BotDataType.MESSAGE);
-        }
-
-        if (update.getMessage() != null && update.getMessage().getBody() != null) {
-            payload.setMessage(new Message()
-                    .setText(update.getMessage().getBody().getText()));
+            if (update.getMessage() != null && update.getMessage().getBody() != null) {
+                payload.setMessage(new Message()
+                        .setText(update.getMessage().getBody().getText()));
+            }
         }
 
         return payload;
@@ -42,10 +43,14 @@ public class MaxDtoConverter implements BotDtoConverter<Update, SendMessageReque
     @Override
     public SendMessageRequest toResponse(Response response) {
         MaxSendMessage maxSendMessage = response.getMaxSendMessage();
-        SendMessageRequest request = new SendMessageRequest().setText(maxSendMessage.getText());
-
-        if (CollectionUtils.isNotEmpty(maxSendMessage.getAttachments())) {
-            request.setAttachments(maxSendMessage.getAttachments().toArray(new Attachment[0]));
+        SendMessageRequest request = new SendMessageRequest();
+        if (maxSendMessage == null) {
+            request.setText(response.getText());
+        } else {
+            request.setText(maxSendMessage.getText());
+            if (CollectionUtils.isNotEmpty(maxSendMessage.getAttachments())) {
+                request.setAttachments(maxSendMessage.getAttachments().toArray(new Attachment[0]));
+            }
         }
 
         return request;
@@ -57,6 +62,6 @@ public class MaxDtoConverter implements BotDtoConverter<Update, SendMessageReque
     }
 
     private String getChatId(Update update) {
-        return update.getChatId();
+        return update.getUpdateMessage().getRecipient().getChatId();
     }
 }

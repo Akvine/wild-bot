@@ -12,5 +12,5 @@ public class LongPoolingSubscriptionResponse {
     private Update[] updates;
 
     @JsonProperty(value = "marker")
-    private int marker;
+    private long marker;
 }

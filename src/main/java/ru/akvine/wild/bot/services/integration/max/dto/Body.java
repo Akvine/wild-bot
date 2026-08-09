@@ -10,6 +10,6 @@ public class Body {
     @JsonProperty(value = "mid")
     private String mid;
 
-    @JsonProperty(value = "mid")
+    @JsonProperty(value = "text")
     private String text;
 }

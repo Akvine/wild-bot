@@ -3,7 +3,6 @@ package ru.akvine.wild.bot.exceptions.telegram;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.*;
@@ -16,7 +15,7 @@ import static ru.akvine.wild.bot.constants.telegram.BotMessageErrorConstants.*;
  */
 @Component
 @Slf4j
-public class BotExceptionHandlerImpl {
+public class BotExceptionHandler {
     @Value("${telegram.bot.support.url}")
     private String supportUrl;
     @Value("${photo.width.min.pixels}")

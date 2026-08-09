@@ -56,9 +56,12 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<LongPoolingSubscriptionResponse> response;
+        String url = RequestUtils.buildUri(maxUrl + MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET.getEndpoint(),
+                Map.of("timeout", "2",
+                        "types", "message_created,message_callback"));
         try {
             response = restTemplate.exchange(
-                    maxUrl + MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET.getEndpoint(),
+                    url,
                     MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET.getMethod(),
                     httpEntity,
                     LongPoolingSubscriptionResponse.class);

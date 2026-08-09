@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.services.integration.max.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,16 +12,14 @@ public class Update {
     private String updateType;
 
     @JsonProperty(value = "timestamp")
-    private int timestamp;
+    private long timestamp;
 
-    @JsonProperty(value = "chat_id")
-    private String chatId;
+    @JsonProperty(value = "message")
+    private UpdateMessage updateMessage;
 
-    @JsonProperty(value = "user")
-    private User user;
+    @JsonProperty(value = "callback")
+    private Callback callback;
 
-    @JsonProperty(value = "is_channel")
-    private boolean channel;
-
+    @JsonIgnore
     private Message message;
 }
