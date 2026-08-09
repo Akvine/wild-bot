@@ -43,8 +43,8 @@ public class MessageDispatcherImpl implements MessageDispatcher {
         BotType botType = payload.getBotType();
 
         logger.info(
-                "Received in dispatcher message = [{}], with type = [{}]. Bot type = [{}]",
-                text, payload.getBotDataType(), botType
+                "Received in dispatcher message = [{}] [{}]",
+                text, payload.getBotDataType()
         );
 
         if (StringUtils.isNotBlank(text) && text.startsWith("/")) {

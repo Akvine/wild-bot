@@ -7,4 +7,5 @@ public final class MDCConstants {
 
     public static final String USERNAME = "username";
     public static final String CHAT_ID = "chatId";
+    public static final String BOT_TYPE = "botType";
 }

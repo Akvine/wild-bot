@@ -55,6 +55,7 @@ public class ScheduledConfig {
                 countersStorage,
                 advertStatisticService,
                 CheckRunningAdvertsJob.class.getSimpleName(),
+                SYSTEM,
                 SYSTEM
         );
     }

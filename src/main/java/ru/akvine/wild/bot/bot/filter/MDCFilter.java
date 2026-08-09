@@ -15,8 +15,11 @@ public class MDCFilter extends MessageFilter {
     public Response handle(Payload payload) {
         String chatId = payload.getChatId();
         String username = clientService.getByChatId(chatId).getUsername();
-        MDC.put(MDCConstants.USERNAME, username);
+        if (username != null) {
+            MDC.put(MDCConstants.USERNAME, username);
+        }
         MDC.put(MDCConstants.CHAT_ID, chatId);
+        MDC.put(MDCConstants.BOT_TYPE, payload.getBotType().getType());
         Response response = nextMessageFilter.handle(payload);
         MDC.clear();
         return response;

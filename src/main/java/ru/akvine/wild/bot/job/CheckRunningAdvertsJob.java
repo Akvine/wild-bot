@@ -32,6 +32,7 @@ public class CheckRunningAdvertsJob {
 
     private final String name;
     private final String chatId;
+    private final String botType;
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
@@ -50,6 +51,7 @@ public class CheckRunningAdvertsJob {
     public void checkRunningAdverts() {
         MDC.put(MDCConstants.USERNAME, name);
         MDC.put(MDCConstants.CHAT_ID, chatId);
+        MDC.put(MDCConstants.BOT_TYPE, botType);
         logger.info("Start check running adverts...");
 
         List<AdvertEntity> runningAdverts = advertRepository.findByStatuses(List.of(AdvertStatus.RUNNING));
