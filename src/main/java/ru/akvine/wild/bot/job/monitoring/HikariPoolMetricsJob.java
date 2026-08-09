@@ -21,7 +21,9 @@ public class HikariPoolMetricsJob {
     public void logPoolMetrics() {
         HikariPoolMXBean poolMXBean = hikariDataSource.getHikariPoolMXBean();
         if (poolMXBean == null) {
-            logger.warn("HikariCP pool = [{}] is not initialized yet, skip metrics logging", hikariDataSource.getPoolName());
+            logger.warn(
+                    "HikariCP pool = [{}] is not initialized yet, skip metrics logging",
+                    hikariDataSource.getPoolName());
             return;
         }
 
@@ -30,7 +32,6 @@ public class HikariPoolMetricsJob {
                 hikariDataSource.getPoolName(),
                 poolMXBean.getTotalConnections(),
                 poolMXBean.getActiveConnections(),
-                poolMXBean.getIdleConnections()
-        );
+                poolMXBean.getIdleConnections());
     }
 }

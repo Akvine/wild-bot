@@ -1,9 +1,9 @@
 package ru.akvine.wild.bot.services.integration.max;
 
 import ru.akvine.wild.bot.services.integration.max.dto.Message;
+import ru.akvine.wild.bot.services.integration.max.dto.Update;
 import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
 import ru.akvine.wild.bot.services.integration.max.dto.response.LongPoolingSubscriptionResponse;
-import ru.akvine.wild.bot.services.integration.max.dto.Update;
 
 public interface MaxIntegrationService {
     /**

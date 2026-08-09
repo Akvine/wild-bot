@@ -1,10 +1,9 @@
 package ru.akvine.wild.bot.admin.dto.subscription;
 
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.admin.dto.common.SuccessfulResponse;
-
-import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)

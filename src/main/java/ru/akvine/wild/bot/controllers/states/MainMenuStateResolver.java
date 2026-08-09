@@ -1,5 +1,8 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
+
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,20 +19,17 @@ import ru.akvine.wild.bot.services.SubscriptionService;
 import ru.akvine.wild.bot.services.domain.SubscriptionModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
-import java.util.List;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
-
 @State
 @Slf4j
 public class MainMenuStateResolver extends StateResolver {
     private final SubscriptionService subscriptionService;
 
     @Autowired
-    public MainMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                 BotViewFacade viewFacade,
-                                 SubscriptionService subscriptionService,
-                                 TelegramIntegrationService telegramIntegrationService) {
+    public MainMenuStateResolver(
+            StateStorage<String, List<ClientState>> stateStorage,
+            BotViewFacade viewFacade,
+            SubscriptionService subscriptionService,
+            TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.subscriptionService = subscriptionService;
     }
@@ -53,9 +53,7 @@ public class MainMenuStateResolver extends StateResolver {
 
             Response response = new Response(chatId, botType);
             if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(
-                        new SendMessage(chatId, "Необходимо выбрать действие из меню!")
-                );
+                return response.setTelegramResponse(new SendMessage(chatId, "Необходимо выбрать действие из меню!"));
             }
 
             return response.setText("Необходимо выбрать действие из меню!");

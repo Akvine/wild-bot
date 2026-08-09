@@ -1,18 +1,17 @@
 package ru.akvine.wild.bot.infrastructure.state;
 
-import lombok.extern.slf4j.Slf4j;
-import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.infrastructure.exceptions.NoStateException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
+import ru.akvine.wild.bot.enums.ClientState;
+import ru.akvine.wild.bot.infrastructure.exceptions.NoStateException;
 
 @Slf4j
 public class StateStorageInMemoryImpl implements StateStorage<String, List<ClientState>> {
-    private final static Map<String, List<ClientState>> STATES = new ConcurrentHashMap<>();
+    private static final Map<String, List<ClientState>> STATES = new ConcurrentHashMap<>();
 
     @Override
     public void add(String chatId, ClientState state) {

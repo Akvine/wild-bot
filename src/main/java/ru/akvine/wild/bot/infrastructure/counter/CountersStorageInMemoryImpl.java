@@ -1,17 +1,16 @@
 package ru.akvine.wild.bot.infrastructure.counter;
 
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import ru.akvine.wild.bot.enums.AdvertStatus;
-import ru.akvine.wild.bot.exceptions.ValidationException;
-import ru.akvine.wild.bot.constants.ApiErrorConstants;
-import ru.akvine.wild.bot.services.AdvertService;
-import ru.akvine.wild.bot.services.domain.AdvertModel;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import ru.akvine.wild.bot.constants.ApiErrorConstants;
+import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.exceptions.ValidationException;
+import ru.akvine.wild.bot.services.AdvertService;
+import ru.akvine.wild.bot.services.domain.AdvertModel;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -58,9 +57,7 @@ public class CountersStorageInMemoryImpl implements CountersStorage {
     private void validateExists(int advertId) {
         if (!counters.containsKey(advertId)) {
             throw new ValidationException(
-                    ApiErrorConstants.GENERAL_ERROR,
-                    "Advert with id = [" + advertId + "] not exists!"
-            );
+                    ApiErrorConstants.GENERAL_ERROR, "Advert with id = [" + advertId + "] not exists!");
         }
     }
 }

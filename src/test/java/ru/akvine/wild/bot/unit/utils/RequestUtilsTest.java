@@ -1,14 +1,13 @@
 package ru.akvine.wild.bot.unit.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.akvine.wild.bot.utils.RequestUtils;
-
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Request utils tests")
@@ -43,8 +42,7 @@ public class RequestUtilsTest {
 
         Map<String, String> queryParams = Map.of(
                 "param1", "value1",
-                "param2", "value2"
-        );
+                "param2", "value2");
 
         String result = RequestUtils.buildUri(url, queryParams);
 

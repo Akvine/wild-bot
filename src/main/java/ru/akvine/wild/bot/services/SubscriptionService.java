@@ -2,6 +2,8 @@ package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
 import io.micrometer.common.util.StringUtils;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
@@ -14,9 +16,6 @@ import ru.akvine.wild.bot.exceptions.HasNoSubscriptionException;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.domain.SubscriptionModel;
 import ru.akvine.wild.bot.services.dto.admin.client.Subscription;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +52,8 @@ public class SubscriptionService {
         Preconditions.checkNotNull(chatId, "chatId is null");
         return subscriptionRepository
                 .findByChatId(chatId)
-                .orElseThrow(() -> new HasNoSubscriptionException("Client subscription for chat with id = [" + chatId + "] not found!"));
+                .orElseThrow(() -> new HasNoSubscriptionException(
+                        "Client subscription for chat with id = [" + chatId + "] not found!"));
     }
 
     public SubscriptionModel add(Subscription subscription) {
@@ -74,13 +74,13 @@ public class SubscriptionService {
             subscriptionEntity = new SubscriptionEntity();
         }
 
-        subscriptionEntity
-                .setClient(client)
-                .setExpiresAt(LocalDateTime.now().plusDays(expiresDaysAfter));
-
+        subscriptionEntity.setClient(client).setExpiresAt(LocalDateTime.now().plusDays(expiresDaysAfter));
 
         SubscriptionEntity savedClientSubscription = subscriptionRepository.save(subscriptionEntity);
-        logger.info("Successful add subscription = [{}] to client with chat id = {}", savedClientSubscription, client.getChatId());
+        logger.info(
+                "Successful add subscription = [{}] to client with chat id = {}",
+                savedClientSubscription,
+                client.getChatId());
         return new SubscriptionModel(savedClientSubscription);
     }
 

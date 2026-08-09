@@ -1,11 +1,10 @@
 package ru.akvine.wild.bot.entities.security;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "OTP_COUNTER_ENTITY")
@@ -16,7 +15,10 @@ public class OtpCounterEntity {
     @Id
     @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "otpCounterEntitySequence")
-    @SequenceGenerator(name = "otpCounterEntitySequence", sequenceName = "SEQ_OTP_COUNTER_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(
+            name = "otpCounterEntitySequence",
+            sequenceName = "SEQ_OTP_COUNTER_ENTITY",
+            allocationSize = 1000)
     private Long id;
 
     @Column(name = "LOGIN", nullable = false)

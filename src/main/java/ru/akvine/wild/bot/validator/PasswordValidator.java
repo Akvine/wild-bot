@@ -1,11 +1,10 @@
 package ru.akvine.wild.bot.validator;
 
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.constants.ApiErrorConstants;
 import ru.akvine.wild.bot.exceptions.ValidationException;
-
-import java.util.regex.Pattern;
 
 @Component
 public class PasswordValidator implements Validator<String> {
@@ -30,13 +29,15 @@ public class PasswordValidator implements Validator<String> {
         if (password.length() < DEFAULT_PWD_MIN_LENGTH) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.REGISTRATION_PASSWORD_INVALID_ERROR,
-                    "Password is less than password min length = [" + DEFAULT_PWD_MIN_LENGTH + "]. Field name: password");
+                    "Password is less than password min length = [" + DEFAULT_PWD_MIN_LENGTH
+                            + "]. Field name: password");
         }
 
         if (password.length() > DEFAULT_PWD_MAX_LENGTH) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.REGISTRATION_PASSWORD_INVALID_ERROR,
-                    "Password is greater than password max length = [" + DEFAULT_PWD_MAX_LENGTH + "]. Field name: password");
+                    "Password is greater than password max length = [" + DEFAULT_PWD_MAX_LENGTH
+                            + "]. Field name: password");
         }
 
         if (password.contains(EMPTY_SPACE)) {
@@ -65,8 +66,7 @@ public class PasswordValidator implements Validator<String> {
         if (findCount < 3) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.REGISTRATION_PASSWORD_INVALID_ERROR,
-                    "The password does not match the requirements. Field name: password"
-            );
+                    "The password does not match the requirements. Field name: password");
         }
     }
 }

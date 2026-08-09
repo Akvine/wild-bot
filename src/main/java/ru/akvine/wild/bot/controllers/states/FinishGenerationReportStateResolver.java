@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -11,15 +12,14 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
-import java.util.List;
-
 @State
 public class FinishGenerationReportStateResolver extends StateResolver {
 
     @Autowired
-    public FinishGenerationReportStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                               BotViewFacade viewFacade,
-                                               TelegramIntegrationService telegramIntegrationService) {
+    public FinishGenerationReportStateResolver(
+            StateStorage<String, List<ClientState>> stateStorage,
+            BotViewFacade viewFacade,
+            TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
     }
 

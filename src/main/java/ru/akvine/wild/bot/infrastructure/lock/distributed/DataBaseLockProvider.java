@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.infrastructure.lock.distributed;
 
+import java.util.concurrent.Callable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -7,8 +8,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import ru.akvine.commons.cluster.lock.ConcurrentOperationsHelper;
 import ru.akvine.commons.cluster.lock.SLock;
 import ru.akvine.commons.cluster.lock.SLockProvider;
-
-import java.util.concurrent.Callable;
 
 @Component
 @RequiredArgsConstructor
@@ -34,6 +33,7 @@ public class DataBaseLockProvider {
 
         return result;
     }
+
     public void doWithLock(String lockId, Runnable job) {
         this.doWithLock(lockId, () -> {
             job.run();
@@ -73,5 +73,4 @@ public class DataBaseLockProvider {
 
         return result;
     }
-
 }

@@ -18,5 +18,4 @@ public interface BotKeyboardFactory {
     static String getUniqueIdentifier(BotType botType, ClientState clientState) {
         return botType + "_" + clientState;
     }
-
 }

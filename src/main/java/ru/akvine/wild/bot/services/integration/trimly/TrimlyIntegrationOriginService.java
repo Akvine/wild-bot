@@ -17,6 +17,7 @@ import ru.akvine.wild.bot.services.integration.trimly.dto.ShortUrlResponse;
 public class TrimlyIntegrationOriginService implements TrimlyIntegrationService {
     @Value("${trimly.url}")
     private String url;
+
     @Value("${trimly.method}")
     private String method;
 
@@ -31,10 +32,7 @@ public class TrimlyIntegrationOriginService implements TrimlyIntegrationService 
         HttpEntity<ShortUrlRequest> httpEntity = new HttpEntity<>(request, headers);
         ResponseEntity<ShortUrlResponse> response;
         try {
-            response = restTemplate.postForEntity(
-                    url + method,
-                    httpEntity,
-                    ShortUrlResponse.class);
+            response = restTemplate.postForEntity(url + method, httpEntity, ShortUrlResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling Trimly api method = [%s]. Message = [%s]",

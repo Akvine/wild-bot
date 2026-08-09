@@ -4,7 +4,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.parameters.P;
 import ru.akvine.wild.bot.infrastructure.property.printers.PropertiesPrinter;
 import ru.akvine.wild.bot.services.integration.property.PropertyService;
 

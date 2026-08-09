@@ -24,18 +24,18 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           AuthFilter authFilter,
-                                           MDCFilter mdcFilter) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthFilter authFilter, MDCFilter mdcFilter)
+            throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/security/two/factor/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers("/security/two/factor/**")
+                        .permitAll()
+                        .requestMatchers("/actuator/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .exceptionHandling(c -> c.authenticationEntryPoint(new RestAuthenticationEntryPoint()))
                 .logout(logout -> {
                     logout.deleteCookies(cookieName);

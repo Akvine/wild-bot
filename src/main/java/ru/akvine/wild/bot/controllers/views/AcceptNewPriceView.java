@@ -11,8 +11,8 @@ import ru.akvine.wild.bot.utils.WildberriesUtils;
 public class AcceptNewPriceView extends AbstractBotView {
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
-    public AcceptNewPriceView(BotKeyboardFactoryFacade facade,
-                              SessionStorage<String, ClientSessionData> sessionStorage) {
+    public AcceptNewPriceView(
+            BotKeyboardFactoryFacade facade, SessionStorage<String, ClientSessionData> sessionStorage) {
         super(facade);
         this.sessionStorage = sessionStorage;
     }
@@ -30,10 +30,14 @@ public class AcceptNewPriceView extends AbstractBotView {
 
     private String buildMessage(int price, int discount) {
         StringBuilder sb = new StringBuilder();
-        sb
-                .append("1. Цена без скидки: ").append(price).append("\n")
-                .append("2. Скидка: ").append(discount).append("\n")
-                .append("3. Цена на сайте: ").append(WildberriesUtils.calculateDiscountPrice(price, discount));
+        sb.append("1. Цена без скидки: ")
+                .append(price)
+                .append("\n")
+                .append("2. Скидка: ")
+                .append(discount)
+                .append("\n")
+                .append("3. Цена на сайте: ")
+                .append(WildberriesUtils.calculateDiscountPrice(price, discount));
         return sb.toString();
     }
 }

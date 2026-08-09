@@ -17,6 +17,7 @@ public class AdvertFullStatisticResponse {
     private String orders;
     private String cr;
     private String shks;
+
     @JsonProperty(value = "sum_price")
     private String sumPrice;
 }

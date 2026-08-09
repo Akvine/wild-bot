@@ -1,11 +1,10 @@
 package ru.akvine.wild.bot.validator;
 
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.constants.ApiErrorConstants;
 import ru.akvine.wild.bot.exceptions.ValidationException;
-
-import java.util.regex.Pattern;
 
 @Component
 public class EmailValidator implements Validator<String> {
@@ -15,12 +14,12 @@ public class EmailValidator implements Validator<String> {
     @Override
     public void validate(String email) {
         if (StringUtils.isBlank(email)) {
-            throw new ValidationException(ApiErrorConstants.Validation.EMAIL_BLANK_ERROR,
-                    "Email is blank. Field name: email");
+            throw new ValidationException(
+                    ApiErrorConstants.Validation.EMAIL_BLANK_ERROR, "Email is blank. Field name: email");
         }
         if (!Pattern.matches(EMAIL_PATTERN, email)) {
-            throw new ValidationException(ApiErrorConstants.Validation.EMAIL_INVALID_ERROR,
-                    "Email is invalid. Field name: email");
+            throw new ValidationException(
+                    ApiErrorConstants.Validation.EMAIL_INVALID_ERROR, "Email is invalid. Field name: email");
         }
     }
 }

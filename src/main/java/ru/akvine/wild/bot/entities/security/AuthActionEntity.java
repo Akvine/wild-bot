@@ -13,7 +13,10 @@ public class AuthActionEntity implements OneTimePasswordable, AccountPasswordabl
     @Id
     @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "authActionEntitySequence")
-    @SequenceGenerator(name = "authActionEntitySequence", sequenceName = "SEQ_AUTH_ACTION_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(
+            name = "authActionEntitySequence",
+            sequenceName = "SEQ_AUTH_ACTION_ENTITY",
+            allocationSize = 1000)
     private Long id;
 
     @Column(name = "SESSION_ID", nullable = false)

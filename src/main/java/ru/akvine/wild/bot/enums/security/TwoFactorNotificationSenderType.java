@@ -18,8 +18,10 @@ public enum TwoFactorNotificationSenderType {
         }
 
         switch (type.toLowerCase()) {
-            case "log": return LOG;
-            case "constant": return CONSTANT;
+            case "log":
+                return LOG;
+            case "constant":
+                return CONSTANT;
             default:
                 throw new IllegalArgumentException("Notification provider type = [" + type + "] is not supported!");
         }

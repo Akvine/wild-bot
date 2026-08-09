@@ -17,8 +17,10 @@ import ru.akvine.wild.bot.services.integration.property.dto.PropertyResponse;
 public class CustodianPropertyServiceIntegration {
     @Value("${custodian.url}")
     private String url;
+
     @Value("${custodian.method}")
     private String method;
+
     @Value("${custodian.token}")
     private String token;
 
@@ -31,10 +33,7 @@ public class CustodianPropertyServiceIntegration {
         HttpEntity<GetPropertiesRequest> httpEntity = new HttpEntity<>(request, headers);
         ResponseEntity<PropertyResponse> response;
         try {
-            response = restTemplate.postForEntity(
-                    url + method,
-                    httpEntity,
-                    PropertyResponse.class);
+            response = restTemplate.postForEntity(url + method, httpEntity, PropertyResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling custodian api method = [%s]. Message = [%s]",

@@ -1,10 +1,9 @@
 package ru.akvine.wild.bot.helpers;
 
 import com.google.common.base.Preconditions;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-
-import java.util.List;
 
 @Component
 public class TelegramPhotoHelper {

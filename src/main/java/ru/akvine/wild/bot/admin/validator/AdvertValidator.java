@@ -12,7 +12,7 @@ import ru.akvine.wild.bot.validator.AdvertStatusValidator;
 
 @Component
 @RequiredArgsConstructor
-public class AdvertValidator  {
+public class AdvertValidator {
     private final AdvertStatusValidator advertStatusValidator;
 
     public void verifyPauseAdvertRequest(PauseAdvertRequest request) {
@@ -31,15 +31,13 @@ public class AdvertValidator  {
         if (StringUtils.isNotBlank(uuid) && id != null) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
-                    "Presented advertId and advertUuid. Need only one parameter"
-            );
+                    "Presented advertId and advertUuid. Need only one parameter");
         }
 
         if (StringUtils.isBlank(uuid) && id == null) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,
-                    "Blank advertId and advertUuid. Need only one parameter"
-            );
+                    "Blank advertId and advertUuid. Need only one parameter");
         }
     }
 }

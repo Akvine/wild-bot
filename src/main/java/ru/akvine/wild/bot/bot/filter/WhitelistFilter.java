@@ -16,7 +16,9 @@ public class WhitelistFilter extends MessageFilter {
     @Override
     public Response handle(Payload payload) {
         String chatId = payload.getChatId();
-        logger.debug("Update data was reached in WhitelistFilter for chat with id = {}, bot type = {}", chatId,
+        logger.debug(
+                "Update data was reached in WhitelistFilter for chat with id = {}, bot type = {}",
+                chatId,
                 payload.getBotType());
         ClientModel clientModel = clientService.getByChatId(chatId);
         if (!clientModel.isInWhitelist()) {

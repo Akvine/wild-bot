@@ -1,12 +1,11 @@
 package ru.akvine.wild.bot.infrastructure.lock;
 
-import org.springframework.stereotype.Component;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import org.springframework.stereotype.Component;
 
 /**
  * Следует использовать только если в production-среде не более 1 инстанса приложения.
@@ -35,7 +34,6 @@ public class InstanceLockProvider implements InMemoryLockProvider {
         if (lockWrapper.removeThreadFromQueue() == 0) {
             locks.remove(key, lockWrapper);
         }
-
     }
 
     private static class LockWrapper {

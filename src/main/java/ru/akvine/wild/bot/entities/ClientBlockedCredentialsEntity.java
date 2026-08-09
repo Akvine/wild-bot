@@ -1,11 +1,10 @@
 package ru.akvine.wild.bot.entities;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "CLIENT_BLOCKED_CREDENTIALS_ENTITY")
@@ -16,7 +15,10 @@ public class ClientBlockedCredentialsEntity {
     @Id
     @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clientBlockedCredentialsEntitySequence")
-    @SequenceGenerator(name = "clientBlockedCredentialsEntitySequence", sequenceName = "SEQ_CLIENT_BLOCKED_CREDENTIALS_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(
+            name = "clientBlockedCredentialsEntitySequence",
+            sequenceName = "SEQ_CLIENT_BLOCKED_CREDENTIALS_ENTITY",
+            allocationSize = 1000)
     private Long id;
 
     @Column(name = "CHAT_ID", nullable = false)

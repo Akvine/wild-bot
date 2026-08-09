@@ -1,6 +1,5 @@
 package ru.akvine.wild.bot.bot.converter;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,9 +15,7 @@ import ru.akvine.wild.bot.enums.BotType;
 public class TelegramDtoConverter implements BotDtoConverter<Update, BotApiMethod<?>> {
     @Override
     public Payload fromRequest(Update update) {
-        Payload payload = new Payload()
-                .setBotType(getType())
-                .setChatId(getChatId(update));
+        Payload payload = new Payload().setBotType(getType()).setChatId(getChatId(update));
 
         if (update.getMessage() != null && update.getMessage().getFrom() != null) {
             User user = update.getMessage().getFrom();

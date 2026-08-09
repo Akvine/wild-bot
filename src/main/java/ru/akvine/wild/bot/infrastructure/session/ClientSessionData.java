@@ -1,20 +1,21 @@
 package ru.akvine.wild.bot.infrastructure.session;
 
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.wild.bot.entities.infrastructure.ClientSessionDataEntity;
 
-import java.time.LocalDateTime;
-
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
 public class ClientSessionData {
     private Long id;
+
     @Nullable
     private String chatId;
+
     private String selectedCardType;
     private int selectedCategoryId;
     private byte[] uploadedCardPhoto;

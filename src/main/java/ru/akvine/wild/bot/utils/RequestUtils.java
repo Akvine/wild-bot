@@ -1,9 +1,8 @@
 package ru.akvine.wild.bot.utils;
 
+import java.util.Map;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.collections4.MapUtils;
-
-import java.util.Map;
 
 @UtilityClass
 public class RequestUtils {
@@ -16,7 +15,10 @@ public class RequestUtils {
         sb.append(url).append("?");
 
         for (Map.Entry<String, String> paramWithValue : queryParams.entrySet()) {
-            sb.append(paramWithValue.getKey()).append("=").append(paramWithValue.getValue()).append("&");
+            sb.append(paramWithValue.getKey())
+                    .append("=")
+                    .append(paramWithValue.getValue())
+                    .append("&");
         }
         String urlWithParams = sb.toString();
         return urlWithParams.substring(0, urlWithParams.length() - 1);

@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.services;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -12,8 +13,6 @@ import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.wild.bot.utils.POIUtils;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -21,8 +20,8 @@ public class ReportService {
     private final AdvertStatisticRepository advertStatisticRepository;
     private final ClientService clientService;
 
-    private final static String SHEET_NAME = "sheet";
-    private final static int HEADERS_ROW_INDEX = 0;
+    private static final String SHEET_NAME = "sheet";
+    private static final int HEADERS_ROW_INDEX = 0;
 
     public byte[] generateReport(String chatId) {
         logger.info("Generate report");
@@ -73,7 +72,11 @@ public class ReportService {
             advertIdCell.setCellValue(advertStatistics.get(i).getAdvertEntity().getExternalId());
 
             Cell startDateTimeCell = row.createCell(12);
-            startDateTimeCell.setCellValue(advertStatistics.get(i).getAdvertEntity().getStartCheckDateTime().toString());
+            startDateTimeCell.setCellValue(advertStatistics
+                    .get(i)
+                    .getAdvertEntity()
+                    .getStartCheckDateTime()
+                    .toString());
         }
 
         return POIUtils.mapToBytes(workbook);
@@ -120,6 +123,5 @@ public class ReportService {
 
         Cell startDateTimeCell = headersRow.createCell(12);
         startDateTimeCell.setCellValue("Время запуска теста");
-
     }
 }

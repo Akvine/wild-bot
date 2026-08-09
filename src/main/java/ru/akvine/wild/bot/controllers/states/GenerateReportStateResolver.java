@@ -1,5 +1,8 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.START_GENERATION_BUTTON_TEXT;
+
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -13,22 +16,19 @@ import ru.akvine.wild.bot.services.ReportService;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
-import java.util.List;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.START_GENERATION_BUTTON_TEXT;
-
 @State
 public class GenerateReportStateResolver extends StateResolver {
     private final ReportService reportService;
     private final TelegramIntegrationService telegramIntegrationService;
 
-    private final static String REPORT_FILENAME_WITH_EXTENSION = "report.xlsx";
+    private static final String REPORT_FILENAME_WITH_EXTENSION = "report.xlsx";
 
     @Autowired
-    public GenerateReportStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                       BotViewFacade viewFacade,
-                                       ReportService reportService,
-                                       TelegramIntegrationService telegramIntegrationService) {
+    public GenerateReportStateResolver(
+            StateStorage<String, List<ClientState>> stateStorage,
+            BotViewFacade viewFacade,
+            ReportService reportService,
+            TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.reportService = reportService;
         this.telegramIntegrationService = telegramIntegrationService;
@@ -52,7 +52,8 @@ public class GenerateReportStateResolver extends StateResolver {
                 return response.setTelegramResponse(new SendMessage(chatId, "Вывберите действие из главного меню"));
             }
 
-            return response.setMaxSendMessage(new MaxSendMessage().setChatId(chatId).setText("Вывберите действие из главного меню"));
+            return response.setMaxSendMessage(
+                    new MaxSendMessage().setChatId(chatId).setText("Вывберите действие из главного меню"));
         }
     }
 

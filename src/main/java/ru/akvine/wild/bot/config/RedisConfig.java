@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.config;
 
+import java.time.Duration;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -20,8 +21,6 @@ import ru.akvine.wild.bot.config.properties.RedisConfigProperties;
 import ru.akvine.wild.bot.services.integration.redis.RedisOperationService;
 import ru.akvine.wild.bot.services.integration.redis.RedisOperationServiceBuilder;
 
-import java.time.Duration;
-
 @Configuration
 @EnableConfigurationProperties(RedisConfigProperties.class)
 @EnableCaching
@@ -33,11 +32,13 @@ public class RedisConfig {
     @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true")
     public RedisConnectionFactory connectionFactory(RedisConfigProperties redisConfigProperties) {
         if (redisConfigProperties.isClusterOn()) {
-            RedisClusterConfiguration clusterConfiguration = new RedisClusterConfiguration(redisConfigProperties.getNodes());
+            RedisClusterConfiguration clusterConfiguration =
+                    new RedisClusterConfiguration(redisConfigProperties.getNodes());
             clusterConfiguration.setPassword(redisConfigProperties.getPassword());
             return new LettuceConnectionFactory(clusterConfiguration);
         } else {
-            RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration(redisConfigProperties.getHost(), redisConfigProperties.getPort());
+            RedisStandaloneConfiguration standaloneConfiguration =
+                    new RedisStandaloneConfiguration(redisConfigProperties.getHost(), redisConfigProperties.getPort());
             standaloneConfiguration.setPassword(redisConfigProperties.getPassword());
             return new LettuceConnectionFactory(standaloneConfiguration);
         }
@@ -51,7 +52,8 @@ public class RedisConfig {
                 .entryTtl(Duration.ofMinutes(1L))
                 .disableCachingNullValues();
         return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheWriter(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory, BatchStrategies.scan(1000)))
+                .cacheWriter(
+                        RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory, BatchStrategies.scan(1000)))
                 .transactionAware()
                 .cacheDefaults(defaults)
                 .build();

@@ -3,10 +3,10 @@ package ru.akvine.wild.bot.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.akvine.wild.bot.bot.MessageDispatcher;
 import ru.akvine.wild.bot.bot.filter.*;
 import ru.akvine.wild.bot.exceptions.telegram.BotExceptionHandler;
 import ru.akvine.wild.bot.services.ClientService;
-import ru.akvine.wild.bot.bot.MessageDispatcher;
 
 @Configuration
 @RequiredArgsConstructor
@@ -37,4 +37,3 @@ public class BotFilterConfig {
         return exceptionHandlerFilter;
     }
 }
-

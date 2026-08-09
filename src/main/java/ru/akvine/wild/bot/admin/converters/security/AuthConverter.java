@@ -22,7 +22,8 @@ public class AuthConverter {
 
     private final SecurityHelper securityHelper;
 
-    public AuthActionRequest convertToAuthActionRequest(AuthCredentialsRequest request, HttpServletRequest httpServletRequest) {
+    public AuthActionRequest convertToAuthActionRequest(
+            AuthCredentialsRequest request, HttpServletRequest httpServletRequest) {
         Preconditions.checkNotNull(request, "authCredentialsRequest is null");
         Preconditions.checkNotNull(httpServletRequest, "httpServletRequest is null");
         return new AuthActionRequest()
@@ -31,7 +32,8 @@ public class AuthConverter {
                 .setPassword(StringUtils.trimToEmpty(request.getPassword()));
     }
 
-    public AuthActionRequest convertToAuthActionRequest(AuthFinishRequest request, HttpServletRequest httpServletRequest) {
+    public AuthActionRequest convertToAuthActionRequest(
+            AuthFinishRequest request, HttpServletRequest httpServletRequest) {
         Preconditions.checkNotNull(request, "authFinishRequest is null");
         Preconditions.checkNotNull(httpServletRequest, "httpServletRequest is null");
 

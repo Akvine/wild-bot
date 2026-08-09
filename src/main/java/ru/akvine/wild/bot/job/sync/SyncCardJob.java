@@ -1,5 +1,9 @@
 package ru.akvine.wild.bot.job.sync;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -9,11 +13,6 @@ import ru.akvine.wild.bot.repositories.CardRepository;
 import ru.akvine.wild.bot.services.CardService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,14 +28,9 @@ public class SyncCardJob {
         List<CardDto> cardsDto = wildberriesIntegrationService.getCards();
         if (CollectionUtils.isNotEmpty(cardsDto)) {
             List<CardEntity> cards = cardRepository.findAll();
-            List<Integer> cardsIdDb = cards
-                    .stream()
-                    .map(CardEntity::getExternalId)
-                    .collect(Collectors.toList());
-            List<Integer> cardsInWb = cardsDto
-                    .stream()
-                    .map(CardDto::getNmID)
-                    .toList();
+            List<Integer> cardsIdDb =
+                    cards.stream().map(CardEntity::getExternalId).collect(Collectors.toList());
+            List<Integer> cardsInWb = cardsDto.stream().map(CardDto::getNmID).toList();
 
             List<Integer> commonElements = new ArrayList<>(cardsInWb);
             commonElements.retainAll(cardsIdDb);
@@ -49,8 +43,7 @@ public class SyncCardJob {
 
             if (CollectionUtils.isNotEmpty(uniqueCardsInDb)) {
                 logger.info("Delete unused db cards. Size = {}", uniqueCardsInDb.size());
-                cards
-                        .stream()
+                cards.stream()
                         .filter(cardEntity -> uniqueCardsInDb.contains(cardEntity.getExternalId()))
                         .forEach(cardEntity -> {
                             cardEntity.setDeleted(true);
@@ -61,8 +54,7 @@ public class SyncCardJob {
 
             if (CollectionUtils.isNotEmpty(uniqueCardsInWb)) {
                 logger.info("Save new cards in db. Size = {}", uniqueCardsInWb.size());
-                List<CardDto> newCardsDto = cardsDto
-                        .stream()
+                List<CardDto> newCardsDto = cardsDto.stream()
                         .filter(cardDto -> uniqueCardsInWb.contains(cardDto.getNmID()))
                         .collect(Collectors.toList());
                 cardService.create(newCardsDto);

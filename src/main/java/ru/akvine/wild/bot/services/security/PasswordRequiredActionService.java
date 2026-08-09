@@ -14,9 +14,11 @@ import ru.akvine.wild.bot.services.dto.security.OtpCreateNewAction;
 
 @Service
 @Slf4j
-public abstract class PasswordRequiredActionService <T extends AccountPasswordable & OneTimePasswordable> extends OtpActionService<T> {
+public abstract class PasswordRequiredActionService<T extends AccountPasswordable & OneTimePasswordable>
+        extends OtpActionService<T> {
     @Autowired
     protected SupportService supportService;
+
     @Autowired
     protected PasswordService passwordService;
 
@@ -33,8 +35,11 @@ public abstract class PasswordRequiredActionService <T extends AccountPasswordab
             throw new BadCredentialsException("Client reached limit of password invalid attempts");
         } else {
             action = getRepository().save(action);
-            logger.info("Client with email = {} tried to initiate {}, but entered wrong account password. Invalid attempts left = {}",
-                    action.getLogin(), getActionName(), action.getPwdInvalidAttemptsLeft());
+            logger.info(
+                    "Client with email = {} tried to initiate {}, but entered wrong account password. Invalid attempts left = {}",
+                    action.getLogin(),
+                    getActionName(),
+                    action.getPwdInvalidAttemptsLeft());
             throw new BadCredentialsException("Invalid password");
         }
     }
@@ -44,7 +49,8 @@ public abstract class PasswordRequiredActionService <T extends AccountPasswordab
         supportBlockingService.setBlock(login);
         logger.info("Client with email = {} reached limit for invalid password input and set blocked", login);
         getRepository().delete(action);
-        logger.info("Blocked client's with email = {} {}[id={}] removed from DB", login, getActionName(), action.getId());
+        logger.info(
+                "Blocked client's with email = {} {}[id={}] removed from DB", login, getActionName(), action.getId());
     }
 
     protected abstract T createNewActionAndSendOtp(OtpCreateNewAction otpCreateNewAction);

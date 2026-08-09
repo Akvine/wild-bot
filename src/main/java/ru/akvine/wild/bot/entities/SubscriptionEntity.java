@@ -1,14 +1,13 @@
 package ru.akvine.wild.bot.entities;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.entities.base.BaseEntity;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

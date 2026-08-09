@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
@@ -12,17 +13,16 @@ import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
-import java.util.List;
-
 @State
 public class ChooseCategoryStateResolver extends StateResolver {
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
     @Autowired
-    public ChooseCategoryStateResolver(BotViewFacade viewFacade,
-                                       StateStorage<String, List<ClientState>> stateStorage,
-                                       SessionStorage<String, ClientSessionData> sessionStorage,
-                                       TelegramIntegrationService telegramIntegrationService) {
+    public ChooseCategoryStateResolver(
+            BotViewFacade viewFacade,
+            StateStorage<String, List<ClientState>> stateStorage,
+            SessionStorage<String, ClientSessionData> sessionStorage,
+            TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
     }
@@ -38,9 +38,7 @@ public class ChooseCategoryStateResolver extends StateResolver {
         try {
             categoryId = Integer.parseInt(text);
         } catch (NumberFormatException exception) {
-            return new Response()
-                    .setChatId(chatId)
-                    .setText("Необходимо выбрать категорию из списка!");
+            return new Response().setChatId(chatId).setText("Необходимо выбрать категорию из списка!");
         }
 
         ClientSessionData sessionData = sessionStorage.get(chatId);

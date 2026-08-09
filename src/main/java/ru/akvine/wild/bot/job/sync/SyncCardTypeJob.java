@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.job.sync;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -9,9 +11,6 @@ import ru.akvine.wild.bot.exceptions.IntegrationException;
 import ru.akvine.wild.bot.repositories.CardTypeRepository;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -28,9 +27,7 @@ public class SyncCardTypeJob {
         validate(response);
 
         List<String> wbCardTypes = response.getData();
-        List<String> dbCardTypes = cardTypeRepository
-                .findAll()
-                .stream()
+        List<String> dbCardTypes = cardTypeRepository.findAll().stream()
                 .map(CardTypeEntity::getType)
                 .toList();
 
@@ -62,8 +59,7 @@ public class SyncCardTypeJob {
         if (Boolean.parseBoolean(response.getError())) {
             String errorMessage = String.format(
                     "Error while getting card types! Error = [%s]. Message = [%s]",
-                    response.getError(),
-                    response.getErrorText());
+                    response.getError(), response.getErrorText());
             throw new IntegrationException(errorMessage);
         }
     }

@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.resolvers.command;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,6 @@ import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -44,9 +43,7 @@ public class StartCommandResolver implements CommandResolver {
         String message = view.getMessage(chatId);
         InlineKeyboard keyboardMarkup = view.getKeyboard(chatId, botType);
 
-        Response response = new Response()
-                .setChatId(chatId)
-                .setBotType(botType);
+        Response response = new Response().setChatId(chatId).setBotType(botType);
         if (botType == BotType.TELEGRAM) {
             SendMessage sendMessage = new SendMessage(chatId, message);
             sendMessage.enableMarkdown(true);
@@ -55,12 +52,10 @@ public class StartCommandResolver implements CommandResolver {
             return response.setTelegramResponse(sendMessage);
         }
 
-        MaxSendMessage maxSendMessage = new MaxSendMessage()
-                .setChatId(chatId)
-                .setText(message);
+        MaxSendMessage maxSendMessage = new MaxSendMessage().setChatId(chatId).setText(message);
         if (keyboardMarkup.getMaxButtons() != null) {
-            maxSendMessage.setAttachments(List.of(
-                    MaxKeyboardFactory.toInlineKeyboardAttachment(keyboardMarkup.getMaxButtons())));
+            maxSendMessage.setAttachments(
+                    List.of(MaxKeyboardFactory.toInlineKeyboardAttachment(keyboardMarkup.getMaxButtons())));
         }
 
         return response.setMaxSendMessage(maxSendMessage);

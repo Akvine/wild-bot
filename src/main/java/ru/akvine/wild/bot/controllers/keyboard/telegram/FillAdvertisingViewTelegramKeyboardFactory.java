@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.controllers.keyboard.telegram;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.QUERY_QR_CODE_BUTTON_TEXT;
+
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -9,8 +11,6 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.QUERY_QR_CODE_BUTTON_TEXT;
-
 @Component
 public class FillAdvertisingViewTelegramKeyboardFactory implements BotKeyboardFactory {
     @Override
@@ -19,7 +19,8 @@ public class FillAdvertisingViewTelegramKeyboardFactory implements BotKeyboardFa
         queryQrCodeButton.setText(QUERY_QR_CODE_BUTTON_TEXT);
         queryQrCodeButton.setCallbackData(QUERY_QR_CODE_BUTTON_TEXT);
 
-        InlineKeyboardMarkup keyboardMarkup = TelegramKeyboardFactory.createVerticalKeyboard(queryQrCodeButton, TelegramKeyboardFactory.getBackButton());
+        InlineKeyboardMarkup keyboardMarkup = TelegramKeyboardFactory.createVerticalKeyboard(
+                queryQrCodeButton, TelegramKeyboardFactory.getBackButton());
         return new InlineKeyboard(keyboardMarkup);
     }
 

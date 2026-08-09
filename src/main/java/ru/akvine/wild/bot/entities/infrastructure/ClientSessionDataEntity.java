@@ -18,7 +18,10 @@ public class ClientSessionDataEntity extends BaseEntity {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clientSessionDataEntitySeq")
-    @SequenceGenerator(name = "clientSessionDataEntitySeq", sequenceName = "SEQ_CLIENT_SESSION_DATA_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(
+            name = "clientSessionDataEntitySeq",
+            sequenceName = "SEQ_CLIENT_SESSION_DATA_ENTITY",
+            allocationSize = 1000)
     private Long id;
 
     @Column(name = "CHAT_ID", nullable = false)

@@ -1,5 +1,11 @@
 package ru.akvine.wild.bot.services.security;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.concurrent.ThreadSafe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
@@ -10,13 +16,6 @@ import ru.akvine.wild.bot.entities.security.BlockedCredentialsEntity;
 import ru.akvine.wild.bot.exceptions.security.BlockedCredentialsException;
 import ru.akvine.wild.bot.repositories.security.BlockedCredentialsRepository;
 import ru.akvine.wild.bot.utils.DateUtils;
-
-import javax.annotation.concurrent.ThreadSafe;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +36,8 @@ public class SupportBlockingService {
             return block.end;
         }
 
-        BlockedCredentialsEntity blockedCredentialsEntity = blockedCredentialsRepository.findByLogin(login).orElse(null);
+        BlockedCredentialsEntity blockedCredentialsEntity =
+                blockedCredentialsRepository.findByLogin(login).orElse(null);
         if (blockedCredentialsEntity == null) {
             return null;
         }
@@ -56,6 +56,7 @@ public class SupportBlockingService {
             return blockFromCache.end;
         }
     }
+
     public long setBlock(String login) {
         return setBlock(login, otpBlockTimeMinutes);
     }
@@ -65,8 +66,7 @@ public class SupportBlockingService {
         if (blockedCredentialsOptional.isPresent()) {
             return DateUtils.getMinutes(
                     blockedCredentialsOptional.get().getBlockStartDate(),
-                    blockedCredentialsOptional.get().getBlockEndDate()
-            );
+                    blockedCredentialsOptional.get().getBlockEndDate());
         }
 
         BlockTime newBlock = new BlockTime(minutes);
@@ -86,7 +86,8 @@ public class SupportBlockingService {
     public boolean removeBlock(String login) {
         BlockedCredentialsEntity blockedCredentialsEntity = blockedCredentialsRepository
                 .findByLogin(login)
-                .orElseThrow(() -> new BlockedCredentialsException("Not exists block record for client with email = [" + login + "]"));
+                .orElseThrow(() -> new BlockedCredentialsException(
+                        "Not exists block record for client with email = [" + login + "]"));
 
         blockedCredentialsRepository.delete(blockedCredentialsEntity);
         blockedCache.remove(login);
@@ -114,7 +115,11 @@ public class SupportBlockingService {
                     logger.info("Blocking cache cleaning started");
                     headerPrinted[0] = true;
                 }
-                logger.info("Blocking start = [{}], end = [{}] of client with email = [{}] is expired. Remove it from cache.", blockInfo.start, blockInfo.end, login);
+                logger.info(
+                        "Blocking start = [{}], end = [{}] of client with email = [{}] is expired. Remove it from cache.",
+                        blockInfo.start,
+                        blockInfo.end,
+                        login);
                 return true;
             }
             return false;
@@ -128,13 +133,17 @@ public class SupportBlockingService {
     @Scheduled(fixedDelayString = "${security.blocked.credentials.expired.db.fixedDelay.milliseconds}")
     public void clearExpiredInDb() {
         boolean[] headerPrinted = new boolean[1];
-        List<BlockedCredentialsEntity> blockedCredentials = blockedCredentialsRepository.findExpired(LocalDateTime.now());
+        List<BlockedCredentialsEntity> blockedCredentials =
+                blockedCredentialsRepository.findExpired(LocalDateTime.now());
         blockedCredentials.forEach(block -> {
             if (!headerPrinted[0]) {
                 logger.info("BlockedCredentials table cleaning started");
                 headerPrinted[0] = true;
             }
-            logger.info("Blocking of client with email = {} has expired at = [{}]", block.getLogin(), block.getBlockEndDate());
+            logger.info(
+                    "Blocking of client with email = {} has expired at = [{}]",
+                    block.getLogin(),
+                    block.getBlockEndDate());
             blockedCredentialsRepository.deleteById(block.getId());
         });
 

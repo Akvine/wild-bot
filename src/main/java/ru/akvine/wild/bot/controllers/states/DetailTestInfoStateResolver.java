@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -16,8 +17,6 @@ import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
-import java.util.List;
-
 @State
 public class DetailTestInfoStateResolver extends StateResolver {
     private final AdvertStatisticService advertStatisticService;
@@ -25,11 +24,12 @@ public class DetailTestInfoStateResolver extends StateResolver {
     private final TelegramIntegrationService telegramIntegrationService;
 
     @Autowired
-    public DetailTestInfoStateResolver(AdvertStatisticService advertStatisticService,
-                                       ClientService clientService,
-                                       TelegramIntegrationService telegramIntegrationService,
-                                       BotViewFacade botViewFacade,
-                                       StateStorage<String, List<ClientState>> stateStorage) {
+    public DetailTestInfoStateResolver(
+            AdvertStatisticService advertStatisticService,
+            ClientService clientService,
+            TelegramIntegrationService telegramIntegrationService,
+            BotViewFacade botViewFacade,
+            StateStorage<String, List<ClientState>> stateStorage) {
         super(stateStorage, botViewFacade, telegramIntegrationService);
         this.advertStatisticService = advertStatisticService;
         this.clientService = clientService;
@@ -53,7 +53,8 @@ public class DetailTestInfoStateResolver extends StateResolver {
                 return response.setTelegramResponse(new SendMessage(chatId, "Необходимо ввести целое число!"));
             }
 
-            return response.setMaxSendMessage(new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести целое число!"));
+            return response.setMaxSendMessage(
+                    new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести целое число!"));
         }
 
         long clientId = clientService.getByChatId(chatId).getId();
@@ -64,10 +65,12 @@ public class DetailTestInfoStateResolver extends StateResolver {
         } catch (AdvertStatisticNotFoundException exception) {
 
             if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(new SendMessage(chatId, "В отчете нет строки с ID = " + statisticId));
+                return response.setTelegramResponse(
+                        new SendMessage(chatId, "В отчете нет строки с ID = " + statisticId));
             }
 
-            return response.setMaxSendMessage(new MaxSendMessage().setChatId(chatId).setText("В отчете нет строки с ID = " + statisticId));
+            return response.setMaxSendMessage(
+                    new MaxSendMessage().setChatId(chatId).setText("В отчете нет строки с ID = " + statisticId));
         }
 
         byte[] photo = advertStatisticEntity.getPhoto();
@@ -94,13 +97,29 @@ public class DetailTestInfoStateResolver extends StateResolver {
         sb.append("4. CTR: ").append(advertStatistic.getCtr()).append("\n");
         sb.append("5. Затраты: ").append(advertStatistic.getSum()).append("\n");
         sb.append("6. CPC: ").append(advertStatistic.getCpc()).append("\n");
-        sb.append("7. Количество добавлений товаров в корзину (atbs): ").append(advertStatistic.getAtbs()).append("\n");
-        sb.append("8. Количество заказов: (orders): ").append(advertStatistic.getOrders()).append("\n");
-        sb.append("9. Отношение количества заказов к общему количеству посещений кампании (cr): ").append(advertStatistic.getCr()).append("\n");
-        sb.append("10. Количество заказанных товаров (shks): ").append(advertStatistic.getShks()).append("\n");
-        sb.append("11. Заказов на сумму (sum_price): ").append(advertStatistic.getSumPrice()).append("\n");
-        sb.append("12. Идентификатор РК (Advert ID): ").append(advertStatistic.getAdvertEntity().getExternalId()).append("\n");
-        sb.append("13. Время запуска теста: ").append(advertStatistic.getAdvertEntity().getStartCheckDateTime().toString());
+        sb.append("7. Количество добавлений товаров в корзину (atbs): ")
+                .append(advertStatistic.getAtbs())
+                .append("\n");
+        sb.append("8. Количество заказов: (orders): ")
+                .append(advertStatistic.getOrders())
+                .append("\n");
+        sb.append("9. Отношение количества заказов к общему количеству посещений кампании (cr): ")
+                .append(advertStatistic.getCr())
+                .append("\n");
+        sb.append("10. Количество заказанных товаров (shks): ")
+                .append(advertStatistic.getShks())
+                .append("\n");
+        sb.append("11. Заказов на сумму (sum_price): ")
+                .append(advertStatistic.getSumPrice())
+                .append("\n");
+        sb.append("12. Идентификатор РК (Advert ID): ")
+                .append(advertStatistic.getAdvertEntity().getExternalId())
+                .append("\n");
+        sb.append("13. Время запуска теста: ")
+                .append(advertStatistic
+                        .getAdvertEntity()
+                        .getStartCheckDateTime()
+                        .toString());
         return sb.toString();
     }
 }

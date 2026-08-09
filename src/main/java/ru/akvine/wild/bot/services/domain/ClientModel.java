@@ -17,8 +17,10 @@ public class ClientModel extends SoftModel {
     private String chatId;
     private String username;
     private String firstName;
+
     @Nullable
     private String lastName;
+
     private int availableTestsCount;
     private boolean inWhitelist;
     private BotType botType;

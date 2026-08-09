@@ -1,5 +1,11 @@
 package ru.akvine.wild.bot.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static ru.akvine.wild.bot.constants.telegram.BotMessageErrorConstants.CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE;
+import static ru.akvine.wild.bot.constants.telegram.BotMessageErrorConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
+import static ru.akvine.wild.bot.integration.config.TestConstants.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,12 +17,6 @@ import ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants;
 import ru.akvine.wild.bot.enums.BotDataType;
 import ru.akvine.wild.bot.integration.base.BaseTest;
 import ru.akvine.wild.bot.integration.base.UpdateBuilder;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
-import static ru.akvine.wild.bot.constants.telegram.BotMessageErrorConstants.CLIENT_HAS_NO_SUBSCRIPTION_MESSAGE;
-import static ru.akvine.wild.bot.constants.telegram.BotMessageErrorConstants.CLIENT_NOT_IN_WHITELIST_MESSAGE;
-import static ru.akvine.wild.bot.integration.config.TestConstants.*;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("Bot workflow flow tests")
@@ -74,26 +74,22 @@ public class WorkflowTest extends BaseTest {
         Update update = builder.build();
         messageFilter.handle(update);
 
-        Update callbackUpdate = builder
-                .withChatId(CHAT_ID_3)
+        Update callbackUpdate = builder.withChatId(CHAT_ID_3)
                 .withText(TelegramButtonConstants.TESTS_MENU)
                 .build(BotDataType.CALLBACK);
 
         messageFilter.handle(callbackUpdate);
 
-        callbackUpdate = builder
-                .withChatId(CHAT_ID_3)
+        callbackUpdate = builder.withChatId(CHAT_ID_3)
                 .withText(GENERATE_REPORT_BUTTON_TEXT)
                 .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
-        callbackUpdate = builder
-                .withChatId(CHAT_ID_3)
+        callbackUpdate = builder.withChatId(CHAT_ID_3)
                 .withText(START_GENERATION_BUTTON_TEXT)
                 .build(BotDataType.CALLBACK);
 
-        SendMessage successfulGenerateReportMessage =
-                (SendMessage) messageFilter.handle(callbackUpdate);
+        SendMessage successfulGenerateReportMessage = (SendMessage) messageFilter.handle(callbackUpdate);
 
         String text = successfulGenerateReportMessage.getText();
         String chatId = successfulGenerateReportMessage.getChatId();
@@ -115,20 +111,17 @@ public class WorkflowTest extends BaseTest {
         Update update = builder.build();
         messageFilter.handle(update);
 
-        Update callbackUpdate = builder
-                .withChatId(CHAT_ID_4)
+        Update callbackUpdate = builder.withChatId(CHAT_ID_4)
                 .withText(TelegramButtonConstants.TESTS_MENU)
                 .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
-        callbackUpdate = builder
-                .withChatId(CHAT_ID_4)
+        callbackUpdate = builder.withChatId(CHAT_ID_4)
                 .withText(TelegramButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT)
                 .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
-        callbackUpdate = builder
-                .withChatId(CHAT_ID_4)
+        callbackUpdate = builder.withChatId(CHAT_ID_4)
                 .withText(QUERY_QR_CODE_BUTTON_TEXT)
                 .build(BotDataType.CALLBACK);
         SendMessage fillAccountMessage = (SendMessage) messageFilter.handle(callbackUpdate);
@@ -145,41 +138,35 @@ public class WorkflowTest extends BaseTest {
     @Test
     @DisplayName("Get detail info by test")
     public void get_detail_info_by_test() {
-        String expectedMessage = "1. ID: -1\n" +
-                "2. Просмотры: 1\n" +
-                "3. Клики: 1\n" +
-                "4. Показатель кликабельности (ctr): 1\n" +
-                "5. Затраты: 1\n" +
-                "6. Средняя стоимость клика (cpc): 1\n" +
-                "7. Количество добавлений товаров в корзину (atbs): 1\n" +
-                "8. Количество заказов: (orders): 1\n" +
-                "9. Отношение количества заказов к общему количеству посещений кампании (cr): 1\n" +
-                "10. Количество заказанных товаров (shks): 1\n" +
-                "11. Заказов на сумму (sum_price): 1\n" +
-                "12. Идентификатор РК (Advert ID): -1\n" +
-                "13. Время запуска теста: 2024-01-04T00:00";
+        String expectedMessage = "1. ID: -1\n" + "2. Просмотры: 1\n"
+                + "3. Клики: 1\n"
+                + "4. Показатель кликабельности (ctr): 1\n"
+                + "5. Затраты: 1\n"
+                + "6. Средняя стоимость клика (cpc): 1\n"
+                + "7. Количество добавлений товаров в корзину (atbs): 1\n"
+                + "8. Количество заказов: (orders): 1\n"
+                + "9. Отношение количества заказов к общему количеству посещений кампании (cr): 1\n"
+                + "10. Количество заказанных товаров (shks): 1\n"
+                + "11. Заказов на сумму (sum_price): 1\n"
+                + "12. Идентификатор РК (Advert ID): -1\n"
+                + "13. Время запуска теста: 2024-01-04T00:00";
         builder = new UpdateBuilder();
         builder.withChatId(CHAT_ID_5);
 
         Update update = builder.build();
         messageFilter.handle(update);
 
-        Update callbackUpdate = builder
-                .withChatId(CHAT_ID_5)
+        Update callbackUpdate = builder.withChatId(CHAT_ID_5)
                 .withText(TelegramButtonConstants.TESTS_MENU)
                 .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
-        callbackUpdate = builder
-                .withChatId(CHAT_ID_5)
+        callbackUpdate = builder.withChatId(CHAT_ID_5)
                 .withText(TelegramButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT)
                 .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
-        update = builder
-                .withChatId(CHAT_ID_5)
-                .withText("-1")
-                .build();
+        update = builder.withChatId(CHAT_ID_5).withText("-1").build();
         SendMessage getDetailInfoMessage = (SendMessage) messageFilter.handle(update);
 
         String text = getDetailInfoMessage.getText();
@@ -194,21 +181,21 @@ public class WorkflowTest extends BaseTest {
     @Test
     @DisplayName("Get instructions")
     public void get_instructions() {
-        String expectedMessage = "<b>Запуск рекламной кампании</b> \uD83D\uDE80: выберите\n" +
-                "категорию товара, и бот автоматически\n" +
-                "создаст новую рекламную кампанию или\n" +
-                "запустит уже cозданную\n" +
-                "<b>Управление ставками CPM</b> \uD83D\uDCB0: бот будет\n" +
-                "автоматически регулировать ставки для\n" +
-                "оптимального размещения рекламы.\n" +
-                "<b>Настройка цен и скидок</b> \uD83C\uDFF7: введите\n" +
-                "желаемую цену на товар, и бот рассчитает\n" +
-                "необходимую скидку.\n" +
-                "<b>Пополнение рекламного кабинета</b> \uD83D\uDCF2:\n" +
-                "запросите QR-код для пополнения, и бот\n" +
-                "выдаст его для оплаты.\n" +
-                "<b>Оптимальное размещение рекламы</b> \uD83D\uDCC8:\n" +
-                "бот обеспечит лучшее размещение ваших  объявлений";
+        String expectedMessage =
+                "<b>Запуск рекламной кампании</b> \uD83D\uDE80: выберите\n" + "категорию товара, и бот автоматически\n"
+                        + "создаст новую рекламную кампанию или\n"
+                        + "запустит уже cозданную\n"
+                        + "<b>Управление ставками CPM</b> \uD83D\uDCB0: бот будет\n"
+                        + "автоматически регулировать ставки для\n"
+                        + "оптимального размещения рекламы.\n"
+                        + "<b>Настройка цен и скидок</b> \uD83C\uDFF7: введите\n"
+                        + "желаемую цену на товар, и бот рассчитает\n"
+                        + "необходимую скидку.\n"
+                        + "<b>Пополнение рекламного кабинета</b> \uD83D\uDCF2:\n"
+                        + "запросите QR-код для пополнения, и бот\n"
+                        + "выдаст его для оплаты.\n"
+                        + "<b>Оптимальное размещение рекламы</b> \uD83D\uDCC8:\n"
+                        + "бот обеспечит лучшее размещение ваших  объявлений";
 
         builder = new UpdateBuilder();
         builder.withChatId(CHAT_ID_6);
@@ -216,8 +203,7 @@ public class WorkflowTest extends BaseTest {
         Update update = builder.build();
         messageFilter.handle(update);
 
-        Update callbackUpdate = builder
-                .withChatId(CHAT_ID_6)
+        Update callbackUpdate = builder.withChatId(CHAT_ID_6)
                 .withText(TelegramButtonConstants.INSTRUCTIONS_FOR_USE_BUTTON_TEXT)
                 .build(BotDataType.CALLBACK);
         SendMessage instructionsMessage = (SendMessage) messageFilter.handle(callbackUpdate);
@@ -239,14 +225,12 @@ public class WorkflowTest extends BaseTest {
         Update update = builder.build();
         messageFilter.handle(update);
 
-        Update callbackUpdate = builder
-                .withChatId(CHAT_ID_7)
+        Update callbackUpdate = builder.withChatId(CHAT_ID_7)
                 .withText(TelegramButtonConstants.ADD_SUBSCRIPTION_BUTTON_TEXT)
                 .build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
-        callbackUpdate = builder
-                .withChatId(CHAT_ID_7)
+        callbackUpdate = builder.withChatId(CHAT_ID_7)
                 .withText(TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT)
                 .build(BotDataType.CALLBACK);
         SendMessage subscriptionMessage = (SendMessage) messageFilter.handle(callbackUpdate);
@@ -267,28 +251,20 @@ public class WorkflowTest extends BaseTest {
         Update update = builder.build();
         messageFilter.handle(update);
 
-        Update callbackUpdate = builder
-                .withText(TelegramButtonConstants.TESTS_MENU)
-                .build(BotDataType.CALLBACK);
+        Update callbackUpdate =
+                builder.withText(TelegramButtonConstants.TESTS_MENU).build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
-        callbackUpdate = builder
-                .withText(TelegramButtonConstants.START_TEST_BUTTON_TEXT)
-                .build(BotDataType.CALLBACK);
+        callbackUpdate =
+                builder.withText(TelegramButtonConstants.START_TEST_BUTTON_TEXT).build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
-        callbackUpdate = builder
-                .withText(TelegramButtonConstants.MALE_BUTTON_TEXT)
-                .build(BotDataType.CALLBACK);
+        callbackUpdate =
+                builder.withText(TelegramButtonConstants.MALE_BUTTON_TEXT).build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
 
         String categoryId = "2";
-        callbackUpdate = builder
-                .withText(categoryId)
-                .build(BotDataType.CALLBACK);
+        callbackUpdate = builder.withText(categoryId).build(BotDataType.CALLBACK);
         messageFilter.handle(callbackUpdate);
-
-
     }
-
 }

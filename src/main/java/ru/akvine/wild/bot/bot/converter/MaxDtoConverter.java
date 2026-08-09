@@ -32,8 +32,8 @@ public class MaxDtoConverter implements BotDtoConverter<Update, SendMessageReque
         } else {
             payload.setBotDataType(BotDataType.MESSAGE);
             if (update.getMessage() != null && update.getMessage().getBody() != null) {
-                payload.setMessage(new Message()
-                        .setText(update.getMessage().getBody().getText()));
+                payload.setMessage(
+                        new Message().setText(update.getMessage().getBody().getText()));
             }
         }
 

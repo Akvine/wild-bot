@@ -1,11 +1,10 @@
 package ru.akvine.wild.bot.facades;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import ru.akvine.wild.bot.bot.converter.BotDtoConverter;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.bot.BotTypeNotSupportedException;
-
-import java.util.Map;
 
 @AllArgsConstructor
 public class BotDtoConverterFacade {

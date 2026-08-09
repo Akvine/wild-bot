@@ -1,12 +1,10 @@
 package ru.akvine.wild.bot.helpers;
 
+import java.util.concurrent.Callable;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.Callable;
-
 
 /***
  * Утилитный класс для выполнения логики в транзакции

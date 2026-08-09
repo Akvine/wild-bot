@@ -1,18 +1,17 @@
 package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.ClientBlockedCredentialsEntity;
 import ru.akvine.wild.bot.repositories.ClientBlockedCredentialsRepository;
 import ru.akvine.wild.bot.utils.DateUtils;
-
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +21,12 @@ public class ClientBlockingService {
 
     public void setBlock(String chatId, Long minutes) {
         logger.info("Block client with chatId = {} for minutes = {}", chatId, minutes);
-        Optional<ClientBlockedCredentialsEntity> blockedCredentialsOptional = clientBlockedCredentialsRepository.findByChatId(chatId);
+        Optional<ClientBlockedCredentialsEntity> blockedCredentialsOptional =
+                clientBlockedCredentialsRepository.findByChatId(chatId);
         if (blockedCredentialsOptional.isPresent()) {
             DateUtils.getMinutes(
                     blockedCredentialsOptional.get().getBlockStartDate(),
-                    blockedCredentialsOptional.get().getBlockEndDate()
-            );
+                    blockedCredentialsOptional.get().getBlockEndDate());
             return;
         }
 
@@ -42,9 +41,8 @@ public class ClientBlockingService {
 
     public void removeBlock(String chatId) {
         logger.info("Remove block client with chatId = {}", chatId);
-        ClientBlockedCredentialsEntity clientBlockedCredentialsEntity = clientBlockedCredentialsRepository
-                .findByChatId(chatId)
-                .orElse(null);
+        ClientBlockedCredentialsEntity clientBlockedCredentialsEntity =
+                clientBlockedCredentialsRepository.findByChatId(chatId).orElse(null);
         if (clientBlockedCredentialsEntity == null) {
             return;
         }
@@ -61,8 +59,11 @@ public class ClientBlockingService {
     public LocalDateTime getEndBlockDate(String clientUuid) {
         Preconditions.checkNotNull(clientUuid, "clientUuid is null");
         logger.debug("Get end block date for client with uuid = {}", clientUuid);
-        Optional<ClientBlockedCredentialsEntity> blockedCredentialsEntityOptional = clientBlockedCredentialsRepository.findByChatId(clientUuid);
-        return blockedCredentialsEntityOptional.map(ClientBlockedCredentialsEntity::getBlockEndDate).orElse(null);
+        Optional<ClientBlockedCredentialsEntity> blockedCredentialsEntityOptional =
+                clientBlockedCredentialsRepository.findByChatId(clientUuid);
+        return blockedCredentialsEntityOptional
+                .map(ClientBlockedCredentialsEntity::getBlockEndDate)
+                .orElse(null);
     }
 
     @ThreadSafe

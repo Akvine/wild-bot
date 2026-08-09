@@ -1,5 +1,8 @@
 package ru.akvine.wild.bot.bot;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.BACK_BUTTON_TEXT;
+
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -12,18 +15,14 @@ import ru.akvine.wild.bot.controllers.views.BotView;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.enums.Command;
+import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.facades.CommandResolverFacade;
 import ru.akvine.wild.bot.facades.StateResolverFacade;
-import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-
-import java.util.List;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.BACK_BUTTON_TEXT;
 
 @Component
 @RequiredArgsConstructor
@@ -42,19 +41,13 @@ public class MessageDispatcherImpl implements MessageDispatcher {
         String text = payload.getMessage().getText();
         BotType botType = payload.getBotType();
 
-        logger.info(
-                "Received in dispatcher message = [{}] [{}]",
-                text, payload.getBotDataType()
-        );
+        logger.info("Received in dispatcher message = [{}] [{}]", text, payload.getBotDataType());
 
         if (StringUtils.isNotBlank(text) && text.startsWith("/")) {
-            CommandResolver commandResolver = commandResolverFacade
-                    .getCommandResolvers()
-                    .get(Command.getByText(text));
+            CommandResolver commandResolver =
+                    commandResolverFacade.getCommandResolvers().get(Command.getByText(text));
             if (commandResolver == null) {
-                return new Response()
-                        .setChatId(chatId)
-                        .setText("Такой команды не существует!");
+                return new Response().setChatId(chatId).setText("Такой команды не существует!");
             }
             return commandResolver.resolve(botType, chatId, text);
         }
@@ -82,7 +75,6 @@ public class MessageDispatcherImpl implements MessageDispatcher {
                 .resolve(payload);
     }
 
-
     private Response formMessage(BotType botType, String chatId, ClientState state) {
         BotView view = botViewFacade.getEventMap().get(state);
         String message = view.getMessage(chatId);
@@ -96,11 +88,11 @@ public class MessageDispatcherImpl implements MessageDispatcher {
             sendMessage.setReplyMarkup(keyboard.getTelegramKeyboard());
             response.setTelegramResponse(sendMessage);
         } else {
-            MaxSendMessage maxSendMessage = new MaxSendMessage()
-                    .setChatId(chatId)
-                    .setText(message);
+            MaxSendMessage maxSendMessage =
+                    new MaxSendMessage().setChatId(chatId).setText(message);
             if (keyboard.getMaxButtons() != null) {
-                maxSendMessage.setAttachments(List.of(MaxKeyboardFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
+                maxSendMessage.setAttachments(
+                        List.of(MaxKeyboardFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
             }
             response.setMaxSendMessage(maxSendMessage);
         }

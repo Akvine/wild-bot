@@ -9,6 +9,7 @@ import ru.akvine.wild.bot.admin.dto.common.NextPage;
 @Accessors(chain = true)
 public class ListCardsRequest {
     private CardFilter filter;
+
     @NotNull
     private NextPage nextPage;
 }

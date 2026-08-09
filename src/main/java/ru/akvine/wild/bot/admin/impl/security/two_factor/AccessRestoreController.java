@@ -29,7 +29,8 @@ public class AccessRestoreController implements AccessRestoreControllerMeta {
     @Override
     public Response start(@Valid AccessRestoreStartRequest request, HttpServletRequest httpServletRequest) {
         accessRestoreValidator.verifyAccessRestore(request);
-        AccessRestoreActionRequest actionRequest = accessRestoreConverter.convertToAccessRestoreActionRequest(request, httpServletRequest);
+        AccessRestoreActionRequest actionRequest =
+                accessRestoreConverter.convertToAccessRestoreActionRequest(request, httpServletRequest);
         AccessRestoreActionResult result = accessRestoreActionService.startAccessRestore(actionRequest);
         return accessRestoreConverter.convertToAccessRestoreResponse(result);
     }
@@ -37,7 +38,8 @@ public class AccessRestoreController implements AccessRestoreControllerMeta {
     @Override
     public Response newotp(@Valid AccessRestoreStartRequest request, HttpServletRequest httpServletRequest) {
         accessRestoreValidator.verifyAccessRestore(request);
-        AccessRestoreActionRequest actionRequest = accessRestoreConverter.convertToAccessRestoreActionRequest(request, httpServletRequest);
+        AccessRestoreActionRequest actionRequest =
+                accessRestoreConverter.convertToAccessRestoreActionRequest(request, httpServletRequest);
         AccessRestoreActionResult result = accessRestoreActionService.generateNewOneTimePassword(actionRequest);
         return accessRestoreConverter.convertToAccessRestoreResponse(result);
     }
@@ -45,7 +47,8 @@ public class AccessRestoreController implements AccessRestoreControllerMeta {
     @Override
     public Response check(@Valid AccessRestoreCheckOtpRequest request, HttpServletRequest httpServletRequest) {
         accessRestoreValidator.verifyAccessRestore(request);
-        AccessRestoreActionRequest actionRequest = accessRestoreConverter.convertToAccessRestoreActionRequest(request, httpServletRequest);
+        AccessRestoreActionRequest actionRequest =
+                accessRestoreConverter.convertToAccessRestoreActionRequest(request, httpServletRequest);
         AccessRestoreActionResult result = accessRestoreActionService.checkOneTimePassword(actionRequest);
         return accessRestoreConverter.convertToAccessRestoreResponse(result);
     }
@@ -53,7 +56,8 @@ public class AccessRestoreController implements AccessRestoreControllerMeta {
     @Override
     public Response finish(@Valid AccessRestoreFinishRequest request, HttpServletRequest httpServletRequest) {
         accessRestoreValidator.verifyAccessRestoreFinish(request);
-        AccessRestoreActionRequest actionRequest = accessRestoreConverter.convertToAccessRestoreActionRequest(request, httpServletRequest);
+        AccessRestoreActionRequest actionRequest =
+                accessRestoreConverter.convertToAccessRestoreActionRequest(request, httpServletRequest);
         SupportUserModel supportUser = accessRestoreActionService.finishAccessRestore(actionRequest);
         securityHelper.authenticate(supportUser, httpServletRequest);
         return new SuccessfulResponse();

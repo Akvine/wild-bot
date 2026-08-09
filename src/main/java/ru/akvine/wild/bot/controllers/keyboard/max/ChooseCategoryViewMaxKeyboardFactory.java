@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.keyboard.max;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
@@ -14,8 +15,6 @@ import ru.akvine.wild.bot.services.CardService;
 import ru.akvine.wild.bot.services.domain.CardModel;
 import ru.akvine.wild.bot.services.dto.AggregateCard;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

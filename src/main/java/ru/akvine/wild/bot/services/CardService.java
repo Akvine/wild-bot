@@ -1,6 +1,9 @@
 package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -21,10 +24,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SizeDto;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -39,8 +38,7 @@ public class CardService {
         logger.info("Create cards by request with size = {}", cards.size());
 
         List<CardTypeEntity> cardTypes = cardTypeRepository.findAll();
-        return cards
-                .stream()
+        return cards.stream()
                 .map(cardDto -> {
                     CardEntity cardEntity = new CardEntity()
                             .setUuid(UUIDGenerator.uuidWithoutDashes())
@@ -73,9 +71,7 @@ public class CardService {
 
     public List<CardModel> getByType(String cardType) {
         logger.info("List cards by cardType = {}", cardType);
-        return cardRepository
-                .findByCardType(cardType)
-                .stream()
+        return cardRepository.findByCardType(cardType).stream()
                 .map(CardModel::new)
                 .toList();
     }
@@ -83,7 +79,8 @@ public class CardService {
     public CardEntity verifyExistsByExternalId(int externalId) {
         return cardRepository
                 .findByExternalId(externalId)
-                .orElseThrow(() -> new CardNotFoundException("Card with external id = [" + externalId + "] not found!"));
+                .orElseThrow(
+                        () -> new CardNotFoundException("Card with external id = [" + externalId + "] not found!"));
     }
 
     public CardModel getFirst(int categoryId) {
@@ -98,9 +95,7 @@ public class CardService {
 
     public List<CardModel> getByCategoryId(int categoryId) {
         logger.info("Get cards by category id = {}", categoryId);
-        return cardRepository
-                .findByCategoryId(categoryId)
-                .stream()
+        return cardRepository.findByCategoryId(categoryId).stream()
                 .map(CardModel::new)
                 .toList();
     }
@@ -109,14 +104,9 @@ public class CardService {
         logger.info("List cards by {}", listCards);
 
         Specification<CardEntity> specification = cardSpecification.build(listCards);
-        Pageable pageable = PageRequest.of(
-                listCards.getPage(),
-                listCards.getCount()
-        );
+        Pageable pageable = PageRequest.of(listCards.getPage(), listCards.getCount());
 
-        return cardRepository
-                .findAll(specification, pageable)
-                .stream()
+        return cardRepository.findAll(specification, pageable).stream()
                 .map(CardModel::new)
                 .toList();
     }
@@ -129,11 +119,8 @@ public class CardService {
             }
         }
 
-        String errorMessage = String.format(
-                "For card with external id = [%s] not found type = [%s]",
-                cardDto.getNmID(),
-                cardDtoType
-        );
+        String errorMessage =
+                String.format("For card with external id = [%s] not found type = [%s]", cardDto.getNmID(), cardDtoType);
         throw new CardTypeNotFoundException(errorMessage);
     }
 
@@ -147,9 +134,7 @@ public class CardService {
 
         String errorMessage = String.format(
                 "For card with external id = [%s] has no characteristic with type = [%s]",
-                cardDto.getNmID(),
-                cardCharacteristicName
-        );
+                cardDto.getNmID(), cardCharacteristicName);
         throw new CardTypeNotFoundException(errorMessage);
     }
 }

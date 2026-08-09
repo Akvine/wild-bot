@@ -23,8 +23,8 @@ public class AccessRestoreConverter {
 
     private final SecurityHelper securityHelper;
 
-    public AccessRestoreActionRequest convertToAccessRestoreActionRequest(AccessRestoreStartRequest request,
-                                                                          HttpServletRequest httpServletRequest) {
+    public AccessRestoreActionRequest convertToAccessRestoreActionRequest(
+            AccessRestoreStartRequest request, HttpServletRequest httpServletRequest) {
         Preconditions.checkNotNull(request, "accessRestoreStartRequest is null");
         Preconditions.checkNotNull(httpServletRequest, "httpServletRequest is null");
         return new AccessRestoreActionRequest()
@@ -32,8 +32,8 @@ public class AccessRestoreConverter {
                 .setSessionId(httpServletRequest.getSession(true).getId());
     }
 
-    public AccessRestoreActionRequest convertToAccessRestoreActionRequest(AccessRestoreCheckOtpRequest request,
-                                                                          HttpServletRequest httpServletRequest) {
+    public AccessRestoreActionRequest convertToAccessRestoreActionRequest(
+            AccessRestoreCheckOtpRequest request, HttpServletRequest httpServletRequest) {
         Preconditions.checkNotNull(request, "accessRestoreCheckOtpRequest is null");
         Preconditions.checkNotNull(httpServletRequest, "httpServletRequest is null");
 
@@ -43,8 +43,8 @@ public class AccessRestoreConverter {
                 .setOtp(request.getOtp());
     }
 
-    public AccessRestoreActionRequest convertToAccessRestoreActionRequest(AccessRestoreFinishRequest request,
-                                                                          HttpServletRequest httpServletRequest) {
+    public AccessRestoreActionRequest convertToAccessRestoreActionRequest(
+            AccessRestoreFinishRequest request, HttpServletRequest httpServletRequest) {
         Preconditions.checkNotNull(request, "accessRestoreFinishRequest is null");
         Preconditions.checkNotNull(httpServletRequest, "httpServletRequest is null");
         return new AccessRestoreActionRequest()
@@ -62,7 +62,10 @@ public class AccessRestoreConverter {
                 .setActionExpiredAt(result.getOtp().getExpiredAt().toString())
                 .setOtpCountLeft(result.getOtp().getOtpCountLeft())
                 .setOtpNumber(result.getOtp().getOtpNumber())
-                .setOtpLastUpdate(result.getOtp().getOtpLastUpdate() != null ? result.getOtp().getOtpLastUpdate().toString() : null)
+                .setOtpLastUpdate(
+                        result.getOtp().getOtpLastUpdate() != null
+                                ? result.getOtp().getOtpLastUpdate().toString()
+                                : null)
                 .setNewOtpDelay(otpNewDelaySeconds)
                 .setOtpInvalidAttemptsLeft(result.getOtp().getOtpInvalidAttemptsLeft());
 

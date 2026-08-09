@@ -1,10 +1,9 @@
 package ru.akvine.wild.bot.utils;
 
+import java.io.ByteArrayOutputStream;
 import lombok.experimental.UtilityClass;
 import org.apache.poi.ss.usermodel.Workbook;
 import ru.akvine.wild.bot.exceptions.POIException;
-
-import java.io.ByteArrayOutputStream;
 
 @UtilityClass
 public class POIUtils {

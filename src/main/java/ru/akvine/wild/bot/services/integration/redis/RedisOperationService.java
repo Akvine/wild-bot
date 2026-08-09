@@ -1,8 +1,7 @@
 package ru.akvine.wild.bot.services.integration.redis;
 
-import org.redisson.api.*;
-
 import java.util.*;
+import org.redisson.api.*;
 
 /**
  * Сервис для работы с Redis кэшом
@@ -75,7 +74,8 @@ public class RedisOperationService<T> {
      */
     public Map.Entry<Object, T> randomEntry(String cacheKey) {
         RMap<Object, T> map = redisson.getMap(cacheKey);
-        Iterator<Map.Entry<Object, T>> iterator = map.randomEntries(1).entrySet().iterator();
+        Iterator<Map.Entry<Object, T>> iterator =
+                map.randomEntries(1).entrySet().iterator();
         return iterator.hasNext() ? iterator.next() : null;
     }
 
@@ -98,7 +98,6 @@ public class RedisOperationService<T> {
     /**
      * Сохраняет элементы в порядке вставки
      */
-
     public void addValueInList(String listKey, T data) {
         RList<Object> list = redisson.getList(listKey);
         list.add(data);

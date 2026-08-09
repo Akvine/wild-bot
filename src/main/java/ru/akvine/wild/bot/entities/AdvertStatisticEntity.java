@@ -7,7 +7,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.entities.base.SoftBaseEntity;
 
-
 @Getter
 @Setter
 @Accessors(chain = true)
@@ -17,7 +16,10 @@ public class AdvertStatisticEntity extends SoftBaseEntity {
     @Id
     @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "advertStatisticEntitySequence")
-    @SequenceGenerator(name = "advertStatisticEntitySequence", sequenceName = "SEQ_ADVERT_STATISTIC_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(
+            name = "advertStatisticEntitySequence",
+            sequenceName = "SEQ_ADVERT_STATISTIC_ENTITY",
+            allocationSize = 1000)
     private Long id;
 
     @Column(name = "VIEWS")

@@ -15,9 +15,8 @@ public class CountersStorageInDatabaseImpl implements CountersStorage {
     @Override
     public void add(int advertId) {
         logger.debug("Init database counter for advert with id = {}", advertId);
-        IterationCounterEntity counter = new IterationCounterEntity()
-                .setAdvertId(advertId)
-                .setCount(ZERO_COUNT_INIT);
+        IterationCounterEntity counter =
+                new IterationCounterEntity().setAdvertId(advertId).setCount(ZERO_COUNT_INIT);
         iterationCounterRepository.save(counter);
     }
 
@@ -44,14 +43,9 @@ public class CountersStorageInDatabaseImpl implements CountersStorage {
     }
 
     private IterationCounterEntity get(int advertId) {
-        return iterationCounterRepository
-                .findByAdvertId(advertId)
-                .orElseThrow(() -> {
-                    String errorMessage = String.format(
-                            "Iteration counter with advert id = [%s] not found!",
-                            advertId
-                    );
-                    return new IterationCounterNotFoundException(errorMessage);
-                });
+        return iterationCounterRepository.findByAdvertId(advertId).orElseThrow(() -> {
+            String errorMessage = String.format("Iteration counter with advert id = [%s] not found!", advertId);
+            return new IterationCounterNotFoundException(errorMessage);
+        });
     }
 }

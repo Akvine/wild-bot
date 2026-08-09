@@ -1,6 +1,8 @@
 package ru.akvine.wild.bot.entities.admin;
 
 import jakarta.persistence.*;
+import java.util.Collection;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,9 +10,6 @@ import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.akvine.wild.bot.entities.base.BaseEntity;
-
-import java.util.Collection;
-import java.util.List;
 
 @Getter
 @Setter

@@ -1,13 +1,12 @@
 package ru.akvine.wild.bot.repositories;
 
+import java.util.List;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.akvine.wild.bot.entities.ClientEntity;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
     @Query("from ClientEntity ce where ce.chatId = :chatId and ce.deleted = false and ce.deletedDate is null")

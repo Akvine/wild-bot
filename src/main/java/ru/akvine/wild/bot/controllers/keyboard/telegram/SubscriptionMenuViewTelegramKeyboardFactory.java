@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.controllers.keyboard.telegram;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT;
+
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -8,8 +10,6 @@ import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT;
 
 @Component
 public class SubscriptionMenuViewTelegramKeyboardFactory implements BotKeyboardFactory {

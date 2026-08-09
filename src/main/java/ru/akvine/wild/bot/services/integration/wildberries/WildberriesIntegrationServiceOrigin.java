@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.services.integration.wildberries;
 
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import java.util.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.card.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
 import ru.akvine.wild.bot.utils.RequestUtils;
 
-import java.util.*;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -30,11 +29,11 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final static int BUDGET_TYPE = 0;
-    private final static String ADVERT_QUERY_ID_PARAM = "id";
-    private final static String LIMIT_QUERY_PARAM = "limit";
-    private final static String FILTER_NM_ID_QUERY_PARAM = "filterNmID";
-    private final static int CARD_GET_LIMIT_COUNT = 100;
+    private static final int BUDGET_TYPE = 0;
+    private static final String ADVERT_QUERY_ID_PARAM = "id";
+    private static final String LIMIT_QUERY_PARAM = "limit";
+    private static final String FILTER_NM_ID_QUERY_PARAM = "filterNmID";
+    private static final int CARD_GET_LIMIT_COUNT = 100;
 
     @Override
     public List<CardDto> getCards() {
@@ -55,15 +54,15 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                 responseEntity = restTemplate.postForEntity(
                         WildberriesApiMethods.GET_CARD_LIST.getUrl() + WildberriesApiMethods.GET_CARD_LIST.getMethod(),
                         httpEntity,
-                        CardListResponse.class
-                );
+                        CardListResponse.class);
             } catch (Exception exception) {
                 String errorMessage = String.format(
                         "Error while calling wb api method = [%s]. Message = [%s]",
                         WildberriesApiMethods.GET_CARD_LIST, exception.getMessage());
                 throw new IntegrationException(errorMessage);
             }
-            List<CardDto> cards = Objects.requireNonNull(responseEntity.getBody()).getCards();
+            List<CardDto> cards =
+                    Objects.requireNonNull(responseEntity.getBody()).getCards();
             size = cards.size();
             responseCards.addAll(cards);
             if (size >= CARD_GET_LIMIT_COUNT) {
@@ -95,8 +94,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     WildberriesApiMethods.GET_ADVERTS.getUrl() + WildberriesApiMethods.GET_ADVERTS.getMethod(),
                     HttpMethod.GET,
                     httpEntity,
-                    AdvertListResponse.class
-            );
+                    AdvertListResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -120,11 +118,13 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         ResponseEntity<AdvertBudgetInfoResponse> responseEntity;
         try {
             responseEntity = restTemplate.exchange(
-                    RequestUtils.buildUri(WildberriesApiMethods.ADVERT_BUDGET_INFO.getUrl() + WildberriesApiMethods.ADVERT_BUDGET_INFO.getMethod(), queryParams),
+                    RequestUtils.buildUri(
+                            WildberriesApiMethods.ADVERT_BUDGET_INFO.getUrl()
+                                    + WildberriesApiMethods.ADVERT_BUDGET_INFO.getMethod(),
+                            queryParams),
                     HttpMethod.GET,
                     httpEntity,
-                    AdvertBudgetInfoResponse.class
-            );
+                    AdvertBudgetInfoResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -153,11 +153,13 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         ResponseEntity<AdvertBudgetDepositResponse> responseEntity;
         try {
             responseEntity = restTemplate.exchange(
-                    RequestUtils.buildUri(WildberriesApiMethods.ADVERT_BUDGET_DEPOSIT.getUrl() + WildberriesApiMethods.ADVERT_BUDGET_DEPOSIT.getMethod(), queryParams),
+                    RequestUtils.buildUri(
+                            WildberriesApiMethods.ADVERT_BUDGET_DEPOSIT.getUrl()
+                                    + WildberriesApiMethods.ADVERT_BUDGET_DEPOSIT.getMethod(),
+                            queryParams),
                     HttpMethod.POST,
                     httpEntity,
-                    AdvertBudgetDepositResponse.class
-            );
+                    AdvertBudgetDepositResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = %s",
@@ -180,11 +182,13 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
         try {
             restTemplate.exchange(
-                    RequestUtils.buildUri(WildberriesApiMethods.START_ADVERT.getUrl() + WildberriesApiMethods.START_ADVERT.getMethod(), queryParams),
+                    RequestUtils.buildUri(
+                            WildberriesApiMethods.START_ADVERT.getUrl()
+                                    + WildberriesApiMethods.START_ADVERT.getMethod(),
+                            queryParams),
                     HttpMethod.GET,
                     httpEntity,
-                    String.class
-            );
+                    String.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -203,10 +207,10 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         ResponseEntity<AdvertDto[]> responseEntity;
         try {
             responseEntity = restTemplate.postForEntity(
-                    WildberriesApiMethods.GET_ADVERTS_INFO.getUrl() + WildberriesApiMethods.GET_ADVERTS_INFO.getMethod(),
+                    WildberriesApiMethods.GET_ADVERTS_INFO.getUrl()
+                            + WildberriesApiMethods.GET_ADVERTS_INFO.getMethod(),
                     httpEntity,
-                    AdvertDto[].class
-            );
+                    AdvertDto[].class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -230,11 +234,13 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         ResponseEntity<AdvertStatisticResponse> responseEntity;
         try {
             responseEntity = restTemplate.exchange(
-                    RequestUtils.buildUri(WildberriesApiMethods.GET_ADVERT_STATISTIC.getUrl() + WildberriesApiMethods.GET_ADVERT_STATISTIC.getMethod(), queryParams),
+                    RequestUtils.buildUri(
+                            WildberriesApiMethods.GET_ADVERT_STATISTIC.getUrl()
+                                    + WildberriesApiMethods.GET_ADVERT_STATISTIC.getMethod(),
+                            queryParams),
                     HttpMethod.GET,
                     httpEntity,
-                    AdvertStatisticResponse.class
-            );
+                    AdvertStatisticResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -257,11 +263,13 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
         try {
             restTemplate.exchange(
-                    RequestUtils.buildUri(WildberriesApiMethods.PAUSE_ADVERT.getUrl() + WildberriesApiMethods.PAUSE_ADVERT.getMethod(), queryParams),
+                    RequestUtils.buildUri(
+                            WildberriesApiMethods.PAUSE_ADVERT.getUrl()
+                                    + WildberriesApiMethods.PAUSE_ADVERT.getMethod(),
+                            queryParams),
                     HttpMethod.GET,
                     httpEntity,
-                    String.class
-            );
+                    String.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -279,11 +287,11 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
         try {
             restTemplate.exchange(
-                    WildberriesApiMethods.CHANGE_ADVERT_CPM.getUrl() + WildberriesApiMethods.CHANGE_ADVERT_CPM.getMethod(),
+                    WildberriesApiMethods.CHANGE_ADVERT_CPM.getUrl()
+                            + WildberriesApiMethods.CHANGE_ADVERT_CPM.getMethod(),
                     HttpMethod.POST,
                     httpEntity,
-                    String.class
-            );
+                    String.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -295,9 +303,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
     @Override
     public void renameAdvert(int advertId, String name) {
         logger.info("Rename advert with id = {} by name = {}", advertId, name);
-        AdvertRenameRequest request = new AdvertRenameRequest()
-                .setAdvertId(advertId)
-                .setName(name);
+        AdvertRenameRequest request =
+                new AdvertRenameRequest().setAdvertId(advertId).setName(name);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<AdvertRenameRequest> httpEntity = new HttpEntity<>(request, headers);
 
@@ -306,8 +313,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     WildberriesApiMethods.RENAME_ADVERT.getUrl() + WildberriesApiMethods.RENAME_ADVERT.getMethod(),
                     HttpMethod.POST,
                     httpEntity,
-                    Object.class
-            );
+                    Object.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -322,8 +328,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
         Map<String, String> fields = Map.of(
                 "X-Nm-Id", String.valueOf(request.getNmId()),
-                "X-Photo-Number", String.valueOf(request.getPhotoNumber())
-        );
+                "X-Photo-Number", String.valueOf(request.getPhotoNumber()));
         HttpHeaders headers = buildHttpHeadersForMultipartBody(fields);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -333,7 +338,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         ResponseEntity<AdvertUploadPhotoResponse> response;
         try {
             response = restTemplate.postForEntity(
-                    WildberriesApiMethods.UPLOAD_CARD_PHOTO.getUrl() + WildberriesApiMethods.UPLOAD_CARD_PHOTO.getMethod(),
+                    WildberriesApiMethods.UPLOAD_CARD_PHOTO.getUrl()
+                            + WildberriesApiMethods.UPLOAD_CARD_PHOTO.getMethod(),
                     requestEntity,
                     AdvertUploadPhotoResponse.class);
         } catch (Exception exception) {
@@ -356,11 +362,12 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
         try {
             restTemplate.exchange(
-                    WildberriesApiMethods.CHANGE_CARD_STOCKS.getUrl() + WildberriesApiMethods.CHANGE_CARD_STOCKS.getMethod() + warehouseId,
+                    WildberriesApiMethods.CHANGE_CARD_STOCKS.getUrl()
+                            + WildberriesApiMethods.CHANGE_CARD_STOCKS.getMethod()
+                            + warehouseId,
                     HttpMethod.PUT,
                     httpEntity,
-                    String.class
-            );
+                    String.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -379,7 +386,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         ResponseEntity<AdvertFullStatisticResponse[]> response;
         try {
             response = restTemplate.postForEntity(
-                    WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getUrl() + WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getMethod(),
+                    WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getUrl()
+                            + WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getMethod(),
                     httpEntity,
                     AdvertFullStatisticResponse[].class);
         } catch (Exception exception) {
@@ -389,7 +397,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException(errorMessage);
         }
 
-        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов / получения ответов
+        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов /
+        // получения ответов
         AdvertFullStatisticResponse[] responses = response.getBody();
         if (responses == null || responses.length == 0) {
             throw new IntegrationException("Full statistic responses by dates is null or empty");
@@ -401,7 +410,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Override
     @RateLimiter(name = "wb-get-adverts-full-statistic-by-interval")
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(
+            List<AdvertFullStatisticIntervalDto> request) {
         logger.info("Get advert full statistic interval by request = {}", request);
         HttpHeaders headers = buildHttpHeadersForJsonBody();
         HttpEntity<List<AdvertFullStatisticIntervalDto>> httpEntity = new HttpEntity<>(request, headers);
@@ -409,7 +419,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         ResponseEntity<AdvertFullStatisticResponse[]> response;
         try {
             response = restTemplate.postForEntity(
-                    WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getUrl() + WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getMethod(),
+                    WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getUrl()
+                            + WildberriesApiMethods.GET_ADVERTS_FULL_STATISTIC.getMethod(),
                     httpEntity,
                     AdvertFullStatisticResponse[].class);
         } catch (Exception exception) {
@@ -419,7 +430,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException(errorMessage);
         }
 
-        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов / получения ответов
+        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов /
+        // получения ответов
         AdvertFullStatisticResponse[] responses = response.getBody();
         if (responses == null || responses.length == 0) {
             throw new IntegrationException("Full statistic responses by interval is null or empty");
@@ -445,11 +457,12 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
         ResponseEntity<GetGoodsResponse> responseEntity;
         try {
             responseEntity = restTemplate.exchange(
-                    RequestUtils.buildUri(WildberriesApiMethods.GET_GOODS.getUrl() + WildberriesApiMethods.GET_GOODS.getMethod(), queryParams),
+                    RequestUtils.buildUri(
+                            WildberriesApiMethods.GET_GOODS.getUrl() + WildberriesApiMethods.GET_GOODS.getMethod(),
+                            queryParams),
                     HttpMethod.GET,
                     httpEntity,
-                    GetGoodsResponse.class
-            );
+                    GetGoodsResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -457,7 +470,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException(errorMessage);
         }
 
-        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов / получения ответов
+        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов /
+        // получения ответов
         GetGoodsResponse response = responseEntity.getBody();
         if (response == null) {
             throw new IntegrationException("Get goods response is null");
@@ -476,11 +490,11 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
         try {
             restTemplate.exchange(
-                    WildberriesApiMethods.SET_GOODS_PRICE_AND_DISCOUNT.getUrl() + WildberriesApiMethods.SET_GOODS_PRICE_AND_DISCOUNT.getMethod(),
+                    WildberriesApiMethods.SET_GOODS_PRICE_AND_DISCOUNT.getUrl()
+                            + WildberriesApiMethods.SET_GOODS_PRICE_AND_DISCOUNT.getMethod(),
                     HttpMethod.POST,
                     httpEntity,
-                    String.class
-            );
+                    String.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -498,12 +512,14 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
         String response;
         try {
-            response = restTemplate.exchange(
-                    WildberriesApiMethods.CREATE_AUTO_ADVERT.getUrl() + WildberriesApiMethods.CREATE_AUTO_ADVERT.getMethod(),
-                    HttpMethod.POST,
-                    httpEntity,
-                    String.class
-            ).getBody();
+            response = restTemplate
+                    .exchange(
+                            WildberriesApiMethods.CREATE_AUTO_ADVERT.getUrl()
+                                    + WildberriesApiMethods.CREATE_AUTO_ADVERT.getMethod(),
+                            HttpMethod.POST,
+                            httpEntity,
+                            String.class)
+                    .getBody();
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -527,8 +543,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
                     WildberriesApiMethods.GET_CARD_TYPES.getUrl() + WildberriesApiMethods.GET_CARD_TYPES.getMethod(),
                     HttpMethod.GET,
                     httpEntity,
-                    CardTypeResponse.class
-            );
+                    CardTypeResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -562,17 +577,17 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
     @Getter
     @AllArgsConstructor
     private enum WildberriesApiMethods {
-        GET_CARD_LIST("https://suppliers-api.wildberries.ru","/content/v2/get/cards/list?locale=ru"),
+        GET_CARD_LIST("https://suppliers-api.wildberries.ru", "/content/v2/get/cards/list?locale=ru"),
         GET_ADVERTS("https://advert-api.wb.ru", "/adv/v1/promotion/count"),
-        ADVERT_BUDGET_DEPOSIT("https://advert-api.wb.ru","/adv/v1/budget/deposit"),
+        ADVERT_BUDGET_DEPOSIT("https://advert-api.wb.ru", "/adv/v1/budget/deposit"),
         START_ADVERT("https://advert-api.wb.ru", "/adv/v0/start"),
-        PAUSE_ADVERT("https://advert-api.wb.ru","/adv/v0/pause"),
+        PAUSE_ADVERT("https://advert-api.wb.ru", "/adv/v0/pause"),
         CHANGE_ADVERT_CPM("https://advert-api.wb.ru", "/adv/v0/cpm"),
         RENAME_ADVERT("https://advert-api.wb.ru", "/adv/v0/rename"),
-        GET_ADVERTS_INFO( "https://advert-api.wb.ru", "/adv/v1/promotion/adverts"),
-        GET_ADVERT_STATISTIC("https://advert-api.wb.ru", "/adv/v1/auto/stat" ),
-        UPLOAD_CARD_PHOTO("https://suppliers-api.wildberries.ru","/content/v3/media/file"),
-        ADVERT_BUDGET_INFO("https://advert-api.wb.ru","/adv/v1/budget"),
+        GET_ADVERTS_INFO("https://advert-api.wb.ru", "/adv/v1/promotion/adverts"),
+        GET_ADVERT_STATISTIC("https://advert-api.wb.ru", "/adv/v1/auto/stat"),
+        UPLOAD_CARD_PHOTO("https://suppliers-api.wildberries.ru", "/content/v3/media/file"),
+        ADVERT_BUDGET_INFO("https://advert-api.wb.ru", "/adv/v1/budget"),
         CHANGE_CARD_STOCKS("https://marketplace-api.wildberries.ru", "/api/v3/stocks/"),
         GET_ADVERTS_FULL_STATISTIC("https://advert-api.wb.ru", "/adv/v2/fullstats"),
         GET_GOODS("https://discounts-prices-api.wildberries.ru", "/api/v2/list/goods/filter"),

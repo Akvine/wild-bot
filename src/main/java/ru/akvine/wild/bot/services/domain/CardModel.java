@@ -35,5 +35,3 @@ public class CardModel extends SoftModel {
         this.deleted = cardEntity.isDeleted();
     }
 }
-
-

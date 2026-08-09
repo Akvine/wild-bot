@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -14,17 +15,16 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
-import java.util.List;
-
 @State
 public class InputNewDiscountStateResolver extends StateResolver {
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
     @Autowired
-    public InputNewDiscountStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                         BotViewFacade viewFacade,
-                                         SessionStorage<String, ClientSessionData> sessionStorage,
-                                         TelegramIntegrationService telegramIntegrationService) {
+    public InputNewDiscountStateResolver(
+            StateStorage<String, List<ClientState>> stateStorage,
+            BotViewFacade viewFacade,
+            SessionStorage<String, ClientSessionData> sessionStorage,
+            TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
     }
@@ -43,10 +43,12 @@ public class InputNewDiscountStateResolver extends StateResolver {
 
             Response response = new Response(chatId, botType);
             if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(new SendMessage(chatId, "Необходимо ввести скидку в виде числа без %"));
+                return response.setTelegramResponse(
+                        new SendMessage(chatId, "Необходимо ввести скидку в виде числа без %"));
             }
 
-            return response.setMaxSendMessage(new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести скидку в виде числа без %"));
+            return response.setMaxSendMessage(
+                    new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести скидку в виде числа без %"));
         }
 
         ClientSessionData sessionData = sessionStorage.get(chatId);

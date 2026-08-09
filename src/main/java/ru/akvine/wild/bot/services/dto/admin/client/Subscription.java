@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public class Subscription {
     @Nullable
     private String chatId;
+
     @Nullable
     private String username;
 }

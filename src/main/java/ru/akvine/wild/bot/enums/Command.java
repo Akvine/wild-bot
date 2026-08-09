@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor
 @Getter
 public enum Command {
-
     COMMAND_START("/start"),
     COMMAND_HELP("/help");
 

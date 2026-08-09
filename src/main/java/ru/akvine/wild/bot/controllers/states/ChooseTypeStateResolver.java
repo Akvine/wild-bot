@@ -1,5 +1,9 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FEMALE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.MALE_BUTTON_TEXT;
+
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -14,22 +18,18 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.CardTypeService;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
-import java.util.List;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FEMALE_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.MALE_BUTTON_TEXT;
-
 @State
 public class ChooseTypeStateResolver extends StateResolver {
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final CardTypeService cardTypeService;
 
     @Autowired
-    public ChooseTypeStateResolver(BotViewFacade viewFacade,
-                                   StateStorage<String, List<ClientState>> stateStorage,
-                                   SessionStorage<String, ClientSessionData> sessionStorage,
-                                   CardTypeService cardTypeService,
-                                   TelegramIntegrationService telegramIntegrationService) {
+    public ChooseTypeStateResolver(
+            BotViewFacade viewFacade,
+            StateStorage<String, List<ClientState>> stateStorage,
+            SessionStorage<String, ClientSessionData> sessionStorage,
+            CardTypeService cardTypeService,
+            TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.cardTypeService = cardTypeService;
@@ -59,9 +59,7 @@ public class ChooseTypeStateResolver extends StateResolver {
         } else {
             Response response = new Response(chatId, botType);
             if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(
-                        new SendMessage(chatId, "Необходимо выбрать действие из меню!")
-                );
+                return response.setTelegramResponse(new SendMessage(chatId, "Необходимо выбрать действие из меню!"));
             }
 
             return response.setText("Необходимо выбрать действие из меню!");

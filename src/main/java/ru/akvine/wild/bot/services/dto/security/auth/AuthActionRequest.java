@@ -12,6 +12,7 @@ public class AuthActionRequest {
 
     @Nullable
     private String password;
+
     @Nullable
     private String otp;
 }

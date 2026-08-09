@@ -1,5 +1,8 @@
 package ru.akvine.wild.bot.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,10 +22,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertFull
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertStatisticInterval;
 import ru.akvine.wild.bot.utils.DateUtils;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -36,26 +35,24 @@ public class AdvertStatisticService {
     public AdvertStatisticModel getAndSave(AdvertEntity advert) {
         logger.info("Start getting advert full statistic for advert = [{}]", advert);
 
-        AdvertStatisticEntity advertStatisticEntity = verifyExistsByClientIdAndAdvertId(advert.getClient().getId(), advert.getId());
+        AdvertStatisticEntity advertStatisticEntity =
+                verifyExistsByClientIdAndAdvertId(advert.getClient().getId(), advert.getId());
 
         AdvertFullStatisticResponse[] response;
         if (DateUtils.isSameDay(advert.getStartCheckDateTime(), LocalDateTime.now())) {
             logger.info("Get advert with id = {} statistic by dates request", advert.getExternalId());
-            List<AdvertFullStatisticDatesDto> request = List.of(
-                    new AdvertFullStatisticDatesDto()
-                            .setId(advert.getExternalId())
-                            .setDates(List.of(LocalDate.now().toString()))
-            );
+            List<AdvertFullStatisticDatesDto> request = List.of(new AdvertFullStatisticDatesDto()
+                    .setId(advert.getExternalId())
+                    .setDates(List.of(LocalDate.now().toString())));
             response = wildberriesIntegrationService.getAdvertsFullStatisticByDates(request);
         } else {
             logger.info("Get advert with id = {} statistic by interval request", advert.getExternalId());
-            List<AdvertFullStatisticIntervalDto> request = List.of(
-                    new AdvertFullStatisticIntervalDto()
-                            .setId(advert.getExternalId())
-                            .setInterval(new AdvertStatisticInterval()
-                                    .setBegin(advert.getStartCheckDateTime().toLocalDate().toString())
-                                    .setEnd(LocalDate.now().toString()))
-            );
+            List<AdvertFullStatisticIntervalDto> request = List.of(new AdvertFullStatisticIntervalDto()
+                    .setId(advert.getExternalId())
+                    .setInterval(new AdvertStatisticInterval()
+                            .setBegin(
+                                    advert.getStartCheckDateTime().toLocalDate().toString())
+                            .setEnd(LocalDate.now().toString())));
             response = wildberriesIntegrationService.getAdvertsFullStatisticByInterval(request);
         }
 
@@ -75,9 +72,11 @@ public class AdvertStatisticService {
                 .setClient(advert.getClient())
                 .setActive(false);
 
-        AdvertStatisticModel savedAdvertStatistic = new AdvertStatisticModel(advertStatisticRepository.save(advertStatisticEntity));
+        AdvertStatisticModel savedAdvertStatistic =
+                new AdvertStatisticModel(advertStatisticRepository.save(advertStatisticEntity));
 
-        ClientEntity client = clientService.verifyExistsByChatId(advert.getClient().getChatId());
+        ClientEntity client =
+                clientService.verifyExistsByChatId(advert.getClient().getChatId());
         client.decreaseOneTest();
         clientRepository.save(client);
 
@@ -100,14 +99,11 @@ public class AdvertStatisticService {
     }
 
     public AdvertStatisticEntity verifyExistsByClientIdAndId(long clientId, long id) {
-        return advertStatisticRepository
-                .findByClientIdAndId(clientId, id)
-                .orElseThrow(() -> {
-                    String errorMessage = String.format(
-                            "Advert statistic for client with id = [%s] and  id = [%s] not found!",
-                            clientId, id);
-                    return new AdvertStatisticNotFoundException(errorMessage);
-                });
+        return advertStatisticRepository.findByClientIdAndId(clientId, id).orElseThrow(() -> {
+            String errorMessage =
+                    String.format("Advert statistic for client with id = [%s] and  id = [%s] not found!", clientId, id);
+            return new AdvertStatisticNotFoundException(errorMessage);
+        });
     }
 
     @Transactional

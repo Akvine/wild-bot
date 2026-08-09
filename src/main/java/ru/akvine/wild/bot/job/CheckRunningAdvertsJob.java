@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.job;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -9,17 +11,14 @@ import ru.akvine.wild.bot.constants.MDCConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.CardEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
-import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -36,14 +35,19 @@ public class CheckRunningAdvertsJob {
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
+
     @Value("${max.start.sum.difference}")
     private int maxStartSumDifference;
+
     @Value("${advert.cpm.increase.value}")
     private int advertCpmIncreaseValue;
+
     @Value("${check.advert.iterations.before.increase}")
     private int maxIterationsBeforeIncreaseCpm;
+
     @Value("${advert.max.cpm}")
     private int advertMaxCpm;
+
     @Value("${wildberries.warehouse.id}")
     private int warehouseId;
 
@@ -58,7 +62,8 @@ public class CheckRunningAdvertsJob {
         LocalDateTime startCheckDateTime = LocalDateTime.now();
         for (AdvertEntity advert : runningAdverts) {
             int advertId = advert.getExternalId();
-            int currentBudgetSum = wildberriesIntegrationService.getAdvertBudgetInfo(advertId).getTotal();
+            int currentBudgetSum =
+                    wildberriesIntegrationService.getAdvertBudgetInfo(advertId).getTotal();
             int startBudgetSum = advert.getStartBudgetSum();
             int differenceBudgetSum = startBudgetSum - currentBudgetSum;
             int currentCpm = advert.getCpm();
@@ -72,9 +77,7 @@ public class CheckRunningAdvertsJob {
                 advertStatisticService.getAndSave(advert);
                 CardEntity cardEntity = advert.getCard();
                 ChangeStocksRequest request = new ChangeStocksRequest()
-                        .setStocks(List.of(new SkuDto()
-                                .setAmount(0)
-                                .setSku(cardEntity.getBarcode())));
+                        .setStocks(List.of(new SkuDto().setAmount(0).setSku(cardEntity.getBarcode())));
                 wildberriesIntegrationService.changeStocks(request, warehouseId);
 
                 String chatId = advert.getClient().getChatId();
@@ -90,8 +93,7 @@ public class CheckRunningAdvertsJob {
 
                 String finishedTestMessage = String.format(
                         "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику",
-                        advertId
-                );
+                        advertId);
                 telegramIntegrationService.sendMessage(chatId, finishedTestMessage);
                 continue;
             }

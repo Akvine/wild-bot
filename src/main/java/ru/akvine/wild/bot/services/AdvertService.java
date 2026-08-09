@@ -2,6 +2,10 @@ package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
 import io.micrometer.common.util.StringUtils;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,11 +27,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocks
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -39,12 +38,16 @@ public class AdvertService {
 
     @Value("${create.adverts.by.api.enabled}")
     private boolean createAdvertsByApi;
+
     @Value("${advert.budget.sum.increase.value}")
     private int advertBudgetSumIncrease;
+
     @Value("${advert.min.cpm}")
     private int advertMinCpm;
+
     @Value("${wildberries.warehouse.id}")
     private int warehouseId;
+
     @Value("${wildberries.change.stocks.count}")
     private int changeStocksCount;
 
@@ -54,8 +57,7 @@ public class AdvertService {
 
         adverts.forEach(advertDto -> {
             CardEntity card = cardService.verifyExistsByExternalId(
-                    advertDto.getAdvertParams().getNms().getFirst()
-            );
+                    advertDto.getAdvertParams().getNms().getFirst());
             AdvertEntity advertEntity = new AdvertEntity()
                     .setUuid(UUIDGenerator.uuidWithoutDashes())
                     .setExternalId(advertDto.getAdvertId())
@@ -78,9 +80,7 @@ public class AdvertService {
     public List<AdvertModel> getAdvertsByStatuses(List<AdvertStatus> statuses) {
         Preconditions.checkNotNull(statuses, "advertStatuses is null");
         logger.info("Get adverts by statuses = {}", statuses);
-        return advertRepository
-                .findByStatuses(statuses)
-                .stream()
+        return advertRepository.findByStatuses(statuses).stream()
                 .map(AdvertModel::new)
                 .collect(Collectors.toList());
     }
@@ -92,12 +92,9 @@ public class AdvertService {
         logger.info("Get adverts by statuses = {}", statuses);
 
         Long clientId = clientService.verifyExistsByChatId(chatId).getId();
-        return advertRepository
-                .findByClientIdAndStatuses(clientId, statuses)
-                .stream()
+        return advertRepository.findByClientIdAndStatuses(clientId, statuses).stream()
                 .map(AdvertModel::new)
                 .toList();
-
     }
 
     public AdvertModel update(AdvertModel advertBean) {
@@ -106,7 +103,8 @@ public class AdvertService {
 
         AdvertEntity advertEntity = advertRepository
                 .findByUuid(advertBean.getUuid())
-                .orElseThrow(() -> new AdvertNotFoundException("Advert with uuid = [" + advertBean.getUuid() + "] not found!"));
+                .orElseThrow(() ->
+                        new AdvertNotFoundException("Advert with uuid = [" + advertBean.getUuid() + "] not found!"));
         if (StringUtils.isNotBlank(advertBean.getChatId())) {
             ClientEntity client = clientService.verifyExistsByChatId(advertBean.getChatId());
             advertEntity.setClient(client);
@@ -137,15 +135,12 @@ public class AdvertService {
 
         List<AdvertModel> advertBeans = advertRepository
                 .findByStatusesAndCardTypeAndCategoryId(
-                        List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START),
-                        cardType,
-                        categoryId)
+                        List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START), cardType, categoryId)
                 .stream()
                 .map(AdvertModel::new)
                 .toList();
 
-        List<AdvertModel> pauseAdvertBeans = advertBeans
-                .stream()
+        List<AdvertModel> pauseAdvertBeans = advertBeans.stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.PAUSE))
                 .filter(advertBean -> !advertBean.isLocked())
                 .filter(AdvertModel::isAvailableForStart)
@@ -156,8 +151,7 @@ public class AdvertService {
             return pauseAdvert;
         }
 
-        List<AdvertModel> readyForStartAdvertBeans = advertBeans
-                .stream()
+        List<AdvertModel> readyForStartAdvertBeans = advertBeans.stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.READY_FOR_START))
                 .filter(advertBean -> !advertBean.isLocked())
                 .filter(AdvertModel::isAvailableForStart)
@@ -171,12 +165,11 @@ public class AdvertService {
         if (createAdvertsByApi) {
             logger.info("Create advert with category id = {} by API", categoryId);
             CardModel cardBean = cardService.getFirst(categoryId);
-            wildberriesIntegrationService.changeStocks(new ChangeStocksRequest()
-                    .setStocks(List.of(
-                            new SkuDto()
-                                    .setAmount(changeStocksCount)
-                                    .setSku(cardBean.getBarcode())
-                    )), warehouseId);
+            wildberriesIntegrationService.changeStocks(
+                    new ChangeStocksRequest()
+                            .setStocks(List.of(
+                                    new SkuDto().setAmount(changeStocksCount).setSku(cardBean.getBarcode()))),
+                    warehouseId);
 
             String advertName = "Created by API: " + LocalDateTime.now();
             AdvertCreateRequest request = new AdvertCreateRequest()
@@ -187,7 +180,7 @@ public class AdvertService {
                     .setBtype(DebitType.ACCOUNT.getCode())
                     .setOnPause(true)
                     .setCpm(advertMinCpm)
-                    .setNms(new int[]{cardBean.getExternalId()});
+                    .setNms(new int[] {cardBean.getExternalId()});
             int advertId = wildberriesIntegrationService.createAdvert(request);
 
             AdvertEntity advertEntity = new AdvertEntity()
@@ -208,8 +201,7 @@ public class AdvertService {
         }
 
         String errorMessage = String.format(
-                "Pause or ready for start advert with specified category id = [%s] not found!",
-                categoryId);
+                "Pause or ready for start advert with specified category id = [%s] not found!", categoryId);
         throw new AdvertNotFoundException(errorMessage);
     }
 
@@ -222,20 +214,17 @@ public class AdvertService {
         logger.info("Verify advert exists with external id = {}", externalId);
         return advertRepository
                 .findByExternalId(externalId)
-                .orElseThrow(() -> new AdvertNotFoundException("Advert with external id = [" + externalId + "] not found!"));
+                .orElseThrow(
+                        () -> new AdvertNotFoundException("Advert with external id = [" + externalId + "] not found!"));
     }
 
     public AdvertEntity verifyExistsByAdvertIdAndClientId(int advertId, long clientId) {
         logger.info("Verify advert exists with id = {} launched by client with id = {}", advertId, clientId);
-        return advertRepository
-                .findByExternalIdAndClientId(advertId, clientId)
-                .orElseThrow(() -> {
-                    String errorMessage = String.format(
-                            "Advert with advertId = [%s] and launched client with id = [%s] not found!",
-                            advertId, clientId
-                    );
-                    return new AdvertNotFoundException(errorMessage);
-                });
+        return advertRepository.findByExternalIdAndClientId(advertId, clientId).orElseThrow(() -> {
+            String errorMessage = String.format(
+                    "Advert with advertId = [%s] and launched client with id = [%s] not found!", advertId, clientId);
+            return new AdvertNotFoundException(errorMessage);
+        });
     }
 
     public AdvertEntity verifyExistsByUuid(String uuid) {

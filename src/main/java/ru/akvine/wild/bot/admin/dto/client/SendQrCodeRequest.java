@@ -11,8 +11,10 @@ public class SendQrCodeRequest {
     @NotBlank
     @Size(max = 255)
     private String url;
+
     @NotBlank
     private String chatId;
+
     @NotBlank
     @Size(max = 512)
     private String caption;

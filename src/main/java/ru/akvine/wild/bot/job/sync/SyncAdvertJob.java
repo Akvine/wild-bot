@@ -1,5 +1,9 @@
 package ru.akvine.wild.bot.job.sync;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -14,12 +18,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertList
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
 import ru.akvine.wild.bot.utils.MathUtils;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 @Slf4j
 @Component
@@ -33,18 +31,16 @@ public class SyncAdvertJob {
 
         AdvertListResponse advertListResponse = wildberriesIntegrationService.getAdverts();
         if (advertListResponse.getAll() != 0) {
-            List<Integer> advertsInWb = advertListResponse
-                    .getAdverts()
-                    .stream()
+            List<Integer> advertsInWb = advertListResponse.getAdverts().stream()
                     .filter(advertStatisticDto -> advertStatisticDto.getStatus() == AdvertStatus.PAUSE.getCode()
                             || advertStatisticDto.getStatus() == AdvertStatus.READY_FOR_START.getCode())
-                    .flatMap(advertStatisticDto -> advertStatisticDto.getAdvertList().stream().map(AdvertDto::getAdvertId))
+                    .flatMap(advertStatisticDto ->
+                            advertStatisticDto.getAdvertList().stream().map(AdvertDto::getAdvertId))
                     .toList();
-            List<AdvertEntity> advertsInDb = advertRepository.findByStatuses(List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START));
-            List<Integer> advertsIdsInDb = advertsInDb
-                    .stream()
-                    .map(AdvertEntity::getExternalId)
-                    .collect(Collectors.toList());
+            List<AdvertEntity> advertsInDb =
+                    advertRepository.findByStatuses(List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START));
+            List<Integer> advertsIdsInDb =
+                    advertsInDb.stream().map(AdvertEntity::getExternalId).collect(Collectors.toList());
 
             List<Integer> commonElements = new ArrayList<>(advertsInWb);
             commonElements.retainAll(advertsIdsInDb);
@@ -57,8 +53,7 @@ public class SyncAdvertJob {
 
             if (CollectionUtils.isNotEmpty(uniqueAdvertsInDb)) {
                 logger.info("Delete unused db adverts");
-                advertsInDb
-                        .stream()
+                advertsInDb.stream()
                         .filter(advertEntity -> uniqueAdvertsInDb.contains(advertEntity.getExternalId()))
                         .forEach(advertEntity -> {
                             advertEntity.setDeleted(true);
@@ -72,12 +67,12 @@ public class SyncAdvertJob {
                 int batchNumber = 1;
                 int batchSavedCount = 0;
                 for (int i = 0; i < uniqueAdvertsInWb.size(); i += batchSize) {
-                    logger.info("Get info for adverts by batch with number = {} and max size = {}", batchNumber, batchSize);
-                    List<Integer> advertIdsBatch = uniqueAdvertsInWb.subList(i, Math.min(i + batchSize, uniqueAdvertsInWb.size()));
+                    logger.info(
+                            "Get info for adverts by batch with number = {} and max size = {}", batchNumber, batchSize);
+                    List<Integer> advertIdsBatch =
+                            uniqueAdvertsInWb.subList(i, Math.min(i + batchSize, uniqueAdvertsInWb.size()));
                     AdvertsInfoResponse response = wildberriesIntegrationService.getAdvertsInfo(advertIdsBatch);
-                    List<AdvertDto> filteredAdverts = response
-                            .getAdverts()
-                            .stream()
+                    List<AdvertDto> filteredAdverts = response.getAdverts().stream()
                             .filter(advertDto -> advertDto.getStatus() == AdvertStatus.PAUSE.getCode()
                                     || advertDto.getStatus() == AdvertStatus.READY_FOR_START.getCode())
                             .filter(advertDto -> advertDto.getAdvertParams() != null
@@ -100,7 +95,6 @@ public class SyncAdvertJob {
                 "Successful save {} count | Total {} count | Successful save percent {}",
                 savedCount,
                 totalCount,
-                MathUtils.round((double) savedCount / totalCount * 100, 2)
-        );
+                MathUtils.round((double) savedCount / totalCount * 100, 2));
     }
 }

@@ -9,9 +9,12 @@ import org.jetbrains.annotations.Nullable;
 public class BlockClientStart {
     @Nullable
     private String uuid;
+
     @Nullable
     private String chatId;
+
     @Nullable
     private String username;
+
     private long minutes;
 }

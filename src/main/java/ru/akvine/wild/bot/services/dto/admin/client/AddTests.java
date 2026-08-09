@@ -9,7 +9,9 @@ import org.jetbrains.annotations.Nullable;
 public class AddTests {
     @Nullable
     private String chatId;
+
     @Nullable
     private String username;
+
     private int testsCount;
 }

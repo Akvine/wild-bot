@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,8 +19,6 @@ import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.validator.PhotoValidator;
 
-import java.util.List;
-
 @State
 @Slf4j
 public class UploadPhotoStateResolver extends StateResolver {
@@ -29,12 +28,13 @@ public class UploadPhotoStateResolver extends StateResolver {
     private final PhotoValidator photoValidator;
 
     @Autowired
-    public UploadPhotoStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                    BotViewFacade viewFacade,
-                                    SessionStorage<String, ClientSessionData> sessionStorage,
-                                    TelegramPhotoHelper telegramPhotoHelper,
-                                    TelegramIntegrationService telegramIntegrationService,
-                                    PhotoValidator photoValidator) {
+    public UploadPhotoStateResolver(
+            StateStorage<String, List<ClientState>> stateStorage,
+            BotViewFacade viewFacade,
+            SessionStorage<String, ClientSessionData> sessionStorage,
+            TelegramPhotoHelper telegramPhotoHelper,
+            TelegramIntegrationService telegramIntegrationService,
+            PhotoValidator photoValidator) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.telegramPhotoHelper = telegramPhotoHelper;
@@ -57,7 +57,8 @@ public class UploadPhotoStateResolver extends StateResolver {
                 return response.setTelegramResponse(new SendMessage(chatId, "Необходимо загрузить фотографию!"));
             }
 
-            PhotoSize photoSize = telegramPhotoHelper.resolve(payload.getMessage().getPhoto());
+            PhotoSize photoSize =
+                    telegramPhotoHelper.resolve(payload.getMessage().getPhoto());
             photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
             photoValidator.validate(photo);
         } else {

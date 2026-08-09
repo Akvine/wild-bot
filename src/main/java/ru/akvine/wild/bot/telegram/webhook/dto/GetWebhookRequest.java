@@ -12,5 +12,4 @@ public class GetWebhookRequest {
     public GetWebhookRequest(String telegramApiUrl, String botToken) {
         this.telegramRequestMethod = telegramApiUrl + botToken + TELEGRAM_REQUEST_METHOD;
     }
-
 }

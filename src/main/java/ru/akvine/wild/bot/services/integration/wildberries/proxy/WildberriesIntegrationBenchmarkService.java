@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.services.integration.wildberries.proxy;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
@@ -9,9 +11,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -51,9 +50,7 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void startAdvert(int advertId) {
-
-    }
+    public void startAdvert(int advertId) {}
 
     @Override
     public AdvertsInfoResponse getAdvertsInfo(List<Integer> advertIds) {
@@ -66,19 +63,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void pauseAdvert(int advertId) {
-
-    }
+    public void pauseAdvert(int advertId) {}
 
     @Override
-    public void changeAdvertCpm(AdvertChangeCpmRequest request) {
-
-    }
+    public void changeAdvertCpm(AdvertChangeCpmRequest request) {}
 
     @Override
-    public void renameAdvert(int advertId, String name) {
-
-    }
+    public void renameAdvert(int advertId, String name) {}
 
     @Override
     public AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request) {
@@ -86,9 +77,7 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void changeStocks(ChangeStocksRequest request, int warehouseId) {
-
-    }
+    public void changeStocks(ChangeStocksRequest request, int warehouseId) {}
 
     @Override
     public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request) {
@@ -96,7 +85,8 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(
+            List<AdvertFullStatisticIntervalDto> request) {
         return new AdvertFullStatisticResponse[0];
     }
 
@@ -106,9 +96,7 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void setGoodPriceAndDiscount(SetGoodPriceRequest request) {
-
-    }
+    public void setGoodPriceAndDiscount(SetGoodPriceRequest request) {}
 
     @Override
     public int createAdvert(AdvertCreateRequest request) {

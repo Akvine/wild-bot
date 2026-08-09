@@ -15,19 +15,19 @@ public class RedisInMemoryLockProvider implements InMemoryLockProvider {
 
     @Override
     public void lock(String key) {
-        RLock fairLock =  redisson.getFairLock(key);
+        RLock fairLock = redisson.getFairLock(key);
         fairLock.lock();
     }
 
     @Override
     public boolean tryLock(String key) {
-        RLock fairLock =  redisson.getFairLock(key);
+        RLock fairLock = redisson.getFairLock(key);
         return fairLock.tryLock();
     }
 
     @Override
     public void unlock(String key) {
-        RLock fairLock =  redisson.getFairLock(key);
+        RLock fairLock = redisson.getFairLock(key);
         fairLock.unlock();
     }
 }

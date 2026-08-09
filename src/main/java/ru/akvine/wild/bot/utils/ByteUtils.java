@@ -1,11 +1,10 @@
 package ru.akvine.wild.bot.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import ru.akvine.wild.bot.exceptions.ByteConvertException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 
 @UtilityClass
 public class ByteUtils {
@@ -26,7 +25,8 @@ public class ByteUtils {
 
             return outputStream.toByteArray();
         } catch (Exception exception) {
-            throw new ByteConvertException("Error while converting inputStream to bytes array, ex = " + exception.getMessage());
+            throw new ByteConvertException(
+                    "Error while converting inputStream to bytes array, ex = " + exception.getMessage());
         }
     }
 }

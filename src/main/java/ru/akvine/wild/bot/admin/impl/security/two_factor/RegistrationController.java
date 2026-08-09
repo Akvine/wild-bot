@@ -24,28 +24,33 @@ public class RegistrationController implements RegistrationControllerMeta {
     private final RegistrationActionService registrationActionService;
     private final SecurityHelper securityHelper;
 
-
     @Override
     public Response start(@Valid RegistrationStartRequest request, HttpServletRequest httpServletRequest) {
         registrationValidator.verifyRegistrationLogin(request);
-        RegistrationActionRequest registrationActionRequest = registrationConverter.convertToRegistrationActionRequest(request, httpServletRequest);
-        RegistrationActionResult registrationActionResult = registrationActionService.startRegistration(registrationActionRequest);
+        RegistrationActionRequest registrationActionRequest =
+                registrationConverter.convertToRegistrationActionRequest(request, httpServletRequest);
+        RegistrationActionResult registrationActionResult =
+                registrationActionService.startRegistration(registrationActionRequest);
         return registrationConverter.convertToRegistrationResponse(registrationActionResult);
     }
 
     @Override
     public Response check(@Valid RegistrationCheckOtpRequest request, HttpServletRequest httpServletRequest) {
         registrationValidator.verifyRegistrationLogin(request);
-        RegistrationActionRequest registrationActionRequest = registrationConverter.convertToRegistrationActionRequest(request, httpServletRequest);
-        RegistrationActionResult registrationActionResult = registrationActionService.checkOneTimePassword(registrationActionRequest);
+        RegistrationActionRequest registrationActionRequest =
+                registrationConverter.convertToRegistrationActionRequest(request, httpServletRequest);
+        RegistrationActionResult registrationActionResult =
+                registrationActionService.checkOneTimePassword(registrationActionRequest);
         return registrationConverter.convertToRegistrationResponse(registrationActionResult);
     }
 
     @Override
     public Response newotp(@Valid RegistrationNewOtpRequest request, HttpServletRequest httpServletRequest) {
         registrationValidator.verifyRegistrationLogin(request);
-        RegistrationActionRequest registrationActionRequest = registrationConverter.convertToRegistrationActionRequest(request, httpServletRequest);
-        RegistrationActionResult registrationActionResult = registrationActionService.generateNewOneTimePassword(registrationActionRequest);
+        RegistrationActionRequest registrationActionRequest =
+                registrationConverter.convertToRegistrationActionRequest(request, httpServletRequest);
+        RegistrationActionResult registrationActionResult =
+                registrationActionService.generateNewOneTimePassword(registrationActionRequest);
         return registrationConverter.convertToRegistrationResponse(registrationActionResult);
     }
 
@@ -58,7 +63,8 @@ public class RegistrationController implements RegistrationControllerMeta {
     @Override
     public Response finish(@Valid RegistrationFinishRequest request, HttpServletRequest httpServletRequest) {
         registrationValidator.verifyRegistrationFinish(request);
-        RegistrationActionRequest registrationActionRequest = registrationConverter.convertToRegistrationActionRequest(request, httpServletRequest);
+        RegistrationActionRequest registrationActionRequest =
+                registrationConverter.convertToRegistrationActionRequest(request, httpServletRequest);
         SupportUserModel supportUser = registrationActionService.finishRegistration(registrationActionRequest);
         securityHelper.authenticate(supportUser, httpServletRequest);
         return new SuccessfulResponse();

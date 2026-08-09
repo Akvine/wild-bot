@@ -27,27 +27,23 @@ import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegratio
 @Configuration
 @EnableScheduling
 public class ScheduledConfig {
-    private final static String SYSTEM = "system";
+    private static final String SYSTEM = "system";
 
     @Bean
     @ConditionalOnProperty(name = "global.sync.enabled", havingValue = "true")
-    public GlobalSyncJob globalSyncJob(SyncCardTypeJob syncCardTypeJob,
-                                       SyncCardJob syncCardJob,
-                                       SyncAdvertJob syncAdvertJob) {
+    public GlobalSyncJob globalSyncJob(
+            SyncCardTypeJob syncCardTypeJob, SyncCardJob syncCardJob, SyncAdvertJob syncAdvertJob) {
         return new GlobalSyncJob(
-                syncCardTypeJob,
-                syncCardJob,
-                syncAdvertJob,
-                GlobalSyncJob.class.getSimpleName(),
-                SYSTEM);
+                syncCardTypeJob, syncCardJob, syncAdvertJob, GlobalSyncJob.class.getSimpleName(), SYSTEM);
     }
 
     @Bean
-    public CheckRunningAdvertsJob checkRunningAdvertsJob(AdvertRepository advertRepository,
-                                                         WildberriesIntegrationService wildberriesIntegrationService,
-                                                         CountersStorage countersStorage,
-                                                         AdvertStatisticService advertStatisticService,
-                                                         TelegramIntegrationService telegramIntegrationService) {
+    public CheckRunningAdvertsJob checkRunningAdvertsJob(
+            AdvertRepository advertRepository,
+            WildberriesIntegrationService wildberriesIntegrationService,
+            CountersStorage countersStorage,
+            AdvertStatisticService advertStatisticService,
+            TelegramIntegrationService telegramIntegrationService) {
         return new CheckRunningAdvertsJob(
                 advertRepository,
                 telegramIntegrationService,
@@ -56,19 +52,14 @@ public class ScheduledConfig {
                 advertStatisticService,
                 CheckRunningAdvertsJob.class.getSimpleName(),
                 SYSTEM,
-                SYSTEM
-        );
+                SYSTEM);
     }
 
     @Bean
-    public SubscriptionJob subscriptionJob(TelegramIntegrationService telegramIntegrationService,
-                                           SubscriptionRepository subscriptionRepository) {
+    public SubscriptionJob subscriptionJob(
+            TelegramIntegrationService telegramIntegrationService, SubscriptionRepository subscriptionRepository) {
         return new SubscriptionJob(
-                telegramIntegrationService,
-                subscriptionRepository,
-                SubscriptionJob.class.getSimpleName(),
-                SYSTEM
-        );
+                telegramIntegrationService, subscriptionRepository, SubscriptionJob.class.getSimpleName(), SYSTEM);
     }
 
     @Bean
@@ -79,16 +70,16 @@ public class ScheduledConfig {
 
     @Bean
     @ConditionalOnProperty(name = "print.properties.enabled", havingValue = "true")
-    public PrintPropertiesJob printPropertiesJob(PropertyService propertyService,
-                                                 PropertiesPrinter propertiesPrinter) {
+    public PrintPropertiesJob printPropertiesJob(PropertyService propertyService, PropertiesPrinter propertiesPrinter) {
         return new PrintPropertiesJob(propertyService, propertiesPrinter);
     }
 
     @Bean
     @ConditionalOnExpression("${max.bot.enabled:false} && ${max.bot.dev.mode.enabled:false}")
-    public MaxBotLongPoolingConsumer maxBotLongPoolingJob(MaxIntegrationService maxIntegrationService,
-                                                          MessageFilter messageFilter,
-                                                          BotDtoConverterFacade converters) {
+    public MaxBotLongPoolingConsumer maxBotLongPoolingJob(
+            MaxIntegrationService maxIntegrationService,
+            MessageFilter messageFilter,
+            BotDtoConverterFacade converters) {
         return new MaxBotLongPoolingConsumer(maxIntegrationService, messageFilter, converters);
     }
 

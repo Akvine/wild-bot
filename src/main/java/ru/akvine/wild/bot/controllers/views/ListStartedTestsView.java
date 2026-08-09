@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.views;
 
+import java.util.List;
 import ru.akvine.wild.bot.controllers.converters.StartedAdvertsConverter;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.ClientState;
@@ -9,18 +10,17 @@ import ru.akvine.wild.bot.services.AdvertService;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 
-import java.util.List;
-
 @View
 public class ListStartedTestsView extends AbstractBotView {
     private final StartedAdvertsConverter startedAdvertsConverter;
     private final AdvertService advertService;
     private final ClientService clientService;
 
-    public ListStartedTestsView(BotKeyboardFactoryFacade facade,
-                                StartedAdvertsConverter startedAdvertsConverter,
-                                AdvertService advertService,
-                                ClientService clientService) {
+    public ListStartedTestsView(
+            BotKeyboardFactoryFacade facade,
+            StartedAdvertsConverter startedAdvertsConverter,
+            AdvertService advertService,
+            ClientService clientService) {
         super(facade);
         this.startedAdvertsConverter = startedAdvertsConverter;
         this.advertService = advertService;
@@ -29,7 +29,8 @@ public class ListStartedTestsView extends AbstractBotView {
 
     @Override
     public String getMessage(String chatId) {
-        List<AdvertModel> runningAdverts = advertService.getAdvertsByChatIdAndStatuses(chatId, List.of(AdvertStatus.RUNNING));
+        List<AdvertModel> runningAdverts =
+                advertService.getAdvertsByChatIdAndStatuses(chatId, List.of(AdvertStatus.RUNNING));
         int availableTestsCount = clientService.getByChatId(chatId).getAvailableTestsCount();
         return startedAdvertsConverter.convertToStartedListMessage(chatId, availableTestsCount, runningAdverts);
     }

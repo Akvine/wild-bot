@@ -1,11 +1,11 @@
 package ru.akvine.wild.bot.max;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.BACK_BUTTON_TEXT;
+
 import lombok.experimental.UtilityClass;
 import ru.akvine.wild.bot.services.integration.max.dto.Attachment;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 import ru.akvine.wild.bot.services.integration.max.dto.Payload;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.BACK_BUTTON_TEXT;
 
 /**
  * Аналог {@link ru.akvine.wild.bot.telegram.TelegramKeyboardFactory} для MAX: собирает
@@ -20,10 +20,7 @@ public class MaxKeyboardFactory {
     private static final String INLINE_KEYBOARD_ATTACHMENT_TYPE = "inline_keyboard";
 
     public Button callbackButton(String text) {
-        return new Button()
-                .setType(CALLBACK_BUTTON_TYPE)
-                .setText(text)
-                .setPayload(text);
+        return new Button().setType(CALLBACK_BUTTON_TYPE).setText(text).setPayload(text);
     }
 
     public Button getBackButton() {
@@ -35,7 +32,7 @@ public class MaxKeyboardFactory {
      * {@link ru.akvine.wild.bot.telegram.TelegramKeyboardFactory#getBackKeyboard}.
      */
     public Button[][] getBackKeyboard() {
-        return new Button[][]{{getBackButton()}};
+        return new Button[][] {{getBackButton()}};
     }
 
     /**
@@ -45,7 +42,7 @@ public class MaxKeyboardFactory {
     public Button[][] createVerticalKeyboard(Button... buttons) {
         Button[][] keyboard = new Button[buttons.length][];
         for (int i = 0; i < buttons.length; i++) {
-            keyboard[i] = new Button[]{buttons[i]};
+            keyboard[i] = new Button[] {buttons[i]};
         }
         return keyboard;
     }
@@ -55,8 +52,6 @@ public class MaxKeyboardFactory {
      * в {@code MaxSendMessage#getAttachments()} (см. MAX Bot API: POST /messages).
      */
     public Attachment toInlineKeyboardAttachment(Button[][] buttons) {
-        return new Attachment()
-                .setType(INLINE_KEYBOARD_ATTACHMENT_TYPE)
-                .setPayload(new Payload().setButtons(buttons));
+        return new Attachment().setType(INLINE_KEYBOARD_ATTACHMENT_TYPE).setPayload(new Payload().setButtons(buttons));
     }
 }

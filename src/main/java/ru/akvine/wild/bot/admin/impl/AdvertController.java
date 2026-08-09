@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.admin.impl;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import ru.akvine.wild.bot.admin.converters.AdvertConverter;
@@ -19,8 +20,6 @@ import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.UpdateAdvert;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.config;
 
+import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +18,6 @@ import ru.akvine.wild.bot.repositories.infrastructure.ClientSessionDataRepositor
 import ru.akvine.wild.bot.repositories.infrastructure.IterationCounterRepository;
 import ru.akvine.wild.bot.services.AdvertService;
 
-import java.util.List;
-
 @Configuration
 public class InfrastructureBeansConfig {
 
@@ -35,7 +34,8 @@ public class InfrastructureBeansConfig {
 
     @Bean
     @ConditionalOnProperty(name = "session.storage.implementation.type", havingValue = "database")
-    public SessionStorage<String, ClientSessionData> databaseSessionStorage(ClientSessionDataRepository clientSessionDataRepository) {
+    public SessionStorage<String, ClientSessionData> databaseSessionStorage(
+            ClientSessionDataRepository clientSessionDataRepository) {
         return new SessionStorageInDatabaseImpl(clientSessionDataRepository);
     }
 
@@ -50,5 +50,4 @@ public class InfrastructureBeansConfig {
     public CountersStorage databaseIterationsStorage(IterationCounterRepository iterationCounterRepository) {
         return new CountersStorageInDatabaseImpl(iterationCounterRepository);
     }
-
 }

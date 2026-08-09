@@ -11,8 +11,10 @@ public class AdvertCreateRequest {
     private String name;
     private int subjectId;
     private int sum;
+
     @JsonProperty(value = "on_pause")
     private boolean onPause;
+
     private int btype;
     private int[] nms;
     private int cpm;

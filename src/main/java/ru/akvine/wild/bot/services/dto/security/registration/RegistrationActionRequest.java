@@ -15,5 +15,6 @@ public class RegistrationActionRequest {
 
     @Nullable
     private String otp;
+
     private String password;
 }

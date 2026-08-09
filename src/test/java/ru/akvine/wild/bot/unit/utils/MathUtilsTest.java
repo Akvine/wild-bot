@@ -1,14 +1,14 @@
 package ru.akvine.wild.bot.unit.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.akvine.wild.bot.exceptions.ValidationException;
 import ru.akvine.wild.bot.utils.MathUtils;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Math utils tests")
@@ -29,7 +29,6 @@ public class MathUtilsTest {
     public void round_value_cant_be_less_than_min_value() {
         double value = 10.485;
 
-        assertThatThrownBy(() -> MathUtils.round(value, -15))
-                .isInstanceOf(ValidationException.class);
+        assertThatThrownBy(() -> MathUtils.round(value, -15)).isInstanceOf(ValidationException.class);
     }
 }

@@ -1,6 +1,11 @@
 package ru.akvine.wild.bot.services.integration.telegram;
 
 import com.google.common.base.Preconditions;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,12 +28,6 @@ import ru.akvine.wild.bot.telegram.bot.TelegramDevBot;
 import ru.akvine.wild.bot.telegram.bot.TelegramProductionBot;
 import ru.akvine.wild.bot.utils.ByteUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -38,6 +37,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
     @Value("${telegram.bot.token}")
     private String botToken;
+
     @Value("${telegram.bot.dev.mode.enabled}")
     private boolean isDevModeEnabled;
 
@@ -55,11 +55,9 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
     public void answerCallback(BotDataType botDataType, String callbackQueryId) {
         if (botDataType == BotDataType.CALLBACK) {
             try {
-                absSender.execute(
-                        AnswerCallbackQuery.builder()
-                                .callbackQueryId(callbackQueryId)
-                                .build()
-                );
+                absSender.execute(AnswerCallbackQuery.builder()
+                        .callbackQueryId(callbackQueryId)
+                        .build());
             } catch (Exception exception) {
                 String errorMessage = String.format(
                         "Error while calling telegram api method = [%s]. Message = %s",

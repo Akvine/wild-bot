@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.services.admin;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,6 @@ import ru.akvine.wild.bot.repositories.admin.SupportRepository;
 import ru.akvine.wild.bot.services.domain.admin.SupportUserModel;
 import ru.akvine.wild.bot.services.dto.support.SupportCreate;
 import ru.akvine.wild.bot.services.security.PasswordService;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -47,10 +46,8 @@ public class SupportService {
         } catch (SupportUserNotFoundException exception) {
             String hash = passwordService.encodePassword(password);
 
-            SupportUserEntity supportUser = new SupportUserEntity()
-                    .setEmail(email)
-                    .setHash(hash)
-                    .setUuid(UUIDGenerator.uuidWithNoDashes());
+            SupportUserEntity supportUser =
+                    new SupportUserEntity().setEmail(email).setHash(hash).setUuid(UUIDGenerator.uuidWithNoDashes());
             return new SupportUserModel(supportRepository.save(supportUser));
         }
     }
@@ -74,7 +71,8 @@ public class SupportService {
         Preconditions.checkNotNull(email, "email is null");
         return supportRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new SupportUserNotFoundException("Support user with email = [" + email + "] not found!"));
+                .orElseThrow(
+                        () -> new SupportUserNotFoundException("Support user with email = [" + email + "] not found!"));
     }
 
     public boolean isExistsByEmail(String email) {

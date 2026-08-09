@@ -1,5 +1,10 @@
 package ru.akvine.wild.bot.controllers.keyboard.telegram;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.GENERATE_REPORT_BUTTON_TEXT;
+
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -8,11 +13,6 @@ import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.GENERATE_REPORT_BUTTON_TEXT;
 
 @Component
 public class TestsMainViewTelegramKeyboardFactory implements BotKeyboardFactory {

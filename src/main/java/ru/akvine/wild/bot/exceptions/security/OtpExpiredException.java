@@ -7,7 +7,7 @@ public class OtpExpiredException extends RuntimeException {
         this.otpCountLeft = otpCountLeft;
     }
 
-    public int  getOtpCountLeft() {
+    public int getOtpCountLeft() {
         return otpCountLeft;
     }
 }

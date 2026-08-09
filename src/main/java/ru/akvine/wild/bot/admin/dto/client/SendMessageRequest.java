@@ -2,10 +2,9 @@ package ru.akvine.wild.bot.admin.dto.client;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.util.List;
 
 @Data
 @Accessors(chain = true)

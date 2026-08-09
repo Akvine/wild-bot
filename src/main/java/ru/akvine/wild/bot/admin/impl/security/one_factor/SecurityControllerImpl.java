@@ -22,19 +22,15 @@ public class SecurityControllerImpl implements SecurityControllerMeta {
     private final AuthenticationService authenticationService;
 
     @Override
-    public Response registration(@RequestBody @Valid AuthRequest request,
-                                 HttpServletRequest httpServletRequest) {
+    public Response registration(@RequestBody @Valid AuthRequest request, HttpServletRequest httpServletRequest) {
         SupportUserModel supportUser = supportService.create(request.getEmail(), request.getPassword());
         securityHelper.authenticate(supportUser, httpServletRequest);
         return new SuccessfulResponse();
     }
 
     @Override
-    public Response auth(@RequestBody @Valid AuthRequest request,
-                         HttpServletRequest httpServletRequest) {
-        SupportUserModel supportUser = authenticationService.authenticate(
-                request.getEmail(),
-                request.getPassword());
+    public Response auth(@RequestBody @Valid AuthRequest request, HttpServletRequest httpServletRequest) {
+        SupportUserModel supportUser = authenticationService.authenticate(request.getEmail(), request.getPassword());
         securityHelper.authenticate(supportUser, httpServletRequest);
         return new SuccessfulResponse();
     }

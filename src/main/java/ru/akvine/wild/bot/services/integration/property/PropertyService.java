@@ -2,6 +2,8 @@ package ru.akvine.wild.bot.services.integration.property;
 
 import com.google.common.base.Preconditions;
 import jakarta.annotation.PostConstruct;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
@@ -16,9 +18,6 @@ import ru.akvine.wild.bot.services.integration.property.dto.GetPropertiesRequest
 import ru.akvine.wild.bot.services.integration.property.dto.PropertyDto;
 import ru.akvine.wild.bot.services.integration.property.dto.PropertyResponse;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,6 +31,7 @@ public class PropertyService {
 
     @Value("${custodian.integration.enabled}")
     private boolean propertyExternalServiceIntegrationEnabled;
+
     @Value("${custodian.properties.profile}")
     private String activeProfile;
 
@@ -56,8 +56,7 @@ public class PropertyService {
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Some error was occurred while getInputStream() for properties.load(). Message = [%s]",
-                    exception.getMessage()
-            );
+                    exception.getMessage());
             throw new PropertiesLoadException(errorMessage);
         }
 
@@ -94,8 +93,7 @@ public class PropertyService {
     public void sync() {
         if (!propertyExternalServiceIntegrationEnabled) {
             throw new IntegrationException(
-                    "Integration with external property service is disabled. Synchronization is not possible"
-            );
+                    "Integration with external property service is disabled. Synchronization is not possible");
         }
         logger.info("Sync properties from custodian service...");
 

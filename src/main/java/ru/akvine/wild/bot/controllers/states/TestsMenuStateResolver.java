@@ -1,5 +1,8 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
+
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
@@ -11,19 +14,16 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
-import java.util.List;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
-
 @State
 public class TestsMenuStateResolver extends StateResolver {
     private final StartValidator startValidator;
 
     @Autowired
-    public TestsMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                  BotViewFacade viewFacade,
-                                  StartValidator startValidator,
-                                  TelegramIntegrationService telegramIntegrationService) {
+    public TestsMenuStateResolver(
+            StateStorage<String, List<ClientState>> stateStorage,
+            BotViewFacade viewFacade,
+            StartValidator startValidator,
+            TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.startValidator = startValidator;
     }

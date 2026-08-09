@@ -9,8 +9,10 @@ import org.jetbrains.annotations.Nullable;
 public class AccessRestoreActionRequest {
     private String sessionId;
     private String login;
+
     @Nullable
     private String otp;
+
     @Nullable
     private String password;
 }

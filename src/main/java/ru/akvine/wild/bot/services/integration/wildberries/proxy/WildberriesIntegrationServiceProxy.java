@@ -9,5 +9,4 @@ public abstract class WildberriesIntegrationServiceProxy implements WildberriesI
     protected WildberriesIntegrationService targetObject;
 
     public abstract ProxyType getType();
-
 }

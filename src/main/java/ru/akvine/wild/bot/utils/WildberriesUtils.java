@@ -11,9 +11,8 @@ public class WildberriesUtils {
 
     private void validateArguments(int price, int discount) {
         if (price < 0 && discount < 0) {
-            String errorMessage = String.format(
-                    "Price = (%s) and discount = (%s) can't be less than 0",
-                    price, discount);
+            String errorMessage =
+                    String.format("Price = (%s) and discount = (%s) can't be less than 0", price, discount);
             throw new IllegalArgumentException(errorMessage);
         }
         if (price < 0) {

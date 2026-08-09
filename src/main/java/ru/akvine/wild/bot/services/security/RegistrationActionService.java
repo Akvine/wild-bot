@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.services.security;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,8 +21,6 @@ import ru.akvine.wild.bot.services.dto.security.registration.RegistrationActionR
 import ru.akvine.wild.bot.services.dto.security.registration.RegistrationActionResult;
 import ru.akvine.wild.bot.services.dto.support.SupportCreate;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -31,8 +30,10 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
 
     @Value("${security.otp.action.lifetime.seconds}")
     private int otpActionLifetimeSeconds;
+
     @Value("${security.otp.max.invalid.attempts}")
     private int optMaxInvalidAttempts;
+
     @Value("${security.otp.max.new.generation.per.action}")
     private int otpMaxNewGenerationPerAction;
 
@@ -55,7 +56,8 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
                 return createNewActionAndSendOtp(login, sessionId);
             }
             // Действие не просрочено и код еще годе ... вернем текущее состояние
-            if (registrationAction.getOtpAction().getOtpExpiredAt() != null && registrationAction.getOtpAction().isNotExpiredOtp()) {
+            if (registrationAction.getOtpAction().getOtpExpiredAt() != null
+                    && registrationAction.getOtpAction().isNotExpiredOtp()) {
                 return registrationAction;
             }
             // Пользователь не захотел вводить пароль, OTP уже было использовано, генерируем новый код
@@ -96,7 +98,7 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
 
             RegistrationActionEntity savedRegistrationAction = getRepository().save(registrationAction);
             logger.info("Client with email = {} was successfully passed otp!", login);
-            return  savedRegistrationAction;
+            return savedRegistrationAction;
         });
 
         return buildActionInfo(registrationActionEntity);
@@ -134,9 +136,7 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
 
             getRepository().delete(registrationAction);
 
-            SupportCreate supportCreate = new SupportCreate()
-                    .setEmail(login)
-                    .setPassword(request.getPassword());
+            SupportCreate supportCreate = new SupportCreate().setEmail(login).setPassword(request.getPassword());
             return supportService.create(supportCreate);
         });
     }
@@ -176,7 +176,8 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
     @Override
     protected void sendNewOtpToClient(RegistrationActionEntity action) {
         String login = action.getLogin();
-        twoFactorNotificationSender.sendRegistrationCode(login, action.getOtpAction().getOtpValue());
+        twoFactorNotificationSender.sendRegistrationCode(
+                login, action.getOtpAction().getOtpValue());
     }
 
     @Override
@@ -190,7 +191,8 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
             return;
         }
 
-        String errorMessage = String.format("Registration for login=[%s] must be in state=[%s]",
+        String errorMessage = String.format(
+                "Registration for login=[%s] must be in state=[%s]",
                 registrationActionEntity.getLogin(), expectedState);
         throw new RegistrationWrongStateException(errorMessage);
     }

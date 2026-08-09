@@ -1,5 +1,8 @@
 package ru.akvine.wild.bot.controllers.keyboard.telegram;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FEMALE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.MALE_BUTTON_TEXT;
+
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -8,9 +11,6 @@ import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FEMALE_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.MALE_BUTTON_TEXT;
 
 @Component
 public class ChooseTypeViewTelegramKeyboardFactory implements BotKeyboardFactory {
@@ -24,7 +24,8 @@ public class ChooseTypeViewTelegramKeyboardFactory implements BotKeyboardFactory
         femaleButton.setText(FEMALE_BUTTON_TEXT);
         femaleButton.setCallbackData(FEMALE_BUTTON_TEXT);
 
-        InlineKeyboardMarkup keyboardMarkup = TelegramKeyboardFactory.createVerticalKeyboard(maleButton, femaleButton, TelegramKeyboardFactory.getBackButton());
+        InlineKeyboardMarkup keyboardMarkup = TelegramKeyboardFactory.createVerticalKeyboard(
+                maleButton, femaleButton, TelegramKeyboardFactory.getBackButton());
         return new InlineKeyboard(keyboardMarkup);
     }
 

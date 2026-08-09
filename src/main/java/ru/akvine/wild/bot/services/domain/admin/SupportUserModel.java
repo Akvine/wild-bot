@@ -11,8 +11,10 @@ import ru.akvine.wild.bot.services.domain.base.Model;
 public class SupportUserModel extends Model {
     private Long id;
     private String uuid;
+
     @ToString.Exclude
     private String email;
+
     @ToString.Exclude
     private String hash;
 

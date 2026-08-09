@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.services.admin;
 
 import com.google.common.base.Preconditions;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,8 +25,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
 import ru.akvine.wild.bot.utils.DateUtils;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -36,7 +35,7 @@ public class AdvertAdminService {
     private final AdvertStatisticService advertStatisticService;
     private final CountersStorage countersStorage;
 
-    private final static int ADVERT_PAUSE_STATUS_CODE = 11;
+    private static final int ADVERT_PAUSE_STATUS_CODE = 11;
 
     public AdvertStatisticModel pauseAdvert(PauseAdvert pauseAdvert) {
         Preconditions.checkNotNull(pauseAdvert, "pauseAdvert is null");
@@ -50,16 +49,16 @@ public class AdvertAdminService {
         }
 
         if (advertEntity.getStatus() == AdvertStatus.PAUSE) {
-            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getExternalId() + "] already in pause!");
+            throw new AdvertAlreadyInPauseStateException(
+                    "Advert with id = [" + advertEntity.getExternalId() + "] already in pause!");
         }
 
         int advertId = advertEntity.getExternalId();
         AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId));
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {
-            String errorMessage = String.format(
-                    "Error info adverts response, get info for %s but advertsInfo is empty",
-                    advertId);
+            String errorMessage =
+                    String.format("Error info adverts response, get info for %s but advertsInfo is empty", advertId);
             throw new IllegalStateException(errorMessage);
         }
         AdvertDto advertDto = advertsInfo.getFirst();
@@ -69,9 +68,7 @@ public class AdvertAdminService {
         AdvertStatisticModel advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
 
         String finishedTestMessage = String.format(
-                "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику",
-                advertId
-        );
+                "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику", advertId);
         telegramIntegrationService.sendMessage(advertEntity.getClient().getChatId(), finishedTestMessage);
 
         advertEntity.setNextCheckDateTime(null);
@@ -99,16 +96,16 @@ public class AdvertAdminService {
         }
 
         if (advertEntity.getStatus() == AdvertStatus.PAUSE) {
-            throw new AdvertAlreadyInPauseStateException("Advert with id = [" + advertEntity.getExternalId() + "] already in pause!");
+            throw new AdvertAlreadyInPauseStateException(
+                    "Advert with id = [" + advertEntity.getExternalId() + "] already in pause!");
         }
 
         int advertId = advertEntity.getExternalId();
         AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId));
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {
-            String errorMessage = String.format(
-                    "Error info adverts response, get info for %s but advertsInfo is empty",
-                    advertId);
+            String errorMessage =
+                    String.format("Error info adverts response, get info for %s but advertsInfo is empty", advertId);
             throw new IllegalStateException(errorMessage);
         }
         AdvertDto advertDto = advertsInfo.getFirst();
@@ -117,7 +114,8 @@ public class AdvertAdminService {
         }
 
         Long clientId = advertEntity.getClient().getId();
-        AdvertStatisticEntity advertStatistic = advertStatisticService.verifyExistsByClientIdAndAdvertId(clientId, advertEntity.getId());
+        AdvertStatisticEntity advertStatistic =
+                advertStatisticService.verifyExistsByClientIdAndAdvertId(clientId, advertEntity.getId());
         advertStatisticService.delete(advertStatistic);
 
         advertEntity.setNextCheckDateTime(null);

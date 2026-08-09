@@ -19,10 +19,7 @@ public class PropertyIntegerParser extends AbstractPropertyParser<Integer> {
         } catch (NumberFormatException exception) {
             String errorMessage = String.format(
                     "Error while parse property with key = [%s] to type = [%s]. Message = [%s]",
-                    key,
-                    getType(),
-                    exception.getMessage()
-            );
+                    key, getType(), exception.getMessage());
             throw new PropertiesLoadException(errorMessage);
         }
     }

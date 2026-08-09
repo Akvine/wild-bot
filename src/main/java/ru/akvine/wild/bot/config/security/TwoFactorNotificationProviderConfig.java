@@ -14,6 +14,7 @@ import ru.akvine.wild.bot.services.notification.dummy.LogTwoFactorNotificationSe
 public class TwoFactorNotificationProviderConfig {
     @Value("${telegram.bot.dev.mode.enabled}")
     private boolean devModeEnabled;
+
     @Value("${security.notification.provider.type}")
     private String providerType;
 
@@ -25,11 +26,14 @@ public class TwoFactorNotificationProviderConfig {
         if (devModeEnabled) {
             if (type.isDummy()) {
                 switch (type) {
-                    case CONSTANT: return new ConstantTwoFactorNotificationSender();
-                    default: return new LogTwoFactorNotificationSender();
+                    case CONSTANT:
+                        return new ConstantTwoFactorNotificationSender();
+                    default:
+                        return new LogTwoFactorNotificationSender();
                 }
             } else {
-                throw new IllegalArgumentException("Provider type for dev mode can't be not dummy! Type = " + type.name());
+                throw new IllegalArgumentException(
+                        "Provider type for dev mode can't be not dummy! Type = " + type.name());
             }
         } else {
             if (type.isDummy()) {

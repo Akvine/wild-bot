@@ -1,9 +1,8 @@
 package ru.akvine.wild.bot.services.integration.wildberries.dto.advert;
 
+import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.util.List;
 
 @Data
 @Accessors(chain = true)

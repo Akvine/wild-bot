@@ -20,17 +20,14 @@ public class ClientFilter extends MessageFilter {
         String chatId = payload.getChatId();
         BotType botType = payload.getBotType();
 
-        logger.debug("Payload was reached in ClientFilter for chat with id = [{}]. Type = [{}]", chatId,
+        logger.debug(
+                "Payload was reached in ClientFilter for chat with id = [{}]. Type = [{}]",
+                chatId,
                 payload.getBotType());
         ClientModel clientBean = clientService.findByChatId(chatId);
         if (clientBean == null) {
             ClientCreate clientCreate = new ClientCreate(
-                    chatId,
-                    botType,
-                    payload.getUsername(),
-                    payload.getFirstName(),
-                    payload.getLastName()
-            );
+                    chatId, botType, payload.getUsername(), payload.getFirstName(), payload.getLastName());
             clientService.create(clientCreate);
         } else {
             if (clientBean.isDeleted()) {

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public class Whitelist {
     @Nullable
     private String chatId;
+
     @Nullable
     private String username;
 }

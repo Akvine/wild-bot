@@ -13,8 +13,7 @@ public class PropertyConfig {
 
     @Bean
     @ConditionalOnProperty(name = "print.properties.enabled", havingValue = "true")
-    public PropertiesPrinter propertiesPrinter(SensitiveTypeDetector detector,
-                                               SensitivePropertyMaskersFacade facade) {
+    public PropertiesPrinter propertiesPrinter(SensitiveTypeDetector detector, SensitivePropertyMaskersFacade facade) {
         return new LogPropertiesPrinter(detector, facade);
     }
 }

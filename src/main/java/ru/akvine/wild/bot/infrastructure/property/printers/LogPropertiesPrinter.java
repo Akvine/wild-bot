@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.infrastructure.property.printers;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -7,8 +8,6 @@ import ru.akvine.wild.bot.enums.SensitiveDataType;
 import ru.akvine.wild.bot.facades.SensitivePropertyMaskersFacade;
 import ru.akvine.wild.bot.infrastructure.property.detectors.SensitiveTypeDetector;
 import ru.akvine.wild.bot.infrastructure.property.maskers.PropertyMasker;
-
-import java.util.Map;
 
 @Component
 @Slf4j
@@ -25,10 +24,7 @@ public class LogPropertiesPrinter implements PropertiesPrinter {
     public void print(Map<String, String> properties) {
         logger.info("Start print properties by {}", LogPropertiesPrinter.class.getSimpleName());
 
-        StringBuilder sb = new StringBuilder()
-                .append(NEW_LINE)
-                .append(BORDER)
-                .append(NEW_LINE);
+        StringBuilder sb = new StringBuilder().append(NEW_LINE).append(BORDER).append(NEW_LINE);
 
         Map<SensitiveDataType, PropertyMasker> maskers = maskersFacade.getMap();
         int count = 1;

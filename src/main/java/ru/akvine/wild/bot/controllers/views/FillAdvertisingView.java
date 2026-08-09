@@ -6,7 +6,7 @@ import ru.akvine.wild.bot.infrastructure.annotations.View;
 
 @View
 public class FillAdvertisingView extends AbstractBotView {
-    private final static String NEW_LINE = "\n";
+    private static final String NEW_LINE = "\n";
 
     public FillAdvertisingView(BotKeyboardFactoryFacade facade) {
         super(facade);
@@ -15,10 +15,12 @@ public class FillAdvertisingView extends AbstractBotView {
     @Override
     public String getMessage(String chatId) {
         StringBuilder sb = new StringBuilder();
-        sb
-                .append("Пополнить рекламный кабинет \uD83D\uDCF2:").append(NEW_LINE)
-                .append("Запросите QR-код для пополнения").append(NEW_LINE)
-                .append("рекламного кабинета, и бот выдаст его для  оплаты, пополнит счётчик тестов.").append(NEW_LINE)
+        sb.append("Пополнить рекламный кабинет \uD83D\uDCF2:")
+                .append(NEW_LINE)
+                .append("Запросите QR-код для пополнения")
+                .append(NEW_LINE)
+                .append("рекламного кабинета, и бот выдаст его для  оплаты, пополнит счётчик тестов.")
+                .append(NEW_LINE)
                 .append("Стоимость одной попытки на тест: 500 руб.");
         return sb.toString();
     }

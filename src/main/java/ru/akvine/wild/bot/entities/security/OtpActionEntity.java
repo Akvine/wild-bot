@@ -1,18 +1,17 @@
 package ru.akvine.wild.bot.entities.security;
 
+import static java.time.LocalDateTime.now;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Transient;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.wild.bot.exceptions.security.NoMoreNewOtpAvailableException;
 import ru.akvine.wild.bot.exceptions.security.NoMoreOtpInvalidAttemptsException;
-
-import java.time.LocalDateTime;
-
-import static java.time.LocalDateTime.now;
 
 @Getter
 @Setter
@@ -64,10 +63,14 @@ public class OtpActionEntity {
     }
 
     @Transient
-    public boolean isOtpValid(String clientInput) {return this.otpValue.equals(clientInput);}
+    public boolean isOtpValid(String clientInput) {
+        return this.otpValue.equals(clientInput);
+    }
 
     @Transient
-    public boolean isNewOtpLimitReached() {return this.otpCountLeft <= 0;}
+    public boolean isNewOtpLimitReached() {
+        return this.otpCountLeft <= 0;
+    }
 
     @Transient
     public boolean isActionExpired() {
@@ -107,8 +110,12 @@ public class OtpActionEntity {
     }
 
     @Transient
-    public boolean isNotExpiredOtp() {return now().isBefore(this.otpExpiredAt);}
+    public boolean isNotExpiredOtp() {
+        return now().isBefore(this.otpExpiredAt);
+    }
 
     @Transient
-    public boolean isExpiredOtp() {return this.otpExpiredAt.isBefore(now());}
+    public boolean isExpiredOtp() {
+        return this.otpExpiredAt.isBefore(now());
+    }
 }

@@ -1,5 +1,10 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
+
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -15,23 +20,18 @@ import ru.akvine.wild.bot.services.AdvertStartService;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
-
 @State
 public class IsChangePriceStateResolver extends StateResolver {
     private final AdvertStartService advertStartService;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
     @Autowired
-    public IsChangePriceStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                      BotViewFacade viewFacade,
-                                      SessionStorage<String, ClientSessionData> sessionStorage,
-                                      AdvertStartService advertStartService,
-                                      TelegramIntegrationService telegramIntegrationService) {
+    public IsChangePriceStateResolver(
+            StateStorage<String, List<ClientState>> stateStorage,
+            BotViewFacade viewFacade,
+            SessionStorage<String, ClientSessionData> sessionStorage,
+            AdvertStartService advertStartService,
+            TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.advertStartService = advertStartService;
@@ -61,9 +61,7 @@ public class IsChangePriceStateResolver extends StateResolver {
             return response.setText("Необходимо выбрать действие из меню!");
         } else {
             if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(
-                        new SendMessage(chatId, "Необходимо выбрать действие из меню!")
-                );
+                return response.setTelegramResponse(new SendMessage(chatId, "Необходимо выбрать действие из меню!"));
             }
 
             return response.setText("Необходимо выбрать действие из меню!");
@@ -86,7 +84,7 @@ public class IsChangePriceStateResolver extends StateResolver {
                            1. Advert id = %s
                            2. Начальным CPM = %s
                            3. Начальной суммой = %s руб.
-                           4. Датой следующей проверки = %s 
+                           4. Датой следующей проверки = %s
                         """,
                 advertId, startCpm, startBudgetSum, nextCheckDateTime);
 

@@ -1,9 +1,8 @@
 package ru.akvine.wild.bot.infrastructure.session;
 
-import org.hibernate.SessionException;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.hibernate.SessionException;
 
 public class SessionStorageInMemoryImpl implements SessionStorage<String, ClientSessionData> {
     private final Map<String, ClientSessionData> sessions = new ConcurrentHashMap<>();

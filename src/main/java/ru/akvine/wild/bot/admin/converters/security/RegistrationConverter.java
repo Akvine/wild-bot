@@ -19,8 +19,8 @@ public class RegistrationConverter {
 
     private final SecurityHelper securityHelper;
 
-    public RegistrationActionRequest convertToRegistrationActionRequest(RegistrationStartRequest request,
-                                                                        HttpServletRequest httpServletRequest) {
+    public RegistrationActionRequest convertToRegistrationActionRequest(
+            RegistrationStartRequest request, HttpServletRequest httpServletRequest) {
         Preconditions.checkNotNull(request, "registrationStartRequest is null");
         Preconditions.checkNotNull(httpServletRequest, "httpServletRequest is null");
         return new RegistrationActionRequest()
@@ -28,8 +28,8 @@ public class RegistrationConverter {
                 .setSessionId(httpServletRequest.getSession(true).getId());
     }
 
-    public RegistrationActionRequest convertToRegistrationActionRequest(RegistrationCheckOtpRequest request,
-                                                                        HttpServletRequest httpServletRequest) {
+    public RegistrationActionRequest convertToRegistrationActionRequest(
+            RegistrationCheckOtpRequest request, HttpServletRequest httpServletRequest) {
         Preconditions.checkNotNull(request, "registrationCheckOtpRequest is null");
         Preconditions.checkNotNull(httpServletRequest, "httpServletRequest is null");
 
@@ -39,8 +39,8 @@ public class RegistrationConverter {
                 .setOtp(request.getOtp());
     }
 
-    public RegistrationActionRequest convertToRegistrationActionRequest(RegistrationNewOtpRequest request,
-                                                                        HttpServletRequest httpServletRequest) {
+    public RegistrationActionRequest convertToRegistrationActionRequest(
+            RegistrationNewOtpRequest request, HttpServletRequest httpServletRequest) {
         Preconditions.checkNotNull(request, "registrationNewOtpRequest is null");
         Preconditions.checkNotNull(httpServletRequest, "httpServletRequest is null");
         return new RegistrationActionRequest()
@@ -48,8 +48,8 @@ public class RegistrationConverter {
                 .setSessionId(securityHelper.getSession(httpServletRequest).getId());
     }
 
-    public RegistrationActionRequest convertToRegistrationActionRequest(RegistrationFinishRequest request,
-                                                                        HttpServletRequest httpServletRequest) {
+    public RegistrationActionRequest convertToRegistrationActionRequest(
+            RegistrationFinishRequest request, HttpServletRequest httpServletRequest) {
         Preconditions.checkNotNull(request, "registrationFinishRequest is null");
         Preconditions.checkNotNull(httpServletRequest, "httpServletRequest is null");
 
@@ -66,7 +66,10 @@ public class RegistrationConverter {
                 .setActionExpiredAt(result.getOtp().getExpiredAt().toString())
                 .setOtpCountLeft(result.getOtp().getOtpCountLeft())
                 .setOtpNumber(result.getOtp().getOtpNumber())
-                .setOtpLastUpdate(result.getOtp().getOtpLastUpdate() != null ? result.getOtp().getOtpLastUpdate().toString() : null)
+                .setOtpLastUpdate(
+                        result.getOtp().getOtpLastUpdate() != null
+                                ? result.getOtp().getOtpLastUpdate().toString()
+                                : null)
                 .setNewOtpDelay(otpNewDelaySeconds)
                 .setOtpInvalidAttemptsLeft(result.getOtp().getOtpInvalidAttemptsLeft());
 

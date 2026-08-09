@@ -1,10 +1,9 @@
 package ru.akvine.wild.bot.bot.dto;
 
+import java.util.List;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-
-import java.util.List;
 
 @Data
 @Accessors(chain = true)

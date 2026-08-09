@@ -1,8 +1,7 @@
 package ru.akvine.wild.bot.exceptions;
 
-import lombok.Getter;
-
 import java.time.LocalDate;
+import lombok.Getter;
 
 @Getter
 public class BlockedCredentialsException extends RuntimeException {

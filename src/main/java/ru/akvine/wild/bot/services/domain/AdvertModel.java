@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.services.domain;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
@@ -8,9 +10,6 @@ import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.AdvertType;
 import ru.akvine.wild.bot.services.domain.base.SoftModel;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
 @Data
 @Accessors(chain = true)
 public class AdvertModel extends SoftModel {
@@ -18,18 +17,24 @@ public class AdvertModel extends SoftModel {
     private String uuid;
     private String name;
     private int externalId;
+
     @Nullable
     private String chatId;
+
     private Date changeTime;
     private AdvertStatus status;
     private AdvertType type;
     private int cpm;
     private Integer startBudgetSum;
+
     @Nullable
     private Integer checkBudgetSum;
+
     private LocalDateTime startCheckDateTime;
+
     @Nullable
     private LocalDateTime nextCheckDateTime;
+
     private LocalDateTime availableForStart;
     private boolean locked;
     private CardModel cardModel;

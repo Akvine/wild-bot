@@ -1,10 +1,9 @@
 package ru.akvine.wild.bot.services.dto.security;
 
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.entities.security.OtpActionEntity;
-
-import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)

@@ -17,16 +17,19 @@ public class GlobalSyncJob {
 
     @Value("${sync.card.types.enabled}")
     private boolean syncCardTypesEnabled;
+
     @Value("${sync.card.enabled}")
     private boolean syncCardsEnabled;
+
     @Value("${sync.adverts.enabled}")
     private boolean syncAdvertsEnabled;
 
-    public GlobalSyncJob(SyncCardTypeJob cardTypeJob,
-                         SyncCardJob cardJob,
-                         SyncAdvertJob advertJob,
-                         String mdcName,
-                         String mdcChatId) {
+    public GlobalSyncJob(
+            SyncCardTypeJob cardTypeJob,
+            SyncCardJob cardJob,
+            SyncAdvertJob advertJob,
+            String mdcName,
+            String mdcChatId) {
         this.cardTypeJob = cardTypeJob;
         this.cardJob = cardJob;
         this.advertJob = advertJob;

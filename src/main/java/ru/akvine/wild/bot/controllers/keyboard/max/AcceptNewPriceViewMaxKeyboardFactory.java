@@ -1,5 +1,8 @@
 package ru.akvine.wild.bot.controllers.keyboard.max;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
+
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
 import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
@@ -7,9 +10,6 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
 
 @Component
 public class AcceptNewPriceViewMaxKeyboardFactory implements BotKeyboardFactory {

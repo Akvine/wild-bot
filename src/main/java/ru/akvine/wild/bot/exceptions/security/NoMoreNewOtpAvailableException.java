@@ -12,5 +12,7 @@ public class NoMoreNewOtpAvailableException extends RuntimeException {
         this(message, true);
     }
 
-    public boolean userWasBlocked() {return userWasBlocked;}
+    public boolean userWasBlocked() {
+        return userWasBlocked;
+    }
 }

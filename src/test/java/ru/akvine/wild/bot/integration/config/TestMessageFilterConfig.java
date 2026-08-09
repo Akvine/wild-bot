@@ -6,5 +6,4 @@ import ru.akvine.wild.bot.config.BotFilterConfig;
 
 @Configuration
 @Import(BotFilterConfig.class)
-public class TestMessageFilterConfig {
-}
+public class TestMessageFilterConfig {}

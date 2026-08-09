@@ -1,6 +1,8 @@
 package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +24,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocks
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
 import ru.akvine.wild.bot.utils.DateUtils;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -42,16 +41,20 @@ public class AdvertStartService {
 
     @Value("${advert.budget.sum.increase.value}")
     private int advertBudgetSumIncreaseValue;
+
     @Value("${advert.min.cpm}")
     private int advertMinCpm;
+
     @Value("${wildberries.change.stocks.count}")
     private int changeStocksCount;
+
     @Value("${advert.min.budget.sum}")
     private int budgetMinSum;
+
     @Value("${wildberries.warehouse.id}")
     private int warehouseId;
 
-    private final static int CARD_MAIN_PHOTO_POSITION = 1;
+    private static final int CARD_MAIN_PHOTO_POSITION = 1;
 
     public AdvertModel start(String chatId) {
         try {
@@ -60,7 +63,8 @@ public class AdvertStartService {
             logger.info("Try to start first one advert with category id = {}", categoryId);
             return startInternal(chatId);
         } catch (Exception exception) {
-            AdvertModel advertBean = advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
+            AdvertModel advertBean =
+                    advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
             advertBean.setLocked(false);
             advertService.update(advertBean);
             throw new AdvertStartException(exception.getMessage());
@@ -96,12 +100,10 @@ public class AdvertStartService {
 
         if (sessionStorage.get(chatId).isInputNewCardPriceAndDiscount()) {
             SetGoodPriceRequest setGoodPriceRequest = new SetGoodPriceRequest()
-                    .setData(List.of(
-                            new SetGoodDto()
-                                    .setNmID(card.getExternalId())
-                                    .setPrice(sessionStorage.get(chatId).getNewCardPrice())
-                                    .setDiscount(sessionStorage.get(chatId).getNewCardDiscount())
-                    ));
+                    .setData(List.of(new SetGoodDto()
+                            .setNmID(card.getExternalId())
+                            .setPrice(sessionStorage.get(chatId).getNewCardPrice())
+                            .setDiscount(sessionStorage.get(chatId).getNewCardDiscount())));
             wildberriesIntegrationService.setGoodPriceAndDiscount(setGoodPriceRequest);
         }
 
@@ -111,9 +113,8 @@ public class AdvertStartService {
                 .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
         wildberriesIntegrationService.uploadPhoto(uploadPhotoRequest);
 
-        ChangeStocksRequest changeStocksRequest = new ChangeStocksRequest().setStocks(List.of(new SkuDto()
-                .setSku(card.getBarcode())
-                .setAmount(changeStocksCount)));
+        ChangeStocksRequest changeStocksRequest = new ChangeStocksRequest()
+                .setStocks(List.of(new SkuDto().setSku(card.getBarcode()).setAmount(changeStocksCount)));
         wildberriesIntegrationService.changeStocks(changeStocksRequest, warehouseId);
 
         wildberriesIntegrationService.startAdvert(advertId);

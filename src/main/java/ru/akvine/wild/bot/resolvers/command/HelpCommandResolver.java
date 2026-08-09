@@ -14,7 +14,8 @@ import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 @RequiredArgsConstructor
 @Slf4j
 public class HelpCommandResolver implements CommandResolver {
-    private final static String NEW_LINE = "\n";
+    private static final String NEW_LINE = "\n";
+
     @Value("${telegram.bot.support.url}")
     private String supportUsername;
 
@@ -23,21 +24,19 @@ public class HelpCommandResolver implements CommandResolver {
         logger.info("[{}] resolved", getCommand());
 
         StringBuilder sb = new StringBuilder();
-        sb
-                .append("/start - начать работу с ботом").append(NEW_LINE)
-                .append("/help - вывести список доступных команд").append(NEW_LINE)
-                .append("За доп. информацией обратитесь пожалуйста в поддержку: ").append(supportUsername);
+        sb.append("/start - начать работу с ботом")
+                .append(NEW_LINE)
+                .append("/help - вывести список доступных команд")
+                .append(NEW_LINE)
+                .append("За доп. информацией обратитесь пожалуйста в поддержку: ")
+                .append(supportUsername);
 
-        Response response = new Response()
-                .setBotType(botType)
-                .setChatId(chatId);
+        Response response = new Response().setBotType(botType).setChatId(chatId);
         if (botType == BotType.TELEGRAM) {
             return response.setTelegramResponse(new SendMessage(chatId, sb.toString()));
         }
 
-        return response.setMaxSendMessage(new MaxSendMessage()
-                .setChatId(chatId)
-                .setText(sb.toString()));
+        return response.setMaxSendMessage(new MaxSendMessage().setChatId(chatId).setText(sb.toString()));
     }
 
     @Override

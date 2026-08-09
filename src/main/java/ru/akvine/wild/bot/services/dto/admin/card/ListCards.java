@@ -9,12 +9,16 @@ import org.jetbrains.annotations.Nullable;
 public class ListCards {
     @Nullable
     private String externalTitle;
+
     @Nullable
     private Integer externalId;
+
     @Nullable
     private String categoryTitle;
+
     @Nullable
     private Integer categoryId;
+
     private int page;
     private int count;
 }

@@ -2,12 +2,11 @@ package ru.akvine.wild.bot.admin.filters;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.exceptions.UrlPathException;
-
-import java.io.IOException;
 
 @Component
 public class AuthFilter extends GenericFilter {
@@ -15,7 +14,8 @@ public class AuthFilter extends GenericFilter {
     private Boolean twoFactorAuthEnabled;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         String url = httpRequest.getRequestURL().toString();
         validate(url);

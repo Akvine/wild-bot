@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
+
 /**
  * Successful response status
  */

@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 public class AdvertBudgetDepositRequest {
     private int sum;
     private int type;
+
     @JsonProperty(value = "return")
     private boolean isReturn;
 }

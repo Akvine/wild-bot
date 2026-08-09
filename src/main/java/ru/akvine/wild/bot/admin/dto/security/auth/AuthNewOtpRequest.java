@@ -6,5 +6,4 @@ import ru.akvine.wild.bot.admin.dto.security.EmailRequest;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AuthNewOtpRequest extends EmailRequest {
-}
+public class AuthNewOtpRequest extends EmailRequest {}

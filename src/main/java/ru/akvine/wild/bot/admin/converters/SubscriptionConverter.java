@@ -11,9 +11,7 @@ import ru.akvine.wild.bot.services.dto.admin.client.Subscription;
 public class SubscriptionConverter {
     public Subscription convertToSubscription(SubscriptionRequest request) {
         Preconditions.checkNotNull(request, "SubscriptionRequest is null");
-        return new Subscription()
-                .setChatId(request.getChatId())
-                .setUsername(request.getUsername());
+        return new Subscription().setChatId(request.getChatId()).setUsername(request.getUsername());
     }
 
     public SubscriptionResponse convertToSubscriptionResponse(SubscriptionModel subscriptionModel) {

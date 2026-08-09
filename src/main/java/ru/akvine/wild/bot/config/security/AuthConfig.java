@@ -22,8 +22,10 @@ public class AuthConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return email -> supportRepository.findByEmail(email)
-                .orElseThrow(() -> new SupportUserNotFoundException("Support user with email = [" + email + "] not found!"));
+        return email -> supportRepository
+                .findByEmail(email)
+                .orElseThrow(
+                        () -> new SupportUserNotFoundException("Support user with email = [" + email + "] not found!"));
     }
 
     @Bean

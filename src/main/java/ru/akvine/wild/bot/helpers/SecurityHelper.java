@@ -19,10 +19,8 @@ public class SecurityHelper {
 
     public void authenticate(SupportUserModel supportUser, HttpServletRequest request) {
         SecurityContext context = SecurityContextHolder.getContext();
-        context.setAuthentication(new SupportUserAuthentication(
-                supportUser.getId(),
-                supportUser.getUuid(),
-                supportUser.getEmail()));
+        context.setAuthentication(
+                new SupportUserAuthentication(supportUser.getId(), supportUser.getUuid(), supportUser.getEmail()));
 
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", context);

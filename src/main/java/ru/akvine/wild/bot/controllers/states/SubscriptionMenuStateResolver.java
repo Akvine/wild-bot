@@ -1,5 +1,9 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -16,11 +20,6 @@ import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationServi
 import ru.akvine.wild.bot.services.integration.yookassa.YooKassaIntegrationService;
 import ru.akvine.wild.bot.utils.DateUtils;
 
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT;
-
 @State
 @Slf4j
 public class SubscriptionMenuStateResolver extends StateResolver {
@@ -28,11 +27,12 @@ public class SubscriptionMenuStateResolver extends StateResolver {
     private final SubscriptionService subscriptionService;
 
     @Autowired
-    public SubscriptionMenuStateResolver(StateStorage<String, List<ClientState>> stateStorage,
-                                         BotViewFacade viewFacade,
-                                         YooKassaIntegrationService yooKassaIntegrationService,
-                                         SubscriptionService subscriptionService,
-                                         TelegramIntegrationService telegramIntegrationService) {
+    public SubscriptionMenuStateResolver(
+            StateStorage<String, List<ClientState>> stateStorage,
+            BotViewFacade viewFacade,
+            YooKassaIntegrationService yooKassaIntegrationService,
+            SubscriptionService subscriptionService,
+            TelegramIntegrationService telegramIntegrationService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.yooKassaIntegrationService = yooKassaIntegrationService;
         this.subscriptionService = subscriptionService;

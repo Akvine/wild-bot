@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.services.security;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +18,6 @@ import ru.akvine.wild.bot.services.dto.security.OtpCreateNewAction;
 import ru.akvine.wild.bot.services.dto.security.auth.AuthActionRequest;
 import ru.akvine.wild.bot.services.dto.security.auth.AuthActionResult;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -27,10 +26,13 @@ public class AuthActionService extends PasswordRequiredActionService<AuthActionE
 
     @Value("${security.otp.action.lifetime.seconds}")
     private int otpActionLifetimeSeconds;
+
     @Value("${security.otp.password.max.invalid.attempts}")
     private int otpPasswordMaxInvalidAttempts;
+
     @Value("${security.otp.max.invalid.attempts}")
     private int otpMaxInvalidAttempts;
+
     @Value("${security.otp.max.new.generation.per.action}")
     private int otpMaxNewGenerationPerAction;
 
@@ -144,7 +146,8 @@ public class AuthActionService extends PasswordRequiredActionService<AuthActionE
     @Override
     protected void sendNewOtpToClient(AuthActionEntity action) {
         String login = action.getLogin();
-        twoFactorNotificationSender.sendAuthenticationCode(login, action.getOtpAction().getOtpValue());
+        twoFactorNotificationSender.sendAuthenticationCode(
+                login, action.getOtpAction().getOtpValue());
     }
 
     @Override

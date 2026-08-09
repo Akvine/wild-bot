@@ -6,5 +6,4 @@ import ru.akvine.wild.bot.admin.dto.security.EmailRequest;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AccessRestoreStartRequest extends EmailRequest {
-}
+public class AccessRestoreStartRequest extends EmailRequest {}

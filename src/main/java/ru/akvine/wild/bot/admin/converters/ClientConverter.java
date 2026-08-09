@@ -1,6 +1,10 @@
 package ru.akvine.wild.bot.admin.converters;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.admin.dto.client.*;
@@ -9,17 +13,13 @@ import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
 import ru.akvine.wild.bot.utils.DateUtils;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 public class ClientConverter {
     private static final int BLOCK_TIME_YEARS = 100;
 
     public ClientListResponse convertToClientListResponse(List<ClientModel> clients) {
-        return new ClientListResponse().setClients(clients.stream().map(this::buildClientDto).toList());
+        return new ClientListResponse()
+                .setClients(clients.stream().map(this::buildClientDto).toList());
     }
 
     private ClientDto buildClientDto(ClientModel clientModel) {
@@ -87,10 +87,7 @@ public class ClientConverter {
         Preconditions.checkNotNull(blocked, "blockedClientEntries is null");
         return new ListBlockClientResponse()
                 .setCount(blocked.size())
-                .setList(blocked
-                        .stream()
-                        .map(this::buildBlockClientDto)
-                        .collect(Collectors.toList()));
+                .setList(blocked.stream().map(this::buildBlockClientDto).collect(Collectors.toList()));
     }
 
     public UnblockClient convertToUnblockClient(UnblockClientRequest request) {
@@ -128,9 +125,7 @@ public class ClientConverter {
 
     public Whitelist convertToWhitelist(WhitelistRequest request) {
         Preconditions.checkNotNull(request, "whitelistRequest is null");
-        return new Whitelist()
-                .setChatId(request.getChatId())
-                .setUsername(request.getUsername());
+        return new Whitelist().setChatId(request.getChatId()).setUsername(request.getUsername());
     }
 
     public GenerateQrCode convertToGenerateQrCode(SendQrCodeRequest request) {

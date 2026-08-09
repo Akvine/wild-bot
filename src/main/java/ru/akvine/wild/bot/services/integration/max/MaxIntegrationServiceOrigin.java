@@ -1,5 +1,10 @@
 package ru.akvine.wild.bot.services.integration.max;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import javax.net.ssl.SSLContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -24,20 +29,17 @@ import ru.akvine.wild.bot.services.integration.max.dto.response.GetMessagesRespo
 import ru.akvine.wild.bot.services.integration.max.dto.response.LongPoolingSubscriptionResponse;
 import ru.akvine.wild.bot.utils.RequestUtils;
 
-import javax.net.ssl.SSLContext;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
-
 @Service
 public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
     @Value("${max.bot.url}")
     private String maxUrl;
+
     @Value("${max.bot.token}")
     private String maxBotToken;
+
     @Value("${max.bot.dev.mode.long.pooling.timeout.seconds}")
     private String poolingTimeoutSeconds;
+
     @Value("${max.bot.dev.mode.long.pooling.update-types}")
     private String updateTypes;
 
@@ -48,9 +50,9 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
         try {
             this.restTemplate = buildRestTemplate();
         } catch (Exception exception) {
-            throw new RuntimeException("Exception while initialize " +
-                    MaxIntegrationServiceOrigin.class.getSimpleName() +
-                    " class. Ex = " + exception);
+            throw new RuntimeException("Exception while initialize " + MaxIntegrationServiceOrigin.class.getSimpleName()
+                    + " class. Ex = "
+                    + exception);
         }
     }
 
@@ -60,9 +62,9 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<LongPoolingSubscriptionResponse> response;
-        String url = RequestUtils.buildUri(maxUrl + MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET.getEndpoint(),
-                Map.of("timeout", poolingTimeoutSeconds,
-                        "types", updateTypes));
+        String url = RequestUtils.buildUri(
+                maxUrl + MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET.getEndpoint(),
+                Map.of("timeout", poolingTimeoutSeconds, "types", updateTypes));
         try {
             response = restTemplate.exchange(
                     url,
@@ -88,15 +90,12 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
         HttpHeaders headers = buildHttpHeaders();
         HttpEntity<GetMessagesRequest> httpEntity = new HttpEntity<>(headers);
 
-        String url = RequestUtils.buildUri(maxUrl + MaxApiMethods.GET_MESSAGES.getEndpoint(),
-                Map.of("chat_id", chatId));
+        String url =
+                RequestUtils.buildUri(maxUrl + MaxApiMethods.GET_MESSAGES.getEndpoint(), Map.of("chat_id", chatId));
         ResponseEntity<GetMessagesResponse> response;
         try {
             response = restTemplate.exchange(
-                    url,
-                    MaxApiMethods.GET_MESSAGES.getMethod(),
-                    httpEntity,
-                    GetMessagesResponse.class);
+                    url, MaxApiMethods.GET_MESSAGES.getMethod(), httpEntity, GetMessagesResponse.class);
 
             if (response.getBody() == null) {
                 return new Message[0];
@@ -116,14 +115,10 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
         HttpHeaders headers = buildHttpHeaders();
         HttpEntity<SendMessageRequest> httpEntity = new HttpEntity<>(request, headers);
 
-        String url = RequestUtils.buildUri(maxUrl + MaxApiMethods.SEND_MESSAGE.getEndpoint(),
-                Map.of("chat_id", chatId));
+        String url =
+                RequestUtils.buildUri(maxUrl + MaxApiMethods.SEND_MESSAGE.getEndpoint(), Map.of("chat_id", chatId));
         try {
-            restTemplate.exchange(
-                    url,
-                    MaxApiMethods.SEND_MESSAGE.getMethod(),
-                    httpEntity,
-                    GetMessagesResponse.class);
+            restTemplate.exchange(url, MaxApiMethods.SEND_MESSAGE.getMethod(), httpEntity, GetMessagesResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling MAX api method = [%s]. Message = %s",
@@ -133,10 +128,7 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
     }
 
     @Override
-    public void downloadPhoto() {
-
-    }
-
+    public void downloadPhoto() {}
 
     private HttpHeaders buildHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
@@ -150,7 +142,8 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
      * без этого запросы к {@code max.bot.url} падают с PKIX path building failed, если сертификат
      * сервера не подписан центром из системного trust store JVM.
      */
-    private RestTemplate buildRestTemplate() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+    private RestTemplate buildRestTemplate()
+            throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         SSLContext sslContext = SSLContextBuilder.create()
                 .loadTrustMaterial((chain, authType) -> true)
                 .build();
@@ -164,9 +157,8 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
                 .setSSLSocketFactory(sslConnectionSocketFactory)
                 .build();
 
-        CloseableHttpClient httpClient = HttpClients.custom()
-                .setConnectionManager(connectionManager)
-                .build();
+        CloseableHttpClient httpClient =
+                HttpClients.custom().setConnectionManager(connectionManager).build();
 
         return new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
     }

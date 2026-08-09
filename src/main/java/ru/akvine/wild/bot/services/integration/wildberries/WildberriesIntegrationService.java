@@ -1,11 +1,10 @@
 package ru.akvine.wild.bot.services.integration.wildberries;
 
+import java.util.List;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
-
-import java.util.List;
 
 public interface WildberriesIntegrationService {
     /**
@@ -21,7 +20,6 @@ public interface WildberriesIntegrationService {
      * @return
      */
     AdvertListResponse getAdverts();
-
 
     /**
      * Узнать бюджет рекламной кампании (в рублях)
@@ -39,7 +37,6 @@ public interface WildberriesIntegrationService {
      * @return
      */
     AdvertBudgetDepositResponse advertBudgetDeposit(int advertId, int sum);
-
 
     /**
      * Запуск рекламной кампании

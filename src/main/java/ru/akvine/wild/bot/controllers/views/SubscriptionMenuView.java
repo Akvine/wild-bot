@@ -6,7 +6,7 @@ import ru.akvine.wild.bot.infrastructure.annotations.View;
 
 @View
 public class SubscriptionMenuView extends AbstractBotView {
-    private final static String NEW_LINE = "\n";
+    private static final String NEW_LINE = "\n";
 
     public SubscriptionMenuView(BotKeyboardFactoryFacade facade) {
         super(facade);
@@ -15,8 +15,8 @@ public class SubscriptionMenuView extends AbstractBotView {
     @Override
     public String getMessage(String chatId) {
         StringBuilder sb = new StringBuilder();
-        sb
-                .append("Оформить подписку в два клика.").append(NEW_LINE)
+        sb.append("Оформить подписку в два клика.")
+                .append(NEW_LINE)
                 .append("Стоимость месячной подписки составляет 4900 рублей");
         return sb.toString();
     }

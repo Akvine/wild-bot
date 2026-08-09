@@ -1,12 +1,11 @@
 package ru.akvine.wild.bot.utils;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.UUID;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class UUIDGenerator {
-    private final static int START_INDEX = 0;
+    private static final int START_INDEX = 0;
 
     public String uuid() {
         return UUID.randomUUID().toString().toUpperCase();

@@ -1,12 +1,11 @@
 package ru.akvine.wild.bot.utils;
 
 import io.nayuki.qrcodegen.QrCode;
-import lombok.experimental.UtilityClass;
-import ru.akvine.wild.bot.exceptions.ByteConvertException;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import javax.imageio.ImageIO;
+import lombok.experimental.UtilityClass;
+import ru.akvine.wild.bot.exceptions.ByteConvertException;
 
 @UtilityClass
 public class QrCodeUtils {
@@ -24,7 +23,8 @@ public class QrCodeUtils {
             for (int x = 0; x < size; x++) {
                 boolean color = (x >= border && x < size - border && y >= border && y < size - border)
                         && qr.getModule(x - border, y - border); // Получаем цвет модуля (белый или черный)
-                int rgbColor = color ? 0x000000 : 0xFFFFFF; // Устанавливаем цвет: черный (0x000000) или белый (0xFFFFFF)
+                int rgbColor =
+                        color ? 0x000000 : 0xFFFFFF; // Устанавливаем цвет: черный (0x000000) или белый (0xFFFFFF)
                 for (int dy = 0; dy < scale; dy++) {
                     for (int dx = 0; dx < scale; dx++) {
                         image.setRGB(x * scale + dx, y * scale + dy, rgbColor); // Заполняем квадрат пикселей

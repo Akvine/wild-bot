@@ -1,10 +1,8 @@
 package ru.akvine.wild.bot.services.integration.telegram;
 
-import ru.akvine.wild.bot.enums.BotDataType;
-import ru.akvine.wild.bot.telegram.TelegramData;
-
 import java.io.InputStream;
 import java.util.List;
+import ru.akvine.wild.bot.enums.BotDataType;
 
 public interface TelegramIntegrationService {
 
@@ -22,7 +20,6 @@ public interface TelegramIntegrationService {
      * @return фотографию
      */
     byte[] downloadPhoto(String photoId, String chatId);
-
 
     /**
      * Отправка файла пользователю

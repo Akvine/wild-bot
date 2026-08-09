@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.controllers.views;
 
+import static ru.akvine.wild.bot.constants.DbLockConstants.UPLOAD_PHOTO_LOCK;
+
 import org.springframework.util.CollectionUtils;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
@@ -15,8 +17,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GetGoodsRe
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GoodDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GoodSizeDto;
 
-import static ru.akvine.wild.bot.constants.DbLockConstants.UPLOAD_PHOTO_LOCK;
-
 @View
 public class IsChangePriceView extends AbstractBotView {
     private final WildberriesIntegrationService wildberriesIntegrationService;
@@ -24,14 +24,14 @@ public class IsChangePriceView extends AbstractBotView {
     private final DataBaseLockProvider dataBaseLockProvider;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
+    private static final String NEW_LINE = "\n";
 
-    private final static String NEW_LINE = "\n";
-
-    public IsChangePriceView(BotKeyboardFactoryFacade facade,
-                             WildberriesIntegrationService wildberriesIntegrationService,
-                             AdvertService advertService,
-                             DataBaseLockProvider dataBaseLockProvider,
-                             SessionStorage<String, ClientSessionData> sessionStorage) {
+    public IsChangePriceView(
+            BotKeyboardFactoryFacade facade,
+            WildberriesIntegrationService wildberriesIntegrationService,
+            AdvertService advertService,
+            DataBaseLockProvider dataBaseLockProvider,
+            SessionStorage<String, ClientSessionData> sessionStorage) {
         super(facade);
         this.wildberriesIntegrationService = wildberriesIntegrationService;
         this.advertService = advertService;
@@ -53,9 +53,7 @@ public class IsChangePriceView extends AbstractBotView {
             sessionStorage.save(session);
 
             int nmId = advertBean.getCardModel().getExternalId();
-            GetGoodsRequest request = new GetGoodsRequest()
-                    .setLimit(100)
-                    .setFilterNmID(nmId);
+            GetGoodsRequest request = new GetGoodsRequest().setLimit(100).setFilterNmID(nmId);
             GetGoodsResponse response = wildberriesIntegrationService.getGoods(request);
             if (!CollectionUtils.isEmpty(response.getData().getListGoods())) {
                 GoodDto goodDto = response.getData().getListGoods().getFirst();
@@ -78,12 +76,20 @@ public class IsChangePriceView extends AbstractBotView {
 
     private String buildMessage(int price, int discount, double discountedPrice) {
         StringBuilder sb = new StringBuilder();
-        sb
-                .append("Сейчас у карточки в рекламной кампании по выбранной категории следующая цена, скидка и скидочная цена:").append(NEW_LINE)
-                .append("1. Цена без скидки: ").append(price).append(NEW_LINE)
-                .append("2. Скидка: ").append(discount).append(NEW_LINE)
-                .append("3. Цена на сайте: ").append(discountedPrice).append(NEW_LINE)
-                .append("Поменять цену и скидку у карточки перед запуском теста рекламной кампании?").append(NEW_LINE);
+        sb.append(
+                        "Сейчас у карточки в рекламной кампании по выбранной категории следующая цена, скидка и скидочная цена:")
+                .append(NEW_LINE)
+                .append("1. Цена без скидки: ")
+                .append(price)
+                .append(NEW_LINE)
+                .append("2. Скидка: ")
+                .append(discount)
+                .append(NEW_LINE)
+                .append("3. Цена на сайте: ")
+                .append(discountedPrice)
+                .append(NEW_LINE)
+                .append("Поменять цену и скидку у карточки перед запуском теста рекламной кампании?")
+                .append(NEW_LINE);
         return sb.toString();
     }
 }

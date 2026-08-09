@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.admin.converters;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.admin.dto.advert.*;
@@ -11,9 +13,6 @@ import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.UpdateAdvert;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 public class AdvertConverter {
     public PauseAdvert convertToPauseAdvert(PauseAdvertRequest request) {
@@ -23,13 +22,10 @@ public class AdvertConverter {
     }
 
     public ListAdvert convertToListAdvert(ListAdvertRequest request) {
-        List<AdvertStatus> statuses = request
-                .getStatuses()
-                .stream()
+        List<AdvertStatus> statuses = request.getStatuses().stream()
                 .map(status -> AdvertStatus.valueOf(status.toUpperCase()))
                 .collect(Collectors.toList());
-        return new ListAdvert()
-                .setStatuses(statuses);
+        return new ListAdvert().setStatuses(statuses);
     }
 
     public PauseAdvertResponse convertToPauseAdvert(AdvertStatisticModel advertStatisticBean) {
@@ -46,8 +42,7 @@ public class AdvertConverter {
                         .setSum(advertStatisticBean.getSum())
                         .setSumPrice(advertStatisticBean.getSumPrice())
                         .setOrders(advertStatisticBean.getOrders())
-                        .setClicks(advertStatisticBean.getClicks())
-                );
+                        .setClicks(advertStatisticBean.getClicks()));
     }
 
     public ListAdvertResponse convertToAdvertListResponse(List<AdvertModel> adverts) {

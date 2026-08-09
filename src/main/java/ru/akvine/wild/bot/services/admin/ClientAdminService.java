@@ -1,6 +1,10 @@
 package ru.akvine.wild.bot.services.admin;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,16 +21,11 @@ import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
-import ru.akvine.wild.bot.services.integration.qrcode.dto.GenerateQrCodeRequest;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
+import ru.akvine.wild.bot.services.integration.qrcode.dto.GenerateQrCodeRequest;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.utils.DateUtils;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,25 +40,33 @@ public class ClientAdminService {
 
     @Value("${qraft.integration.enabled}")
     private boolean qraftIntegrationEnabled;
+
     @Value("${qraft.request.param.ecl}")
     private String errorCorrectionLevel;
+
     @Value("${qraft.request.param.qr.size}")
     private int qrSize;
+
     @Value("${qraft.request.param.border.size}")
     private int borderSize;
+
     @Value("${qraft.request.param.radiusFactor}")
     private int radiusFactor;
+
     @Value("${qraft.request.param.cornerBlockRadiusFactor}")
     private double cornerBlockRadiusFactor;
+
     @Value("${qraft.request.param.roundInnerCorners}")
     private boolean roundInnerCorners;
+
     @Value("${qraft.request.param.roundOuterCorners}")
     private boolean roundOuterCorners;
+
     @Value("${qraft.request.param.cornerBlocksAsCircles}")
     private boolean cornerBlocksAsCircles;
+
     @Value("${qraft.request.param.image.type}")
     private String imageType;
-
 
     public List<ClientModel> list() {
         return clientService.getAll();
@@ -93,26 +100,25 @@ public class ClientAdminService {
         LocalDateTime blockDate = LocalDateTime.now().plusMinutes(minutes);
         clientBlockingService.setBlock(chatId, minutes);
 
-        return new BlockClientFinish()
-                .setChatId(chatId)
-                .setDateTime(blockDate)
-                .setMinutes(minutes);
+        return new BlockClientFinish().setChatId(chatId).setDateTime(blockDate).setMinutes(minutes);
     }
 
     public List<BlockClientEntry> listBlocked() {
         List<ClientBlockedCredentialsEntity> list = clientBlockingService.list();
 
-        return list.stream().map(obj -> {
-            LocalDateTime start = obj.getBlockStartDate();
-            LocalDateTime end = obj.getBlockEndDate();
-            String chatId = obj.getChatId();
-            long minutes = DateUtils.getMinutes(start, end);
-            return new BlockClientEntry()
-                    .setChatId(chatId)
-                    .setBlockStartDate(start)
-                    .setBlockEndDate(end)
-                    .setMinutes(minutes);
-        }).collect(Collectors.toList());
+        return list.stream()
+                .map(obj -> {
+                    LocalDateTime start = obj.getBlockStartDate();
+                    LocalDateTime end = obj.getBlockEndDate();
+                    String chatId = obj.getChatId();
+                    long minutes = DateUtils.getMinutes(start, end);
+                    return new BlockClientEntry()
+                            .setChatId(chatId)
+                            .setBlockStartDate(start)
+                            .setBlockEndDate(end)
+                            .setMinutes(minutes);
+                })
+                .collect(Collectors.toList());
     }
 
     public void unblockClient(UnblockClient unblockClient) {
@@ -120,11 +126,17 @@ public class ClientAdminService {
         String chatId;
 
         if (StringUtils.isNotBlank(unblockClient.getUuid())) {
-            chatId = clientService.verifyExistsByClientUuid(unblockClient.getUuid()).getChatId();
+            chatId = clientService
+                    .verifyExistsByClientUuid(unblockClient.getUuid())
+                    .getChatId();
         } else if (StringUtils.isNotBlank(unblockClient.getChatId())) {
-            chatId = clientService.verifyExistsByChatId(unblockClient.getChatId()).getChatId();
+            chatId = clientService
+                    .verifyExistsByChatId(unblockClient.getChatId())
+                    .getChatId();
         } else {
-            chatId = clientService.verifyExistsByUsername(unblockClient.getUsername()).getChatId();
+            chatId = clientService
+                    .verifyExistsByUsername(unblockClient.getUsername())
+                    .getChatId();
         }
 
         clientBlockingService.removeBlock(chatId);
@@ -139,7 +151,8 @@ public class ClientAdminService {
         if (!CollectionUtils.isEmpty(sendMessage.getChatIds())) {
             activeClients = clientService.getByListChatId(sendMessage.getChatIds());
             if (CollectionUtils.isEmpty(activeClients)) {
-                String errorMessage = String.format("Not found any client with chat ids = %s", sendMessage.getChatIds());
+                String errorMessage =
+                        String.format("Not found any client with chat ids = %s", sendMessage.getChatIds());
                 throw new ClientNotFoundException(errorMessage);
             }
 
@@ -150,7 +163,8 @@ public class ClientAdminService {
         if (!CollectionUtils.isEmpty(sendMessage.getUsernames())) {
             activeClients = clientService.getAllByUsernames(sendMessage.getUsernames());
             if (CollectionUtils.isEmpty(activeClients)) {
-                String errorMessage = String.format("Not found any client with usernames = %s", sendMessage.getUsernames());
+                String errorMessage =
+                        String.format("Not found any client with usernames = %s", sendMessage.getUsernames());
                 throw new ClientNotFoundException(errorMessage);
             }
 
@@ -175,7 +189,10 @@ public class ClientAdminService {
 
         client.setInWhitelist(true);
         clientRepository.save(client);
-        logger.info("Successful add to whitelist client with chatId = {} and username = {}", client.getChatId(), client.getUsername());
+        logger.info(
+                "Successful add to whitelist client with chatId = {} and username = {}",
+                client.getChatId(),
+                client.getUsername());
     }
 
     public void deleteFromWhitelist(Whitelist whitelist) {
@@ -191,7 +208,10 @@ public class ClientAdminService {
 
         client.setInWhitelist(false);
         clientRepository.save(client);
-        logger.info("Successful delete to whitelist client with chatId = {} and username = {}", client.getChatId(), client.getUsername());
+        logger.info(
+                "Successful delete to whitelist client with chatId = {} and username = {}",
+                client.getChatId(),
+                client.getUsername());
     }
 
     public void sendQrCode(GenerateQrCode generateQrCode) {
@@ -202,8 +222,8 @@ public class ClientAdminService {
         logger.info("Send qr code to chat with id = {} and url = {}", chatId, url);
         clientService.verifyExistsByChatId(chatId);
 
-        Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap = qrCodeGenerationServiceFacade
-                .getServicesMap();
+        Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap =
+                qrCodeGenerationServiceFacade.getServicesMap();
         GenerateQrCodeRequest request = new GenerateQrCodeRequest()
                 .setUrl(url)
                 .setQrSize(qrSize)
@@ -219,20 +239,16 @@ public class ClientAdminService {
         byte[] image;
         if (qraftIntegrationEnabled) {
             try {
-                image = serviceMap
-                        .get(QrCodeGenerationServiceType.EXTERNAL)
-                        .generateQrCode(request);
+                image = serviceMap.get(QrCodeGenerationServiceType.EXTERNAL).generateQrCode(request);
             } catch (Exception exception) {
-                logger.error("Some error was occurred while calling external qr code generation service. " +
-                        "Generate message by internal service. Message = [{}]", exception.getMessage());
-                image = serviceMap
-                        .get(QrCodeGenerationServiceType.INTERNAL)
-                        .generateQrCode(request);
+                logger.error(
+                        "Some error was occurred while calling external qr code generation service. "
+                                + "Generate message by internal service. Message = [{}]",
+                        exception.getMessage());
+                image = serviceMap.get(QrCodeGenerationServiceType.INTERNAL).generateQrCode(request);
             }
         } else {
-            image = serviceMap
-                    .get(QrCodeGenerationServiceType.INTERNAL)
-                    .generateQrCode(request);
+            image = serviceMap.get(QrCodeGenerationServiceType.INTERNAL).generateQrCode(request);
         }
 
         logger.info("Successful generate qr code");
@@ -240,10 +256,8 @@ public class ClientAdminService {
     }
 
     private void sendMessageInternal(List<ClientModel> activeClients, String message) {
-        List<String> activeChatIds = activeClients
-                .stream()
-                .map(ClientModel::getChatId)
-                .collect(Collectors.toList());
+        List<String> activeChatIds =
+                activeClients.stream().map(ClientModel::getChatId).collect(Collectors.toList());
         telegramIntegrationService.sendMessage(activeChatIds, message);
     }
 }

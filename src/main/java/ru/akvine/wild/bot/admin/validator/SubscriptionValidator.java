@@ -12,14 +12,12 @@ public class SubscriptionValidator {
         if (StringUtils.isBlank(request.getChatId()) && StringUtils.isBlank(request.getUsername())) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,
-                    "Username or chat id are not presented. Must  be only one of these params"
-            );
+                    "Username or chat id are not presented. Must  be only one of these params");
         }
         if (StringUtils.isNotBlank(request.getChatId()) && StringUtils.isNotBlank(request.getUsername())) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
-                    "Username and chat id are presented. Must  be only one of these params"
-            );
+                    "Username and chat id are presented. Must  be only one of these params");
         }
     }
 }

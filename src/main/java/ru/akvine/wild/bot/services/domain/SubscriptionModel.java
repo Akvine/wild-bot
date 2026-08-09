@@ -1,11 +1,10 @@
 package ru.akvine.wild.bot.services.domain;
 
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.entities.SubscriptionEntity;
 import ru.akvine.wild.bot.services.domain.base.Model;
-
-import java.time.LocalDateTime;
 
 @Data
 @Accessors(chain = true)

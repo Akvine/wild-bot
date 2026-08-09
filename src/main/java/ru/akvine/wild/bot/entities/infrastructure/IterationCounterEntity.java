@@ -17,7 +17,10 @@ public class IterationCounterEntity extends BaseEntity {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "iterationCounterEntitySeq")
-    @SequenceGenerator(name = "iterationCounterEntitySeq", sequenceName = "SEQ_ITERATION_COUNTER_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(
+            name = "iterationCounterEntitySeq",
+            sequenceName = "SEQ_ITERATION_COUNTER_ENTITY",
+            allocationSize = 1000)
     private Long id;
 
     @Column(name = "ADVERT_ID", nullable = false, unique = true)

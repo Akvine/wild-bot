@@ -30,8 +30,7 @@ public class SessionStorageInDatabaseImpl implements SessionStorage<String, Clie
     @Override
     public ClientSessionData save(ClientSessionData data) {
         ClientSessionDataEntity session = verifyExistsAndGet(data.getChatId());
-        session
-                .setSelectedCardType(data.getSelectedCardType())
+        session.setSelectedCardType(data.getSelectedCardType())
                 .setSelectedCategoryId(data.getSelectedCategoryId())
                 .setUploadedCardPhoto(data.getUploadedCardPhoto())
                 .setInputNewCardPriceAndDiscount(data.isInputNewCardPriceAndDiscount())
@@ -59,11 +58,9 @@ public class SessionStorageInDatabaseImpl implements SessionStorage<String, Clie
     }
 
     private ClientSessionDataEntity verifyExistsAndGet(String chatId) {
-        return clientSessionDataRepository
-                .findByChatId(chatId)
-                .orElseThrow(() -> {
-                    String errorMessage = String.format("Chat id = [%s] has no database session", chatId);
-                    return new NoSessionException(errorMessage);
-                });
+        return clientSessionDataRepository.findByChatId(chatId).orElseThrow(() -> {
+            String errorMessage = String.format("Chat id = [%s] has no database session", chatId);
+            return new NoSessionException(errorMessage);
+        });
     }
 }

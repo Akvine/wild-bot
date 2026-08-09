@@ -22,5 +22,4 @@ public final class Payload {
     private String lastName;
 
     private String telegramCallbackQueryId;
-
 }

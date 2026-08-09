@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.akvine.wild.bot.admin.dto.subscription.SubscriptionRequest;
 import ru.akvine.wild.bot.admin.dto.common.Response;
+import ru.akvine.wild.bot.admin.dto.subscription.SubscriptionRequest;
 
 @RequestMapping(value = "/admin/subscriptions")
 public interface SubscriptionControllerMeta {

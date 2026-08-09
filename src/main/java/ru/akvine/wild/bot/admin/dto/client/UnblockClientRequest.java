@@ -5,5 +5,4 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class UnblockClientRequest extends BlockRequest {
-}
+public class UnblockClientRequest extends BlockRequest {}

@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.keyboard.telegram;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -14,8 +15,6 @@ import ru.akvine.wild.bot.services.CardAggregateService;
 import ru.akvine.wild.bot.services.CardService;
 import ru.akvine.wild.bot.services.domain.CardModel;
 import ru.akvine.wild.bot.services.dto.AggregateCard;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

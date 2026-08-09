@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.admin.impl;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import ru.akvine.wild.bot.admin.converters.ClientConverter;
@@ -13,8 +14,6 @@ import ru.akvine.wild.bot.services.admin.ClientAdminService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

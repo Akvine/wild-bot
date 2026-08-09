@@ -1,12 +1,11 @@
 package ru.akvine.wild.bot.admin.dto.advert;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.AdvertType;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Accessors(chain = true)

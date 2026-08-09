@@ -1,5 +1,8 @@
 package ru.akvine.wild.bot.job;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -10,10 +13,6 @@ import ru.akvine.wild.bot.constants.MDCConstants;
 import ru.akvine.wild.bot.entities.SubscriptionEntity;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -33,10 +32,7 @@ public class SubscriptionJob {
         MDC.put(MDCConstants.CHAT_ID, mdcChatId);
         logger.info("Start delete expired subscriptions...");
         List<SubscriptionEntity> subscriptions = subscriptionRepository.findAll();
-        subscriptions
-                .stream()
-                .filter(SubscriptionEntity::isExpired)
-                .forEach(subscriptionRepository::delete);
+        subscriptions.stream().filter(SubscriptionEntity::isExpired).forEach(subscriptionRepository::delete);
         logger.info("End delete expired subscriptions");
     }
 
@@ -46,14 +42,16 @@ public class SubscriptionJob {
         MDC.put(MDCConstants.CHAT_ID, mdcChatId);
         logger.info("Start notify clients about expiring subscription...");
         List<SubscriptionEntity> subscriptions = subscriptionRepository.findAll();
-        subscriptions
-                .stream()
+        subscriptions.stream()
                 .filter(subscription -> !subscription.isExpired())
                 .filter(subscription -> !subscription.isNotifiedThatExpires())
-                .filter(subscription -> Duration.between(LocalDateTime.now(), subscription.getExpiresAt()).toDays() <= notifyDaysBefore)
+                .filter(subscription -> Duration.between(LocalDateTime.now(), subscription.getExpiresAt())
+                                .toDays()
+                        <= notifyDaysBefore)
                 .forEach(subscription -> {
                     String chatId = subscription.getClient().getChatId();
-                    long daysBeforeExpire = Duration.between(LocalDateTime.now(), subscription.getExpiresAt()).toDays();
+                    long daysBeforeExpire = Duration.between(LocalDateTime.now(), subscription.getExpiresAt())
+                            .toDays();
                     String message = String.format(
                             "Уважаемый пользователь! Уведомляем вас о том, что через %s дня у вас заканчивается подписка на бота",
                             daysBeforeExpire);

@@ -20,6 +20,7 @@ public class QRaftIntegrationService implements QrCodeGenerationService {
 
     @Value("${qraft.generate.qrcode.url}")
     private String url;
+
     @Value("${qraft.generate.qrcode.method}")
     private String method;
 
@@ -31,10 +32,7 @@ public class QRaftIntegrationService implements QrCodeGenerationService {
         HttpEntity<GenerateQrCodeRequest> httpEntity = new HttpEntity<>(request, headers);
         ResponseEntity<byte[]> response;
         try {
-            response = restTemplate.postForEntity(
-                    url + method,
-                    httpEntity,
-                    byte[].class);
+            response = restTemplate.postForEntity(url + method, httpEntity, byte[].class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling QRaft api method = [%s]. Message = [%s]",

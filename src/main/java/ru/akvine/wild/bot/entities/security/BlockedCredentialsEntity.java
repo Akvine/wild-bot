@@ -1,11 +1,10 @@
 package ru.akvine.wild.bot.entities.security;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "BLOCKED_CREDENTIALS_ENTITY")
@@ -16,7 +15,10 @@ public class BlockedCredentialsEntity {
     @Id
     @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "blockedCredentialsEntitySequence")
-    @SequenceGenerator(name = "blockedCredentialsEntitySequence", sequenceName = "SEQ_BLOCKED_CREDENTIALS_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(
+            name = "blockedCredentialsEntitySequence",
+            sequenceName = "SEQ_BLOCKED_CREDENTIALS_ENTITY",
+            allocationSize = 1000)
     private Long id;
 
     @Column(name = "LOGIN", nullable = false)

@@ -6,7 +6,7 @@ import ru.akvine.wild.bot.infrastructure.annotations.View;
 
 @View
 public class ChooseTypeView extends AbstractBotView {
-    private final static String NEW_LINE = "\n";
+    private static final String NEW_LINE = "\n";
 
     public ChooseTypeView(BotKeyboardFactoryFacade facade) {
         super(facade);
@@ -15,8 +15,8 @@ public class ChooseTypeView extends AbstractBotView {
     @Override
     public String getMessage(String chatId) {
         StringBuilder sb = new StringBuilder();
-        sb
-                .append("Запуск рекламной кампании \uD83D\uDE80:").append(NEW_LINE)
+        sb.append("Запуск рекламной кампании \uD83D\uDE80:")
+                .append(NEW_LINE)
                 .append("Выберите в какой категории будет тестироваться товар:");
         return sb.toString();
     }

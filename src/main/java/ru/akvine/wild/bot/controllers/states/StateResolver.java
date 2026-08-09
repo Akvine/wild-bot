@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
@@ -15,8 +16,6 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -52,11 +51,11 @@ public abstract class StateResolver {
             sendMessage.setReplyMarkup(keyboard.getTelegramKeyboard());
             response.setTelegramResponse(sendMessage);
         } else {
-            MaxSendMessage maxSendMessage = new MaxSendMessage()
-                    .setChatId(chatId)
-                    .setText(message);
+            MaxSendMessage maxSendMessage =
+                    new MaxSendMessage().setChatId(chatId).setText(message);
             if (keyboard.getMaxButtons() != null) {
-                maxSendMessage.setAttachments(List.of(MaxKeyboardFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
+                maxSendMessage.setAttachments(
+                        List.of(MaxKeyboardFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
             }
             response.setMaxSendMessage(maxSendMessage);
         }

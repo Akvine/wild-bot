@@ -18,10 +18,11 @@ public class TelegramProductionBot extends TelegramWebhookBot {
     private final MessageFilter messageFilter;
     private final BotDtoConverterFacade facade;
 
-    public TelegramProductionBot(DefaultBotOptions defaultBotOptions,
-                                 String botToken,
-                                 MessageFilter messageFilter,
-                                 BotDtoConverterFacade facade) {
+    public TelegramProductionBot(
+            DefaultBotOptions defaultBotOptions,
+            String botToken,
+            MessageFilter messageFilter,
+            BotDtoConverterFacade facade) {
         super(defaultBotOptions, botToken);
         this.messageFilter = messageFilter;
         this.facade = facade;

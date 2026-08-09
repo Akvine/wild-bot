@@ -2,21 +2,22 @@ package ru.akvine.wild.bot.constants;
 
 public final class ApiErrorConstants {
     private ApiErrorConstants() throws IllegalAccessException {
-        throw new IllegalAccessException("Calling " + ApiErrorConstants.class.getSimpleName() + " constructor is prohibited!");
+        throw new IllegalAccessException(
+                "Calling " + ApiErrorConstants.class.getSimpleName() + " constructor is prohibited!");
     }
 
-    public final static String NO_SESSION_ERROR = "no.session.error";
+    public static final String NO_SESSION_ERROR = "no.session.error";
 
-    public final static String GENERAL_ERROR = "general.error";
+    public static final String GENERAL_ERROR = "general.error";
 
-    public final static String BLOCKED_ERROR = "blocked.error";
+    public static final String BLOCKED_ERROR = "blocked.error";
 
-    public final static String ADVERT_ALREADY_IN_PAUSE_STATE_ERROR = "advert.already.inPause.state.error";
+    public static final String ADVERT_ALREADY_IN_PAUSE_STATE_ERROR = "advert.already.inPause.state.error";
 
-    public final static String CLIENT_NOT_FOUND_ERROR = "client.notFound.error";
+    public static final String CLIENT_NOT_FOUND_ERROR = "client.notFound.error";
 
-    public final static String RESOURCE_NOT_FOUND_ERROR = "resource.notFound.error";
-    public final static String JSON_BODY_INVALID_ERROR = "json.body.invalid.error";
+    public static final String RESOURCE_NOT_FOUND_ERROR = "resource.notFound.error";
+    public static final String JSON_BODY_INVALID_ERROR = "json.body.invalid.error";
 
     public interface Validation {
         String BOTH_PARAMETERS_PRESENT_ERROR = "both.parameters.present.error";
