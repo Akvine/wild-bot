@@ -1,20 +1,14 @@
 package ru.akvine.wild.bot.controllers.views;
 
-import lombok.RequiredArgsConstructor;
-import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
-import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
 
 @View
-@RequiredArgsConstructor
-public class InputNewPriceView implements BotView {
-    private final BotKeyboardFactoryFacade facade;
+public class InputNewPriceView extends AbstractBotView {
 
-    @Override
-    public InlineKeyboard getKeyboard(String chatId, BotType botType) {
-        return facade.resolve(botType, byState()).create(chatId);
+    public InputNewPriceView(BotKeyboardFactoryFacade facade) {
+        super(facade);
     }
 
     @Override
