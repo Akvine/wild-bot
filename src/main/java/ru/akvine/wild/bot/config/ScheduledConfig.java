@@ -11,7 +11,7 @@ import ru.akvine.wild.bot.facades.BotDtoConverterFacade;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.property.printers.PropertiesPrinter;
 import ru.akvine.wild.bot.job.CheckRunningAdvertsJob;
-import ru.akvine.wild.bot.job.MaxBotLongPoolingJob;
+import ru.akvine.wild.bot.job.MaxBotLongPoolingConsumer;
 import ru.akvine.wild.bot.job.PrintPropertiesJob;
 import ru.akvine.wild.bot.job.SubscriptionJob;
 import ru.akvine.wild.bot.job.monitoring.HikariPoolMetricsJob;
@@ -86,10 +86,10 @@ public class ScheduledConfig {
 
     @Bean
     @ConditionalOnExpression("${max.bot.enabled:false} && ${max.bot.dev.mode.enabled:false}")
-    public MaxBotLongPoolingJob maxBotLongPoolingJob(MaxIntegrationService maxIntegrationService,
-                                                     MessageFilter messageFilter,
-                                                     BotDtoConverterFacade converters) {
-        return new MaxBotLongPoolingJob(maxIntegrationService, messageFilter, converters);
+    public MaxBotLongPoolingConsumer maxBotLongPoolingJob(MaxIntegrationService maxIntegrationService,
+                                                          MessageFilter messageFilter,
+                                                          BotDtoConverterFacade converters) {
+        return new MaxBotLongPoolingConsumer(maxIntegrationService, messageFilter, converters);
     }
 
     @Bean

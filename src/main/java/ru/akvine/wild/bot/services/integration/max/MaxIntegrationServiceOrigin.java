@@ -36,6 +36,10 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
     private String maxUrl;
     @Value("${max.bot.token}")
     private String maxBotToken;
+    @Value("${max.bot.dev.mode.long.pooling.timeout.seconds}")
+    private String poolingTimeoutSeconds;
+    @Value("${max.bot.dev.mode.long.pooling.update-types}")
+    private String updateTypes;
 
     private final RestTemplate restTemplate;
 
@@ -57,8 +61,8 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
 
         ResponseEntity<LongPoolingSubscriptionResponse> response;
         String url = RequestUtils.buildUri(maxUrl + MaxApiMethods.LONG_POOLING_SUBSCRIPTIONS_GET.getEndpoint(),
-                Map.of("timeout", "2",
-                        "types", "message_created,message_callback"));
+                Map.of("timeout", poolingTimeoutSeconds,
+                        "types", updateTypes));
         try {
             response = restTemplate.exchange(
                     url,

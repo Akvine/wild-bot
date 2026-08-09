@@ -13,12 +13,12 @@ import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageReques
 import ru.akvine.wild.bot.bot.filter.MessageFilter;
 
 @RequiredArgsConstructor
-public class MaxBotLongPoolingJob {
+public class MaxBotLongPoolingConsumer {
     private final MaxIntegrationService maxIntegrationService;
     private final MessageFilter startMessageFilter;
     private final BotDtoConverterFacade facade;
 
-    @Scheduled(fixedDelayString = "${max.bot.dev.mode.long.pooling.cron.seconds}")
+    @Scheduled(fixedDelayString = "${max.bot.dev.mode.long.pooling.cron.milliseconds}")
     public void checkUpdates() {
         Update[] updates = maxIntegrationService.updates();
         if (updates.length != 0) {
