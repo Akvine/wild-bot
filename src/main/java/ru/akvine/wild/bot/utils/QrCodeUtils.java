@@ -7,8 +7,18 @@ import javax.imageio.ImageIO;
 import lombok.experimental.UtilityClass;
 import ru.akvine.wild.bot.exceptions.ByteConvertException;
 
+/**
+ * Рендер QR-кода ({@link QrCode}) в растровое изображение и PNG-байты для отправки клиенту.
+ */
 @UtilityClass
 public class QrCodeUtils {
+    /**
+     * Рендерит QR-код в чёрно-белое растровое изображение с рамкой по краям.
+     *
+     * @param qr QR-код, не {@code null}
+     * @return изображение QR-кода
+     * @throws IllegalArgumentException если {@code qr} равен {@code null}
+     */
     public BufferedImage convertQrCodeToImage(QrCode qr) {
         if (qr == null) {
             throw new IllegalArgumentException("Qr code can't be null");
@@ -36,6 +46,14 @@ public class QrCodeUtils {
         return image;
     }
 
+    /**
+     * Рендерит QR-код и кодирует его в PNG.
+     *
+     * @param qrCode QR-код, не {@code null}
+     * @return PNG-изображение QR-кода в виде массива байт
+     * @throws IllegalArgumentException если {@code qrCode} равен {@code null}
+     * @throws ByteConvertException     если при кодировании в PNG произошла ошибка
+     */
     public byte[] convertQrCodeToBytes(QrCode qrCode) {
         BufferedImage image = convertQrCodeToImage(qrCode);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
