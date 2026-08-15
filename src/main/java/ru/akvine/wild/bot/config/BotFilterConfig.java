@@ -1,39 +1,49 @@
 package ru.akvine.wild.bot.config;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.akvine.wild.bot.bot.MessageDispatcher;
-import ru.akvine.wild.bot.bot.filter.*;
-import ru.akvine.wild.bot.exceptions.telegram.BotExceptionHandler;
-import ru.akvine.wild.bot.services.ClientService;
+import org.springframework.context.annotation.Primary;
+import ru.akvine.wild.bot.bot.filter.InitMessageFilter;
+import ru.akvine.wild.bot.bot.filter.MessageFilter;
+import ru.akvine.wild.bot.bot.filter.MessageHandlerFilter;
+import ru.akvine.wild.bot.facades.MessageFiltersFacade;
 
 @Configuration
 @RequiredArgsConstructor
 public class BotFilterConfig {
-    private final MessageDispatcher dispatcher;
-    private final ClientService clientService;
-    private final BotExceptionHandler botExceptionHandler;
+    private static final Logger log = LoggerFactory.getLogger(BotFilterConfig.class);
 
     @Bean
-    public MessageFilter messageFilters() {
-        UserBadMessageFilter userBadMessageFilter = new UserBadMessageFilter(dispatcher);
-        BotExceptionFilter exceptionHandlerFilter = new BotExceptionFilter(botExceptionHandler);
-        ClientFilter clientFilter = new ClientFilter(clientService);
-        ClientBlockedFilter clientBlockedFilter = new ClientBlockedFilter(clientService);
-        WhitelistFilter whitelistFilter = new WhitelistFilter(clientService);
-        MDCFilter mdcFilter = new MDCFilter(clientService);
+    @Primary
+    public InitMessageFilter messageFilter(
+            @Value("${message.filers.list}") List<String> messageFilters, MessageFiltersFacade facade) {
+        if (CollectionUtils.isEmpty(messageFilters)) {
+            throw new IllegalArgumentException("Property {message.filters.list} can't be blank!");
+        }
 
-        exceptionHandlerFilter.setNextMessageFilter(clientFilter);
+        if (!messageFilters.contains(MessageHandlerFilter.class.getSimpleName())) {
+            throw new IllegalArgumentException("Property {message.filters.list} must contains ["
+                    + MessageHandlerFilter.class.getSimpleName() + "] filter name");
+        }
 
-        clientFilter.setNextMessageFilter(mdcFilter);
+        int lastMessageFilterIndex = messageFilters.size() - 1;
+        for (int i = 0; i < messageFilters.size(); ++i) {
+            if (i == lastMessageFilterIndex) {
+                break;
+            }
 
-        mdcFilter.setNextMessageFilter(clientBlockedFilter);
+            MessageFilter firstFilter = facade.get(messageFilters.get(i));
+            MessageFilter secondFilter = facade.get(messageFilters.get(i + 1));
+            firstFilter.setNextMessageFilter(secondFilter);
+        }
 
-        clientBlockedFilter.setNextMessageFilter(whitelistFilter);
-
-        whitelistFilter.setNextMessageFilter(userBadMessageFilter);
-
-        return exceptionHandlerFilter;
+        log.info("Initialized message filters in next order: {}", messageFilters);
+        return facade.get(messageFilters.getFirst());
     }
 }

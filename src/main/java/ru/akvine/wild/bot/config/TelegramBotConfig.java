@@ -18,7 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScope
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.akvine.wild.bot.bot.filter.MessageFilter;
+import ru.akvine.wild.bot.bot.filter.InitMessageFilter;
 import ru.akvine.wild.bot.exceptions.TelegramConfigurationException;
 import ru.akvine.wild.bot.facades.BotDtoConverterFacade;
 import ru.akvine.wild.bot.telegram.bot.TelegramDevBot;
@@ -83,7 +83,7 @@ public class TelegramBotConfig {
     }
 
     @Bean
-    public TelegramBot telegramBot(DefaultBotOptions defaultBotOptions, MessageFilter startMessageFilter)
+    public TelegramBot telegramBot(DefaultBotOptions defaultBotOptions, InitMessageFilter startMessageFilter)
             throws TelegramApiException {
         if (!isBotEnabled) {
             return new TelegramDummyBot();

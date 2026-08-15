@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.akvine.wild.bot.bot.converter.BotDtoConverter;
+import ru.akvine.wild.bot.bot.filter.MessageFilter;
 import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.controllers.states.StateResolver;
 import ru.akvine.wild.bot.controllers.views.BotView;
@@ -85,5 +86,12 @@ public class FacadesConfig {
         Map<String, BotKeyboardFactory> factories =
                 factoriesList.stream().collect(toMap(BotKeyboardFactory::getUniqueIdentifier, identity()));
         return new BotKeyboardFactoryFacade(factories);
+    }
+
+    @Bean
+    public MessageFiltersFacade messageFiltersFacade(List<MessageFilter> messageFilters) {
+        Map<String, MessageFilter> filters =
+                messageFilters.stream().collect(toMap(MessageFilter::getFilterClassName, identity()));
+        return new MessageFiltersFacade(filters);
     }
 }

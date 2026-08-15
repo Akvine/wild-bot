@@ -1,17 +1,15 @@
 package ru.akvine.wild.bot.bot.filter;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.akvine.wild.bot.bot.MessageDispatcher;
+import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.exceptions.bot.InvalidUserMessageException;
 import ru.akvine.wild.bot.utils.BotMessageUtils;
 
-@RequiredArgsConstructor
+@Component
 @Slf4j
 public class UserBadMessageFilter extends MessageFilter {
-    private final MessageDispatcher messageDispatcher;
 
     @Override
     public Response handle(Payload payload) {
@@ -25,6 +23,6 @@ public class UserBadMessageFilter extends MessageFilter {
             throw new InvalidUserMessageException("User input invalid message");
         }
 
-        return messageDispatcher.doDispatch(payload);
+        return nextMessageFilter.handle(payload);
     }
 }

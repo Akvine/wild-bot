@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
-import ru.akvine.wild.bot.bot.filter.MessageFilter;
+import ru.akvine.wild.bot.bot.filter.InitMessageFilter;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.facades.BotDtoConverterFacade;
 
@@ -15,13 +15,13 @@ import ru.akvine.wild.bot.facades.BotDtoConverterFacade;
 public class TelegramProductionBot extends TelegramWebhookBot {
     private String botPath;
     private String botUsername;
-    private final MessageFilter messageFilter;
+    private final InitMessageFilter messageFilter;
     private final BotDtoConverterFacade facade;
 
     public TelegramProductionBot(
             DefaultBotOptions defaultBotOptions,
             String botToken,
-            MessageFilter messageFilter,
+            InitMessageFilter messageFilter,
             BotDtoConverterFacade facade) {
         super(defaultBotOptions, botToken);
         this.messageFilter = messageFilter;

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import ru.akvine.wild.bot.bot.filter.MessageFilter;
+import ru.akvine.wild.bot.bot.filter.InitMessageFilter;
 import ru.akvine.wild.bot.facades.BotDtoConverterFacade;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.property.printers.PropertiesPrinter;
@@ -78,7 +78,7 @@ public class ScheduledConfig {
     @ConditionalOnExpression("${max.bot.enabled:false} && ${max.bot.dev.mode.enabled:false}")
     public MaxBotLongPoolingConsumer maxBotLongPoolingJob(
             MaxIntegrationService maxIntegrationService,
-            MessageFilter messageFilter,
+            InitMessageFilter messageFilter,
             BotDtoConverterFacade converters) {
         return new MaxBotLongPoolingConsumer(maxIntegrationService, messageFilter, converters);
     }

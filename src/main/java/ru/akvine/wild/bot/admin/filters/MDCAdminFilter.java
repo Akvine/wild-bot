@@ -11,7 +11,7 @@ import org.springframework.web.filter.GenericFilterBean;
 import ru.akvine.wild.bot.constants.MDCConstants;
 
 @Component
-public class MDCFilter extends GenericFilterBean {
+public class MDCAdminFilter extends GenericFilterBean {
     private static final String ADMIN = "admin";
 
     @Override

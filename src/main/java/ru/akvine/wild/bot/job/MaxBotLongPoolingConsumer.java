@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
-import ru.akvine.wild.bot.bot.filter.MessageFilter;
+import ru.akvine.wild.bot.bot.filter.InitMessageFilter;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.facades.BotDtoConverterFacade;
 import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
@@ -15,7 +15,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageReques
 @RequiredArgsConstructor
 public class MaxBotLongPoolingConsumer {
     private final MaxIntegrationService maxIntegrationService;
-    private final MessageFilter startMessageFilter;
+    private final InitMessageFilter startMessageFilter;
     private final BotDtoConverterFacade facade;
 
     @Scheduled(fixedDelayString = "${max.bot.dev.mode.long.pooling.cron.milliseconds}")

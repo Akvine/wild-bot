@@ -2,11 +2,13 @@ package ru.akvine.wild.bot.bot.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.services.ClientService;
 
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class ClientBlockedFilter extends MessageFilter {

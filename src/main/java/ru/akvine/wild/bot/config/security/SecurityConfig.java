@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import ru.akvine.wild.bot.admin.filters.AuthFilter;
-import ru.akvine.wild.bot.admin.filters.MDCFilter;
+import ru.akvine.wild.bot.admin.filters.MDCAdminFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthFilter authFilter, MDCFilter mdcFilter)
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthFilter authFilter, MDCAdminFilter mdcAdminFilter)
             throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
@@ -43,7 +43,7 @@ public class SecurityConfig {
                     logout.invalidateHttpSession(true);
                 })
                 .addFilterBefore(authFilter, BasicAuthenticationFilter.class)
-                .addFilterAfter(mdcFilter, BasicAuthenticationFilter.class);
+                .addFilterAfter(mdcAdminFilter, BasicAuthenticationFilter.class);
         return http.build();
     }
 

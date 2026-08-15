@@ -34,5 +34,4 @@ public interface MaxIntegrationService {
      * Метод по отправке сообщений
      */
     void sendMessage(String chatId, SendMessageRequest request);
-
 }

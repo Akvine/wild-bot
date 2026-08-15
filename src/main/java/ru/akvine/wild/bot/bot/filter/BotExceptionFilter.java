@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
@@ -13,6 +14,7 @@ import ru.akvine.wild.bot.exceptions.telegram.BotExceptionHandler;
 import ru.akvine.wild.bot.infrastructure.annotations.ErrorHandler;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class BotExceptionFilter extends MessageFilter {
