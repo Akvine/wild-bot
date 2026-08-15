@@ -24,12 +24,14 @@ public class BotFilterConfig {
     public InitMessageFilter messageFilter(
             @Value("${message.filers.list}") List<String> messageFilters, MessageFiltersFacade facade) {
         if (CollectionUtils.isEmpty(messageFilters)) {
-            throw new IllegalArgumentException("Property {message.filters.list} can't be blank!");
+            return facade.get(MessageHandlerFilter.class.getSimpleName());
         }
 
         if (!messageFilters.contains(MessageHandlerFilter.class.getSimpleName())) {
-            throw new IllegalArgumentException("Property {message.filters.list} must contains ["
-                    + MessageHandlerFilter.class.getSimpleName() + "] filter name");
+            log.warn(
+                    "{message.filters.list} property doesn't contain required [{}] filter. Put required filter at the end of the list",
+                    MessageHandlerFilter.class.getSimpleName());
+            messageFilters.add(MessageHandlerFilter.class.getSimpleName());
         }
 
         int lastMessageFilterIndex = messageFilters.size() - 1;

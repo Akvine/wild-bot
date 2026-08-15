@@ -16,6 +16,6 @@ public class MessageFiltersFacade {
         }
 
         throw new IllegalArgumentException(
-                "Message filter with name = [" + messageFilterClassName + "] is not supported byu app!");
+                "Message filter with name = [" + messageFilterClassName + "] is not supported by app!");
     }
 }
