@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.controllers.keyboard.telegram;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.QUERY_QR_CODE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.QUERY_QR_CODE_BUTTON_TEXT;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

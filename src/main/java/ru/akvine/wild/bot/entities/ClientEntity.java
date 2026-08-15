@@ -44,6 +44,12 @@ public class ClientEntity extends SoftBaseEntity {
     @Enumerated(EnumType.STRING)
     private BotType botType;
 
+    @Column(name = "TOKEN")
+    private String token;
+
+    @Column(name = "WAREHOUSE_ID")
+    private Integer warehouseId;
+
     @Transient
     public void increaseAvailableTestsCount(int addCount) {
         availableTestsCount += addCount;

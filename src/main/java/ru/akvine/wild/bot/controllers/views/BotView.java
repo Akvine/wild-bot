@@ -7,7 +7,7 @@ import ru.akvine.wild.bot.enums.ClientState;
 public interface BotView {
     InlineKeyboard getKeyboard(String chatId, BotType botType);
 
-    String getMessage(String chatId);
+    String getMessage(String chatId, BotType botType);
 
     ClientState byState();
 }

@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.views;
 
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
@@ -13,7 +14,7 @@ public class InstructionMenuView extends AbstractBotView {
     }
 
     @Override
-    public String getMessage(String chatId) {
+    public String getMessage(String chatId, BotType botType) {
         StringBuilder sb = new StringBuilder();
         sb.append("<b>Запуск рекламной кампании</b> \uD83D\uDE80: выберите")
                 .append(NEW_LINE)

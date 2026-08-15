@@ -68,6 +68,7 @@ public class ClientController implements ClientControllerMeta {
 
     @Override
     public Response addToWhitelist(@Valid WhitelistRequest request) {
+        clientValidator.verifyBotType(request.getBotType());
         Whitelist whitelist = clientConverter.convertToWhitelist(request);
         clientAdminService.addToWhitelist(whitelist);
         return new SuccessfulResponse();
@@ -75,6 +76,7 @@ public class ClientController implements ClientControllerMeta {
 
     @Override
     public Response deleteFromWhitelist(@Valid WhitelistRequest request) {
+        clientValidator.verifyBotType(request.getBotType());
         Whitelist whitelist = clientConverter.convertToWhitelist(request);
         clientAdminService.deleteFromWhitelist(whitelist);
         return new SuccessfulResponse();
@@ -82,6 +84,7 @@ public class ClientController implements ClientControllerMeta {
 
     @Override
     public Response sendQrCode(@Valid SendQrCodeRequest request) {
+        clientValidator.verifyBotType(request.getBotType());
         GenerateQrCode generateQrCode = clientConverter.convertToGenerateQrCode(request);
         clientAdminService.sendQrCode(generateQrCode);
         return new SuccessfulResponse();

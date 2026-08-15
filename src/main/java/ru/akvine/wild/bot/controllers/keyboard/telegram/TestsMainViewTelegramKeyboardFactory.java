@@ -1,9 +1,9 @@
 package ru.akvine.wild.bot.controllers.keyboard.telegram;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.GENERATE_REPORT_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.*;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.GENERATE_REPORT_BUTTON_TEXT;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

@@ -15,6 +15,7 @@ import ru.akvine.wild.bot.entities.CardEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.AdvertType;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.DebitType;
 import ru.akvine.wild.bot.exceptions.AdvertNotFoundException;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
@@ -85,13 +86,15 @@ public class AdvertService {
                 .collect(Collectors.toList());
     }
 
-    public List<AdvertModel> getAdvertsByChatIdAndStatuses(String chatId, List<AdvertStatus> statuses) {
+    public List<AdvertModel> getAdvertsByChatIdAndBotTypeAndStatuses(
+            String chatId, BotType botType, List<AdvertStatus> statuses) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         Preconditions.checkNotNull(statuses, "advertStatuses is null");
 
         logger.info("Get adverts by statuses = {}", statuses);
 
-        Long clientId = clientService.verifyExistsByChatId(chatId).getId();
+        Long clientId =
+                clientService.verifyExistsByChatIdAndBotType(chatId, botType).getId();
         return advertRepository.findByClientIdAndStatuses(clientId, statuses).stream()
                 .map(AdvertModel::new)
                 .toList();
@@ -106,7 +109,8 @@ public class AdvertService {
                 .orElseThrow(() ->
                         new AdvertNotFoundException("Advert with uuid = [" + advertBean.getUuid() + "] not found!"));
         if (StringUtils.isNotBlank(advertBean.getChatId())) {
-            ClientEntity client = clientService.verifyExistsByChatId(advertBean.getChatId());
+            ClientEntity client = clientService.verifyExistsByChatIdAndBotType(
+                    advertBean.getClient().getChatId(), advertBean.getClient().getBotType());
             advertEntity.setClient(client);
         }
         advertEntity

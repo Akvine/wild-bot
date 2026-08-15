@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import ru.akvine.wild.bot.enums.BotType;
 
 @Entity
 @Table(name = "CLIENT_BLOCKED_CREDENTIALS_ENTITY")
@@ -23,6 +24,10 @@ public class ClientBlockedCredentialsEntity {
 
     @Column(name = "CHAT_ID", nullable = false)
     private String chatId;
+
+    @Column(name = "BOT_TYPE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BotType botType;
 
     @Column(name = "BLOCK_START_DATE", nullable = false)
     private LocalDateTime blockStartDate;

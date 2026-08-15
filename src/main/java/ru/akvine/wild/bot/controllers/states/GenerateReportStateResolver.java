@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.START_GENERATION_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.START_GENERATION_BUTTON_TEXT;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class GenerateReportStateResolver extends StateResolver {
         BotType botType = payload.getBotType();
 
         if (text.equals(START_GENERATION_BUTTON_TEXT)) {
-            byte[] report = reportService.generateReport(chatId);
+            byte[] report = reportService.generateReport(chatId, botType);
             telegramIntegrationService.sendFile(chatId, REPORT_FILENAME_WITH_EXTENSION, report);
             return setNextState(chatId, ClientState.FINISH_GENERATION_REPORT_MENU, botType);
         } else {

@@ -24,7 +24,7 @@ public class ClientFilter extends MessageFilter {
                 "Payload was reached in ClientFilter for chat with id = [{}]. Type = [{}]",
                 chatId,
                 payload.getBotType());
-        ClientModel clientBean = clientService.findByChatId(chatId);
+        ClientModel clientBean = clientService.findByChatIdAndBotType(chatId, botType);
         if (clientBean == null) {
             ClientCreate clientCreate = new ClientCreate(
                     chatId, botType, payload.getUsername(), payload.getFirstName(), payload.getLastName());

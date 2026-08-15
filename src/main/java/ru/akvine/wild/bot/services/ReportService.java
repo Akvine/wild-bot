@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.wild.bot.utils.POIUtils;
 
@@ -23,10 +24,11 @@ public class ReportService {
     private static final String SHEET_NAME = "sheet";
     private static final int HEADERS_ROW_INDEX = 0;
 
-    public byte[] generateReport(String chatId) {
+    public byte[] generateReport(String chatId, BotType botType) {
         logger.info("Generate report");
 
-        Long clientId = clientService.verifyExistsByChatId(chatId).getId();
+        Long clientId =
+                clientService.verifyExistsByChatIdAndBotType(chatId, botType).getId();
         List<AdvertStatisticEntity> advertStatistics = advertStatisticRepository.findByClientId(clientId);
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet(SHEET_NAME);

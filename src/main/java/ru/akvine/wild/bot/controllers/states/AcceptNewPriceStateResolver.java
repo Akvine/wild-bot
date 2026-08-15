@@ -1,7 +1,7 @@
 package ru.akvine.wild.bot.controllers.states;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.KEEP_PRICE_BUTTON_TEXT;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,7 +51,7 @@ public class AcceptNewPriceStateResolver extends StateResolver {
             sessionStorage.save(sessionData);
             return setNextState(chatId, ClientState.INPUT_NEW_PRICE_MENU, botType);
         } else if (text.equals(KEEP_PRICE_BUTTON_TEXT)) {
-            AdvertModel startedAdvert = advertStartService.start(chatId);
+            AdvertModel startedAdvert = advertStartService.start(chatId, botType);
 
             if (botType == BotType.TELEGRAM) {
                 SendMessage message = new SendMessage(chatId, buildMessage(startedAdvert));

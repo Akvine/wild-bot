@@ -10,5 +10,7 @@ public class BlockRequest {
 
     private String chatId;
 
+    private String botType;
+
     private String username;
 }

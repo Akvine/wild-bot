@@ -1,7 +1,7 @@
 package ru.akvine.wild.bot.controllers.keyboard.telegram;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.ADD_SUBSCRIPTION_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.*;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.ADD_SUBSCRIPTION_BUTTON_TEXT;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -29,8 +29,12 @@ public class MainMenuViewTelegramKeyboardFactory implements BotKeyboardFactory {
         addSubscriptionButton.setText(ADD_SUBSCRIPTION_BUTTON_TEXT);
         addSubscriptionButton.setCallbackData(ADD_SUBSCRIPTION_BUTTON_TEXT);
 
+        InlineKeyboardButton wildberriesAccountSettingsButton = new InlineKeyboardButton();
+        wildberriesAccountSettingsButton.setText(WILDBERRIES_ACCOUNT_SETTINGS_BUTTON_TEXT);
+        wildberriesAccountSettingsButton.setCallbackData(WILDBERRIES_ACCOUNT_SETTINGS_BUTTON_TEXT);
+
         InlineKeyboardMarkup markup = TelegramKeyboardFactory.createVerticalKeyboard(
-                menuButton, instructionsForUseButton, addSubscriptionButton);
+                menuButton, instructionsForUseButton, addSubscriptionButton, wildberriesAccountSettingsButton);
         return new InlineKeyboard(markup);
     }
 

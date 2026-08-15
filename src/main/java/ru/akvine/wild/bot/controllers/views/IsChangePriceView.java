@@ -3,6 +3,7 @@ package ru.akvine.wild.bot.controllers.views;
 import static ru.akvine.wild.bot.constants.DbLockConstants.UPLOAD_PHOTO_LOCK;
 
 import org.springframework.util.CollectionUtils;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
@@ -40,7 +41,7 @@ public class IsChangePriceView extends AbstractBotView {
     }
 
     @Override
-    public String getMessage(String chatId) {
+    public String getMessage(String chatId, BotType botType) {
         return dataBaseLockProvider.doWithLock(UPLOAD_PHOTO_LOCK + chatId, () -> {
             String selectedCardType = sessionStorage.get(chatId).getSelectedCardType();
             int selectedCategoryId = sessionStorage.get(chatId).getSelectedCategoryId();

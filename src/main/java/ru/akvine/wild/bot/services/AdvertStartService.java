@@ -11,6 +11,7 @@ import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.AdvertStartException;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
@@ -56,12 +57,12 @@ public class AdvertStartService {
 
     private static final int CARD_MAIN_PHOTO_POSITION = 1;
 
-    public AdvertModel start(String chatId) {
+    public AdvertModel start(String chatId, BotType botType) {
         try {
             Preconditions.checkNotNull(chatId, "chatId is null");
             Integer categoryId = sessionStorage.get(chatId).getSelectedCategoryId();
             logger.info("Try to start first one advert with category id = {}", categoryId);
-            return startInternal(chatId);
+            return startInternal(chatId, botType);
         } catch (Exception exception) {
             AdvertModel advertBean =
                     advertService.getByAdvertId(sessionStorage.get(chatId).getLockedAdvertId());
@@ -71,11 +72,11 @@ public class AdvertStartService {
         }
     }
 
-    private AdvertModel startInternal(String chatId) {
+    private AdvertModel startInternal(String chatId, BotType botType) {
         int advertId = sessionStorage.get(chatId).getLockedAdvertId();
         AdvertModel advertToStart = advertService.getByAdvertId(advertId);
         CardModel card = advertToStart.getCardModel();
-        ClientEntity client = clientService.verifyExistsByChatId(chatId);
+        ClientEntity client = clientService.verifyExistsByChatIdAndBotType(chatId, botType);
 
         AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId);
         Integer advertTotalBudget = advertBudgetInfo.getTotal();

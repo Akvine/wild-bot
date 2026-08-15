@@ -1,10 +1,10 @@
 package ru.akvine.wild.bot.controllers.keyboard.max;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.GENERATE_REPORT_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.LIST_STARTED_TESTS_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.START_TEST_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.DETAIL_TEST_INFORMATION_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.GENERATE_REPORT_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.LIST_STARTED_TESTS_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.START_TEST_BUTTON_TEXT;
 
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.bot.dto.InlineKeyboard;

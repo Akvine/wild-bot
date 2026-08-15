@@ -1,7 +1,7 @@
 package ru.akvine.wild.bot.controllers.keyboard.max;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.KEEP_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.KEEP_PRICE_BUTTON_TEXT;
 
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.bot.dto.InlineKeyboard;

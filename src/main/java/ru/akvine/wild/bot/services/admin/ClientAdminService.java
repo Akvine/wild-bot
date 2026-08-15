@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.akvine.wild.bot.entities.ClientBlockedCredentialsEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
 import ru.akvine.wild.bot.facades.QrCodeGenerationServiceFacade;
 import ru.akvine.wild.bot.repositories.ClientRepository;
@@ -77,7 +78,7 @@ public class ClientAdminService {
         if (StringUtils.isNotBlank(addTests.getUsername())) {
             client = clientService.verifyExistsByUsername(addTests.getUsername());
         } else {
-            client = clientService.verifyExistsByChatId(addTests.getChatId());
+            client = clientService.verifyExistsByChatIdAndBotType(addTests.getChatId(), addTests.getBotType());
         }
 
         client.increaseAvailableTestsCount(addTests.getTestsCount());
@@ -88,17 +89,20 @@ public class ClientAdminService {
         Preconditions.checkNotNull(start, "blockClientStart is null");
         long minutes = start.getMinutes();
         String chatId;
+        BotType botType = start.getBotType();
 
         if (StringUtils.isNotBlank(start.getUuid())) {
             chatId = clientService.verifyExistsByClientUuid(start.getUuid()).getChatId();
-        } else if (StringUtils.isNotBlank(start.getChatId())) {
-            chatId = clientService.verifyExistsByChatId(start.getChatId()).getChatId();
+        } else if (StringUtils.isNotBlank(start.getChatId()) && start.getBotType() != null) {
+            chatId = clientService
+                    .verifyExistsByChatIdAndBotType(start.getChatId(), botType)
+                    .getChatId();
         } else {
             chatId = clientService.verifyExistsByUsername(start.getUsername()).getChatId();
         }
 
         LocalDateTime blockDate = LocalDateTime.now().plusMinutes(minutes);
-        clientBlockingService.setBlock(chatId, minutes);
+        clientBlockingService.setBlock(chatId, botType, minutes);
 
         return new BlockClientFinish().setChatId(chatId).setDateTime(blockDate).setMinutes(minutes);
     }
@@ -124,14 +128,15 @@ public class ClientAdminService {
     public void unblockClient(UnblockClient unblockClient) {
         Preconditions.checkNotNull(unblockClient, "unblockClient is null");
         String chatId;
+        BotType botType = unblockClient.getBotType();
 
         if (StringUtils.isNotBlank(unblockClient.getUuid())) {
             chatId = clientService
                     .verifyExistsByClientUuid(unblockClient.getUuid())
                     .getChatId();
-        } else if (StringUtils.isNotBlank(unblockClient.getChatId())) {
+        } else if (StringUtils.isNotBlank(unblockClient.getChatId()) && unblockClient.getBotType() != null) {
             chatId = clientService
-                    .verifyExistsByChatId(unblockClient.getChatId())
+                    .verifyExistsByChatIdAndBotType(unblockClient.getChatId(), unblockClient.getBotType())
                     .getChatId();
         } else {
             chatId = clientService
@@ -139,7 +144,7 @@ public class ClientAdminService {
                     .getChatId();
         }
 
-        clientBlockingService.removeBlock(chatId);
+        clientBlockingService.removeBlock(chatId, botType);
     }
 
     public void sendMessage(SendMessage sendMessage) {
@@ -182,7 +187,7 @@ public class ClientAdminService {
 
         ClientEntity client;
         if (StringUtils.isNotBlank(whitelist.getChatId())) {
-            client = clientService.verifyExistsByChatId(whitelist.getChatId());
+            client = clientService.verifyExistsByChatIdAndBotType(whitelist.getChatId(), whitelist.getBotType());
         } else {
             client = clientService.verifyExistsByUsername(whitelist.getUsername());
         }
@@ -201,7 +206,7 @@ public class ClientAdminService {
 
         ClientEntity client;
         if (StringUtils.isNotBlank(whitelist.getChatId())) {
-            client = clientService.verifyExistsByChatId(whitelist.getChatId());
+            client = clientService.verifyExistsByChatIdAndBotType(whitelist.getChatId(), whitelist.getBotType());
         } else {
             client = clientService.verifyExistsByUsername(whitelist.getUsername());
         }
@@ -218,9 +223,10 @@ public class ClientAdminService {
         String chatId = generateQrCode.getChatId();
         String url = generateQrCode.getUrl();
         String caption = generateQrCode.getCaption();
+        BotType botType = generateQrCode.getBotType();
 
         logger.info("Send qr code to chat with id = {} and url = {}", chatId, url);
-        clientService.verifyExistsByChatId(chatId);
+        clientService.verifyExistsByChatIdAndBotType(chatId, botType);
 
         Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap =
                 qrCodeGenerationServiceFacade.getServicesMap();
@@ -252,7 +258,10 @@ public class ClientAdminService {
         }
 
         logger.info("Successful generate qr code");
-        telegramIntegrationService.sendImage(chatId, image, caption);
+
+        if (BotType.TELEGRAM == botType) {
+            telegramIntegrationService.sendImage(chatId, image, caption);
+        }
     }
 
     private void sendMessageInternal(List<ClientModel> activeClients, String message) {

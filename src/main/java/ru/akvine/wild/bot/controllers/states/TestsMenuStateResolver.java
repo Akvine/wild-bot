@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.*;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

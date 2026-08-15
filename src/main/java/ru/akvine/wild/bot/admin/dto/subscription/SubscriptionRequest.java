@@ -8,5 +8,7 @@ import lombok.experimental.Accessors;
 public class SubscriptionRequest {
     private String chatId;
 
+    private String botType;
+
     private String username;
 }

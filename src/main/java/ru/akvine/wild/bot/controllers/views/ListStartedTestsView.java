@@ -3,6 +3,7 @@ package ru.akvine.wild.bot.controllers.views;
 import java.util.List;
 import ru.akvine.wild.bot.controllers.converters.StartedAdvertsConverter;
 import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
@@ -28,10 +29,11 @@ public class ListStartedTestsView extends AbstractBotView {
     }
 
     @Override
-    public String getMessage(String chatId) {
+    public String getMessage(String chatId, BotType botType) {
         List<AdvertModel> runningAdverts =
-                advertService.getAdvertsByChatIdAndStatuses(chatId, List.of(AdvertStatus.RUNNING));
-        int availableTestsCount = clientService.getByChatId(chatId).getAvailableTestsCount();
+                advertService.getAdvertsByChatIdAndBotTypeAndStatuses(chatId, botType, List.of(AdvertStatus.RUNNING));
+        int availableTestsCount =
+                clientService.getByChatIdAndBotType(chatId, botType).getAvailableTestsCount();
         return startedAdvertsConverter.convertToStartedListMessage(chatId, availableTestsCount, runningAdverts);
     }
 

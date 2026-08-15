@@ -1,7 +1,8 @@
 package ru.akvine.wild.bot.controllers.views;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.CHOOSE_CATEGORY_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.CHOOSE_CATEGORY_TEXT;
 
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
@@ -14,7 +15,7 @@ public class ChooseCategoryView extends AbstractBotView {
     }
 
     @Override
-    public String getMessage(String chatId) {
+    public String getMessage(String chatId, BotType botType) {
         return CHOOSE_CATEGORY_TEXT;
     }
 

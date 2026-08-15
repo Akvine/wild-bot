@@ -7,10 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.akvine.wild.bot.entities.ClientEntity;
+import ru.akvine.wild.bot.enums.BotType;
 
 public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
-    @Query("from ClientEntity ce where ce.chatId = :chatId and ce.deleted = false and ce.deletedDate is null")
-    Optional<ClientEntity> findByChatId(@Param("chatId") String chatId);
+    @Query("from ClientEntity ce where ce.chatId = :chatId " + "and ce.botType = :botType "
+            + "and ce.deleted = false and ce.deletedDate is null")
+    Optional<ClientEntity> findByChatIdAndBotType(@Param("chatId") String chatId, @Param("botType") BotType botType);
 
     @Query("from ClientEntity ce where ce.uuid = :uuid and ce.deleted = false and ce.deletedDate is null")
     Optional<ClientEntity> findByUuid(@Param("uuid") String uuid);

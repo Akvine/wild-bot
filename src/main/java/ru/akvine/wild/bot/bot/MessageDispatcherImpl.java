@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.bot;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.BACK_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.BACK_BUTTON_TEXT;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -77,7 +77,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 
     private Response formMessage(BotType botType, String chatId, ClientState state) {
         BotView view = botViewFacade.getEventMap().get(state);
-        String message = view.getMessage(chatId);
+        String message = view.getMessage(chatId, botType);
         InlineKeyboard keyboard = view.getKeyboard(chatId, botType);
 
         Response response = new Response(chatId, botType);

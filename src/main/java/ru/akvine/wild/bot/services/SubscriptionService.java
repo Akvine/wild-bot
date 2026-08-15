@@ -42,7 +42,7 @@ public class SubscriptionService {
         if (StringUtils.isNotBlank(subscription.getUsername())) {
             client = clientService.verifyExistsByUsername(subscription.getUsername());
         } else {
-            client = clientService.verifyExistsByChatId(subscription.getChatId());
+            client = clientService.verifyExistsByChatIdAndBotType(subscription.getChatId(), subscription.getBotType());
         }
 
         return new SubscriptionModel(verifyExistsByChatId(client.getChatId()));
@@ -64,7 +64,7 @@ public class SubscriptionService {
         if (StringUtils.isNotBlank(subscription.getUsername())) {
             client = clientService.verifyExistsByUsername(subscription.getUsername());
         } else {
-            client = clientService.verifyExistsByChatId(subscription.getChatId());
+            client = clientService.verifyExistsByChatIdAndBotType(subscription.getChatId(), subscription.getBotType());
         }
 
         SubscriptionEntity subscriptionEntity;
@@ -93,7 +93,7 @@ public class SubscriptionService {
         if (StringUtils.isNotBlank(subscription.getUsername())) {
             client = clientService.verifyExistsByUsername(subscription.getUsername());
         } else {
-            client = clientService.verifyExistsByChatId(subscription.getChatId());
+            client = clientService.verifyExistsByChatIdAndBotType(subscription.getChatId(), subscription.getBotType());
         }
         String chatId = client.getChatId();
 

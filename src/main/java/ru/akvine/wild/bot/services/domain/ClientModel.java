@@ -15,7 +15,10 @@ public class ClientModel extends SoftModel {
     private Long id;
     private String uuid;
     private String chatId;
+
+    @Nullable
     private String username;
+
     private String firstName;
 
     @Nullable
@@ -24,6 +27,12 @@ public class ClientModel extends SoftModel {
     private int availableTestsCount;
     private boolean inWhitelist;
     private BotType botType;
+
+    @Nullable
+    private String token;
+
+    @Nullable
+    private Integer warehouseId;
 
     public ClientModel(ClientEntity clientEntity) {
         this.id = clientEntity.getId();
@@ -35,6 +44,8 @@ public class ClientModel extends SoftModel {
         this.availableTestsCount = clientEntity.getAvailableTestsCount();
         this.inWhitelist = clientEntity.isInWhitelist();
         this.botType = clientEntity.getBotType();
+        this.token = clientEntity.getToken();
+        this.warehouseId = clientEntity.getWarehouseId();
 
         this.createdDate = clientEntity.getCreatedDate();
         this.updatedDate = clientEntity.getUpdatedDate();

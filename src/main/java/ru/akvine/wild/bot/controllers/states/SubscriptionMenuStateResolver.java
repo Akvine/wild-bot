@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.PAY_SUBSCRIPTION_BUTTON_TEXT;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

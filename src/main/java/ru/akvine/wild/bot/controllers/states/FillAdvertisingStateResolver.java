@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.QUERY_QR_CODE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.QUERY_QR_CODE_BUTTON_TEXT;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

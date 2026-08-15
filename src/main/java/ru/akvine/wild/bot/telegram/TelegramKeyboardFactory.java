@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.telegram;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.BACK_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.BACK_BUTTON_TEXT;
 
 import java.util.ArrayList;
 import java.util.List;

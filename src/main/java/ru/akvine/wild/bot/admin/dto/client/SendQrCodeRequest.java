@@ -16,6 +16,9 @@ public class SendQrCodeRequest {
     private String chatId;
 
     @NotBlank
+    private String botType;
+
+    @NotBlank
     @Size(max = 512)
     private String caption;
 }

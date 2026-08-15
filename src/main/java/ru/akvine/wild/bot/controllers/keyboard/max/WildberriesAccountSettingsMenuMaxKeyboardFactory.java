@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.controllers.keyboard.max;
 
-import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.START_GENERATION_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.CHANGE_WAREHOUSE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.REVOKE_TOKEN_BUTTON_TEXT;
 
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
@@ -11,13 +12,16 @@ import ru.akvine.wild.bot.max.MaxKeyboardFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 
 @Component
-public class GenerateReportViewMaxKeyboardFactory implements BotKeyboardFactory {
+public class WildberriesAccountSettingsMenuMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId) {
-        Button startGenerationButton = MaxKeyboardFactory.callbackButton(START_GENERATION_BUTTON_TEXT);
+        Button revokeTokenButton = MaxKeyboardFactory.callbackButton(REVOKE_TOKEN_BUTTON_TEXT);
+        Button changeWarehouseIdButton = MaxKeyboardFactory.callbackButton(CHANGE_WAREHOUSE_BUTTON_TEXT);
         Button backButton = MaxKeyboardFactory.getBackButton();
 
-        Button[][] keyboard = MaxKeyboardFactory.createVerticalKeyboard(startGenerationButton, backButton);
+        Button[][] keyboard =
+                MaxKeyboardFactory.createVerticalKeyboard(revokeTokenButton, changeWarehouseIdButton, backButton);
+
         return new InlineKeyboard(keyboard);
     }
 
@@ -28,6 +32,6 @@ public class GenerateReportViewMaxKeyboardFactory implements BotKeyboardFactory 
 
     @Override
     public ClientState getByState() {
-        return ClientState.GENERATE_REPORT_MENU;
+        return ClientState.WILDBERRIES_ACCOUNT_SETTINGS_MENU;
     }
 }

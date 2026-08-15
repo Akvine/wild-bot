@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.services.ClientService;
 
 @RequiredArgsConstructor
@@ -14,8 +15,9 @@ public class ClientBlockedFilter extends MessageFilter {
     @Override
     public Response handle(Payload payload) {
         String chatId = payload.getChatId();
+        BotType botType = payload.getBotType();
         logger.debug("Update data was reached in ClientBlockedFilter for chat with id = {}", chatId);
-        clientService.checkIsBlocked(chatId);
+        clientService.checkIsBlocked(chatId, botType);
         return nextMessageFilter.handle(payload);
     }
 }

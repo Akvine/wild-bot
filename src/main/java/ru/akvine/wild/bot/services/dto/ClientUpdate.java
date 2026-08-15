@@ -1,4 +1,4 @@
-package ru.akvine.wild.bot.services.dto.admin.client;
+package ru.akvine.wild.bot.services.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,14 +7,10 @@ import ru.akvine.wild.bot.enums.BotType;
 
 @Data
 @Accessors(chain = true)
-public class AddTests {
-    @Nullable
+public class ClientUpdate {
     private String chatId;
-
-    @Nullable
-    private String username;
-
     private BotType botType;
 
-    private int testsCount;
+    @Nullable
+    private String tokenToUpdate;
 }

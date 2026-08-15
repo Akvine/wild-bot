@@ -6,14 +6,17 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.ClientEntity;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.BlockedCredentialsException;
 import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
 import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.ClientCreate;
+import ru.akvine.wild.bot.services.dto.ClientUpdate;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
 
 @Service
@@ -24,11 +27,12 @@ public class ClientService {
     private final ClientBlockingService clientBlockingService;
 
     @Nullable
-    public ClientModel findByChatId(String chatId) {
+    public ClientModel findByChatIdAndBotType(String chatId, BotType botType) {
         Preconditions.checkNotNull(chatId, "chatId is null");
-        logger.debug("Find client by chatId = {}", chatId);
+        Preconditions.checkNotNull(botType, "botType is null");
+        logger.debug("Find client by chatId = {} and bot type = {}", chatId, botType);
 
-        Optional<ClientEntity> client = clientRepository.findByChatId(chatId);
+        Optional<ClientEntity> client = clientRepository.findByChatIdAndBotType(chatId, botType);
         return client.map(ClientModel::new).orElse(null);
     }
 
@@ -47,10 +51,42 @@ public class ClientService {
         return new ClientModel(clientRepository.save(clientEntity));
     }
 
-    public void checkIsBlocked(String chatId) {
+    public ClientModel update(ClientUpdate action) {
+        logger.info("Update client with chat id = [{}], bot type = [{}]", action.getChatId(), action.getBotType());
+
+        ClientEntity clientToUpdate = verifyExistsByChatIdAndBotType(action.getChatId(), action.getBotType());
+
+        if (StringUtils.isNotBlank(clientToUpdate.getToken())
+                && !action.getTokenToUpdate().equals(clientToUpdate.getToken())) {
+            clientToUpdate.setToken(action.getTokenToUpdate());
+        }
+
+        ClientModel updatedClient = new ClientModel(clientRepository.save(clientToUpdate));
+        logger.info(
+                "Successful update client with chat id = [{}], bot type = [{}]",
+                action.getChatId(),
+                action.getBotType());
+        return updatedClient;
+    }
+
+    public boolean revokeToken(String chatId, BotType botType) {
+        logger.info("Revoke token for client with chat id = [{}] and bot type = [{}]", chatId, botType);
+
+        ClientEntity clientToRevokeToken = verifyExistsByChatIdAndBotType(chatId, botType);
+        clientToRevokeToken.setToken(null);
+
+        ClientEntity updatedClient = clientRepository.save(clientToRevokeToken);
+        if (updatedClient.getToken() != null) {
+            logger.debug("Revoke token for client with chat id = [{}] and bot type = [{}] failed!", chatId, botType);
+            return false;
+        }
+
+        return true;
+    }
+
+    public void checkIsBlocked(String chatId, BotType botType) {
         logger.debug("Check client is blocked by chat id = {}", chatId);
-        String uuid = verifyExistsByChatId(chatId).getUuid();
-        LocalDateTime blockDateTime = clientBlockingService.getEndBlockDate(uuid);
+        LocalDateTime blockDateTime = clientBlockingService.getEndBlockDate(chatId, botType);
         if (blockDateTime != null) {
             String errorMessage =
                     String.format("Client with chat id = [%s] has blocked until = [%s]!", chatId, blockDateTime);
@@ -66,18 +102,19 @@ public class ClientService {
                 .orElseThrow(() -> new ClientNotFoundException("Client has no with uuid = [" + clientUuid + "]!"));
     }
 
-    public ClientModel getByChatId(String chatId) {
+    public ClientModel getByChatIdAndBotType(String chatId, BotType botType) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         logger.debug("Get client by uuid = {}", chatId);
-        return new ClientModel(verifyExistsByChatId(chatId));
+        return new ClientModel(verifyExistsByChatIdAndBotType(chatId, botType));
     }
 
-    public ClientEntity verifyExistsByChatId(String chatId) {
+    public ClientEntity verifyExistsByChatIdAndBotType(String chatId, BotType botType) {
         Preconditions.checkNotNull(chatId, "chatId is null");
         logger.debug("Verify client exists by chat with id = {}", chatId);
         return clientRepository
-                .findByChatId(chatId)
-                .orElseThrow(() -> new ClientNotFoundException("Client has no with chatId = [" + chatId + "]!"));
+                .findByChatIdAndBotType(chatId, botType)
+                .orElseThrow(() -> new ClientNotFoundException(
+                        "Client has no with chatId = [" + chatId + "] and bot type = [" + botType + "]!"));
     }
 
     public ClientEntity verifyExistsByUsername(String username) {
@@ -107,4 +144,8 @@ public class ClientService {
                 .map(ClientModel::new)
                 .toList();
     }
+
+    //    public ClientModel revokeToken(String chatId, BotType botType) {
+    //        logger.info("Revoke token for user with chat id = [{}], bot type = [{}]", chatId, botType);
+    //    }
 }

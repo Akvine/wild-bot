@@ -1,7 +1,7 @@
 package ru.akvine.wild.bot.controllers.keyboard.max;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.FEMALE_BUTTON_TEXT;
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.MALE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.FEMALE_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.MALE_BUTTON_TEXT;
 
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.bot.dto.InlineKeyboard;

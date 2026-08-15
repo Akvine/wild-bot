@@ -401,3 +401,18 @@ CREATE SEQUENCE SEQ_SUPPORT_USER_ENTITY START WITH 1 INCREMENT BY 1000;
 CREATE UNIQUE INDEX SUPPORT_USER_ID_INDEX ON SUPPORT_USER_ENTITY (ID);
 CREATE UNIQUE INDEX SUPPORT_USER_UUID_INDEX ON SUPPORT_USER_ENTITY (UUID);
 CREATE UNIQUE INDEX SUPPORT_USER_EMAIL_INDEX ON SUPPORT_USER_ENTITY (EMAIL);
+
+--changeset akvine:TG-BOT-1-22
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'BOT_TYPE' and upper(table_name) = 'CLIENT_BLOCKED_CREDENTIALS_ENTITY';
+ALTER TABLE CLIENT_BLOCKED_CREDENTIALS_ENTITY ADD BOT_TYPE VARCHAR(32) NOT NULL;
+
+--changeset akvine:TG-BOT-1-23
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'TOKEN' and upper(table_name) = 'CLIENT_ENTITY';
+ALTER TABLE CLIENT_ENTITY ADD TOKEN VARCHAR(255);
+
+--changeset akvine:TG-BOT-1-24
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'WAREHOUSE_ID' and upper(table_name) = 'CLIENT_ENTITY';
+ALTER TABLE CLIENT_ENTITY ADD WAREHOUSE_ID INTEGER;

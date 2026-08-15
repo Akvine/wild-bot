@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.max;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.BACK_BUTTON_TEXT;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.BACK_BUTTON_TEXT;
 
 import lombok.experimental.UtilityClass;
 import ru.akvine.wild.bot.services.integration.max.dto.Attachment;

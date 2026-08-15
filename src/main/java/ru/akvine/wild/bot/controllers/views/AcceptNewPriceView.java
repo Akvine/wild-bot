@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.controllers.views;
 
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
@@ -18,7 +19,7 @@ public class AcceptNewPriceView extends AbstractBotView {
     }
 
     @Override
-    public String getMessage(String chatId) {
+    public String getMessage(String chatId, BotType botType) {
         ClientSessionData sessionData = sessionStorage.get(chatId);
         return buildMessage(sessionData.getNewCardPrice(), sessionData.getNewCardDiscount());
     }

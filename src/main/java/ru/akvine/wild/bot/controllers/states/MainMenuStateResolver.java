@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.*;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +49,8 @@ public class MainMenuStateResolver extends StateResolver {
             return setNextState(chatId, ClientState.INSTRUCTIONS_MENU, botType);
         } else if (text.equals(ADD_SUBSCRIPTION_BUTTON_TEXT)) {
             return setNextState(chatId, ClientState.SUBSCRIBE_MENU, botType);
+        } else if (WILDBERRIES_ACCOUNT_SETTINGS_BUTTON_TEXT.equals(text)) {
+            return setNextState(chatId, ClientState.WILDBERRIES_ACCOUNT_SETTINGS_MENU, botType);
         } else {
 
             Response response = new Response(chatId, botType);

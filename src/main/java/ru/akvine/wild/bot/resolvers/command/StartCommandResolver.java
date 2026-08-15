@@ -40,7 +40,7 @@ public class StartCommandResolver implements CommandResolver {
         ClientState startState = ClientState.MAIN_MENU;
         stateStorage.add(chatId, startState);
         BotView view = botViewFacade.getEventMap().get(startState);
-        String message = view.getMessage(chatId);
+        String message = view.getMessage(chatId, botType);
         InlineKeyboard keyboardMarkup = view.getKeyboard(chatId, botType);
 
         Response response = new Response().setChatId(chatId).setBotType(botType);

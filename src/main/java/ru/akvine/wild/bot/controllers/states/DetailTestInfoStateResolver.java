@@ -57,7 +57,7 @@ public class DetailTestInfoStateResolver extends StateResolver {
                     new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести целое число!"));
         }
 
-        long clientId = clientService.getByChatId(chatId).getId();
+        long clientId = clientService.getByChatIdAndBotType(chatId, botType).getId();
         AdvertStatisticEntity advertStatisticEntity;
 
         try {

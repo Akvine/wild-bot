@@ -5,6 +5,7 @@ import org.slf4j.MDC;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.constants.MDCConstants;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.services.ClientService;
 
 @RequiredArgsConstructor
@@ -14,7 +15,9 @@ public class MDCFilter extends MessageFilter {
     @Override
     public Response handle(Payload payload) {
         String chatId = payload.getChatId();
-        String username = clientService.getByChatId(chatId).getUsername();
+        BotType botType = payload.getBotType();
+
+        String username = clientService.getByChatIdAndBotType(chatId, botType).getUsername();
         if (username != null) {
             MDC.put(MDCConstants.USERNAME, username);
         }

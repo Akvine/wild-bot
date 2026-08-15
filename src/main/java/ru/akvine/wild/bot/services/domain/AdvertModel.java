@@ -38,6 +38,7 @@ public class AdvertModel extends SoftModel {
     private LocalDateTime availableForStart;
     private boolean locked;
     private CardModel cardModel;
+    private ClientModel client;
 
     public AdvertModel(AdvertEntity advertEntity) {
         this.id = advertEntity.getId();
@@ -55,6 +56,7 @@ public class AdvertModel extends SoftModel {
         this.checkBudgetSum = advertEntity.getCheckBudgetSum();
         this.availableForStart = advertEntity.getAvailableForStart();
         this.cardModel = new CardModel(advertEntity.getCard());
+        this.client = new ClientModel(advertEntity.getClient());
 
         this.createdDate = advertEntity.getCreatedDate();
         this.updatedDate = advertEntity.getUpdatedDate();

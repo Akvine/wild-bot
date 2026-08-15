@@ -6,19 +6,18 @@ import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
 
 @View
-public class InputNewDiscountView extends AbstractBotView {
-
-    public InputNewDiscountView(BotKeyboardFactoryFacade facade) {
+public class WildberriesAccountMenuView extends AbstractBotView {
+    public WildberriesAccountMenuView(BotKeyboardFactoryFacade facade) {
         super(facade);
     }
 
     @Override
     public String getMessage(String chatId, BotType botType) {
-        return "Введите новую скидку (без %): ";
+        return "Выберите действие из меню";
     }
 
     @Override
     public ClientState byState() {
-        return ClientState.INPUT_NEW_DISCOUNT_MENU;
+        return ClientState.WILDBERRIES_ACCOUNT_SETTINGS_MENU;
     }
 }

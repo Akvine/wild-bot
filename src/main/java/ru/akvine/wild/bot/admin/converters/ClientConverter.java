@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.admin.dto.client.*;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
@@ -41,7 +42,8 @@ public class ClientConverter {
         return new AddTests()
                 .setTestsCount(request.getCount())
                 .setUsername(request.getUsername())
-                .setChatId(request.getChatId());
+                .setChatId(request.getChatId())
+                .setBotType(BotType.valueOf(request.getBotType()));
     }
 
     public AddTestsResponse convertToAddTestsResponse(ClientModel clientBean) {
@@ -70,6 +72,9 @@ public class ClientConverter {
         }
         if (StringUtils.isNotBlank(request.getUsername())) {
             start.setUsername(request.getUsername());
+        }
+        if (StringUtils.isNotBlank(request.getBotType())) {
+            start.setBotType(BotType.valueOf(request.getBotType()));
         }
 
         return start;
@@ -103,6 +108,9 @@ public class ClientConverter {
         if (StringUtils.isNotBlank(request.getUsername())) {
             unblockClient.setUsername(request.getUsername());
         }
+        if (StringUtils.isNotBlank(request.getBotType())) {
+            unblockClient.setBotType(BotType.valueOf(request.getBotType()));
+        }
 
         return unblockClient;
     }
@@ -125,7 +133,11 @@ public class ClientConverter {
 
     public Whitelist convertToWhitelist(WhitelistRequest request) {
         Preconditions.checkNotNull(request, "whitelistRequest is null");
-        return new Whitelist().setChatId(request.getChatId()).setUsername(request.getUsername());
+        return new Whitelist()
+                .setChatId(request.getChatId())
+                .setUsername(request.getUsername())
+                .setBotType(
+                        StringUtils.isNotBlank(request.getBotType()) ? BotType.valueOf(request.getBotType()) : null);
     }
 
     public GenerateQrCode convertToGenerateQrCode(SendQrCodeRequest request) {
@@ -133,6 +145,7 @@ public class ClientConverter {
         return new GenerateQrCode()
                 .setUrl(request.getUrl())
                 .setChatId(request.getChatId())
-                .setCaption(request.getCaption());
+                .setCaption(request.getCaption())
+                .setBotType(BotType.valueOf(request.getBotType()));
     }
 }

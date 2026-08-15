@@ -40,7 +40,7 @@ public abstract class StateResolver {
         stateStorage.add(chatId, nextState);
         BotView botView = viewFacade.getEventMap().get(nextState);
 
-        String message = botView.getMessage(chatId);
+        String message = botView.getMessage(chatId, botType);
         InlineKeyboard keyboard = botView.getKeyboard(chatId, botType);
 
         Response response = new Response(chatId, botType);

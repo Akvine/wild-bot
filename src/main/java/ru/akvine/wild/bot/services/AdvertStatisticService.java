@@ -75,8 +75,8 @@ public class AdvertStatisticService {
         AdvertStatisticModel savedAdvertStatistic =
                 new AdvertStatisticModel(advertStatisticRepository.save(advertStatisticEntity));
 
-        ClientEntity client =
-                clientService.verifyExistsByChatId(advert.getClient().getChatId());
+        ClientEntity client = clientService.verifyExistsByChatIdAndBotType(
+                advert.getClient().getChatId(), advert.getClient().getBotType());
         client.decreaseOneTest();
         clientRepository.save(client);
 

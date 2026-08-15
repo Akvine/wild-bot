@@ -1,7 +1,8 @@
 package ru.akvine.wild.bot.controllers.views;
 
-import static ru.akvine.wild.bot.constants.telegram.TelegramButtonConstants.*;
+import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.*;
 
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
@@ -15,7 +16,7 @@ public class TestsMainView extends AbstractBotView {
     }
 
     @Override
-    public String getMessage(String chatId) {
+    public String getMessage(String chatId, BotType botType) {
         StringBuilder sb = new StringBuilder();
         sb.append("<b>")
                 .append(START_TEST_BUTTON_TEXT)

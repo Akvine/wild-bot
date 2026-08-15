@@ -36,6 +36,11 @@ public final class ApiErrorConstants {
 
         String LESS_THEN_MIN_VALUE_ERROR = "less.than.min.value.error";
 
+        String CHAT_ID_IS_NOT_PRESENTED_ERROR = "chatId.blank.error";
+
+        String BOT_TYPE_BLANK_ERROR = "bot.type.field.blank.error";
+        String BOT_TYPE_INVALID_ERROR = "bot.type.field.blank.error";
+
         String REGISTRATION_PASSWORD_BLANK_ERROR = "registration.password.blank.error";
         String REGISTRATION_PASSWORD_INVALID_ERROR = "registration.password.invalid.error";
     }
