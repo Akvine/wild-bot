@@ -31,6 +31,7 @@ public class ClientConverter {
                 .setFirstName(clientModel.getFirstName())
                 .setLastName(clientModel.getLastName())
                 .setAvailableTestsCount(clientModel.getAvailableTestsCount())
+                .setBotType(clientModel.getBotType().toString())
                 .setInWhitelist(clientModel.isInWhitelist())
                 .setCreatedDate(clientModel.getCreatedDate())
                 .setUpdatedDate(clientModel.getUpdatedDate())

@@ -17,6 +17,8 @@ public class ClientDto {
 
     private String lastName;
 
+    private String botType;
+
     private int availableTestsCount;
 
     private boolean inWhitelist;
