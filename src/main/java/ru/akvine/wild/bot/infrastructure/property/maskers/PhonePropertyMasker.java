@@ -3,6 +3,9 @@ package ru.akvine.wild.bot.infrastructure.property.maskers;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.enums.SensitiveDataType;
 
+/**
+ * Маскирует номер телефона, оставляя видимыми первые 4 и последние 2 символа.
+ */
 @Component
 public class PhonePropertyMasker implements PropertyMasker {
     @Override

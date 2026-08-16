@@ -9,6 +9,12 @@ import ru.akvine.wild.bot.facades.SensitivePropertyMaskersFacade;
 import ru.akvine.wild.bot.infrastructure.property.detectors.SensitiveTypeDetector;
 import ru.akvine.wild.bot.infrastructure.property.maskers.PropertyMasker;
 
+/**
+ * Реализация {@link PropertiesPrinter}, выводящая все свойства приложения одним INFO-логом.
+ * Перед выводом каждое значение прогоняется через {@link SensitiveTypeDetector}: если по имени
+ * property определяется чувствительный тип данных, значение маскируется соответствующим
+ * {@link PropertyMasker} из {@link SensitivePropertyMaskersFacade} — иначе выводится как есть.
+ */
 @Component
 @Slf4j
 @RequiredArgsConstructor

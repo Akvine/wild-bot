@@ -7,6 +7,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.infrastructure.lock.InMemoryLockProvider;
 
+/**
+ * Реализация {@link InMemoryLockProvider} поверх Redis (Redisson {@code RLock}, справедливая
+ * блокировка) — в отличие от {@code InstanceLockProvider}, координирует несколько инстансов
+ * приложения между собой. Включается только при {@code spring.redis.enabled=true}.
+ */
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true")

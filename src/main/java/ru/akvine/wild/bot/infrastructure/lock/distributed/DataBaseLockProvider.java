@@ -9,6 +9,13 @@ import ru.akvine.commons.cluster.lock.ConcurrentOperationsHelper;
 import ru.akvine.commons.cluster.lock.SLock;
 import ru.akvine.commons.cluster.lock.SLockProvider;
 
+/**
+ * Распределённая блокировка на основе БД ({@link SLockProvider}/{@link SLock}) — в отличие
+ * от {@link ru.akvine.wild.bot.infrastructure.lock.InstanceLockProvider}, координирует
+ * несколько инстансов приложения между собой. {@link #doWithLockAndTransaction} дополнительно
+ * оборачивает переданную задачу в транзакцию, гарантированно снимая блокировку в {@code finally}
+ * даже при ошибке коммита.
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j

@@ -7,6 +7,10 @@ import ru.akvine.wild.bot.entities.infrastructure.ClientSessionDataEntity;
 import ru.akvine.wild.bot.infrastructure.exceptions.NoSessionException;
 import ru.akvine.wild.bot.repositories.infrastructure.ClientSessionDataRepository;
 
+/**
+ * Реализация {@link SessionStorage} поверх БД ({@link ClientSessionDataRepository}) — сессия
+ * переживает рестарт приложения, в отличие от {@link SessionStorageInMemoryImpl}.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class SessionStorageInDatabaseImpl implements SessionStorage<String, ClientSessionData> {

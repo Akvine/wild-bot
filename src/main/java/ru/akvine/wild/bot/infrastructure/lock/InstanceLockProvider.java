@@ -8,8 +8,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.springframework.stereotype.Component;
 
 /**
- * Следует использовать только если в production-среде не более 1 инстанса приложения.
- * В противном случае стоит использовать RedisInMemoryLockProvider или DataBaseLockProvider
+ * Реализация {@link InMemoryLockProvider} на {@link ReentrantLock} внутри одного процесса —
+ * блокировки видны только в рамках текущего инстанса приложения и не координируются между
+ * несколькими инстансами. Следует использовать только если в production-среде не более
+ * 1 инстанса приложения. В противном случае стоит использовать RedisInMemoryLockProvider
+ * или DataBaseLockProvider.
  */
 @Component
 public class InstanceLockProvider implements InMemoryLockProvider {

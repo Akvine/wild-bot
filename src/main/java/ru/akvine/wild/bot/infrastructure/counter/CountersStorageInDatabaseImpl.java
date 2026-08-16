@@ -7,6 +7,10 @@ import ru.akvine.wild.bot.entities.infrastructure.IterationCounterEntity;
 import ru.akvine.wild.bot.exceptions.IterationCounterNotFoundException;
 import ru.akvine.wild.bot.repositories.infrastructure.IterationCounterRepository;
 
+/**
+ * Реализация {@link CountersStorage} поверх БД ({@link IterationCounterRepository}) — счётчик
+ * переживает рестарт приложения, в отличие от {@link CountersStorageInMemoryImpl}.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class CountersStorageInDatabaseImpl implements CountersStorage {

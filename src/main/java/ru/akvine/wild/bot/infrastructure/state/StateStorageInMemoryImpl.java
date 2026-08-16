@@ -9,6 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.infrastructure.exceptions.NoStateException;
 
+/**
+ * Реализация {@link StateStorage} поверх {@link ConcurrentHashMap} в памяти процесса: для
+ * каждого chatId хранится список состояний как стек (последний элемент — текущее состояние),
+ * что и обеспечивает работу кнопки "Назад". Не переживает рестарт приложения и не видна
+ * другим инстансам при горизонтальном масштабировании.
+ */
 @Slf4j
 public class StateStorageInMemoryImpl implements StateStorage<String, List<ClientState>> {
     private static final Map<String, List<ClientState>> STATES = new ConcurrentHashMap<>();

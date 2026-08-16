@@ -3,6 +3,10 @@ package ru.akvine.wild.bot.infrastructure.property.maskers;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.enums.SensitiveDataType;
 
+/**
+ * Маскирует email, оставляя видимыми первые 3 и последние 3 символа (например,
+ * {@code "abc********xyz"}); если значение короче 4 символов — маскирует целиком.
+ */
 @Component
 public class EmailPropertyMasker implements PropertyMasker {
 

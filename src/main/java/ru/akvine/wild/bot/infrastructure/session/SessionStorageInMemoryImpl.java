@@ -4,6 +4,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.hibernate.SessionException;
 
+/**
+ * Реализация {@link SessionStorage} поверх {@link ConcurrentHashMap} в памяти процесса —
+ * быстрее {@link SessionStorageInDatabaseImpl}, но не переживает рестарт приложения и не
+ * видна другим инстансам при горизонтальном масштабировании.
+ */
 public class SessionStorageInMemoryImpl implements SessionStorage<String, ClientSessionData> {
     private final Map<String, ClientSessionData> sessions = new ConcurrentHashMap<>();
 

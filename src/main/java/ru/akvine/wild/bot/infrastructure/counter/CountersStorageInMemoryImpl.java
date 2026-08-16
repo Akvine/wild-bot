@@ -12,6 +12,12 @@ import ru.akvine.wild.bot.exceptions.ValidationException;
 import ru.akvine.wild.bot.services.AdvertService;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 
+/**
+ * Реализация {@link CountersStorage} поверх {@link ConcurrentHashMap} в памяти процесса —
+ * при старте приложения ({@link #init()}) заводит счётчик для каждой уже запущенной кампании,
+ * чтобы не потерять их при рестарте. Быстрее {@link CountersStorageInDatabaseImpl}, но
+ * не переживает рестарт нескольких инстансов приложения без отдельной синхронизации.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class CountersStorageInMemoryImpl implements CountersStorage {

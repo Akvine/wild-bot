@@ -7,6 +7,11 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.wild.bot.entities.infrastructure.ClientSessionDataEntity;
 
+/**
+ * Данные текущего диалога клиента с ботом: выбранный тип/категория карточки, загруженное фото,
+ * вводимые новые цена/скидка, id заблокированной под тест кампании. Хранится и читается через
+ * {@link SessionStorage}; сбрасывается при завершении сценария или команде {@code /start}.
+ */
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
