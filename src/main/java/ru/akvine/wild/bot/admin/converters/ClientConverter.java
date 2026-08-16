@@ -138,7 +138,9 @@ public class ClientConverter {
                 .setChatId(request.getChatId())
                 .setUsername(request.getUsername())
                 .setBotType(
-                        StringUtils.isNotBlank(request.getBotType()) ? BotType.safeValueOf(request.getBotType()) : null);
+                        StringUtils.isNotBlank(request.getBotType())
+                                ? BotType.safeValueOf(request.getBotType())
+                                : null);
     }
 
     public GenerateQrCode convertToGenerateQrCode(SendQrCodeRequest request) {

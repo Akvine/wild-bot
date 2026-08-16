@@ -17,7 +17,6 @@ import ru.akvine.wild.bot.facades.*;
 import ru.akvine.wild.bot.facades.proxy.WildberriesProxiesFacade;
 import ru.akvine.wild.bot.infrastructure.property.maskers.PropertyMasker;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
-import ru.akvine.wild.bot.resolvers.property.PropertyParser;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
 import ru.akvine.wild.bot.services.integration.wildberries.proxy.WildberriesIntegrationServiceProxy;
@@ -51,13 +50,6 @@ public class FacadesConfig {
         Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap =
                 qrCodeGenerationServices.stream().collect(toMap(QrCodeGenerationService::getType, identity()));
         return new QrCodeGenerationServiceFacade(serviceMap);
-    }
-
-    @Bean
-    public PropertyParseFacade propertyParseFacade(List<PropertyParser<?>> propertyParsers) {
-        Map<Class<?>, PropertyParser<?>> propertiesMap =
-                propertyParsers.stream().collect(toMap(PropertyParser::getType, identity()));
-        return new PropertyParseFacade(propertiesMap);
     }
 
     @Bean

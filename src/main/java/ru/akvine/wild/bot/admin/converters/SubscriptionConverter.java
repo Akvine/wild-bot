@@ -17,7 +17,9 @@ public class SubscriptionConverter {
                 .setChatId(request.getChatId())
                 .setUsername(request.getUsername())
                 .setBotType(
-                        StringUtils.isNotBlank(request.getBotType()) ? BotType.safeValueOf(request.getBotType()) : null);
+                        StringUtils.isNotBlank(request.getBotType())
+                                ? BotType.safeValueOf(request.getBotType())
+                                : null);
     }
 
     public SubscriptionResponse convertToSubscriptionResponse(SubscriptionModel subscriptionModel) {
