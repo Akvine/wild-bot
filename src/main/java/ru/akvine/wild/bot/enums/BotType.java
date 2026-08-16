@@ -10,4 +10,14 @@ public enum BotType {
     MAX("max");
 
     private final String type;
+
+    public static BotType safeValueOf(String value) {
+        for (BotType botType : values()) {
+            if (botType.getType().equalsIgnoreCase(value)) {
+                return botType;
+            }
+        }
+
+        throw new IllegalArgumentException("Bot type = [" + value + "] is not supported by app!");
+    }
 }

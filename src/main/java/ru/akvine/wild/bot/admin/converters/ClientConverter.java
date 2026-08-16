@@ -44,7 +44,7 @@ public class ClientConverter {
                 .setTestsCount(request.getCount())
                 .setUsername(request.getUsername())
                 .setChatId(request.getChatId())
-                .setBotType(BotType.valueOf(request.getBotType()));
+                .setBotType(BotType.safeValueOf(request.getBotType()));
     }
 
     public AddTestsResponse convertToAddTestsResponse(ClientModel clientBean) {
@@ -75,7 +75,7 @@ public class ClientConverter {
             start.setUsername(request.getUsername());
         }
         if (StringUtils.isNotBlank(request.getBotType())) {
-            start.setBotType(BotType.valueOf(request.getBotType()));
+            start.setBotType(BotType.safeValueOf(request.getBotType()));
         }
 
         return start;
@@ -110,7 +110,7 @@ public class ClientConverter {
             unblockClient.setUsername(request.getUsername());
         }
         if (StringUtils.isNotBlank(request.getBotType())) {
-            unblockClient.setBotType(BotType.valueOf(request.getBotType()));
+            unblockClient.setBotType(BotType.safeValueOf(request.getBotType()));
         }
 
         return unblockClient;
@@ -138,7 +138,7 @@ public class ClientConverter {
                 .setChatId(request.getChatId())
                 .setUsername(request.getUsername())
                 .setBotType(
-                        StringUtils.isNotBlank(request.getBotType()) ? BotType.valueOf(request.getBotType()) : null);
+                        StringUtils.isNotBlank(request.getBotType()) ? BotType.safeValueOf(request.getBotType()) : null);
     }
 
     public GenerateQrCode convertToGenerateQrCode(SendQrCodeRequest request) {
@@ -147,6 +147,6 @@ public class ClientConverter {
                 .setUrl(request.getUrl())
                 .setChatId(request.getChatId())
                 .setCaption(request.getCaption())
-                .setBotType(BotType.valueOf(request.getBotType()));
+                .setBotType(BotType.safeValueOf(request.getBotType()));
     }
 }
