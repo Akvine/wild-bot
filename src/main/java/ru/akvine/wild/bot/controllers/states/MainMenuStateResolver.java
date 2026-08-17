@@ -5,7 +5,6 @@ import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.*;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
@@ -52,13 +51,7 @@ public class MainMenuStateResolver extends StateResolver {
         } else if (WILDBERRIES_ACCOUNT_SETTINGS_BUTTON_TEXT.equals(text)) {
             return setNextState(chatId, ClientState.WILDBERRIES_ACCOUNT_SETTINGS_MENU, botType);
         } else {
-
-            Response response = new Response(chatId, botType);
-            if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(new SendMessage(chatId, "Необходимо выбрать действие из меню!"));
-            }
-
-            return response.setText("Необходимо выбрать действие из меню!");
+            return resolveDefaultResponse(chatId, botType);
         }
     }
 

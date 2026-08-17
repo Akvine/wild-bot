@@ -60,11 +60,7 @@ public class AcceptNewPriceStateResolver extends StateResolver {
 
             return response.setText("Необходимо выбрать действие из меню!");
         } else {
-            if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(new SendMessage(chatId, "Необходимо выбрать действие из меню!"));
-            }
-
-            return response.setText("Необходимо выбрать действие из меню!");
+            return resolveDefaultResponse(chatId, botType);
         }
     }
 

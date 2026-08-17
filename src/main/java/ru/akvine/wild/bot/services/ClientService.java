@@ -89,9 +89,9 @@ public class ClientService {
         logger.debug("Check client is blocked by chat id = {}", chatId);
         LocalDateTime blockDateTime = clientBlockingService.getEndBlockDate(chatId, botType);
         if (blockDateTime != null) {
-            String errorMessage =
-                    String.format("Client with chat id = [%s], bot type = [%s] has blocked until = [%s]!",
-                            chatId, botType, blockDateTime);
+            String errorMessage = String.format(
+                    "Client with chat id = [%s], bot type = [%s] has blocked until = [%s]!",
+                    chatId, botType, blockDateTime);
             throw new BlockedCredentialsException(errorMessage, blockDateTime.toLocalDate());
         }
     }

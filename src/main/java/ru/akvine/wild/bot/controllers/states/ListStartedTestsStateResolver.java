@@ -2,7 +2,6 @@ package ru.akvine.wild.bot.controllers.states;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
@@ -28,8 +27,7 @@ public class ListStartedTestsStateResolver extends StateResolver {
         super.resolve(payload);
         String chatId = payload.getChatId();
         BotType botType = payload.getBotType();
-
-        return new Response(chatId, botType).setTelegramResponse(new SendMessage(chatId, "Выберите действие из меню"));
+        return resolveDefaultResponse(chatId, botType);
     }
 
     @Override

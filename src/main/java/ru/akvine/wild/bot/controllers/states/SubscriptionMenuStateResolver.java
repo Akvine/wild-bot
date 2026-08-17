@@ -68,7 +68,7 @@ public class SubscriptionMenuStateResolver extends StateResolver {
                 return new Response(chatId, "Не удалось провести платеж", botType);
             }
         } else {
-            return new Response(chatId, "Нужно выбрать действие из меню", botType);
+            return resolveDefaultResponse(chatId, botType);
         }
     }
 

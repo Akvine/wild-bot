@@ -47,7 +47,7 @@ public class TestsMenuStateResolver extends StateResolver {
         } else if (text.equals(DETAIL_TEST_INFORMATION_BUTTON_TEXT)) {
             return setNextState(chatId, ClientState.DETAIL_TEST_INFO_MENU, botType);
         } else {
-            return new Response(chatId, "Выберите действие из меню", botType);
+            return resolveDefaultResponse(chatId, botType);
         }
     }
 

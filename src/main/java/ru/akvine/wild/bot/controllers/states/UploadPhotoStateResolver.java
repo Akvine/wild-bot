@@ -66,7 +66,8 @@ public class UploadPhotoStateResolver extends StateResolver {
             photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
             photoValidator.validate(photo);
         } else {
-            String photoUrl = payload.getMessage() != null ? payload.getMessage().getMaxPhotoUrl() : null;
+            String photoUrl =
+                    payload.getMessage() != null ? payload.getMessage().getMaxPhotoUrl() : null;
             if (photoUrl == null) {
                 return response.setMaxSendMessage(
                         new MaxSendMessage().setChatId(chatId).setText("Необходимо загрузить фотографию!"));

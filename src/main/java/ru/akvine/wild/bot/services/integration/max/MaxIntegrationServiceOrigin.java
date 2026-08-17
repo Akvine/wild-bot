@@ -136,7 +136,8 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
             return response.getBody() != null ? response.getBody() : new byte[0];
         } catch (Exception exception) {
             String errorMessage = String.format(
-                    "Error while downloading MAX attachment from url = [%s]. Message = %s", fileUrl, exception.getMessage());
+                    "Error while downloading MAX attachment from url = [%s]. Message = %s",
+                    fileUrl, exception.getMessage());
             throw new IntegrationException(errorMessage);
         }
     }

@@ -4,7 +4,6 @@ import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.START_GENERA
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
@@ -13,7 +12,6 @@ import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.ReportService;
-import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
 @State
@@ -46,14 +44,7 @@ public class GenerateReportStateResolver extends StateResolver {
             telegramIntegrationService.sendFile(chatId, REPORT_FILENAME_WITH_EXTENSION, report);
             return setNextState(chatId, ClientState.FINISH_GENERATION_REPORT_MENU, botType);
         } else {
-
-            Response response = new Response(chatId, botType);
-            if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(new SendMessage(chatId, "Вывберите действие из главного меню"));
-            }
-
-            return response.setMaxSendMessage(
-                    new MaxSendMessage().setChatId(chatId).setText("Вывберите действие из главного меню"));
+            return resolveDefaultResponse(chatId, botType);
         }
     }
 

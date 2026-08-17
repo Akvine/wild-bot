@@ -34,7 +34,16 @@ public abstract class StateResolver {
         return null;
     }
 
-    public abstract ClientState getState();
+    protected abstract ClientState getState();
+
+    protected Response resolveDefaultResponse(String chatId, BotType botType) {
+        Response response = new Response(chatId, botType);
+        if (botType == BotType.TELEGRAM) {
+            return response.setTelegramResponse(new SendMessage(chatId, "Необходимо выбрать действие из меню!"));
+        }
+
+        return response.setText("Необходимо выбрать действие из меню!");
+    }
 
     protected Response setNextState(String chatId, ClientState nextState, BotType botType) {
         stateStorage.add(chatId, nextState);

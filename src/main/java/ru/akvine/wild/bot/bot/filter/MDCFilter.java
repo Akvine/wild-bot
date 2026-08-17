@@ -20,7 +20,8 @@ public class MDCFilter extends MessageFilter {
         BotType botType = payload.getBotType();
 
         try {
-            String username = clientService.getByChatIdAndBotType(chatId, botType).getUsername();
+            String username =
+                    clientService.getByChatIdAndBotType(chatId, botType).getUsername();
             if (username != null) {
                 MDC.put(MDCConstants.USERNAME, username);
             }

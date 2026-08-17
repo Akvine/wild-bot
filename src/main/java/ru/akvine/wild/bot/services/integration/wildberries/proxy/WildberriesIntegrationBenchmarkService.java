@@ -1,5 +1,9 @@
 package ru.akvine.wild.bot.services.integration.wildberries.proxy;
 
+import static ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationServiceOrigin.WildberriesApiMethods.*;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
@@ -10,11 +14,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationServiceOrigin.WildberriesApiMethods.*;
 
 @Service
 @Slf4j
@@ -64,7 +63,6 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
         } finally {
             timeMeter.stop();
         }
-
     }
 
     @Override
@@ -100,7 +98,6 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
         } finally {
             timeMeter.stop();
         }
-
     }
 
     @Override
@@ -120,7 +117,6 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
         } finally {
             timeMeter.stop();
         }
-
     }
 
     @Override
@@ -200,7 +196,6 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
         } finally {
             timeMeter.stop();
         }
-
     }
 
     @Override
@@ -384,7 +379,8 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
         }
     }
 
-    private void logExecutionTime(WildberriesIntegrationServiceOrigin.WildberriesApiMethods apiMethod, double executionTime) {
+    private void logExecutionTime(
+            WildberriesIntegrationServiceOrigin.WildberriesApiMethods apiMethod, double executionTime) {
         logger.info("[{}] api method execution time seconds: {}", apiMethod, executionTime);
     }
 }

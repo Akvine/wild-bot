@@ -4,7 +4,6 @@ import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.CHANGE_WAREH
 import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.REVOKE_TOKEN_BUTTON_TEXT;
 
 import java.util.List;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
@@ -41,13 +40,7 @@ public class WildberriesAccountSettingsMenuStateResolver extends StateResolver {
         } else if (CHANGE_WAREHOUSE_BUTTON_TEXT.equals(text)) {
             return setNextState(chatId, ClientState.CHANGE_WAREHOUSE_ID_MENU, botType);
         } else {
-            // TODO: boilerplate-код. Надо в рамках отдельного коммита убрать
-            Response response = new Response(chatId, botType);
-            if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(new SendMessage(chatId, "Необходимо выбрать действие из меню!"));
-            }
-
-            return response.setText("Необходимо выбрать действие из меню!");
+            return resolveDefaultResponse(chatId, botType);
         }
     }
 

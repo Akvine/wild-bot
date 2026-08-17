@@ -38,7 +38,7 @@ public class ChooseCategoryStateResolver extends StateResolver {
         try {
             categoryId = Integer.parseInt(text);
         } catch (NumberFormatException exception) {
-            return new Response().setChatId(chatId).setText("Необходимо выбрать категорию из списка!");
+            return resolveDefaultResponse(chatId, botType);
         }
 
         ClientSessionData sessionData = sessionStorage.get(chatId);

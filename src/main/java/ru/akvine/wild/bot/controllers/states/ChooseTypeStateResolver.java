@@ -5,7 +5,6 @@ import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.MALE_BUTTON_
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
@@ -57,12 +56,7 @@ public class ChooseTypeStateResolver extends StateResolver {
             sessionStorage.save(sessionData);
             return setNextState(chatId, ClientState.CHOOSE_CATEGORY_MENU, botType);
         } else {
-            Response response = new Response(chatId, botType);
-            if (botType == BotType.TELEGRAM) {
-                return response.setTelegramResponse(new SendMessage(chatId, "Необходимо выбрать действие из меню!"));
-            }
-
-            return response.setText("Необходимо выбрать действие из меню!");
+            return resolveDefaultResponse(chatId, botType);
         }
     }
 
