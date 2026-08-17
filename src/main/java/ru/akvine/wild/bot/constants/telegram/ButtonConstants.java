@@ -17,9 +17,9 @@ public final class ButtonConstants {
     public static final String START_TEST_BUTTON_TEXT = "Запуск теста \uD83D\uDE80";
     public static final String LIST_STARTED_TESTS_BUTTON_TEXT = "Список запущенных тестов \uD83D\uDCDD";
     public static final String FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT = "Пополнить рекламный кабинет \uD83D\uDCF2";
-    public static final String WILDBERRIES_ACCOUNT_SETTINGS_BUTTON_TEXT = "Настройки аккаунта Wildberries";
+    public static final String WILDBERRIES_ACCOUNT_SETTINGS_BUTTON_TEXT = "Настройки аккаунта";
 
-    public static final String REVOKE_TOKEN_BUTTON_TEXT = "Отозвать токен";
+    public static final String REVOKE_TOKEN_BUTTON_TEXT = "Отозвать токен Wildberries";
     public static final String CHANGE_WAREHOUSE_BUTTON_TEXT = "Сменить ID склада";
 
     public static final String DETAIL_TEST_INFORMATION_BUTTON_TEXT = "Детальная информация по тестам \uD83D\uDCCA";

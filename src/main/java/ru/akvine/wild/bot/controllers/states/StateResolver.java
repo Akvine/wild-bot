@@ -22,7 +22,7 @@ import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationServi
 public abstract class StateResolver {
     protected final StateStorage<String, List<ClientState>> stateStorage;
     protected final BotViewFacade viewFacade;
-    private final TelegramIntegrationService telegramIntegrationService;
+    protected final TelegramIntegrationService telegramIntegrationService;
 
     @Nullable
     public Response resolve(Payload payload) {
@@ -34,15 +34,19 @@ public abstract class StateResolver {
         return null;
     }
 
-    protected abstract ClientState getState();
+    public abstract ClientState getState();
 
     protected Response resolveDefaultResponse(String chatId, BotType botType) {
+        return resolveDefaultResponse(chatId, botType, "Необходимо выбрать действие из меню!");
+    }
+
+    protected Response resolveDefaultResponse(String chatId, BotType botType, String message) {
         Response response = new Response(chatId, botType);
         if (botType == BotType.TELEGRAM) {
-            return response.setTelegramResponse(new SendMessage(chatId, "Необходимо выбрать действие из меню!"));
+            return response.setTelegramResponse(new SendMessage(chatId, message));
         }
 
-        return response.setText("Необходимо выбрать действие из меню!");
+        return response.setText(message);
     }
 
     protected Response setNextState(String chatId, ClientState nextState, BotType botType) {

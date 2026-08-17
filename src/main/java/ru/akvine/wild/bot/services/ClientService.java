@@ -25,6 +25,7 @@ import ru.akvine.wild.bot.utils.UUIDGenerator;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientBlockingService clientBlockingService;
+    private final EncryptionService encryptionService;
 
     @Nullable
     public ClientModel findByChatIdAndBotType(String chatId, BotType botType) {
@@ -56,10 +57,11 @@ public class ClientService {
 
         ClientEntity clientToUpdate = verifyExistsByChatIdAndBotType(action.getChatId(), action.getBotType());
 
-        if (StringUtils.isNotBlank(clientToUpdate.getToken())
-                && !action.getTokenToUpdate().equals(clientToUpdate.getToken())) {
-            clientToUpdate.setToken(action.getTokenToUpdate());
+        if (!action.getTokenToUpdate().equals(encryptionService.decrypt(clientToUpdate.getToken()))) {
+            clientToUpdate.setToken(encryptionService.encrypt(action.getTokenToUpdate()));
         }
+
+        clientToUpdate.setUpdatedDate(LocalDateTime.now());
 
         ClientModel updatedClient = new ClientModel(clientRepository.save(clientToUpdate));
         logger.info(
