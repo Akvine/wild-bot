@@ -19,14 +19,16 @@ public class MDCFilter extends MessageFilter {
         String chatId = payload.getChatId();
         BotType botType = payload.getBotType();
 
-        String username = clientService.getByChatIdAndBotType(chatId, botType).getUsername();
-        if (username != null) {
-            MDC.put(MDCConstants.USERNAME, username);
+        try {
+            String username = clientService.getByChatIdAndBotType(chatId, botType).getUsername();
+            if (username != null) {
+                MDC.put(MDCConstants.USERNAME, username);
+            }
+            MDC.put(MDCConstants.CHAT_ID, chatId);
+            MDC.put(MDCConstants.BOT_TYPE, payload.getBotType().getType());
+            return nextMessageFilter.handle(payload);
+        } finally {
+            MDC.clear();
         }
-        MDC.put(MDCConstants.CHAT_ID, chatId);
-        MDC.put(MDCConstants.BOT_TYPE, payload.getBotType().getType());
-        Response response = nextMessageFilter.handle(payload);
-        MDC.clear();
-        return response;
     }
 }

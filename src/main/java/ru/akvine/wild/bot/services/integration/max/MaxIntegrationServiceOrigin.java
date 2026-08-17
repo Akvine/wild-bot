@@ -127,6 +127,20 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
         }
     }
 
+    @Override
+    public byte[] downloadAttachment(String fileUrl) {
+        HttpHeaders headers = buildHttpHeaders();
+        HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
+        try {
+            ResponseEntity<byte[]> response = restTemplate.exchange(fileUrl, HttpMethod.GET, httpEntity, byte[].class);
+            return response.getBody() != null ? response.getBody() : new byte[0];
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while downloading MAX attachment from url = [%s]. Message = %s", fileUrl, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+    }
+
     private HttpHeaders buildHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, maxBotToken);

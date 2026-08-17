@@ -12,6 +12,7 @@ import ru.akvine.wild.bot.enums.BotType;
 @Accessors(chain = true)
 public final class Payload {
     private String chatId;
+
     private BotType botType;
     private BotDataType botDataType;
 

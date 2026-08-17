@@ -9,7 +9,14 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 @Accessors(chain = true)
 public class Message {
     private String text;
-    private List<PhotoSize> photo;
+    private List<PhotoSize> telegramPhoto;
+
+    /**
+     * Прямая ссылка на фото-вложение сообщения MAX (см. {@code ReceivedAttachment}) — в
+     * отличие от Telegram, где фото передаётся набором {@code file_id} для скачивания через
+     * отдельный API-вызов, MAX сразу отдаёт готовый URL.
+     */
+    private String maxPhotoUrl;
 
     public boolean hasText() {
         return text != null && !text.trim().isEmpty();

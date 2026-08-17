@@ -15,6 +15,7 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
+import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.validator.PhotoValidator;
@@ -25,6 +26,7 @@ public class UploadPhotoStateResolver extends StateResolver {
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final TelegramPhotoHelper telegramPhotoHelper;
     private final TelegramIntegrationService telegramIntegrationService;
+    private final MaxIntegrationService maxIntegrationService;
     private final PhotoValidator photoValidator;
 
     @Autowired
@@ -34,11 +36,13 @@ public class UploadPhotoStateResolver extends StateResolver {
             SessionStorage<String, ClientSessionData> sessionStorage,
             TelegramPhotoHelper telegramPhotoHelper,
             TelegramIntegrationService telegramIntegrationService,
+            MaxIntegrationService maxIntegrationService,
             PhotoValidator photoValidator) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.sessionStorage = sessionStorage;
         this.telegramPhotoHelper = telegramPhotoHelper;
         this.telegramIntegrationService = telegramIntegrationService;
+        this.maxIntegrationService = maxIntegrationService;
         this.photoValidator = photoValidator;
     }
 
@@ -51,23 +55,25 @@ public class UploadPhotoStateResolver extends StateResolver {
         logger.info("[{}] state resolved", getState());
 
         Response response = new Response(chatId, botType);
-        byte[] photo = null;
+        byte[] photo;
         if (botType == BotType.TELEGRAM) {
-            if (payload.getMessage().getPhoto() == null) {
+            if (payload.getMessage().getTelegramPhoto() == null) {
                 return response.setTelegramResponse(new SendMessage(chatId, "Необходимо загрузить фотографию!"));
             }
 
             PhotoSize photoSize =
-                    telegramPhotoHelper.resolve(payload.getMessage().getPhoto());
+                    telegramPhotoHelper.resolve(payload.getMessage().getTelegramPhoto());
             photo = telegramIntegrationService.downloadPhoto(photoSize.getFileId(), chatId);
             photoValidator.validate(photo);
         } else {
-            // TODO: у MAX пока нет ни поля для фото-вложения в унифицированном Message,
-            // ни метода скачивания вложений в MaxIntegrationService - загрузка фото карточки
-            // поддерживается только через Telegram-версию бота.
-            return response.setMaxSendMessage(new MaxSendMessage()
-                    .setChatId(chatId)
-                    .setText("Загрузка фото пока не поддерживается в MAX — используйте Telegram-версию бота."));
+            String photoUrl = payload.getMessage() != null ? payload.getMessage().getMaxPhotoUrl() : null;
+            if (photoUrl == null) {
+                return response.setMaxSendMessage(
+                        new MaxSendMessage().setChatId(chatId).setText("Необходимо загрузить фотографию!"));
+            }
+
+            photo = maxIntegrationService.downloadAttachment(photoUrl);
+            photoValidator.validate(photo);
         }
 
         ClientSessionData session = sessionStorage.get(chatId);

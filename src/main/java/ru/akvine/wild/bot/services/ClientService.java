@@ -84,12 +84,14 @@ public class ClientService {
         return true;
     }
 
+    // TODO: добавить шедулер для проверки истечения блокировки
     public void checkIsBlocked(String chatId, BotType botType) {
         logger.debug("Check client is blocked by chat id = {}", chatId);
         LocalDateTime blockDateTime = clientBlockingService.getEndBlockDate(chatId, botType);
         if (blockDateTime != null) {
             String errorMessage =
-                    String.format("Client with chat id = [%s] has blocked until = [%s]!", chatId, blockDateTime);
+                    String.format("Client with chat id = [%s], bot type = [%s] has blocked until = [%s]!",
+                            chatId, botType, blockDateTime);
             throw new BlockedCredentialsException(errorMessage, blockDateTime.toLocalDate());
         }
     }
@@ -144,8 +146,4 @@ public class ClientService {
                 .map(ClientModel::new)
                 .toList();
     }
-
-    //    public ClientModel revokeToken(String chatId, BotType botType) {
-    //        logger.info("Revoke token for user with chat id = [{}], bot type = [{}]", chatId, botType);
-    //    }
 }

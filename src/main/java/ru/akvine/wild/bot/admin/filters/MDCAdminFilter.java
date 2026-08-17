@@ -19,7 +19,10 @@ public class MDCAdminFilter extends GenericFilterBean {
             throws IOException, ServletException {
         MDC.put(MDCConstants.USERNAME, ADMIN);
         MDC.put(MDCConstants.CHAT_ID, ADMIN);
-        filterChain.doFilter(servletRequest, servletResponse);
-        MDC.clear();
+        try {
+            filterChain.doFilter(servletRequest, servletResponse);
+        } finally {
+            MDC.clear();
+        }
     }
 }

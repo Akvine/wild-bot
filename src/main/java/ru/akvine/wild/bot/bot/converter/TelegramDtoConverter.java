@@ -35,6 +35,10 @@ public class TelegramDtoConverter implements BotDtoConverter<Update, BotApiMetho
             payload.setBotDataType(BotDataType.MESSAGE);
         }
 
+        if (update.hasMessage() && update.getMessage().hasPhoto()) {
+            payload.getMessage().setTelegramPhoto(update.getMessage().getPhoto());
+        }
+
         return payload;
     }
 

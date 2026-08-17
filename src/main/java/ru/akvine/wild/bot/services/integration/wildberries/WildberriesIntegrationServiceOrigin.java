@@ -576,7 +576,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Getter
     @AllArgsConstructor
-    private enum WildberriesApiMethods {
+    public enum WildberriesApiMethods {
         GET_CARD_LIST("https://suppliers-api.wildberries.ru", "/content/v2/get/cards/list?locale=ru"),
         GET_ADVERTS("https://advert-api.wb.ru", "/adv/v1/promotion/count"),
         ADVERT_BUDGET_DEPOSIT("https://advert-api.wb.ru", "/adv/v1/budget/deposit"),

@@ -34,4 +34,14 @@ public interface MaxIntegrationService {
      * Метод по отправке сообщений
      */
     void sendMessage(String chatId, SendMessageRequest request);
+
+    /**
+     * Скачивает файл вложения (например, фото карточки) по прямой ссылке, полученной в
+     * {@code payload.url} вложения входящего сообщения — в отличие от Telegram, отдельного
+     * API-метода "получить файл по токену" для этого не требуется.
+     *
+     * @param fileUrl прямая ссылка на файл
+     * @return содержимое файла
+     */
+    byte[] downloadAttachment(String fileUrl);
 }
