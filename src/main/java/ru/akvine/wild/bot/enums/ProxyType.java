@@ -20,7 +20,8 @@ public enum ProxyType {
     TRANSACTIONAL("transactional"),
     RETRY("retry"),
     EXCEPTION("exception"),
-    RATELIMITING("ratelimiting");
+    RATELIMITING("ratelimiting"),
+    VALIDATION("validation");
 
     private final String value;
 
@@ -29,22 +30,12 @@ public enum ProxyType {
             throw new IllegalArgumentException("Proxy type is blank!");
         }
 
-        return switch (value.toLowerCase()) {
-            case "lock" -> LOCK;
-            case "security" -> SECURITY;
-            case "statistic" -> STATISTIC;
-            case "logging" -> LOGGING;
-            case "cache" -> CACHE;
-            case "idempotence" -> IDEMPOTENCE;
-            case "metrics" -> METRICS;
-            case "preconditions" -> PRECONDITIONS;
-            case "benchmark" -> BENCHMARK;
-            case "tracing" -> TRACING;
-            case "transactional" -> TRANSACTIONAL;
-            case "retry" -> RETRY;
-            case "exception" -> EXCEPTION;
-            case "ratelimiting" -> RATELIMITING;
-            default -> throw new IllegalArgumentException("Proxy type with value = [" + value + "] is not supported!");
-        };
+        for (ProxyType type : values()) {
+            if (value.equalsIgnoreCase(type.getValue())) {
+                return type;
+            }
+        }
+
+        throw new IllegalArgumentException("Proxy type [" + value + "] is not supported by app!");
     }
 }

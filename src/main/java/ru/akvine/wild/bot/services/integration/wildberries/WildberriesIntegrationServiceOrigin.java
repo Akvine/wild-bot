@@ -397,13 +397,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException(errorMessage);
         }
 
-        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов /
-        // получения ответов
         AdvertFullStatisticResponse[] responses = response.getBody();
-        if (responses == null || responses.length == 0) {
-            throw new IntegrationException("Full statistic responses by dates is null or empty");
-        }
-
         logger.info("Received full statistic responses by dates = [{}]", List.of(responses));
         return responses;
     }
@@ -430,13 +424,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException(errorMessage);
         }
 
-        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов /
-        // получения ответов
         AdvertFullStatisticResponse[] responses = response.getBody();
-        if (responses == null || responses.length == 0) {
-            throw new IntegrationException("Full statistic responses by interval is null or empty");
-        }
-
         logger.info("Received full statistic responses by interval = [{}]", List.of(responses));
         return responses;
     }
@@ -470,13 +458,7 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
             throw new IntegrationException(errorMessage);
         }
 
-        // TODO: вынести валидацию из сервиса. Данный класс выступает как просто клиент для отправки запросов /
-        // получения ответов
         GetGoodsResponse response = responseEntity.getBody();
-        if (response == null) {
-            throw new IntegrationException("Get goods response is null");
-        }
-
         logger.info("Set goods new price and discount response was received = [{}]", response);
         return response;
     }
