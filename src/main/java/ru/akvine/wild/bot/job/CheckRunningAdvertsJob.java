@@ -14,6 +14,7 @@ import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
+import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
@@ -62,8 +63,10 @@ public class CheckRunningAdvertsJob {
         LocalDateTime startCheckDateTime = LocalDateTime.now();
         for (AdvertEntity advert : runningAdverts) {
             int advertId = advert.getExternalId();
+
+            String clientToken = advert.getClient().getToken();
             int currentBudgetSum =
-                    wildberriesIntegrationService.getAdvertBudgetInfo(advertId).getTotal();
+                    wildberriesIntegrationService.getAdvertBudgetInfo(advertId, clientToken).getTotal();
             int startBudgetSum = advert.getStartBudgetSum();
             int differenceBudgetSum = startBudgetSum - currentBudgetSum;
             int currentCpm = advert.getCpm();
@@ -72,13 +75,13 @@ public class CheckRunningAdvertsJob {
                 logger.info("Get statistic and pause advert with id = {}", advertId);
                 if (currentBudgetSum != 0) {
                     logger.info("Current budget for advert = [{}] not equals zero, pause advert", advert);
-                    wildberriesIntegrationService.pauseAdvert(advertId);
+                    wildberriesIntegrationService.pauseAdvert(advertId, clientToken);
                 }
-                advertStatisticService.getAndSave(advert);
+                advertStatisticService.getAndSave(advert, new ClientModel(advert.getClient()));
                 CardEntity cardEntity = advert.getCard();
                 ChangeStocksRequest request = new ChangeStocksRequest()
                         .setStocks(List.of(new SkuDto().setAmount(0).setSku(cardEntity.getBarcode())));
-                wildberriesIntegrationService.changeStocks(request, warehouseId);
+                wildberriesIntegrationService.changeStocks(request, warehouseId, clientToken);
 
                 String chatId = advert.getClient().getChatId();
                 advert.setStatus(AdvertStatus.PAUSE);
@@ -107,7 +110,7 @@ public class CheckRunningAdvertsJob {
                             .setAdvertId(advertId)
                             .setParam(advert.getCard().getCategoryId())
                             .setType(advert.getOrdinalType());
-                    wildberriesIntegrationService.changeAdvertCpm(request);
+                    wildberriesIntegrationService.changeAdvertCpm(request, clientToken);
 
                     advert.setCpm(newCpm);
                 }

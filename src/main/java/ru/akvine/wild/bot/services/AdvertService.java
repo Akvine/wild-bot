@@ -21,6 +21,7 @@ import ru.akvine.wild.bot.exceptions.AdvertNotFoundException;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 import ru.akvine.wild.bot.services.domain.CardModel;
+import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertCreateRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
@@ -133,7 +134,7 @@ public class AdvertService {
         return updatedAdvert;
     }
 
-    public AdvertModel getFirst(String cardType, int categoryId) {
+    public AdvertModel getFirst(String cardType, int categoryId, ClientModel client) {
         Preconditions.checkNotNull(cardType, "cardType is null");
         logger.info("Get first advert by card type = {} and category id = {}", cardType, categoryId);
 
@@ -173,7 +174,7 @@ public class AdvertService {
                     new ChangeStocksRequest()
                             .setStocks(List.of(
                                     new SkuDto().setAmount(changeStocksCount).setSku(cardBean.getBarcode()))),
-                    warehouseId);
+                    warehouseId, client.getToken());
 
             String advertName = "Created by API: " + LocalDateTime.now();
             AdvertCreateRequest request = new AdvertCreateRequest()
@@ -185,7 +186,7 @@ public class AdvertService {
                     .setOnPause(true)
                     .setCpm(advertMinCpm)
                     .setNms(new int[] {cardBean.getExternalId()});
-            int advertId = wildberriesIntegrationService.createAdvert(request);
+            int advertId = wildberriesIntegrationService.createAdvert(request, client.getToken());
 
             AdvertEntity advertEntity = new AdvertEntity()
                     .setUuid(UUIDGenerator.uuidWithoutDashes())

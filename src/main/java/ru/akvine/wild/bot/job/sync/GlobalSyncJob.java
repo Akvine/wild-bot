@@ -42,16 +42,18 @@ public class GlobalSyncJob {
         MDC.put(MDCConstants.USERNAME, mdcName);
         MDC.put(MDCConstants.CHAT_ID, mdcChatId);
 
-        if (syncCardTypesEnabled) {
-            cardTypeJob.sync();
+        try {
+            if (syncCardTypesEnabled) {
+                cardTypeJob.sync();
+            }
+            if (syncCardsEnabled) {
+                cardJob.sync();
+            }
+            if (syncAdvertsEnabled) {
+                advertJob.sync();
+            }
+        } finally {
+            MDC.clear();
         }
-        if (syncCardsEnabled) {
-            cardJob.sync();
-        }
-        if (syncAdvertsEnabled) {
-            advertJob.sync();
-        }
-
-        MDC.clear();
     }
 }

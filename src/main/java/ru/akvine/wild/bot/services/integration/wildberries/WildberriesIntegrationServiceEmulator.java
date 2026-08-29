@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.akvine.wild.bot.constants.ProxyConstants;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
+import ru.akvine.wild.bot.services.EncryptionService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardListResponse;
@@ -29,8 +30,7 @@ import ru.akvine.wild.bot.utils.RequestUtils;
 @Profile("local")
 @Qualifier(ProxyConstants.ORIGIN_BEAN_NAME)
 public class WildberriesIntegrationServiceEmulator implements WildberriesIntegrationService {
-    @Value("${wildberries.api.token}")
-    private String apiToken;
+    private final EncryptionService encryptionService;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -38,10 +38,10 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     private static final String FILTER_NM_ID_QUERY_PARAM = "filterNmID";
 
     @Override
-    public List<CardDto> getCards() {
+    public List<CardDto> getCards(String apiToken) {
         logger.info("Get cards");
 
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<CardListResponse> responseEntity;
@@ -60,9 +60,9 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public AdvertListResponse getAdverts() {
+    public AdvertListResponse getAdverts(String apiToken) {
         logger.info("Get adverts list");
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<AdvertListResponse> responseEntity;
@@ -85,9 +85,9 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public AdvertBudgetInfoResponse getAdvertBudgetInfo(int advertId) {
+    public AdvertBudgetInfoResponse getAdvertBudgetInfo(int advertId, String apiToken) {
         logger.info("Get budget info for advert with id = {}", advertId);
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<String> httpEntity = new HttpEntity<>("some", headers);
 
         Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
@@ -114,12 +114,12 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public AdvertBudgetDepositResponse advertBudgetDeposit(int advertId, int sum) {
+    public AdvertBudgetDepositResponse advertBudgetDeposit(int advertId, int sum, String apiToken) {
         logger.info("Deposit budget advert with id = {} and sum = {}", advertId, sum);
         AdvertBudgetDepositRequest request =
                 new AdvertBudgetDepositRequest().setReturn(true).setType(0).setSum(sum);
 
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<AdvertBudgetDepositRequest> httpEntity = new HttpEntity<>(request, headers);
 
         Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
@@ -146,9 +146,9 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public void startAdvert(int advertId) {
+    public void startAdvert(int advertId, String apiToken) {
         logger.info("Start advert with id = {}", advertId);
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<String> httpEntity = new HttpEntity<>("some", headers);
 
         Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
@@ -170,18 +170,18 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public AdvertsInfoResponse getAdvertsInfo(List<Integer> advertIds) {
+    public AdvertsInfoResponse getAdvertsInfo(List<Integer> advertIds, String apiToken) {
         logger.info("Get adverts info");
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<List<Integer>> httpEntity = new HttpEntity<>(advertIds, headers);
 
-        ResponseEntity<AdvertDto[]> responseEntity;
+        ResponseEntity<AdvertSubListResponse> responseEntity;
         try {
             responseEntity = restTemplate.postForEntity(
                     WildberriesApiMethods.GET_ADVERTS_INFO.getUrl()
                             + WildberriesApiMethods.GET_ADVERTS_INFO.getMethod(),
                     httpEntity,
-                    AdvertDto[].class);
+                    AdvertSubListResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling wb api method = [%s]. Message = [%s]",
@@ -189,20 +189,20 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
             throw new IntegrationException(errorMessage);
         }
 
-        List<AdvertDto> response = List.of(Objects.requireNonNull(responseEntity.getBody()));
+        List<AdvertDto> response = List.of(Objects.requireNonNull(responseEntity.getBody().getAdverts()));
         logger.info("Get adverts info response with size = {} was received", response.size());
         return new AdvertsInfoResponse().setAdverts(response);
     }
 
     @Override
-    public AdvertStatisticResponse getAdvertStatistic(String advertId) {
+    public AdvertStatisticResponse getAdvertStatistic(String advertId, String apiToken) {
         throw new UnsupportedOperationException("Get advert statistic method is not supported!");
     }
 
     @Override
-    public void pauseAdvert(int advertId) {
+    public void pauseAdvert(int advertId, String apiToken) {
         logger.info("Pause advert with id = {}", advertId);
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<String> httpEntity = new HttpEntity<>("some", headers);
 
         Map<String, String> queryParams = Map.of(ADVERT_QUERY_ID_PARAM, String.valueOf(advertId));
@@ -224,9 +224,9 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public void changeAdvertCpm(AdvertChangeCpmRequest request) {
+    public void changeAdvertCpm(AdvertChangeCpmRequest request, String apiToken) {
         logger.info("Change advert cpm by request {}", request);
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<AdvertChangeCpmRequest> httpEntity = new HttpEntity<>(request, headers);
 
         try {
@@ -245,11 +245,11 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public void renameAdvert(int advertId, String name) {
+    public void renameAdvert(int advertId, String name, String apiToken) {
         logger.info("Rename advert with id = {} by name = {}", advertId, name);
         AdvertRenameRequest request =
                 new AdvertRenameRequest().setAdvertId(advertId).setName(name);
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<AdvertRenameRequest> httpEntity = new HttpEntity<>(request, headers);
 
         try {
@@ -267,17 +267,19 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request) {
+    public AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request, String apiToken) {
         return new AdvertUploadPhotoResponse();
     }
 
     @Override
-    public void changeStocks(ChangeStocksRequest request, int warehouseId) {}
+    public void changeStocks(ChangeStocksRequest request, int warehouseId, String apiToken) {
+
+    }
 
     @Override
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request, String apiToken) {
         logger.info("Get advert full statistic by request = {}", request);
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<List<AdvertFullStatisticDatesDto>> httpEntity = new HttpEntity<>(request, headers);
 
         ResponseEntity<AdvertFullStatisticResponse[]> response;
@@ -300,15 +302,15 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
 
     @Override
     public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(
-            List<AdvertFullStatisticIntervalDto> request) {
+            List<AdvertFullStatisticIntervalDto> request, String apiToken) {
         return new AdvertFullStatisticResponse[0];
     }
 
     @Override
-    public GetGoodsResponse getGoods(GetGoodsRequest request) {
+    public GetGoodsResponse getGoods(GetGoodsRequest request, String apiToken) {
         logger.info("Get goods by request = {}", request);
 
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<GetGoodsRequest> httpEntity = new HttpEntity<>(headers);
 
         Map<String, String> queryParams = new HashMap<>();
@@ -336,10 +338,10 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public void setGoodPriceAndDiscount(SetGoodPriceRequest request) {
+    public void setGoodPriceAndDiscount(SetGoodPriceRequest request, String apiToken) {
         logger.info("Set goods new price and discount by request = {}", request);
 
-        HttpHeaders headers = buildHttpHeadersForJsonBody();
+        HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<SetGoodPriceRequest> httpEntity = new HttpEntity<>(request, headers);
 
         try {
@@ -358,15 +360,15 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public int createAdvert(AdvertCreateRequest request) {
+    public int createAdvert(AdvertCreateRequest request, String apiToken) {
         throw new UnsupportedOperationException("Creating advert is not supported!");
     }
 
     @Override
-    public CardTypeResponse getTypes() {
+    public CardTypeResponse getTypes(String apiToken) {
         logger.info("Get card types");
 
-        HttpHeaders headers = buildHttpHeadersInternal();
+        HttpHeaders headers = buildHttpHeadersInternal(apiToken);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<CardTypeResponse> responseEntity;
@@ -386,16 +388,16 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
         return responseEntity.getBody();
     }
 
-    private HttpHeaders buildHttpHeadersInternal() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, apiToken);
-        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+    private HttpHeaders buildHttpHeadersForJsonBody(String apiToken) {
+        HttpHeaders headers = buildHttpHeadersInternal(apiToken);
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         return headers;
     }
 
-    private HttpHeaders buildHttpHeadersForJsonBody() {
-        HttpHeaders headers = buildHttpHeadersInternal();
-        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+    private HttpHeaders buildHttpHeadersInternal(String apiToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, encryptionService.decrypt(apiToken));
+        headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         return headers;
     }
 

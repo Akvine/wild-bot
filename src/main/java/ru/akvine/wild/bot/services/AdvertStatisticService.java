@@ -15,6 +15,7 @@ import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 import ru.akvine.wild.bot.services.domain.AdvertStatisticModel;
+import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticDatesDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticIntervalDto;
@@ -32,7 +33,7 @@ public class AdvertStatisticService {
     private final ClientService clientService;
     private final AdvertService advertService;
 
-    public AdvertStatisticModel getAndSave(AdvertEntity advert) {
+    public AdvertStatisticModel getAndSave(AdvertEntity advert, ClientModel currentClient) {
         logger.info("Start getting advert full statistic for advert = [{}]", advert);
 
         AdvertStatisticEntity advertStatisticEntity =
@@ -44,7 +45,7 @@ public class AdvertStatisticService {
             List<AdvertFullStatisticDatesDto> request = List.of(new AdvertFullStatisticDatesDto()
                     .setId(advert.getExternalId())
                     .setDates(List.of(LocalDate.now().toString())));
-            response = wildberriesIntegrationService.getAdvertsFullStatisticByDates(request);
+            response = wildberriesIntegrationService.getAdvertsFullStatisticByDates(request, currentClient.getToken());
         } else {
             logger.info("Get advert with id = {} statistic by interval request", advert.getExternalId());
             List<AdvertFullStatisticIntervalDto> request = List.of(new AdvertFullStatisticIntervalDto()
@@ -53,7 +54,7 @@ public class AdvertStatisticService {
                             .setBegin(
                                     advert.getStartCheckDateTime().toLocalDate().toString())
                             .setEnd(LocalDate.now().toString())));
-            response = wildberriesIntegrationService.getAdvertsFullStatisticByInterval(request);
+            response = wildberriesIntegrationService.getAdvertsFullStatisticByInterval(request, currentClient.getToken());
         }
 
         AdvertFullStatisticResponse firstPositionResponse = response[0];

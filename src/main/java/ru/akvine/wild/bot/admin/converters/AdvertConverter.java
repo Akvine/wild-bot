@@ -18,7 +18,8 @@ public class AdvertConverter {
     public PauseAdvert convertToPauseAdvert(PauseAdvertRequest request) {
         return new PauseAdvert()
                 .setAdvertId(request.getAdvertId() == null ? null : request.getAdvertId())
-                .setAdvertUuid(StringUtils.isBlank(request.getAdvertUuid()) ? null : request.getAdvertUuid());
+                .setAdvertUuid(StringUtils.isBlank(request.getAdvertUuid()) ? null : request.getAdvertUuid())
+                .setClientUuid(request.getClientUuid());
     }
 
     public ListAdvert convertToListAdvert(ListAdvertRequest request) {
@@ -55,7 +56,8 @@ public class AdvertConverter {
         return new RenameAdvert()
                 .setAdvertId(request.getAdvertId() == null ? null : request.getAdvertId())
                 .setAdvertUuid(StringUtils.isBlank(request.getAdvertUuid()) ? null : request.getAdvertUuid())
-                .setName(request.getName());
+                .setName(request.getName())
+                .setClientUuid(request.getClientUuid());
     }
 
     public UpdateAdvert convertToUpdateAdvert(UpdateAdvertRequest request) {

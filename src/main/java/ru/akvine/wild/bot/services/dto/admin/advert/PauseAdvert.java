@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class PauseAdvert {
+    private String clientUuid;
     private String advertUuid;
     private Integer advertId;
 }

@@ -24,13 +24,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public List<CardDto> getCards() {
+    public List<CardDto> getCards(String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         List<CardDto> cards;
         try {
-            cards = targetObject.getCards();
+            cards = targetObject.getCards(apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -45,13 +45,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public AdvertListResponse getAdverts() {
+    public AdvertListResponse getAdverts(String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         AdvertListResponse response;
         try {
-            response = targetObject.getAdverts();
+            response = targetObject.getAdverts(apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -66,11 +66,11 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public AdvertBudgetInfoResponse getAdvertBudgetInfo(int advertId) {
+    public AdvertBudgetInfoResponse getAdvertBudgetInfo(int advertId, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
-        AdvertBudgetInfoResponse response = targetObject.getAdvertBudgetInfo(advertId);
+        AdvertBudgetInfoResponse response = targetObject.getAdvertBudgetInfo(advertId, apiToken);
 
         timeMeter.stop();
         double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -80,13 +80,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public AdvertBudgetDepositResponse advertBudgetDeposit(int advertId, int sum) {
+    public AdvertBudgetDepositResponse advertBudgetDeposit(int advertId, int sum, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         AdvertBudgetDepositResponse response;
         try {
-            response = targetObject.advertBudgetDeposit(advertId, sum);
+            response = targetObject.advertBudgetDeposit(advertId, sum, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -101,12 +101,12 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void startAdvert(int advertId) {
+    public void startAdvert(int advertId, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         try {
-            targetObject.startAdvert(advertId);
+            targetObject.startAdvert(advertId, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -120,13 +120,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public AdvertsInfoResponse getAdvertsInfo(List<Integer> advertIds) {
+    public AdvertsInfoResponse getAdvertsInfo(List<Integer> advertIds, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         AdvertsInfoResponse response;
         try {
-            response = targetObject.getAdvertsInfo(advertIds);
+            response = targetObject.getAdvertsInfo(advertIds, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -141,13 +141,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public AdvertStatisticResponse getAdvertStatistic(String advertId) {
+    public AdvertStatisticResponse getAdvertStatistic(String advertId, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         AdvertStatisticResponse response;
         try {
-            response = targetObject.getAdvertStatistic(advertId);
+            response = targetObject.getAdvertStatistic(advertId, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -162,12 +162,12 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void pauseAdvert(int advertId) {
+    public void pauseAdvert(int advertId, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         try {
-            targetObject.pauseAdvert(advertId);
+            targetObject.pauseAdvert(advertId, apiToken);
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
 
@@ -180,12 +180,12 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void changeAdvertCpm(AdvertChangeCpmRequest request) {
+    public void changeAdvertCpm(AdvertChangeCpmRequest request, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         try {
-            targetObject.changeAdvertCpm(request);
+            targetObject.changeAdvertCpm(request, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -199,12 +199,12 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void renameAdvert(int advertId, String name) {
+    public void renameAdvert(int advertId, String name, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         try {
-            targetObject.renameAdvert(advertId, name);
+            targetObject.renameAdvert(advertId, name, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -218,13 +218,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request) {
+    public AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         AdvertUploadPhotoResponse response;
         try {
-            response = targetObject.uploadPhoto(request);
+            response = targetObject.uploadPhoto(request, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -239,12 +239,12 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void changeStocks(ChangeStocksRequest request, int warehouseId) {
+    public void changeStocks(ChangeStocksRequest request, int warehouseId, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         try {
-            targetObject.changeStocks(request, warehouseId);
+            targetObject.changeStocks(request, warehouseId, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -258,13 +258,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         AdvertFullStatisticResponse[] response;
         try {
-            response = targetObject.getAdvertsFullStatisticByDates(request);
+            response = targetObject.getAdvertsFullStatisticByDates(request, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -280,13 +280,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
 
     @Override
     public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(
-            List<AdvertFullStatisticIntervalDto> request) {
+            List<AdvertFullStatisticIntervalDto> request, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         AdvertFullStatisticResponse[] response;
         try {
-            response = targetObject.getAdvertsFullStatisticByInterval(request);
+            response = targetObject.getAdvertsFullStatisticByInterval(request, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -301,13 +301,13 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public GetGoodsResponse getGoods(GetGoodsRequest request) {
+    public GetGoodsResponse getGoods(GetGoodsRequest request, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         GetGoodsResponse response;
         try {
-            response = targetObject.getGoods(request);
+            response = targetObject.getGoods(request, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -322,12 +322,12 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public void setGoodPriceAndDiscount(SetGoodPriceRequest request) {
+    public void setGoodPriceAndDiscount(SetGoodPriceRequest request, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         try {
-            targetObject.setGoodPriceAndDiscount(request);
+            targetObject.setGoodPriceAndDiscount(request, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -341,12 +341,12 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public int createAdvert(AdvertCreateRequest request) {
+    public int createAdvert(AdvertCreateRequest request, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 
         try {
-            int response = targetObject.createAdvert(request);
+            int response = targetObject.createAdvert(request, apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);
@@ -361,11 +361,11 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public CardTypeResponse getTypes() {
+    public CardTypeResponse getTypes(String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
         try {
-            CardTypeResponse response = targetObject.getTypes();
+            CardTypeResponse response = targetObject.getTypes(apiToken);
 
             timeMeter.stop();
             double executionTime = timeMeter.getTotalTime(TimeUnit.SECONDS);

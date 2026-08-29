@@ -8,13 +8,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
+import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.exceptions.AdvertAlreadyInPauseStateException;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.services.AdvertService;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
+import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 import ru.akvine.wild.bot.services.domain.AdvertStatisticModel;
+import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
@@ -34,6 +37,7 @@ public class AdvertAdminService {
     private final TelegramIntegrationService telegramIntegrationService;
     private final AdvertStatisticService advertStatisticService;
     private final CountersStorage countersStorage;
+    private final ClientService clientService;
 
     private static final int ADVERT_PAUSE_STATUS_CODE = 11;
 
@@ -42,6 +46,7 @@ public class AdvertAdminService {
         logger.info("Pause advert by [{}]", pauseAdvert);
 
         AdvertEntity advertEntity;
+        ClientEntity client = clientService.verifyExistsByClientUuid(pauseAdvert.getClientUuid());
         if (StringUtils.isNotBlank(pauseAdvert.getAdvertUuid())) {
             advertEntity = advertService.verifyExistsByUuid(pauseAdvert.getAdvertUuid());
         } else {
@@ -54,7 +59,7 @@ public class AdvertAdminService {
         }
 
         int advertId = advertEntity.getExternalId();
-        AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId));
+        AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId), client.getToken());
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {
             String errorMessage =
@@ -63,9 +68,10 @@ public class AdvertAdminService {
         }
         AdvertDto advertDto = advertsInfo.getFirst();
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
-            wildberriesIntegrationService.pauseAdvert(advertEntity.getExternalId());
+            wildberriesIntegrationService.pauseAdvert(advertEntity.getExternalId(), client.getToken());
         }
-        AdvertStatisticModel advertStatisticBean = advertStatisticService.getAndSave(advertEntity);
+        AdvertStatisticModel advertStatisticBean = advertStatisticService.getAndSave(advertEntity,
+                new ClientModel(client));
 
         String finishedTestMessage = String.format(
                 "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику", advertId);
@@ -89,6 +95,7 @@ public class AdvertAdminService {
         logger.info("Force pause advert by [{}]", pauseAdvert);
 
         AdvertEntity advertEntity;
+        ClientEntity client = clientService.verifyExistsByClientUuid(pauseAdvert.getClientUuid());
         if (StringUtils.isNotBlank(pauseAdvert.getAdvertUuid())) {
             advertEntity = advertService.verifyExistsByUuid(pauseAdvert.getAdvertUuid());
         } else {
@@ -101,7 +108,7 @@ public class AdvertAdminService {
         }
 
         int advertId = advertEntity.getExternalId();
-        AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId));
+        AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId), client.getToken());
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {
             String errorMessage =
@@ -110,7 +117,7 @@ public class AdvertAdminService {
         }
         AdvertDto advertDto = advertsInfo.getFirst();
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
-            wildberriesIntegrationService.pauseAdvert(advertId);
+            wildberriesIntegrationService.pauseAdvert(advertId, client.getToken());
         }
 
         Long clientId = advertEntity.getClient().getId();
@@ -142,12 +149,13 @@ public class AdvertAdminService {
         logger.info("Rename advert by [{}]", renameAdvert);
 
         AdvertEntity advertEntity;
+        ClientEntity client = clientService.verifyExistsByClientUuid(renameAdvert.getClientUuid());
         if (StringUtils.isNotBlank(renameAdvert.getAdvertUuid())) {
             advertEntity = advertService.verifyExistsByUuid(renameAdvert.getAdvertUuid());
         } else {
             advertEntity = advertService.verifyExistsByExternalId(renameAdvert.getAdvertId());
         }
-        wildberriesIntegrationService.renameAdvert(advertEntity.getExternalId(), renameAdvert.getName());
+        wildberriesIntegrationService.renameAdvert(advertEntity.getExternalId(), renameAdvert.getName(), client.getToken());
         advertEntity.setExternalTitle(renameAdvert.getName());
         advertService.update(new AdvertModel(advertEntity));
 

@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 @Data
 @Accessors(chain = true)
 public class RenameAdvert {
+    private String clientUuid;
+
     @Nullable
     private String advertUuid;
 

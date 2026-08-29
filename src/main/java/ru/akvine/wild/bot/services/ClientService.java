@@ -142,6 +142,13 @@ public class ClientService {
         return clientRepository.findAll().stream().map(ClientModel::new).toList();
     }
 
+    public List<ClientModel> getAllActive() {
+        logger.info("Get all active clients");
+        return clientRepository.findAllActive().stream()
+                .map(ClientModel::new)
+                .toList();
+    }
+
     public List<ClientModel> getAllByUsernames(List<String> usernames) {
         logger.info("Get all clients by usernames = {}", usernames);
         return clientRepository.findByUsernames(usernames).stream()

@@ -7,6 +7,8 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class RenameAdvertRequest {
+    private String clientUuid;
+
     private String advertUuid;
 
     private Integer advertId;

@@ -77,11 +77,12 @@ public class AdvertStartService {
         AdvertModel advertToStart = advertService.getByAdvertId(advertId);
         CardModel card = advertToStart.getCardModel();
         ClientEntity client = clientService.verifyExistsByChatIdAndBotType(chatId, botType);
+        String clientToken = client.getToken();
 
-        AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId);
+        AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId, clientToken);
         Integer advertTotalBudget = advertBudgetInfo.getTotal();
         if (advertTotalBudget < budgetMinSum) {
-            wildberriesIntegrationService.advertBudgetDeposit(advertId, advertBudgetSumIncreaseValue);
+            wildberriesIntegrationService.advertBudgetDeposit(advertId, advertBudgetSumIncreaseValue, clientToken);
             advertToStart.plusStartBudget(advertBudgetSumIncreaseValue);
         } else {
             advertToStart.setStartBudgetSum(advertTotalBudget);
@@ -94,10 +95,10 @@ public class AdvertStartService {
                 .setParam(advertToStart.getCardModel().getCategoryId())
                 .setCpm(advertMinCpm);
         advertToStart.setCpm(advertMinCpm);
-        wildberriesIntegrationService.changeAdvertCpm(request);
+        wildberriesIntegrationService.changeAdvertCpm(request, client.getToken());
 
         String advertStartName = "Bot:" + DateUtils.formatLocalDateTime(LocalDateTime.now()) + ":" + advertId;
-        wildberriesIntegrationService.renameAdvert(advertId, advertStartName);
+        wildberriesIntegrationService.renameAdvert(advertId, advertStartName, clientToken);
 
         if (sessionStorage.get(chatId).isInputNewCardPriceAndDiscount()) {
             SetGoodPriceRequest setGoodPriceRequest = new SetGoodPriceRequest()
@@ -105,20 +106,20 @@ public class AdvertStartService {
                             .setNmID(card.getExternalId())
                             .setPrice(sessionStorage.get(chatId).getNewCardPrice())
                             .setDiscount(sessionStorage.get(chatId).getNewCardDiscount())));
-            wildberriesIntegrationService.setGoodPriceAndDiscount(setGoodPriceRequest);
+            wildberriesIntegrationService.setGoodPriceAndDiscount(setGoodPriceRequest, clientToken);
         }
 
         AdvertUploadPhotoRequest uploadPhotoRequest = new AdvertUploadPhotoRequest()
                 .setNmId(card.getExternalId())
                 .setPhotoNumber(CARD_MAIN_PHOTO_POSITION)
                 .setUploadFile(sessionStorage.get(chatId).getUploadedCardPhoto());
-        wildberriesIntegrationService.uploadPhoto(uploadPhotoRequest);
+        wildberriesIntegrationService.uploadPhoto(uploadPhotoRequest, clientToken);
 
         ChangeStocksRequest changeStocksRequest = new ChangeStocksRequest()
                 .setStocks(List.of(new SkuDto().setSku(card.getBarcode()).setAmount(changeStocksCount)));
-        wildberriesIntegrationService.changeStocks(changeStocksRequest, warehouseId);
+        wildberriesIntegrationService.changeStocks(changeStocksRequest, warehouseId, clientToken);
 
-        wildberriesIntegrationService.startAdvert(advertId);
+        wildberriesIntegrationService.startAdvert(advertId, clientToken);
 
         LocalDateTime startDateTime = LocalDateTime.now();
         advertToStart.setNextCheckDateTime(startDateTime.plusSeconds(checkMilliseconds / 1000));

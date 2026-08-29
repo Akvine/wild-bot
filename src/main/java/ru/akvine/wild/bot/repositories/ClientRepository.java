@@ -29,4 +29,8 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
     @Query("from ClientEntity ce where ce.deleted = false and ce.deletedDate is null")
     @NotNull
     List<ClientEntity> findAll();
+
+    @Query("from ClientEntity ce where ce.token is not null and ce.deleted = false")
+    @NotNull
+    List<ClientEntity> findAllActive();
 }

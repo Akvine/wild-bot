@@ -12,14 +12,14 @@ public interface WildberriesIntegrationService {
      *
      * @return
      */
-    List<CardDto> getCards();
+    List<CardDto> getCards(String apiToken);
 
     /**
      * Получение списка рекламных кампаний продавца
      *
      * @return
      */
-    AdvertListResponse getAdverts();
+    AdvertListResponse getAdverts(String apiToken);
 
     /**
      * Узнать бюджет рекламной кампании (в рублях)
@@ -27,7 +27,7 @@ public interface WildberriesIntegrationService {
      * @param advertId идентификатор кампании в системе WB
      * @return
      */
-    AdvertBudgetInfoResponse getAdvertBudgetInfo(int advertId);
+    AdvertBudgetInfoResponse getAdvertBudgetInfo(int advertId, String apiToken);
 
     /**
      * Пополнить бюджет рекламной кампании. Сумма фиксировано пополняется на 1000 рублей
@@ -36,7 +36,7 @@ public interface WildberriesIntegrationService {
      * @param sum      сумма пополнения бюджета в рублях
      * @return
      */
-    AdvertBudgetDepositResponse advertBudgetDeposit(int advertId, int sum);
+    AdvertBudgetDepositResponse advertBudgetDeposit(int advertId, int sum, String apiToken);
 
     /**
      * Запуск рекламной кампании
@@ -44,7 +44,7 @@ public interface WildberriesIntegrationService {
      * @param advertId идентификатор кампании в системе WB
      * @return
      */
-    void startAdvert(int advertId);
+    void startAdvert(int advertId, String apiToken);
 
     /**
      * Получение детальной информации о рекламных кампаниях
@@ -52,7 +52,7 @@ public interface WildberriesIntegrationService {
      * @param advertIds список id рекламных кампаний продавца
      * @return
      */
-    AdvertsInfoResponse getAdvertsInfo(List<Integer> advertIds);
+    AdvertsInfoResponse getAdvertsInfo(List<Integer> advertIds, String apiToken);
 
     /**
      * Получение краткой статистики по кампании (количество кликов, ctr и т.д.)
@@ -60,7 +60,7 @@ public interface WildberriesIntegrationService {
      * @param advertId идентификатор кампании в системе WB
      * @return
      */
-    AdvertStatisticResponse getAdvertStatistic(String advertId);
+    AdvertStatisticResponse getAdvertStatistic(String advertId, String apiToken);
 
     /**
      * Приостановка на паузу рекламной кампании
@@ -68,7 +68,7 @@ public interface WildberriesIntegrationService {
      * @param advertId идентификатор кампании в системе WB
      * @return
      */
-    void pauseAdvert(int advertId);
+    void pauseAdvert(int advertId, String apiToken);
 
     /**
      * Изменение ставки кампании
@@ -76,7 +76,7 @@ public interface WildberriesIntegrationService {
      * @param request запрос на изменение ставки у кампании
      * @return
      */
-    void changeAdvertCpm(AdvertChangeCpmRequest request);
+    void changeAdvertCpm(AdvertChangeCpmRequest request, String apiToken);
 
     /**
      * Переименование кампании
@@ -84,14 +84,14 @@ public interface WildberriesIntegrationService {
      * @param advertId идентификатор кампании в WB
      * @param name     новое имя (Не может быть больше 100 символов)
      */
-    void renameAdvert(int advertId, String name);
+    void renameAdvert(int advertId, String name, String apiToken);
 
     /**
      * Добавление фотографии
      *
      * @param request данные запроса
      */
-    AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request);
+    AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request, String apiToken);
 
     /**
      * Изменение остатка товара (карточки) на складе
@@ -99,35 +99,35 @@ public interface WildberriesIntegrationService {
      * @param request
      * @param warehouseId - идентификатор склада
      */
-    void changeStocks(ChangeStocksRequest request, int warehouseId);
+    void changeStocks(ChangeStocksRequest request, int warehouseId, String apiToken);
 
     /**
      * Получение полной статистики по кампании за определенные даты
      *
      * @param request
      */
-    AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request);
+    AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request, String apiToken);
 
     /**
      * Получение полной статистики по кампании за интервал времени
      *
      * @param request
      */
-    AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request);
+    AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request, String apiToken);
 
     /**
      * Получение товаров
      *
      * @param request
      */
-    GetGoodsResponse getGoods(GetGoodsRequest request);
+    GetGoodsResponse getGoods(GetGoodsRequest request, String apiToken);
 
     /**
      * Установить цену и скидку для товара
      *
      * @param request
      */
-    void setGoodPriceAndDiscount(SetGoodPriceRequest request);
+    void setGoodPriceAndDiscount(SetGoodPriceRequest request, String apiToken);
 
     /**
      * Создать автоматическую рекламную кампанию.
@@ -136,11 +136,11 @@ public interface WildberriesIntegrationService {
      * @param request
      * @return
      */
-    int createAdvert(AdvertCreateRequest request);
+    int createAdvert(AdvertCreateRequest request, String apiToken);
 
     /**
      * Получение списка типов товаров (Женский, Мужской, Детский и т.д.)
      * @return список типов товаров или ошибку
      */
-    CardTypeResponse getTypes();
+    CardTypeResponse getTypes(String apiToken);
 }
