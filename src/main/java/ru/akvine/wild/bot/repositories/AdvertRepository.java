@@ -22,7 +22,7 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
             @Param("cardType") String cardType,
             @Param("categoryId") Integer categoryId);
 
-    @Query("from AdvertEntity ae join ae.client c where ae.status in :statuses " + "and "
+    @Query("from AdvertEntity ae join ae.card.ownerClient c where ae.status in :statuses " + "and "
             + "c.id = :id "
             + "and "
             + "ae.deleted = false")
@@ -34,7 +34,7 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
     @Query("from AdvertEntity ae where ae.externalId = :externalId and ae.deleted = false")
     Optional<AdvertEntity> findByExternalId(@Param("externalId") int externalId);
 
-    @Query("from AdvertEntity ae join ae.client c " + "where ae.externalId = :externalId and "
+    @Query("from AdvertEntity ae join ae.card.ownerClient c " + "where ae.externalId = :externalId and "
             + "c.id = :clientId and "
             + "ae.deleted = false")
     Optional<AdvertEntity> findByExternalIdAndClientId(

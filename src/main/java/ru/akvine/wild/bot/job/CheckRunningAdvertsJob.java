@@ -64,7 +64,7 @@ public class CheckRunningAdvertsJob {
         for (AdvertEntity advert : runningAdverts) {
             int advertId = advert.getExternalId();
 
-            String clientToken = advert.getClient().getToken();
+            String clientToken = advert.getCard().getOwnerClient().getToken();
             int currentBudgetSum =
                     wildberriesIntegrationService.getAdvertBudgetInfo(advertId, clientToken).getTotal();
             int startBudgetSum = advert.getStartBudgetSum();
@@ -77,19 +77,18 @@ public class CheckRunningAdvertsJob {
                     logger.info("Current budget for advert = [{}] not equals zero, pause advert", advert);
                     wildberriesIntegrationService.pauseAdvert(advertId, clientToken);
                 }
-                advertStatisticService.getAndSave(advert, new ClientModel(advert.getClient()));
+                advertStatisticService.getAndSave(advert, new ClientModel(advert.getCard().getOwnerClient()));
                 CardEntity cardEntity = advert.getCard();
                 ChangeStocksRequest request = new ChangeStocksRequest()
                         .setStocks(List.of(new SkuDto().setAmount(0).setSku(cardEntity.getBarcode())));
                 wildberriesIntegrationService.changeStocks(request, warehouseId, clientToken);
 
-                String chatId = advert.getClient().getChatId();
+                String chatId = advert.getCard().getOwnerClient().getChatId();
                 advert.setStatus(AdvertStatus.PAUSE);
                 advert.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
                 advert.setUpdatedDate(LocalDateTime.now());
                 advert.setNextCheckDateTime(null);
                 advert.setCheckBudgetSum(null);
-                advert.setClient(null);
                 advert.setLocked(false);
                 advertRepository.save(advert);
                 countersStorage.delete(advertId);

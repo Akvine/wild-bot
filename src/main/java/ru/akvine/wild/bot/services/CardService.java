@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.CardEntity;
 import ru.akvine.wild.bot.entities.CardTypeEntity;
+import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.exceptions.CardNotFoundException;
 import ru.akvine.wild.bot.exceptions.CardTypeNotFoundException;
 import ru.akvine.wild.bot.repositories.CardRepository;
@@ -32,11 +33,13 @@ public class CardService {
     private final CardRepository cardRepository;
     private final CardTypeRepository cardTypeRepository;
     private final CardSpecification cardSpecification;
+    private final ClientService clientService;
 
-    public List<CardModel> create(List<CardDto> cards) {
+    public List<CardModel> create(List<CardDto> cards, String clientOwnerUuid) {
         Preconditions.checkNotNull(cards, "cards is null");
         logger.info("Create cards by request with size = {}", cards.size());
 
+        ClientEntity clientOwner = clientService.verifyExistsByClientUuid(clientOwnerUuid);
         List<CardTypeEntity> cardTypes = cardTypeRepository.findAll();
         return cards.stream()
                 .map(cardDto -> {
@@ -45,6 +48,7 @@ public class CardService {
                             .setExternalId(cardDto.getNmID())
                             .setExternalTitle(cardDto.getTitle())
                             .setCategoryId(cardDto.getSubjectID())
+                            .setOwnerClient(clientOwner)
                             .setCategoryTitle(cardDto.getSubjectName());
 
                     if (cardDto.getSizes().size() > 1) {

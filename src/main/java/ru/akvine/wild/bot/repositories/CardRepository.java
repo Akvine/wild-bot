@@ -10,9 +10,9 @@ import org.springframework.data.repository.query.Param;
 import ru.akvine.wild.bot.entities.CardEntity;
 
 public interface CardRepository extends JpaRepository<CardEntity, Long>, JpaSpecificationExecutor<CardEntity> {
-    @Query("from CardEntity ce where ce.deleted = false")
+    @Query("from CardEntity ce where ce.deleted = false and ce.ownerClient.uuid = :clientUuid")
     @NotNull
-    List<CardEntity> findAll();
+    List<CardEntity> findAll(@Param("clientUuid") String clientUuid);
 
     @Query("from CardEntity ce where ce.externalId = :externalId and ce.deleted = false")
     Optional<CardEntity> findByExternalId(@Param("externalId") int externalId);

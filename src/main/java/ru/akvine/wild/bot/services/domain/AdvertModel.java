@@ -1,7 +1,5 @@
 package ru.akvine.wild.bot.services.domain;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
@@ -9,6 +7,9 @@ import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.AdvertType;
 import ru.akvine.wild.bot.services.domain.base.SoftModel;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Accessors(chain = true)
@@ -38,7 +39,6 @@ public class AdvertModel extends SoftModel {
     private LocalDateTime availableForStart;
     private boolean locked;
     private CardModel cardModel;
-    private ClientModel client;
 
     public AdvertModel(AdvertEntity advertEntity) {
         this.id = advertEntity.getId();
@@ -56,7 +56,6 @@ public class AdvertModel extends SoftModel {
         this.checkBudgetSum = advertEntity.getCheckBudgetSum();
         this.availableForStart = advertEntity.getAvailableForStart();
         this.cardModel = new CardModel(advertEntity.getCard());
-        this.client = new ClientModel(advertEntity.getClient());
 
         this.createdDate = advertEntity.getCreatedDate();
         this.updatedDate = advertEntity.getUpdatedDate();

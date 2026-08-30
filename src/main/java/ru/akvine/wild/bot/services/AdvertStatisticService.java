@@ -37,7 +37,7 @@ public class AdvertStatisticService {
         logger.info("Start getting advert full statistic for advert = [{}]", advert);
 
         AdvertStatisticEntity advertStatisticEntity =
-                verifyExistsByClientIdAndAdvertId(advert.getClient().getId(), advert.getId());
+                verifyExistsByClientIdAndAdvertId(advert.getCard().getOwnerClient().getId(), advert.getId());
 
         AdvertFullStatisticResponse[] response;
         if (DateUtils.isSameDay(advert.getStartCheckDateTime(), LocalDateTime.now())) {
@@ -70,14 +70,14 @@ public class AdvertStatisticService {
                 .setShks(firstPositionResponse.getShks())
                 .setSumPrice(firstPositionResponse.getSumPrice())
                 .setAdvertEntity(advert)
-                .setClient(advert.getClient())
+                .setClient(advert.getCard().getOwnerClient())
                 .setActive(false);
 
         AdvertStatisticModel savedAdvertStatistic =
                 new AdvertStatisticModel(advertStatisticRepository.save(advertStatisticEntity));
 
         ClientEntity client = clientService.verifyExistsByChatIdAndBotType(
-                advert.getClient().getChatId(), advert.getClient().getBotType());
+                advert.getCard().getOwnerClient().getChatId(), advert.getCard().getOwnerClient().getBotType());
         client.decreaseOneTest();
         clientRepository.save(client);
 

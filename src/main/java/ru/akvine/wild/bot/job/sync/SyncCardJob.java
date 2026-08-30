@@ -35,7 +35,7 @@ public class SyncCardJob {
 
             List<CardDto> cardsDto = wildberriesIntegrationService.getCards(activeClient.getToken());
             if (CollectionUtils.isNotEmpty(cardsDto)) {
-                List<CardEntity> cards = cardRepository.findAll();
+                List<CardEntity> cards = cardRepository.findAll(activeClient.getUuid());
                 List<Integer> cardsIdDb =
                         cards.stream().map(CardEntity::getExternalId).collect(Collectors.toList());
                 List<Integer> cardsInWb = cardsDto.stream().map(CardDto::getNmID).toList();
@@ -65,7 +65,7 @@ public class SyncCardJob {
                     List<CardDto> newCardsDto = cardsDto.stream()
                             .filter(cardDto -> uniqueCardsInWb.contains(cardDto.getNmID()))
                             .collect(Collectors.toList());
-                    cardService.create(newCardsDto);
+                    cardService.create(newCardsDto, activeClient.getUuid());
                 }
             }
         }

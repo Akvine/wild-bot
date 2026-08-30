@@ -75,12 +75,11 @@ public class AdvertAdminService {
 
         String finishedTestMessage = String.format(
                 "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику", advertId);
-        telegramIntegrationService.sendMessage(advertEntity.getClient().getChatId(), finishedTestMessage);
+        telegramIntegrationService.sendMessage(advertEntity.getCard().getOwnerClient().getChatId(), finishedTestMessage);
 
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
-        advertEntity.setClient(null);
         advertEntity.setLocked(false);
         AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));
 
@@ -107,7 +106,7 @@ public class AdvertAdminService {
         }
 
         int advertId = advertEntity.getExternalId();
-        String clientToken = advertEntity.getClient().getToken();
+        String clientToken = advertEntity.getCard().getOwnerClient().getToken();
         AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId), clientToken);
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {
@@ -120,7 +119,7 @@ public class AdvertAdminService {
             wildberriesIntegrationService.pauseAdvert(advertId, clientToken);
         }
 
-        Long clientId = advertEntity.getClient().getId();
+        Long clientId = advertEntity.getCard().getOwnerClient().getId();
         AdvertStatisticEntity advertStatistic =
                 advertStatisticService.verifyExistsByClientIdAndAdvertId(clientId, advertEntity.getId());
         advertStatisticService.delete(advertStatistic);
@@ -128,7 +127,6 @@ public class AdvertAdminService {
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
-//        advertEntity.setClient(null);
         advertEntity.setLocked(false);
         advertEntity.setAvailableForStart(DateUtils.getStartOfNextDay());
         AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));

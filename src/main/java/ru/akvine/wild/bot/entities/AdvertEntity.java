@@ -1,14 +1,15 @@
 package ru.akvine.wild.bot.entities;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.entities.base.SoftBaseEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.AdvertType;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -65,10 +66,6 @@ public class AdvertEntity extends SoftBaseEntity {
 
     @Column(name = "AVAILABLE_FOR_START")
     private LocalDateTime availableForStart = LocalDateTime.now();
-
-    @OneToOne
-    @JoinColumn(name = "LAUNCHED_BY_CLIENT_ID")
-    private ClientEntity client;
 
     @Column(name = "IS_LOCKED", nullable = false)
     private boolean locked;

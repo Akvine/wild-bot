@@ -36,6 +36,10 @@ public class CardEntity extends SoftBaseEntity {
     @Column(name = "BARCODE", nullable = false)
     private String barcode;
 
+    @JoinColumn(name = "CLIENT_ID", nullable = false)
+    @ManyToOne
+    private ClientEntity ownerClient;
+
     @ManyToOne
     @JoinColumn(name = "CARD_TYPE_ID", nullable = false)
     private CardTypeEntity cardType;

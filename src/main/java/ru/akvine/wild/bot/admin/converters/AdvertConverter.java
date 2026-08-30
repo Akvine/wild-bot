@@ -83,6 +83,6 @@ public class AdvertConverter {
                 .setAvailable(advertBean.isAvailableForStart())
                 .setCreatedDate(advertBean.getCreatedDate())
                 .setUpdatedDate(advertBean.getUpdatedDate())
-                .setClientOwnerUuid(advertBean.getClient().getUuid());
+                .setClientOwnerUuid(advertBean.getCardModel().getOwnerClient().getUuid());
     }
 }

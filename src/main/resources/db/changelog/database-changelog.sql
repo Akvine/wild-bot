@@ -416,3 +416,13 @@ ALTER TABLE CLIENT_ENTITY ADD TOKEN VARCHAR(255);
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'WAREHOUSE_ID' and upper(table_name) = 'CLIENT_ENTITY';
 ALTER TABLE CLIENT_ENTITY ADD WAREHOUSE_ID INTEGER;
+
+--changeset akvine:TG-BOT-1-25
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'CLIENT_ID' and upper(table_name) = 'CARD_ENTITY';
+ALTER TABLE CARD_ENTITY ADD CLIENT_ID BIGINT NOT NULL;
+
+--changeset akvine:TG-BOT-1-26
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(column_name) = 'LAUNCHED_BY_CLIENT_ID' and upper(table_name) = 'ADVERT_ENTITY';
+ALTER TABLE ADVERT_ENTITY DROP COLUMN LAUNCHED_BY_CLIENT_ID;

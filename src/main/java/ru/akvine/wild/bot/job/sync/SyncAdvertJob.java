@@ -88,7 +88,7 @@ public class SyncAdvertJob {
                                 .filter(advertDto -> advertDto.getAdvertParams() != null
                                         && advertDto.getAdvertParams().getSubject() != null)
                                 .collect(Collectors.toList());
-                        advertService.saveAll(filteredAdverts, activeClient.getUuid());
+                        advertService.saveAll(filteredAdverts);
 
                         batchSavedCount += filteredAdverts.size();
                         batchNumber += 1;

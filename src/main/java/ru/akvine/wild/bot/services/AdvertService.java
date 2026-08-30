@@ -1,18 +1,12 @@
 package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
-import io.micrometer.common.util.StringUtils;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.CardEntity;
-import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.AdvertType;
 import ru.akvine.wild.bot.enums.BotType;
@@ -28,6 +22,11 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,14 +52,13 @@ public class AdvertService {
     @Value("${wildberries.change.stocks.count}")
     private int changeStocksCount;
 
-    public void saveAll(List<AdvertDto> adverts, String clientUuid) {
+    public void saveAll(List<AdvertDto> adverts) {
         Preconditions.checkNotNull(adverts, "loadedAdverts is null");
         logger.info("Save new adverts, size = {}", adverts.size());
 
         adverts.forEach(advertDto -> {
             CardEntity card = cardService.verifyExistsByExternalId(
                     advertDto.getAdvertParams().getNms().getFirst());
-            ClientEntity client = clientService.verifyExistsByClientUuid(clientUuid);
             AdvertEntity advertEntity = new AdvertEntity()
                     .setUuid(UUIDGenerator.uuidWithoutDashes())
                     .setExternalId(advertDto.getAdvertId())
@@ -70,8 +68,7 @@ public class AdvertService {
                     .setOrdinalType(advertDto.getType())
                     .setStatus(AdvertStatus.getByCode(advertDto.getStatus()))
                     .setOrdinalStatus(advertDto.getStatus())
-                    .setCard(card)
-                    .setClient(client);
+                    .setCard(card);
             if (advertDto.getAdvertParams() != null) {
                 advertEntity.setCpm(advertDto.getAdvertParams().getCpm());
             }
@@ -111,11 +108,7 @@ public class AdvertService {
                 .findByUuid(advertBean.getUuid())
                 .orElseThrow(() ->
                         new AdvertNotFoundException("Advert with uuid = [" + advertBean.getUuid() + "] not found!"));
-        if (StringUtils.isNotBlank(advertBean.getChatId())) {
-            ClientEntity client = clientService.verifyExistsByChatIdAndBotType(
-                    advertBean.getClient().getChatId(), advertBean.getClient().getBotType());
-            advertEntity.setClient(client);
-        }
+
         advertEntity
                 .setStartBudgetSum(advertBean.getStartBudgetSum())
                 .setNextCheckDateTime(advertBean.getNextCheckDateTime())
