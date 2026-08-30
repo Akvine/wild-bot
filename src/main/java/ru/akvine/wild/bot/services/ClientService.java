@@ -108,7 +108,7 @@ public class ClientService {
 
     public ClientModel getByChatIdAndBotType(String chatId, BotType botType) {
         Preconditions.checkNotNull(chatId, "chatId is null");
-        logger.debug("Get client by uuid = {}", chatId);
+        logger.debug("Get client by chat id = {} and bot type = {}", chatId, botType);
         return new ClientModel(verifyExistsByChatIdAndBotType(chatId, botType));
     }
 

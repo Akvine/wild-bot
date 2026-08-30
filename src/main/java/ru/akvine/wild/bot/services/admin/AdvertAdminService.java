@@ -95,7 +95,6 @@ public class AdvertAdminService {
         logger.info("Force pause advert by [{}]", pauseAdvert);
 
         AdvertEntity advertEntity;
-        ClientEntity client = clientService.verifyExistsByClientUuid(pauseAdvert.getClientUuid());
         if (StringUtils.isNotBlank(pauseAdvert.getAdvertUuid())) {
             advertEntity = advertService.verifyExistsByUuid(pauseAdvert.getAdvertUuid());
         } else {
@@ -108,7 +107,8 @@ public class AdvertAdminService {
         }
 
         int advertId = advertEntity.getExternalId();
-        AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId), client.getToken());
+        String clientToken = advertEntity.getClient().getToken();
+        AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId), clientToken);
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {
             String errorMessage =
@@ -117,7 +117,7 @@ public class AdvertAdminService {
         }
         AdvertDto advertDto = advertsInfo.getFirst();
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
-            wildberriesIntegrationService.pauseAdvert(advertId, client.getToken());
+            wildberriesIntegrationService.pauseAdvert(advertId, clientToken);
         }
 
         Long clientId = advertEntity.getClient().getId();
@@ -128,7 +128,7 @@ public class AdvertAdminService {
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
-        advertEntity.setClient(null);
+//        advertEntity.setClient(null);
         advertEntity.setLocked(false);
         advertEntity.setAvailableForStart(DateUtils.getStartOfNextDay());
         AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));

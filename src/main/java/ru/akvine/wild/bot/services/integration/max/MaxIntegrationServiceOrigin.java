@@ -1,10 +1,5 @@
 package ru.akvine.wild.bot.services.integration.max;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
-import javax.net.ssl.SSLContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -27,7 +22,16 @@ import ru.akvine.wild.bot.services.integration.max.dto.request.GetMessagesReques
 import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
 import ru.akvine.wild.bot.services.integration.max.dto.response.GetMessagesResponse;
 import ru.akvine.wild.bot.services.integration.max.dto.response.LongPoolingSubscriptionResponse;
+import ru.akvine.wild.bot.utils.ByteUtils;
 import ru.akvine.wild.bot.utils.RequestUtils;
+
+import javax.net.ssl.SSLContext;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 @Service
 public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
@@ -129,11 +133,11 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
 
     @Override
     public byte[] downloadAttachment(String fileUrl) {
-        HttpHeaders headers = buildHttpHeaders();
-        HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
         try {
-            ResponseEntity<byte[]> response = restTemplate.exchange(fileUrl, HttpMethod.GET, httpEntity, byte[].class);
-            return response.getBody() != null ? response.getBody() : new byte[0];
+            URL url = new URL(fileUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            return ByteUtils.convertToBytes(connection.getInputStream());
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while downloading MAX attachment from url = [%s]. Message = %s",

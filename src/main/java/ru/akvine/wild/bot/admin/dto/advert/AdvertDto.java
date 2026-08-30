@@ -25,4 +25,5 @@ public class AdvertDto {
     private boolean isAvailable;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
+    private String clientOwnerUuid;
 }

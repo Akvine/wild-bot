@@ -53,13 +53,14 @@ public class AdvertService {
     @Value("${wildberries.change.stocks.count}")
     private int changeStocksCount;
 
-    public void saveAll(List<AdvertDto> adverts) {
+    public void saveAll(List<AdvertDto> adverts, String clientUuid) {
         Preconditions.checkNotNull(adverts, "loadedAdverts is null");
         logger.info("Save new adverts, size = {}", adverts.size());
 
         adverts.forEach(advertDto -> {
             CardEntity card = cardService.verifyExistsByExternalId(
                     advertDto.getAdvertParams().getNms().getFirst());
+            ClientEntity client = clientService.verifyExistsByClientUuid(clientUuid);
             AdvertEntity advertEntity = new AdvertEntity()
                     .setUuid(UUIDGenerator.uuidWithoutDashes())
                     .setExternalId(advertDto.getAdvertId())
@@ -69,7 +70,8 @@ public class AdvertService {
                     .setOrdinalType(advertDto.getType())
                     .setStatus(AdvertStatus.getByCode(advertDto.getStatus()))
                     .setOrdinalStatus(advertDto.getStatus())
-                    .setCard(card);
+                    .setCard(card)
+                    .setClient(client);
             if (advertDto.getAdvertParams() != null) {
                 advertEntity.setCpm(advertDto.getAdvertParams().getCpm());
             }

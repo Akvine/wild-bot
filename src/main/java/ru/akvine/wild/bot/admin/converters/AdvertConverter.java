@@ -82,6 +82,7 @@ public class AdvertConverter {
                 .setAvailableForStart(advertBean.getAvailableForStart())
                 .setAvailable(advertBean.isAvailableForStart())
                 .setCreatedDate(advertBean.getCreatedDate())
-                .setUpdatedDate(advertBean.getUpdatedDate());
+                .setUpdatedDate(advertBean.getUpdatedDate())
+                .setClientOwnerUuid(advertBean.getClient().getUuid());
     }
 }

@@ -176,6 +176,12 @@
             <version>1.85.2</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-webp</artifactId>
+            <version>3.14.0</version>
+            <scope>compile</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
