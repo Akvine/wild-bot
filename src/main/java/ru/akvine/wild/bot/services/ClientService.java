@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.ClientEntity;
@@ -144,9 +143,7 @@ public class ClientService {
 
     public List<ClientModel> getAllActive() {
         logger.info("Get all active clients");
-        return clientRepository.findAllActive().stream()
-                .map(ClientModel::new)
-                .toList();
+        return clientRepository.findAllActive().stream().map(ClientModel::new).toList();
     }
 
     public List<ClientModel> getAllByUsernames(List<String> usernames) {

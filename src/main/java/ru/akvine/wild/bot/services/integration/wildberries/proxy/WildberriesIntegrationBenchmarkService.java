@@ -258,7 +258,8 @@ public class WildberriesIntegrationBenchmarkService extends WildberriesIntegrati
     }
 
     @Override
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request, String apiToken) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(
+            List<AdvertFullStatisticDatesDto> request, String apiToken) {
         StopWatch timeMeter = new StopWatch();
         timeMeter.start();
 

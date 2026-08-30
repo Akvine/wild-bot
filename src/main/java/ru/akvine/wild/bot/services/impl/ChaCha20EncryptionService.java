@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.services.impl;
 
+import java.nio.charset.StandardCharsets;
 import org.bouncycastle.crypto.engines.ChaChaEngine;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
@@ -8,16 +9,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.services.EncryptionService;
 
-import java.nio.charset.StandardCharsets;
-
 @Service
 public class ChaCha20EncryptionService implements EncryptionService {
 
     private final byte[] keyBytes;
     private final byte[] ivBytes;
 
-    public ChaCha20EncryptionService(@Value("${crypt.chacha20.secret.key}") String chaChaSecretKey,
-                                     @Value("${crypt.chacha20.iv}") String chaChaIv) {
+    public ChaCha20EncryptionService(
+            @Value("${crypt.chacha20.secret.key}") String chaChaSecretKey,
+            @Value("${crypt.chacha20.iv}") String chaChaIv) {
         keyBytes = Hex.decode(chaChaSecretKey);
         ivBytes = Hex.decode(chaChaIv);
     }

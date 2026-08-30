@@ -36,8 +36,8 @@ public class AdvertStatisticService {
     public AdvertStatisticModel getAndSave(AdvertEntity advert, ClientModel currentClient) {
         logger.info("Start getting advert full statistic for advert = [{}]", advert);
 
-        AdvertStatisticEntity advertStatisticEntity =
-                verifyExistsByClientIdAndAdvertId(advert.getCard().getOwnerClient().getId(), advert.getId());
+        AdvertStatisticEntity advertStatisticEntity = verifyExistsByClientIdAndAdvertId(
+                advert.getCard().getOwnerClient().getId(), advert.getId());
 
         AdvertFullStatisticResponse[] response;
         if (DateUtils.isSameDay(advert.getStartCheckDateTime(), LocalDateTime.now())) {
@@ -54,7 +54,8 @@ public class AdvertStatisticService {
                             .setBegin(
                                     advert.getStartCheckDateTime().toLocalDate().toString())
                             .setEnd(LocalDate.now().toString())));
-            response = wildberriesIntegrationService.getAdvertsFullStatisticByInterval(request, currentClient.getToken());
+            response =
+                    wildberriesIntegrationService.getAdvertsFullStatisticByInterval(request, currentClient.getToken());
         }
 
         AdvertFullStatisticResponse firstPositionResponse = response[0];
@@ -77,7 +78,8 @@ public class AdvertStatisticService {
                 new AdvertStatisticModel(advertStatisticRepository.save(advertStatisticEntity));
 
         ClientEntity client = clientService.verifyExistsByChatIdAndBotType(
-                advert.getCard().getOwnerClient().getChatId(), advert.getCard().getOwnerClient().getBotType());
+                advert.getCard().getOwnerClient().getChatId(),
+                advert.getCard().getOwnerClient().getBotType());
         client.decreaseOneTest();
         clientRepository.save(client);
 

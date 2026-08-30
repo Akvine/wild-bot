@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.job.sync;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -10,9 +12,6 @@ import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j

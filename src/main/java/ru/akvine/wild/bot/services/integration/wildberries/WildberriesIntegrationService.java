@@ -106,14 +106,16 @@ public interface WildberriesIntegrationService {
      *
      * @param request
      */
-    AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request, String apiToken);
+    AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(
+            List<AdvertFullStatisticDatesDto> request, String apiToken);
 
     /**
      * Получение полной статистики по кампании за интервал времени
      *
      * @param request
      */
-    AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request, String apiToken);
+    AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(
+            List<AdvertFullStatisticIntervalDto> request, String apiToken);
 
     /**
      * Получение товаров

@@ -77,11 +77,14 @@ public class SyncAdvertJob {
                     int batchSavedCount = 0;
                     for (int i = 0; i < uniqueAdvertsInWb.size(); i += batchSize) {
                         logger.info(
-                                "Get info for adverts by batch with number = {} and max size = {}. Client uuid = [{}]", batchNumber, batchSize,
+                                "Get info for adverts by batch with number = {} and max size = {}. Client uuid = [{}]",
+                                batchNumber,
+                                batchSize,
                                 activeClient.getUuid());
                         List<Integer> advertIdsBatch =
                                 uniqueAdvertsInWb.subList(i, Math.min(i + batchSize, uniqueAdvertsInWb.size()));
-                        AdvertsInfoResponse response = wildberriesIntegrationService.getAdvertsInfo(advertIdsBatch, apiToken);
+                        AdvertsInfoResponse response =
+                                wildberriesIntegrationService.getAdvertsInfo(advertIdsBatch, apiToken);
                         List<AdvertDto> filteredAdverts = response.getAdverts().stream()
                                 .filter(advertDto -> advertDto.getStatus() == AdvertStatus.PAUSE.getCode()
                                         || advertDto.getStatus() == AdvertStatus.READY_FOR_START.getCode())

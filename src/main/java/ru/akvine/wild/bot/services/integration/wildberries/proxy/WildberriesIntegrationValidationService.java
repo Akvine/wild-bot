@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.services.integration.wildberries.proxy;
 
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.enums.ProxyType;
@@ -8,8 +9,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
-
-import java.util.List;
 
 /**
  * Единая точка для валидации входные и выходных данных
@@ -94,7 +93,8 @@ public class WildberriesIntegrationValidationService extends WildberriesIntegrat
     }
 
     @Override
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request, String apiToken) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(
+            List<AdvertFullStatisticDatesDto> request, String apiToken) {
         validateToken(apiToken);
         AdvertFullStatisticResponse[] responses = targetObject.getAdvertsFullStatisticByDates(request, apiToken);
 
@@ -106,7 +106,8 @@ public class WildberriesIntegrationValidationService extends WildberriesIntegrat
     }
 
     @Override
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request, String apiToken) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(
+            List<AdvertFullStatisticIntervalDto> request, String apiToken) {
         validateToken(apiToken);
 
         AdvertFullStatisticResponse[] responses = targetObject.getAdvertsFullStatisticByInterval(request, apiToken);

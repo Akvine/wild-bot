@@ -65,8 +65,9 @@ public class CheckRunningAdvertsJob {
             int advertId = advert.getExternalId();
 
             String clientToken = advert.getCard().getOwnerClient().getToken();
-            int currentBudgetSum =
-                    wildberriesIntegrationService.getAdvertBudgetInfo(advertId, clientToken).getTotal();
+            int currentBudgetSum = wildberriesIntegrationService
+                    .getAdvertBudgetInfo(advertId, clientToken)
+                    .getTotal();
             int startBudgetSum = advert.getStartBudgetSum();
             int differenceBudgetSum = startBudgetSum - currentBudgetSum;
             int currentCpm = advert.getCpm();
@@ -77,7 +78,8 @@ public class CheckRunningAdvertsJob {
                     logger.info("Current budget for advert = [{}] not equals zero, pause advert", advert);
                     wildberriesIntegrationService.pauseAdvert(advertId, clientToken);
                 }
-                advertStatisticService.getAndSave(advert, new ClientModel(advert.getCard().getOwnerClient()));
+                advertStatisticService.getAndSave(
+                        advert, new ClientModel(advert.getCard().getOwnerClient()));
                 CardEntity cardEntity = advert.getCard();
                 ChangeStocksRequest request = new ChangeStocksRequest()
                         .setStocks(List.of(new SkuDto().setAmount(0).setSku(cardEntity.getBarcode())));

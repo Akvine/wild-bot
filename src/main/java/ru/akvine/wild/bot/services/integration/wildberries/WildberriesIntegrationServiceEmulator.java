@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -189,7 +188,8 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
             throw new IntegrationException(errorMessage);
         }
 
-        List<AdvertDto> response = List.of(Objects.requireNonNull(responseEntity.getBody().getAdverts()));
+        List<AdvertDto> response =
+                List.of(Objects.requireNonNull(responseEntity.getBody().getAdverts()));
         logger.info("Get adverts info response with size = {} was received", response.size());
         return new AdvertsInfoResponse().setAdverts(response);
     }
@@ -272,12 +272,11 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
     }
 
     @Override
-    public void changeStocks(ChangeStocksRequest request, int warehouseId, String apiToken) {
-
-    }
+    public void changeStocks(ChangeStocksRequest request, int warehouseId, String apiToken) {}
 
     @Override
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request, String apiToken) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(
+            List<AdvertFullStatisticDatesDto> request, String apiToken) {
         logger.info("Get advert full statistic by request = {}", request);
         HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<List<AdvertFullStatisticDatesDto>> httpEntity = new HttpEntity<>(request, headers);

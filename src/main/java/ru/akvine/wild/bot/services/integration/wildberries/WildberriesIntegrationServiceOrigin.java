@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.services.integration.wildberries;
 
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import java.util.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
 import ru.akvine.wild.bot.utils.RequestUtils;
-
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -378,7 +377,8 @@ public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrati
 
     @Override
     @RateLimiter(name = "wb-get-adverts-full-statistic-by-dates")
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request, String apiToken) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(
+            List<AdvertFullStatisticDatesDto> request, String apiToken) {
         logger.info("Get advert full statistic by request = {}", request);
         HttpHeaders headers = buildHttpHeadersForJsonBody(apiToken);
         HttpEntity<List<AdvertFullStatisticDatesDto>> httpEntity = new HttpEntity<>(request, headers);

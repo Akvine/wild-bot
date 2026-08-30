@@ -59,7 +59,8 @@ public class AdvertAdminService {
         }
 
         int advertId = advertEntity.getExternalId();
-        AdvertsInfoResponse infoResponse = wildberriesIntegrationService.getAdvertsInfo(List.of(advertId), client.getToken());
+        AdvertsInfoResponse infoResponse =
+                wildberriesIntegrationService.getAdvertsInfo(List.of(advertId), client.getToken());
         List<AdvertDto> advertsInfo = infoResponse.getAdverts();
         if (advertsInfo.isEmpty()) {
             String errorMessage =
@@ -70,12 +71,13 @@ public class AdvertAdminService {
         if (advertDto.getStatus() != ADVERT_PAUSE_STATUS_CODE) {
             wildberriesIntegrationService.pauseAdvert(advertEntity.getExternalId(), client.getToken());
         }
-        AdvertStatisticModel advertStatisticBean = advertStatisticService.getAndSave(advertEntity,
-                new ClientModel(client));
+        AdvertStatisticModel advertStatisticBean =
+                advertStatisticService.getAndSave(advertEntity, new ClientModel(client));
 
         String finishedTestMessage = String.format(
                 "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику", advertId);
-        telegramIntegrationService.sendMessage(advertEntity.getCard().getOwnerClient().getChatId(), finishedTestMessage);
+        telegramIntegrationService.sendMessage(
+                advertEntity.getCard().getOwnerClient().getChatId(), finishedTestMessage);
 
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);
@@ -153,7 +155,8 @@ public class AdvertAdminService {
         } else {
             advertEntity = advertService.verifyExistsByExternalId(renameAdvert.getAdvertId());
         }
-        wildberriesIntegrationService.renameAdvert(advertEntity.getExternalId(), renameAdvert.getName(), client.getToken());
+        wildberriesIntegrationService.renameAdvert(
+                advertEntity.getExternalId(), renameAdvert.getName(), client.getToken());
         advertEntity.setExternalTitle(renameAdvert.getName());
         advertService.update(new AdvertModel(advertEntity));
 

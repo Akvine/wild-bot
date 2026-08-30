@@ -79,7 +79,8 @@ public class AdvertStartService {
         ClientEntity client = clientService.verifyExistsByChatIdAndBotType(chatId, botType);
         String clientToken = client.getToken();
 
-        AdvertBudgetInfoResponse advertBudgetInfo = wildberriesIntegrationService.getAdvertBudgetInfo(advertId, clientToken);
+        AdvertBudgetInfoResponse advertBudgetInfo =
+                wildberriesIntegrationService.getAdvertBudgetInfo(advertId, clientToken);
         Integer advertTotalBudget = advertBudgetInfo.getTotal();
         if (advertTotalBudget < budgetMinSum) {
             wildberriesIntegrationService.advertBudgetDeposit(advertId, advertBudgetSumIncreaseValue, clientToken);

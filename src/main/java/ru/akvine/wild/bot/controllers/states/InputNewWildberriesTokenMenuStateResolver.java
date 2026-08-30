@@ -1,7 +1,6 @@
 package ru.akvine.wild.bot.controllers.states;
 
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -30,7 +29,8 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
             StateStorage<String, List<ClientState>> stateStorage,
             BotViewFacade viewFacade,
             TelegramIntegrationService telegramIntegrationService,
-            ClientService clientService, MaxIntegrationService maxIntegrationService,
+            ClientService clientService,
+            MaxIntegrationService maxIntegrationService,
             @Value("${wildberries.api.token.validate.enabled}") boolean apiTokenValidateEnable,
             @Value("${wildberries.api.token.validate.pattern}") String apiTokenPattern) {
         super(stateStorage, viewFacade, telegramIntegrationService);
@@ -48,8 +48,7 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
         String token = payload.getMessage().getText();
         BotType botType = payload.getBotType();
 
-        ClientUpdate action =
-                new ClientUpdate().setChatId(chatId).setBotType(botType);
+        ClientUpdate action = new ClientUpdate().setChatId(chatId).setBotType(botType);
         if (apiTokenValidateEnabled && StringUtils.isNotBlank(apiTokenPattern)) {
             if (token.matches(apiTokenPattern)) {
                 action.setTokenToUpdate(token);

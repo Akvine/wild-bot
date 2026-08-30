@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.controllers.views;
 
+import static ru.akvine.wild.bot.constants.DbLockConstants.UPLOAD_PHOTO_LOCK;
+
 import org.springframework.util.CollectionUtils;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
@@ -17,8 +19,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GetGoodsRe
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GetGoodsResponse;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GoodDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GoodSizeDto;
-
-import static ru.akvine.wild.bot.constants.DbLockConstants.UPLOAD_PHOTO_LOCK;
 
 @View
 public class IsChangePriceView extends AbstractBotView {

@@ -1,6 +1,10 @@
 package ru.akvine.wild.bot.services;
 
 import com.google.common.base.Preconditions;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,11 +26,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
-
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -169,7 +168,8 @@ public class AdvertService {
                     new ChangeStocksRequest()
                             .setStocks(List.of(
                                     new SkuDto().setAmount(changeStocksCount).setSku(cardBean.getBarcode()))),
-                    warehouseId, client.getToken());
+                    warehouseId,
+                    client.getToken());
 
             String advertName = "Created by API: " + LocalDateTime.now();
             AdvertCreateRequest request = new AdvertCreateRequest()

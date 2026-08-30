@@ -1,5 +1,12 @@
 package ru.akvine.wild.bot.services.integration.max;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import javax.net.ssl.SSLContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -24,14 +31,6 @@ import ru.akvine.wild.bot.services.integration.max.dto.response.GetMessagesRespo
 import ru.akvine.wild.bot.services.integration.max.dto.response.LongPoolingSubscriptionResponse;
 import ru.akvine.wild.bot.utils.ByteUtils;
 import ru.akvine.wild.bot.utils.RequestUtils;
-
-import javax.net.ssl.SSLContext;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 
 @Service
 public class MaxIntegrationServiceOrigin implements MaxIntegrationService {

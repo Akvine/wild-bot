@@ -38,7 +38,8 @@ public class SyncCardJob {
                 List<CardEntity> cards = cardRepository.findAll(activeClient.getUuid());
                 List<Integer> cardsIdDb =
                         cards.stream().map(CardEntity::getExternalId).collect(Collectors.toList());
-                List<Integer> cardsInWb = cardsDto.stream().map(CardDto::getNmID).toList();
+                List<Integer> cardsInWb =
+                        cardsDto.stream().map(CardDto::getNmID).toList();
 
                 List<Integer> commonElements = new ArrayList<>(cardsInWb);
                 commonElements.retainAll(cardsIdDb);
@@ -50,7 +51,10 @@ public class SyncCardJob {
                 uniqueCardsInDb.removeAll(commonElements);
 
                 if (CollectionUtils.isNotEmpty(uniqueCardsInDb)) {
-                    logger.info("Delete unused db cards. Size = {}. Client uuid = [{}]", uniqueCardsInDb.size(), activeClient.getUuid());
+                    logger.info(
+                            "Delete unused db cards. Size = {}. Client uuid = [{}]",
+                            uniqueCardsInDb.size(),
+                            activeClient.getUuid());
                     cards.stream()
                             .filter(cardEntity -> uniqueCardsInDb.contains(cardEntity.getExternalId()))
                             .forEach(cardEntity -> {
@@ -61,7 +65,10 @@ public class SyncCardJob {
                 }
 
                 if (CollectionUtils.isNotEmpty(uniqueCardsInWb)) {
-                    logger.info("Save new cards in db. Size = {}. Client uuid = [{}]", uniqueCardsInWb.size(), activeClient.getUuid());
+                    logger.info(
+                            "Save new cards in db. Size = {}. Client uuid = [{}]",
+                            uniqueCardsInWb.size(),
+                            activeClient.getUuid());
                     List<CardDto> newCardsDto = cardsDto.stream()
                             .filter(cardDto -> uniqueCardsInWb.contains(cardDto.getNmID()))
                             .collect(Collectors.toList());

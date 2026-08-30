@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.services.domain;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
@@ -7,9 +9,6 @@ import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.AdvertType;
 import ru.akvine.wild.bot.services.domain.base.SoftModel;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Accessors(chain = true)
