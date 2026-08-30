@@ -8,18 +8,18 @@ import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
 import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.max.MaxKeyboardFactory;
+import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 
 @Component
 public class AcceptNewPriceViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId) {
-        Button changePriceButton = MaxKeyboardFactory.callbackButton(CHANGE_PRICE_BUTTON_TEXT);
-        Button keepPriceButton = MaxKeyboardFactory.callbackButton(KEEP_PRICE_BUTTON_TEXT);
+        Button changePriceButton = MaxComponentsFactory.callbackButton(CHANGE_PRICE_BUTTON_TEXT);
+        Button keepPriceButton = MaxComponentsFactory.callbackButton(KEEP_PRICE_BUTTON_TEXT);
 
-        Button[][] keyboard = MaxKeyboardFactory.createVerticalKeyboard(
-                changePriceButton, keepPriceButton, MaxKeyboardFactory.getBackButton());
+        Button[][] keyboard = MaxComponentsFactory.createVerticalKeyboard(
+                changePriceButton, keepPriceButton, MaxComponentsFactory.getBackButton());
         return new InlineKeyboard(keyboard);
     }
 

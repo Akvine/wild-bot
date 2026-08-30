@@ -8,19 +8,19 @@ import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
 import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.max.MaxKeyboardFactory;
+import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 
 @Component
 public class WildberriesAccountSettingsMenuMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId) {
-        Button revokeTokenButton = MaxKeyboardFactory.callbackButton(REVOKE_TOKEN_BUTTON_TEXT);
-        Button changeWarehouseIdButton = MaxKeyboardFactory.callbackButton(CHANGE_WAREHOUSE_BUTTON_TEXT);
-        Button backButton = MaxKeyboardFactory.getBackButton();
+        Button revokeTokenButton = MaxComponentsFactory.callbackButton(REVOKE_TOKEN_BUTTON_TEXT);
+        Button changeWarehouseIdButton = MaxComponentsFactory.callbackButton(CHANGE_WAREHOUSE_BUTTON_TEXT);
+        Button backButton = MaxComponentsFactory.getBackButton();
 
         Button[][] keyboard =
-                MaxKeyboardFactory.createVerticalKeyboard(revokeTokenButton, changeWarehouseIdButton, backButton);
+                MaxComponentsFactory.createVerticalKeyboard(revokeTokenButton, changeWarehouseIdButton, backButton);
 
         return new InlineKeyboard(keyboard);
     }

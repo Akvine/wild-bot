@@ -1,10 +1,14 @@
 package ru.akvine.wild.bot.services.integration.max;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 import java.util.Map;
 import javax.net.ssl.SSLContext;
 import lombok.AllArgsConstructor;
@@ -21,14 +25,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
+import ru.akvine.wild.bot.services.integration.max.dto.AttachmentType;
 import ru.akvine.wild.bot.services.integration.max.dto.Message;
 import ru.akvine.wild.bot.services.integration.max.dto.Update;
 import ru.akvine.wild.bot.services.integration.max.dto.request.GetMessagesRequest;
 import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
-import ru.akvine.wild.bot.services.integration.max.dto.response.GetMessagesResponse;
-import ru.akvine.wild.bot.services.integration.max.dto.response.LongPoolingSubscriptionResponse;
+import ru.akvine.wild.bot.services.integration.max.dto.response.*;
 import ru.akvine.wild.bot.utils.ByteUtils;
 import ru.akvine.wild.bot.utils.RequestUtils;
 
@@ -145,6 +151,111 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
         }
     }
 
+    @Override
+    public String getUploadFileUrl(AttachmentType type) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, maxBotToken);
+        headers.add(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br");
+        headers.add(HttpHeaders.ACCEPT, "*/*");
+        HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
+
+        String url = RequestUtils.buildUri(
+                maxUrl + MaxApiMethods.GET_UPLOAD_FILE_URL.getEndpoint(),
+                Map.of("type", type.toString().toLowerCase()));
+
+        ResponseEntity<GetUploadFileUrlResponse> response;
+        try {
+            response = restTemplate.exchange(
+                    url, MaxApiMethods.GET_UPLOAD_FILE_URL.getMethod(), httpEntity, GetUploadFileUrlResponse.class);
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling MAX api method = [%s]. Message = %s",
+                    MaxApiMethods.GET_UPLOAD_FILE_URL, exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+
+        return response.getBody().getUrl();
+    }
+
+    @Override
+    public String uploadFileAtServer(String url, byte[] file, String filename) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("data", new MultipartByteArrayResource(file, filename));
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<UploadFileAtServerResponse> response;
+        try {
+            response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, UploadFileAtServerResponse.class);
+        } catch (Exception exception) {
+            String errorMessage =
+                    String.format("Error while uploading file at server for MAX. Message = %s", exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+
+        return response.getBody().getToken();
+    }
+
+    @Override
+    public String uploadImageAtServer(String url, byte[] image, String imageName) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("data", new MultipartByteArrayResource(image, imageName));
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        URI uri = URI.create(url);
+        ResponseEntity<String> response;
+        try {
+            response = restTemplate.exchange(uri, HttpMethod.POST, requestEntity, String.class);
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while uploading image at server for MAX. Message = %s", exception.getMessage());
+            throw new IntegrationException(errorMessage);
+        }
+
+        String responseBody = response.getBody();
+        try {
+            JsonNode root = new ObjectMapper().readTree(responseBody);
+
+            if (root.has("error_code")) {
+                String errorCode = root.get("error_code").asText();
+                String errorData =
+                        root.has("error_data") ? root.get("error_data").asText() : "";
+                throw new IntegrationException(
+                        String.format("Server returned error: code=%s, data=%s", errorCode, errorData));
+            }
+
+            JsonNode photosNode = root.get("photos");
+            if (photosNode == null || !photosNode.isObject()) {
+                throw new IntegrationException("Response does not contain 'photos' field");
+            }
+
+            Iterator<Map.Entry<String, JsonNode>> fields = photosNode.fields();
+            if (!fields.hasNext()) {
+                throw new IntegrationException("No entries in 'photos' object");
+            }
+
+            Map.Entry<String, JsonNode> firstPhotoEntry = fields.next();
+            JsonNode tokenNode = firstPhotoEntry.getValue().get("token");
+            if (tokenNode == null) {
+                throw new IntegrationException("Response does not contain 'token' field inside photo entry");
+            }
+
+            return tokenNode.asText();
+        } catch (IntegrationException e) {
+            throw e;
+        } catch (Exception exception) {
+            throw new IntegrationException(
+                    "Bad response while uploading image at server for MAX. Message = " + exception.getMessage());
+        }
+    }
+
     private HttpHeaders buildHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, maxBotToken);
@@ -184,7 +295,8 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
         LONG_POOLING_SUBSCRIPTIONS_GET("/updates", HttpMethod.GET),
 
         GET_MESSAGES("/messages", HttpMethod.GET),
-        SEND_MESSAGE("/messages", HttpMethod.POST);
+        SEND_MESSAGE("/messages", HttpMethod.POST),
+        GET_UPLOAD_FILE_URL("/uploads", HttpMethod.POST);
 
         private final String endpoint;
         private final HttpMethod method;

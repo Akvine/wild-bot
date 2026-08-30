@@ -10,6 +10,7 @@ import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.AdvertAlreadyInPauseStateException;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.services.AdvertService;
@@ -22,7 +23,7 @@ import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.UpdateAdvert;
-import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
@@ -34,7 +35,7 @@ import ru.akvine.wild.bot.utils.DateUtils;
 public class AdvertAdminService {
     private final AdvertService advertService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
-    private final TelegramIntegrationService telegramIntegrationService;
+    private final BotIntegrationAdapter botIntegrationAdapter;
     private final AdvertStatisticService advertStatisticService;
     private final CountersStorage countersStorage;
     private final ClientService clientService;
@@ -74,10 +75,11 @@ public class AdvertAdminService {
         AdvertStatisticModel advertStatisticBean =
                 advertStatisticService.getAndSave(advertEntity, new ClientModel(client));
 
+        String chatId = advertEntity.getCard().getOwnerClient().getChatId();
+        BotType botType = advertEntity.getCard().getOwnerClient().getBotType();
         String finishedTestMessage = String.format(
                 "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику", advertId);
-        telegramIntegrationService.sendMessage(
-                advertEntity.getCard().getOwnerClient().getChatId(), finishedTestMessage);
+        botIntegrationAdapter.sendMessage(chatId, botType, finishedTestMessage);
 
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);

@@ -8,18 +8,18 @@ import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
 import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.max.MaxKeyboardFactory;
+import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 
 @Component
 public class ChooseTypeViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId) {
-        Button maleButton = MaxKeyboardFactory.callbackButton(MALE_BUTTON_TEXT);
-        Button femaleButton = MaxKeyboardFactory.callbackButton(FEMALE_BUTTON_TEXT);
+        Button maleButton = MaxComponentsFactory.callbackButton(MALE_BUTTON_TEXT);
+        Button femaleButton = MaxComponentsFactory.callbackButton(FEMALE_BUTTON_TEXT);
 
-        Button[][] keyboard =
-                MaxKeyboardFactory.createVerticalKeyboard(maleButton, femaleButton, MaxKeyboardFactory.getBackButton());
+        Button[][] keyboard = MaxComponentsFactory.createVerticalKeyboard(
+                maleButton, femaleButton, MaxComponentsFactory.getBackButton());
         return new InlineKeyboard(keyboard);
     }
 

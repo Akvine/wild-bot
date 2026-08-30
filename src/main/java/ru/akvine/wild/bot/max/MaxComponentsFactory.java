@@ -4,6 +4,7 @@ import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.BACK_BUTTON_
 
 import lombok.experimental.UtilityClass;
 import ru.akvine.wild.bot.services.integration.max.dto.Attachment;
+import ru.akvine.wild.bot.services.integration.max.dto.AttachmentType;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 import ru.akvine.wild.bot.services.integration.max.dto.Payload;
 
@@ -15,7 +16,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.Payload;
  * {@code callback_data} у Telegram-кнопок.
  */
 @UtilityClass
-public class MaxKeyboardFactory {
+public class MaxComponentsFactory {
     private static final String CALLBACK_BUTTON_TYPE = "callback";
     private static final String INLINE_KEYBOARD_ATTACHMENT_TYPE = "inline_keyboard";
 
@@ -53,5 +54,17 @@ public class MaxKeyboardFactory {
      */
     public Attachment toInlineKeyboardAttachment(Button[][] buttons) {
         return new Attachment().setType(INLINE_KEYBOARD_ATTACHMENT_TYPE).setPayload(new Payload().setButtons(buttons));
+    }
+
+    /**
+     * Создает attachment при отправке файла
+     * @param token токен для отправки файла
+     * @return {@link Attachment}
+     */
+    public Attachment[] createFileAttachment(AttachmentType type, String token) {
+        Attachment attachment =
+                new Attachment().setType(type.toString().toLowerCase()).setPayload(new Payload().setToken(token));
+
+        return new Attachment[] {attachment};
     }
 }

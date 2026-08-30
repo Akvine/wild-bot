@@ -5,13 +5,13 @@ import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
 import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.max.MaxKeyboardFactory;
+import ru.akvine.wild.bot.max.MaxComponentsFactory;
 
 @Component
 public class InputNewWildberriesTokenMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId) {
-        return new InlineKeyboard(MaxKeyboardFactory.getBackKeyboard());
+        return new InlineKeyboard(MaxComponentsFactory.getBackKeyboard());
     }
 
     @Override

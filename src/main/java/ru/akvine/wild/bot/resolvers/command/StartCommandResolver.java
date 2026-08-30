@@ -15,7 +15,7 @@ import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.max.MaxKeyboardFactory;
+import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 
 @Component
@@ -55,7 +55,7 @@ public class StartCommandResolver implements CommandResolver {
         MaxSendMessage maxSendMessage = new MaxSendMessage().setChatId(chatId).setText(message);
         if (keyboardMarkup.getMaxButtons() != null) {
             maxSendMessage.setAttachments(
-                    List.of(MaxKeyboardFactory.toInlineKeyboardAttachment(keyboardMarkup.getMaxButtons())));
+                    List.of(MaxComponentsFactory.toInlineKeyboardAttachment(keyboardMarkup.getMaxButtons())));
         }
 
         return response.setMaxSendMessage(maxSendMessage);

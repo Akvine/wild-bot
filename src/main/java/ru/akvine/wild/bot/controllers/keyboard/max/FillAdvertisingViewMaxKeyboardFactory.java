@@ -7,17 +7,17 @@ import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
 import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.max.MaxKeyboardFactory;
+import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 
 @Component
 public class FillAdvertisingViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId) {
-        Button queryQrCodeButton = MaxKeyboardFactory.callbackButton(QUERY_QR_CODE_BUTTON_TEXT);
+        Button queryQrCodeButton = MaxComponentsFactory.callbackButton(QUERY_QR_CODE_BUTTON_TEXT);
 
         Button[][] keyboard =
-                MaxKeyboardFactory.createVerticalKeyboard(queryQrCodeButton, MaxKeyboardFactory.getBackButton());
+                MaxComponentsFactory.createVerticalKeyboard(queryQrCodeButton, MaxComponentsFactory.getBackButton());
         return new InlineKeyboard(keyboard);
     }
 

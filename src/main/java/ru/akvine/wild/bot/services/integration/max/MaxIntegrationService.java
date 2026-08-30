@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.services.integration.max;
 
+import ru.akvine.wild.bot.services.integration.max.dto.AttachmentType;
 import ru.akvine.wild.bot.services.integration.max.dto.Message;
 import ru.akvine.wild.bot.services.integration.max.dto.Update;
 import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
@@ -44,4 +45,29 @@ public interface MaxIntegrationService {
      * @return содержимое файла
      */
     byte[] downloadAttachment(String fileUrl);
+
+    /**
+     * Метод для получения url для прикрепления файла во вложение
+     * @param type тип вложения (image, file, video, audio и т.д.)
+     * @return URL для прикрепления файла
+     */
+    String getUploadFileUrl(AttachmentType type);
+
+    /**
+     * Загружает файл на файловый хостинг-сервис MAX
+     * @param url ссылка, по которой необходимо загрузить файл (получается на шаге getUploadFileUrl)
+     * @param file файл в байтовом представлении
+     * @return токен
+     */
+    String uploadFileAtServer(String url, byte[] file, String fileName);
+
+    /**
+     * Загружает изображение на файловый хостинг-сервис MAX
+     *
+     * @param url ссылка, по которой необходимо загрузить файл (получается на шаге getUploadFileUrl)
+     * @param image изображение в байтовом представлении
+     * @param imageName название изображения
+     * @return токен
+     */
+    String uploadImageAtServer(String url, byte[] image, String imageName);
 }

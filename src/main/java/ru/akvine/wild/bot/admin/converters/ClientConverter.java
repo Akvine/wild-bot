@@ -121,7 +121,8 @@ public class ClientConverter {
         return new SendMessage()
                 .setMessage(request.getMessage())
                 .setChatIds(request.getChatIds())
-                .setUsernames(request.getUsernames());
+                .setUsernames(request.getUsernames())
+                .setBotType(BotType.safeValueOf(request.getBotType()));
     }
 
     private BlockClientDto buildBlockClientDto(BlockClientEntry entry) {

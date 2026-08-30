@@ -11,13 +11,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.wild.bot.constants.MDCConstants;
 import ru.akvine.wild.bot.entities.SubscriptionEntity;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
-import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 
 @RequiredArgsConstructor
 @Slf4j
 public class SubscriptionJob {
-    private final TelegramIntegrationService telegramIntegrationService;
+    private final BotIntegrationAdapter botIntegrationAdapter;
     private final SubscriptionRepository subscriptionRepository;
     private final String mdcName;
     private final String mdcChatId;
@@ -50,12 +51,13 @@ public class SubscriptionJob {
                         <= notifyDaysBefore)
                 .forEach(subscription -> {
                     String chatId = subscription.getClient().getChatId();
+                    BotType botType = subscription.getClient().getBotType();
                     long daysBeforeExpire = Duration.between(LocalDateTime.now(), subscription.getExpiresAt())
                             .toDays();
                     String message = String.format(
                             "Уважаемый пользователь! Уведомляем вас о том, что через %s дня у вас заканчивается подписка на бота",
                             daysBeforeExpire);
-                    telegramIntegrationService.sendMessage(chatId, message);
+                    botIntegrationAdapter.sendMessage(chatId, botType, message);
                     subscription.setNotifiedThatExpires(true);
                     subscriptionRepository.save(subscription);
                 });

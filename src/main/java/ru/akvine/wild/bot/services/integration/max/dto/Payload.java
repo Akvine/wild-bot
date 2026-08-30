@@ -12,4 +12,9 @@ public class Payload {
      * в MAX Bot API: POST /messages).
      */
     private Button[][] buttons;
+
+    /**
+     * Токен для загрузки медиафайлов
+     */
+    private String token;
 }

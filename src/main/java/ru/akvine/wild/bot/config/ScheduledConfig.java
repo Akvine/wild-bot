@@ -19,9 +19,9 @@ import ru.akvine.wild.bot.job.sync.*;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
+import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
 import ru.akvine.wild.bot.services.integration.property.PropertyService;
-import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 
 @Configuration
@@ -43,10 +43,10 @@ public class ScheduledConfig {
             WildberriesIntegrationService wildberriesIntegrationService,
             CountersStorage countersStorage,
             AdvertStatisticService advertStatisticService,
-            TelegramIntegrationService telegramIntegrationService) {
+            BotIntegrationAdapter botIntegrationAdapter) {
         return new CheckRunningAdvertsJob(
                 advertRepository,
-                telegramIntegrationService,
+                botIntegrationAdapter,
                 wildberriesIntegrationService,
                 countersStorage,
                 advertStatisticService,
@@ -57,9 +57,9 @@ public class ScheduledConfig {
 
     @Bean
     public SubscriptionJob subscriptionJob(
-            TelegramIntegrationService telegramIntegrationService, SubscriptionRepository subscriptionRepository) {
+            BotIntegrationAdapter botIntegrationAdapter, SubscriptionRepository subscriptionRepository) {
         return new SubscriptionJob(
-                telegramIntegrationService, subscriptionRepository, SubscriptionJob.class.getSimpleName(), SYSTEM);
+                botIntegrationAdapter, subscriptionRepository, SubscriptionJob.class.getSimpleName(), SYSTEM);
     }
 
     @Bean

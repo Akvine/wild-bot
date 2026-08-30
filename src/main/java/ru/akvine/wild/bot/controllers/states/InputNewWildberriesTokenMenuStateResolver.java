@@ -12,8 +12,8 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.dto.ClientUpdate;
+import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
-import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
 @State
@@ -21,6 +21,7 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
     private final ClientService clientService;
 
     private final MaxIntegrationService maxIntegrationService;
+    private final BotIntegrationAdapter botIntegrationAdapter;
 
     private final boolean apiTokenValidateEnabled;
     private final String apiTokenPattern;
@@ -31,11 +32,13 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
             TelegramIntegrationService telegramIntegrationService,
             ClientService clientService,
             MaxIntegrationService maxIntegrationService,
+            BotIntegrationAdapter botIntegrationAdapter,
             @Value("${wildberries.api.token.validate.enabled}") boolean apiTokenValidateEnable,
             @Value("${wildberries.api.token.validate.pattern}") String apiTokenPattern) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.clientService = clientService;
         this.maxIntegrationService = maxIntegrationService;
+        this.botIntegrationAdapter = botIntegrationAdapter;
 
         this.apiTokenValidateEnabled = apiTokenValidateEnable;
         this.apiTokenPattern = apiTokenPattern;
@@ -60,11 +63,7 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
         }
 
         clientService.update(action);
-        if (botType == BotType.TELEGRAM) {
-            telegramIntegrationService.sendMessage(chatId, "Токен успешно обновлен!");
-        } else {
-            maxIntegrationService.sendMessage(chatId, new SendMessageRequest().setText("Токен успешно обновлен!"));
-        }
+        botIntegrationAdapter.sendMessage(chatId, botType, "Токен успешно обновлен!");
         return setNextState(chatId, stateStorage.removeCurrentAndGetPrevious(chatId), botType);
     }
 

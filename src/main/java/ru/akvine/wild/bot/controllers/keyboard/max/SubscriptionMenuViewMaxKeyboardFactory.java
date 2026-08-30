@@ -7,17 +7,17 @@ import ru.akvine.wild.bot.bot.dto.InlineKeyboard;
 import ru.akvine.wild.bot.controllers.keyboard.BotKeyboardFactory;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
-import ru.akvine.wild.bot.max.MaxKeyboardFactory;
+import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 
 @Component
 public class SubscriptionMenuViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId) {
-        Button paySubscriptionButton = MaxKeyboardFactory.callbackButton(PAY_SUBSCRIPTION_BUTTON_TEXT);
-        Button backButton = MaxKeyboardFactory.getBackButton();
+        Button paySubscriptionButton = MaxComponentsFactory.callbackButton(PAY_SUBSCRIPTION_BUTTON_TEXT);
+        Button backButton = MaxComponentsFactory.getBackButton();
 
-        Button[][] keyboard = MaxKeyboardFactory.createVerticalKeyboard(paySubscriptionButton, backButton);
+        Button[][] keyboard = MaxComponentsFactory.createVerticalKeyboard(paySubscriptionButton, backButton);
         return new InlineKeyboard(keyboard);
     }
 

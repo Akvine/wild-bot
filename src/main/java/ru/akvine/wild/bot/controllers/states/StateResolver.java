@@ -13,7 +13,7 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
-import ru.akvine.wild.bot.max.MaxKeyboardFactory;
+import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
@@ -68,7 +68,7 @@ public abstract class StateResolver {
                     new MaxSendMessage().setChatId(chatId).setText(message);
             if (keyboard.getMaxButtons() != null) {
                 maxSendMessage.setAttachments(
-                        List.of(MaxKeyboardFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
+                        List.of(MaxComponentsFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
             }
             response.setMaxSendMessage(maxSendMessage);
         }

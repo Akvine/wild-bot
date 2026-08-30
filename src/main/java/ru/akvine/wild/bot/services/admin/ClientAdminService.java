@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +23,10 @@ import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
+import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
 import ru.akvine.wild.bot.services.integration.qrcode.dto.GenerateQrCodeRequest;
-import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.utils.DateUtils;
 
 @Service
@@ -36,7 +37,7 @@ public class ClientAdminService {
     private final ClientService clientService;
     // TODO : лучше делать обновление сущности в ClientService, так по канону
     private final ClientRepository clientRepository;
-    private final TelegramIntegrationService telegramIntegrationService;
+    private final BotIntegrationAdapter botIntegrationAdapter;
     private final QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade;
 
     @Value("${qraft.integration.enabled}")
@@ -152,6 +153,7 @@ public class ClientAdminService {
         logger.info("Send message by request = {}", sendMessage);
 
         String message = sendMessage.getMessage();
+        BotType botType = sendMessage.getBotType();
         List<ClientModel> activeClients;
         if (!CollectionUtils.isEmpty(sendMessage.getChatIds())) {
             activeClients = clientService.getByListChatId(sendMessage.getChatIds());
@@ -161,7 +163,7 @@ public class ClientAdminService {
                 throw new ClientNotFoundException(errorMessage);
             }
 
-            sendMessageInternal(activeClients, message);
+            sendMessageInternal(activeClients, botType, message);
             return;
         }
 
@@ -173,12 +175,12 @@ public class ClientAdminService {
                 throw new ClientNotFoundException(errorMessage);
             }
 
-            sendMessageInternal(activeClients, message);
+            sendMessageInternal(activeClients, botType, message);
             return;
         }
 
         activeClients = clientService.getAll();
-        sendMessageInternal(activeClients, message);
+        sendMessageInternal(activeClients, botType, message);
     }
 
     public void addToWhitelist(Whitelist whitelist) {
@@ -258,15 +260,12 @@ public class ClientAdminService {
         }
 
         logger.info("Successful generate qr code");
-
-        if (BotType.TELEGRAM == botType) {
-            telegramIntegrationService.sendImage(chatId, image, caption);
-        }
+        botIntegrationAdapter.sendImage(chatId, botType, image, caption);
     }
 
-    private void sendMessageInternal(List<ClientModel> activeClients, String message) {
-        List<String> activeChatIds =
-                activeClients.stream().map(ClientModel::getChatId).collect(Collectors.toList());
-        telegramIntegrationService.sendMessage(activeChatIds, message);
+    private void sendMessageInternal(List<ClientModel> activeClients, BotType botType, String message) {
+        Set<String> activeChatIds =
+                activeClients.stream().map(ClientModel::getChatId).collect(Collectors.toSet());
+        botIntegrationAdapter.sendMessage(activeChatIds, botType, message);
     }
 }

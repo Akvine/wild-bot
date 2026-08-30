@@ -5,7 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -118,7 +118,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
     }
 
     @Override
-    public void sendMessage(List<String> chatIds, String message) {
+    public void sendMessage(Set<String> chatIds, String message) {
         logger.info("Send message = [{}] to chat with ids = {}", message, chatIds);
 
         try {

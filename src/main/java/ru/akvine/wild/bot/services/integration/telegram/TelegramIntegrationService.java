@@ -1,7 +1,7 @@
 package ru.akvine.wild.bot.services.integration.telegram;
 
 import java.io.InputStream;
-import java.util.List;
+import java.util.Set;
 import ru.akvine.wild.bot.enums.BotDataType;
 
 public interface TelegramIntegrationService {
@@ -44,7 +44,7 @@ public interface TelegramIntegrationService {
      * @param message сообщение
      */
     default void sendMessage(String chatId, String message) {
-        sendMessage(List.of(chatId), message);
+        sendMessage(Set.of(chatId), message);
     }
 
     /**
@@ -53,7 +53,7 @@ public interface TelegramIntegrationService {
      * @param chatIds идентификаторы чатов пользователей
      * @param message сообщение
      */
-    void sendMessage(List<String> chatIds, String message);
+    void sendMessage(Set<String> chatIds, String message);
 
     /**
      * Отправка изображения пользователю

@@ -268,6 +268,7 @@ public class WildberriesIntegrationServiceEmulator implements WildberriesIntegra
 
     @Override
     public AdvertUploadPhotoResponse uploadPhoto(AdvertUploadPhotoRequest request, String apiToken) {
+        // TODO: нужно реализовать
         return new AdvertUploadPhotoResponse();
     }
 

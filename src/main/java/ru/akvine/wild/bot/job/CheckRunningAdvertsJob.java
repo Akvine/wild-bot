@@ -15,7 +15,7 @@ import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
-import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
@@ -25,7 +25,7 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
 @Slf4j
 public class CheckRunningAdvertsJob {
     private final AdvertRepository advertRepository;
-    private final TelegramIntegrationService telegramIntegrationService;
+    private final BotIntegrationAdapter botIntegrationAdapter;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final CountersStorage countersStorage;
     private final AdvertStatisticService advertStatisticService;
@@ -98,7 +98,8 @@ public class CheckRunningAdvertsJob {
                 String finishedTestMessage = String.format(
                         "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику",
                         advertId);
-                telegramIntegrationService.sendMessage(chatId, finishedTestMessage);
+                botIntegrationAdapter.sendMessage(
+                        chatId, cardEntity.getOwnerClient().getBotType(), finishedTestMessage);
                 continue;
             }
             if (currentCpm < advertMaxCpm) {
