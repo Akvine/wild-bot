@@ -83,13 +83,4 @@ public interface ClientControllerMeta {
      */
     @PostMapping(value = "/whitelist/delete")
     Response deleteFromWhitelist(@Valid @RequestBody WhitelistRequest request);
-
-    /**
-     * Отправляет клиенту QR-код через бота.
-     *
-     * @param request идентификатор клиента и параметры генерации QR-кода
-     * @return успешный ответ
-     */
-    @PostMapping(value = "/send/qr-code")
-    Response sendQrCode(@Valid @RequestBody SendQrCodeRequest request);
 }

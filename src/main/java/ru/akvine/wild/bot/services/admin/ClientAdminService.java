@@ -3,7 +3,6 @@ package ru.akvine.wild.bot.services.admin;
 import com.google.common.base.Preconditions;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +20,8 @@ import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.services.ClientBlockingService;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
-import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
 import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
-import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
-import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
-import ru.akvine.wild.bot.services.integration.qrcode.dto.GenerateQrCodeRequest;
 import ru.akvine.wild.bot.utils.DateUtils;
 
 @Service
@@ -219,48 +214,6 @@ public class ClientAdminService {
                 "Successful delete to whitelist client with chatId = {} and username = {}",
                 client.getChatId(),
                 client.getUsername());
-    }
-
-    public void sendQrCode(GenerateQrCode generateQrCode) {
-        String chatId = generateQrCode.getChatId();
-        String url = generateQrCode.getUrl();
-        String caption = generateQrCode.getCaption();
-        BotType botType = generateQrCode.getBotType();
-
-        logger.info("Send qr code to chat with id = {} and url = {}", chatId, url);
-        clientService.verifyExistsByChatIdAndBotType(chatId, botType);
-
-        Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap =
-                qrCodeGenerationServiceFacade.getServicesMap();
-        GenerateQrCodeRequest request = new GenerateQrCodeRequest()
-                .setUrl(url)
-                .setQrSize(qrSize)
-                .setBorderSize(borderSize)
-                .setRadiusFactor(radiusFactor)
-                .setErrorCorrectionLevel(errorCorrectionLevel)
-                .setCornerBlockRadiusFactor(cornerBlockRadiusFactor)
-                .setRoundInnerCorners(roundInnerCorners)
-                .setRoundOuterCorners(roundOuterCorners)
-                .setCornerBlocksAsCircles(cornerBlocksAsCircles)
-                .setImageType(imageType);
-
-        byte[] image;
-        if (qraftIntegrationEnabled) {
-            try {
-                image = serviceMap.get(QrCodeGenerationServiceType.EXTERNAL).generateQrCode(request);
-            } catch (Exception exception) {
-                logger.error(
-                        "Some error was occurred while calling external qr code generation service. "
-                                + "Generate message by internal service. Message = [{}]",
-                        exception.getMessage());
-                image = serviceMap.get(QrCodeGenerationServiceType.INTERNAL).generateQrCode(request);
-            }
-        } else {
-            image = serviceMap.get(QrCodeGenerationServiceType.INTERNAL).generateQrCode(request);
-        }
-
-        logger.info("Successful generate qr code");
-        botIntegrationAdapter.sendImage(chatId, botType, image, caption);
     }
 
     private void sendMessageInternal(List<ClientModel> activeClients, BotType botType, String message) {

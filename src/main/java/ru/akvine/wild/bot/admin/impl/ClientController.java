@@ -12,7 +12,6 @@ import ru.akvine.wild.bot.admin.meta.ClientControllerMeta;
 import ru.akvine.wild.bot.admin.validator.ClientValidator;
 import ru.akvine.wild.bot.services.admin.ClientAdminService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
-import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
 
 @RestController
@@ -79,14 +78,6 @@ public class ClientController implements ClientControllerMeta {
         clientValidator.verifyBotType(request.getBotType());
         Whitelist whitelist = clientConverter.convertToWhitelist(request);
         clientAdminService.deleteFromWhitelist(whitelist);
-        return new SuccessfulResponse();
-    }
-
-    @Override
-    public Response sendQrCode(@Valid SendQrCodeRequest request) {
-        clientValidator.verifyBotType(request.getBotType());
-        GenerateQrCode generateQrCode = clientConverter.convertToGenerateQrCode(request);
-        clientAdminService.sendQrCode(generateQrCode);
         return new SuccessfulResponse();
     }
 }

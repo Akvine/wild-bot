@@ -24,6 +24,8 @@ import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationServi
 @State
 @Slf4j
 public class FillAdvertisingStateResolver extends StateResolver {
+    private static final String QR_CODE_FILE_NAME_DEFAULT_NAME = "qr_code.jpg";
+
     private final BotIntegrationAdapter botIntegrationAdapter;
     private final QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade;
 
@@ -81,7 +83,6 @@ public class FillAdvertisingStateResolver extends StateResolver {
 
         Response response = new Response(chatId, botType);
         if (text.equals(QUERY_QR_CODE_BUTTON_TEXT)) {
-            // TODO: дублирование кода и в ClientAdminService, и тут
             Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap =
                     qrCodeGenerationServiceFacade.getServicesMap();
             GenerateQrCodeRequest request = new GenerateQrCodeRequest()
@@ -111,8 +112,7 @@ public class FillAdvertisingStateResolver extends StateResolver {
                 image = serviceMap.get(QrCodeGenerationServiceType.INTERNAL).generateQrCode(request);
             }
 
-            botIntegrationAdapter.sendImage(chatId, botType, image, "qr.jpg");
-
+            botIntegrationAdapter.sendImage(chatId, botType, image, QR_CODE_FILE_NAME_DEFAULT_NAME);
             return response.setText("QR-код для пополнения бюджета сгенерован");
         } else {
             return resolveDefaultResponse(chatId, botType);

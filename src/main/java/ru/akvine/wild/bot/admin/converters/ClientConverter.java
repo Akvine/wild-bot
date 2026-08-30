@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.admin.dto.client.*;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.services.domain.ClientModel;
-import ru.akvine.wild.bot.services.dto.admin.GenerateQrCode;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
 import ru.akvine.wild.bot.utils.DateUtils;
 
@@ -142,14 +141,5 @@ public class ClientConverter {
                         StringUtils.isNotBlank(request.getBotType())
                                 ? BotType.safeValueOf(request.getBotType())
                                 : null);
-    }
-
-    public GenerateQrCode convertToGenerateQrCode(SendQrCodeRequest request) {
-        Preconditions.checkNotNull(request, "SendQrCodeRequest is null");
-        return new GenerateQrCode()
-                .setUrl(request.getUrl())
-                .setChatId(request.getChatId())
-                .setCaption(request.getCaption())
-                .setBotType(BotType.safeValueOf(request.getBotType()));
     }
 }
