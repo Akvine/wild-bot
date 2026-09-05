@@ -79,6 +79,29 @@ public class StateStorageInDatabaseImpl implements StateStorage<String, List<Cli
     }
 
     @Override
+    public boolean backAt(String chatId, BotType botType, ClientState targetClientState) {
+        String uniqueIdentifier = createUniqueIdentifier(chatId, botType);
+        Optional<ClientStatesEntity> optionalClientStates = clientStatesRepository.findByIdentifier(uniqueIdentifier);
+        if (optionalClientStates.isPresent()) {
+            ClientStatesEntity entity = optionalClientStates.get();
+            List<ClientState> states = entity.getStates();
+
+            if (states.contains(targetClientState)) {
+                int targetStateIndexInclusive = states.indexOf(targetClientState) + 1;
+                List<ClientState> subStates = states.subList(0, targetStateIndexInclusive);
+                entity.setStates(subStates);
+                entity.setUpdatedDate(LocalDateTime.now());
+                clientStatesRepository.save(entity);
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    @Override
     public void close(String chatId, BotType botType) {
         String uniqueIdentifier = createUniqueIdentifier(chatId, botType);
         Optional<ClientStatesEntity> optionalClientStates = clientStatesRepository.findByIdentifier(uniqueIdentifier);

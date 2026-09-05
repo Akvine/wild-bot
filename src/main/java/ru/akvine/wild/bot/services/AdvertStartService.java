@@ -12,10 +12,12 @@ import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.BotType;
+import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.exceptions.AdvertStartException;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
+import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 import ru.akvine.wild.bot.services.domain.CardModel;
@@ -36,6 +38,7 @@ public class AdvertStartService {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final CountersStorage countersStorage;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
+    private final StateStorage<String, List<ClientState>> stateStorage;
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
@@ -140,6 +143,7 @@ public class AdvertStartService {
 
         countersStorage.add(advertToStart.getExternalId());
         sessionStorage.close(chatId, botType);
+        stateStorage.backAt(chatId, botType, ClientState.TESTS_MENU);
 
         logger.info("Successful start advert = [{}]", updatedAdvert);
         return advertToStart;

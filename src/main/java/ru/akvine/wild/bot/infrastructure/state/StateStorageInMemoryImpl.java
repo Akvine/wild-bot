@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 import lombok.extern.slf4j.Slf4j;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
@@ -50,6 +51,22 @@ public class StateStorageInMemoryImpl implements StateStorage<String, List<Clien
     public ClientState removeCurrentAndGetPrevious(String chatId, BotType botType) {
         removeCurrent(chatId, botType);
         return getCurrent(chatId, botType);
+    }
+
+    @Override
+    public boolean backAt(String chatId, BotType botType, ClientState targetClientState) {
+        validate(chatId, botType);
+
+        String uniqueIdentifier = createUniqueIdentifier(chatId, botType);
+        List<ClientState> states = STATES.get(uniqueIdentifier);
+        if (states.contains(targetClientState)) {
+            int targetStateIndexInclusive = states.indexOf(targetClientState) + 1;
+            List<ClientState> subStates = states.subList(0, targetStateIndexInclusive);
+            STATES.replace(uniqueIdentifier, subStates);
+            return true;
+        }
+
+        return false;
     }
 
     @Override

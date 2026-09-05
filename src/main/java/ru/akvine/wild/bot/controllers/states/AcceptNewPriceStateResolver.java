@@ -58,7 +58,7 @@ public class AcceptNewPriceStateResolver extends StateResolver {
                 return response.setTelegramResponse(message);
             }
 
-            return response.setText("Необходимо выбрать действие из меню!");
+            return response.setText(buildMessage(startedAdvert));
         } else {
             return resolveDefaultResponse(chatId, botType);
         }
