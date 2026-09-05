@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 @Getter
 public enum Command {
     COMMAND_START("/start"),
+    CURRENT_STATE("/current"),
     COMMAND_HELP("/help");
 
     private final String commandName;
