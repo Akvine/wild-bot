@@ -12,4 +12,6 @@ public final class BotMessageErrorConstants {
             "Вы не можете использовать функционал бота, т.к. подписка истекла";
     public static final String CLIENT_NOT_IN_WHITELIST_MESSAGE =
             "Вы не можете использовать функционал бота, т.к. вы не в white-листе";
+
+    public static final String CLIENT_HAS_BLOCKED_MESSAGE_PREFIX = "Вы были заблокированы до ";
 }

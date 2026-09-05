@@ -86,7 +86,7 @@ public class TelegramBotConfig {
     public TelegramBot telegramBot(DefaultBotOptions defaultBotOptions, InitMessageFilter startMessageFilter)
             throws TelegramApiException {
         if (!isBotEnabled) {
-            return new TelegramDummyBot();
+            return new TelegramDummyBot(startMessageFilter, converters);
         }
 
         if (isDevModeEnabled) {

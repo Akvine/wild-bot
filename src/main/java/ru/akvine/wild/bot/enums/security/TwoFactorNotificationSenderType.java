@@ -17,6 +17,7 @@ public enum TwoFactorNotificationSenderType {
             throw new IllegalArgumentException("Notification provider type can't be null");
         }
 
+        // TODO: перевести на цикл
         switch (type.toLowerCase()) {
             case "log":
                 return LOG;

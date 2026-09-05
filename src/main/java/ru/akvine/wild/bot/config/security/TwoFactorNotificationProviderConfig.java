@@ -9,6 +9,8 @@ import ru.akvine.wild.bot.services.notification.TwoFactorNotificationSender;
 import ru.akvine.wild.bot.services.notification.dummy.ConstantTwoFactorNotificationSender;
 import ru.akvine.wild.bot.services.notification.dummy.LogTwoFactorNotificationSender;
 
+import java.util.Objects;
+
 @Configuration
 @RequiredArgsConstructor
 public class TwoFactorNotificationProviderConfig {
@@ -22,25 +24,10 @@ public class TwoFactorNotificationProviderConfig {
     public TwoFactorNotificationSender notificationProvider() {
         TwoFactorNotificationSenderType type = TwoFactorNotificationSenderType.safeValueOf(providerType);
 
-        // TODO : слишком сложная и громоздкая нстройка. Придумать что-то по лучше
-        if (devModeEnabled) {
-            if (type.isDummy()) {
-                switch (type) {
-                    case CONSTANT:
-                        return new ConstantTwoFactorNotificationSender();
-                    default:
-                        return new LogTwoFactorNotificationSender();
-                }
-            } else {
-                throw new IllegalArgumentException(
-                        "Provider type for dev mode can't be not dummy! Type = " + type.name());
-            }
-        } else {
-            if (type.isDummy()) {
-                throw new IllegalArgumentException("Provider type for real mode can't be dummy! Type = " + type.name());
-            } else {
-                return new LogTwoFactorNotificationSender();
-            }
+        // TODO : слишком сложная и громоздкая нстройка. Придумать что-то по лучше. Да и вообще нужно переделать с учетом настроек и MAX
+        if (Objects.requireNonNull(type) == TwoFactorNotificationSenderType.CONSTANT) {
+            return new ConstantTwoFactorNotificationSender();
         }
+        return new LogTwoFactorNotificationSender();
     }
 }

@@ -9,6 +9,9 @@ import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.*;
 import ru.akvine.wild.bot.infrastructure.annotations.ErrorHandler;
+import ru.akvine.wild.bot.utils.DateUtils;
+
+import java.time.format.DateTimeFormatter;
 
 /**
  * Превращает бизнес-исключения, всплывшие при обработке сообщения ({@code BotExceptionFilter}),
@@ -39,7 +42,14 @@ public class BotExceptionHandler {
     public Response handleBlockedCredentialsException(
             String chatId, BotType botType, BlockedCredentialsException exception) {
         logger.info("Client is blocked. Message = [{}]", exception.getMessage());
-        return new Response(chatId, exception.getMessage(), botType);
+        String message = String.format("Вы были заблокированы до [%s]",
+                DateUtils.formatLocalDateTime(DateUtils.localDateToLocalDateTime(
+                                exception.getBlockedDate()
+                        ),
+                        DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy")
+                )
+        );
+        return new Response(chatId, message, botType);
     }
 
     @ErrorHandler(AdvertNotFoundException.class)

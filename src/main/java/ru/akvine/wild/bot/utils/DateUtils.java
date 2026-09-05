@@ -2,6 +2,7 @@ package ru.akvine.wild.bot.utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import lombok.experimental.UtilityClass;
@@ -72,6 +73,23 @@ public class DateUtils {
             return null;
         }
         return localDateTime.format(dateTimeFormatter);
+    }
+
+    /**
+     * Преобразует {@link LocalDate} в {@link LocalDateTime}, устанавливая время на начало суток (полночь).
+     * Если переданная дата равна {@code null}, метод возвращает {@code null}.
+     *
+     * @param localDate дата, которую требуется преобразовать; может быть {@code null}
+     * @return объект {@link LocalDateTime}, соответствующий началу указанной даты,
+     *         или {@code null}, если входной параметр равен {@code null}
+     */
+    @Nullable
+    public LocalDateTime localDateToLocalDateTime(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+
+        return LocalDateTime.of(localDate, LocalTime.MIDNIGHT);
     }
 
     /**
