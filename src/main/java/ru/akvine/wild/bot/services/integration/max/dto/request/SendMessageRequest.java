@@ -9,4 +9,8 @@ import ru.akvine.wild.bot.services.integration.max.dto.Attachment;
 public class SendMessageRequest {
     private String text;
     private Attachment[] attachments;
+
+    public static SendMessageRequest empty() {
+        return new SendMessageRequest();
+    }
 }

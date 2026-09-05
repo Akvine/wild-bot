@@ -2,6 +2,7 @@ package ru.akvine.wild.bot.exceptions.telegram;
 
 import static ru.akvine.wild.bot.constants.telegram.BotMessageErrorConstants.*;
 
+import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,8 +11,6 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.*;
 import ru.akvine.wild.bot.infrastructure.annotations.ErrorHandler;
 import ru.akvine.wild.bot.utils.DateUtils;
-
-import java.time.format.DateTimeFormatter;
 
 /**
  * Превращает бизнес-исключения, всплывшие при обработке сообщения ({@code BotExceptionFilter}),
@@ -42,13 +41,11 @@ public class BotExceptionHandler {
     public Response handleBlockedCredentialsException(
             String chatId, BotType botType, BlockedCredentialsException exception) {
         logger.info("Client is blocked. Message = [{}]", exception.getMessage());
-        String message = String.format("Вы были заблокированы до [%s]",
-                DateUtils.formatLocalDateTime(DateUtils.localDateToLocalDateTime(
-                                exception.getBlockedDate()
-                        ),
-                        DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy")
-                )
-        );
+        String message = String.format(
+                "Вы были заблокированы до [%s]",
+                DateUtils.formatLocalDateTime(
+                        DateUtils.localDateToLocalDateTime(exception.getBlockedDate()),
+                        DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy")));
         return new Response(chatId, message, botType);
     }
 

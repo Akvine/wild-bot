@@ -46,10 +46,10 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
     @Value("${max.bot.token}")
     private String maxBotToken;
 
-    @Value("${max.bot.dev.mode.long.pooling.timeout.seconds}")
+    @Value("${max.bot.long.pooling.timeout.seconds}")
     private String poolingTimeoutSeconds;
 
-    @Value("${max.bot.dev.mode.long.pooling.update-types}")
+    @Value("${max.bot.long.pooling.update-types}")
     private String updateTypes;
 
     private final RestTemplate restTemplate;

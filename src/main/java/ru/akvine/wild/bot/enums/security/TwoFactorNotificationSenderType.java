@@ -2,29 +2,27 @@ package ru.akvine.wild.bot.enums.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import ru.akvine.wild.bot.services.notification.TwoFactorNotificationSender;
+import ru.akvine.wild.bot.services.notification.dummy.ConstantTwoFactorNotificationSender;
+import ru.akvine.wild.bot.services.notification.dummy.LogTwoFactorNotificationSender;
 
 @AllArgsConstructor
 @Getter
 public enum TwoFactorNotificationSenderType {
-    LOG("log", true),
-    CONSTANT("constant", true);
+    LOG("log", new LogTwoFactorNotificationSender()),
+    CONSTANT("constant", new ConstantTwoFactorNotificationSender());
 
     private final String code;
-    private final boolean dummy;
+    private final TwoFactorNotificationSender senderObject;
 
-    public static TwoFactorNotificationSenderType safeValueOf(String type) {
-        if (type == null) {
-            throw new IllegalArgumentException("Notification provider type can't be null");
+    public static TwoFactorNotificationSender resolveByCodeAndBotType(String code) {
+        for (TwoFactorNotificationSenderType senderType : values()) {
+            if (senderType.getCode().equalsIgnoreCase(code)) {
+                return senderType.getSenderObject();
+            }
         }
 
-        // TODO: перевести на цикл
-        switch (type.toLowerCase()) {
-            case "log":
-                return LOG;
-            case "constant":
-                return CONSTANT;
-            default:
-                throw new IllegalArgumentException("Notification provider type = [" + type + "] is not supported!");
-        }
+        String errorMessage = String.format("Unsupported notification provider type = [%s]", code);
+        throw new IllegalArgumentException(errorMessage);
     }
 }

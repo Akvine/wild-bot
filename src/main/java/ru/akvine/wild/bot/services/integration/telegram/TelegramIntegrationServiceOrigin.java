@@ -35,11 +35,13 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
     private TelegramBot bot;
     private AbsSender absSender;
 
+    private static final String BOT_LONG_POOLING_MODE_TYPE = "longpooling";
+
     @Value("${telegram.bot.token}")
     private String botToken;
 
-    @Value("${telegram.bot.dev.mode.enabled}")
-    private boolean isDevModeEnabled;
+    @Value("${telegram.bot.type}")
+    private String botType;
 
     @Autowired
     public void setBot(@Lazy TelegramDevBot bot) {
@@ -76,7 +78,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
             GetFile getFileRequest = new GetFile();
             getFileRequest.setFileId(photoId);
             File file;
-            if (isDevModeEnabled) {
+            if (BOT_LONG_POOLING_MODE_TYPE.equalsIgnoreCase(botType)) {
                 file = ((TelegramDevBot) bot).execute(getFileRequest);
             } else {
                 file = ((TelegramProductionBot) bot).execute(getFileRequest);
@@ -123,7 +125,7 @@ public class TelegramIntegrationServiceOrigin implements TelegramIntegrationServ
 
         try {
             for (String chatId : chatIds) {
-                if (isDevModeEnabled) {
+                if (BOT_LONG_POOLING_MODE_TYPE.equalsIgnoreCase(botType)) {
                     ((TelegramDevBot) bot).execute(new SendMessage(chatId, message));
                 } else {
                     ((TelegramProductionBot) bot).execute(new SendMessage(chatId, message));

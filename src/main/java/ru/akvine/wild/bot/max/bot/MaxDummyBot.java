@@ -1,7 +1,6 @@
-package ru.akvine.wild.bot.job;
+package ru.akvine.wild.bot.max.bot;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.bot.filter.InitMessageFilter;
@@ -13,14 +12,13 @@ import ru.akvine.wild.bot.services.integration.max.dto.Update;
 import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
 
 @RequiredArgsConstructor
-public class MaxBotLongPoolingConsumer {
+public class MaxDummyBot implements MaxBot {
     private final MaxIntegrationService maxIntegrationService;
     private final InitMessageFilter startMessageFilter;
     private final BotDtoConverterFacade facade;
 
-    @Scheduled(fixedDelayString = "${max.bot.dev.mode.long.pooling.cron.milliseconds}")
-    public void checkUpdates() {
-        Update[] updates = maxIntegrationService.updates();
+    @Override
+    public SendMessageRequest onUpdateReceived(Update[] updates) {
         if (updates.length != 0) {
             Update update = updates[0];
             Message[] messages = maxIntegrationService.getMessages(
@@ -32,10 +30,10 @@ public class MaxBotLongPoolingConsumer {
                 Payload payload = facade.getConverter(BotType.MAX).fromRequest(update);
                 Response response = startMessageFilter.handle(payload);
 
-                SendMessageRequest sendMessageRequest =
-                        (SendMessageRequest) facade.getConverter(BotType.MAX).toResponse(response);
-                maxIntegrationService.sendMessage(payload.getChatId(), sendMessageRequest);
+                return (SendMessageRequest) facade.getConverter(BotType.MAX).toResponse(response);
             }
         }
+
+        return null;
     }
 }

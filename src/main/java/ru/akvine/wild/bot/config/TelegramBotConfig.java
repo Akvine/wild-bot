@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -38,12 +39,6 @@ public class TelegramBotConfig {
     private static final String HTTPS_PROXY_PORT_PROPERTY_NAME = "https.proxyPort";
     private static final String HTTPS_PROXY_HOST_PROPERTY_NAME = "https.proxyHost";
 
-    @Value("${telegram.bot.enabled}")
-    private boolean isBotEnabled;
-
-    @Value("${telegram.bot.dev.mode.enabled}")
-    private boolean isDevModeEnabled;
-
     @Value("${telegram.bot.path}")
     private String botPath;
 
@@ -61,7 +56,7 @@ public class TelegramBotConfig {
 
     private final Environment environment;
     private final RestTemplate restTemplate = new RestTemplate();
-    private final BotDtoConverterFacade converters;
+    private final BotDtoConverterFacade convertersFacade;
 
     @Bean
     public DefaultBotOptions defaultBotOptions() {
@@ -83,30 +78,36 @@ public class TelegramBotConfig {
     }
 
     @Bean
-    public TelegramBot telegramBot(DefaultBotOptions defaultBotOptions, InitMessageFilter startMessageFilter)
+    @ConditionalOnProperty(name = "telegram.bot.type", havingValue = "webhook")
+    public TelegramBot telegramWebhookBot(DefaultBotOptions defaultBotOptions, InitMessageFilter startMessageFilter)
             throws TelegramApiException {
-        if (!isBotEnabled) {
-            return new TelegramDummyBot(startMessageFilter, converters);
-        }
+        TelegramProductionBot bot =
+                new TelegramProductionBot(defaultBotOptions, botToken, startMessageFilter, convertersFacade);
+        bot.setBotUsername(botUsername);
+        bot.setBotPath(botPath);
+        setWebhook(botToken);
+        List<BotCommand> listCommands = initBotCommands();
+        bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
+        return bot;
+    }
 
-        if (isDevModeEnabled) {
-            TelegramDevBot bot =
-                    new TelegramDevBot(defaultBotOptions, botToken, botUsername, startMessageFilter, converters);
-            List<BotCommand> listCommands = initBotCommands();
-            bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
-            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(bot);
-            return bot;
-        } else {
-            TelegramProductionBot bot =
-                    new TelegramProductionBot(defaultBotOptions, botToken, startMessageFilter, converters);
-            bot.setBotUsername(botUsername);
-            bot.setBotPath(botPath);
-            setWebhook(botToken);
-            List<BotCommand> listCommands = initBotCommands();
-            bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
-            return bot;
-        }
+    @Bean
+    @ConditionalOnProperty(name = "telegram.bot.type", havingValue = "longpooling")
+    public TelegramBot telegramLongPoolingBot(DefaultBotOptions defaultBotOptions, InitMessageFilter startMessageFilter)
+            throws TelegramApiException {
+        TelegramDevBot bot =
+                new TelegramDevBot(defaultBotOptions, botToken, botUsername, startMessageFilter, convertersFacade);
+        List<BotCommand> listCommands = initBotCommands();
+        bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
+        TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+        telegramBotsApi.registerBot(bot);
+        return bot;
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "telegram.bot.type", havingValue = "dummy")
+    public TelegramBot telegramDummyBot(InitMessageFilter startMessageFilter) {
+        return new TelegramDummyBot(startMessageFilter, convertersFacade);
     }
 
     private void setWebhook(String botToken) {
