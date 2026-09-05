@@ -406,23 +406,45 @@ CREATE UNIQUE INDEX SUPPORT_USER_EMAIL_INDEX ON SUPPORT_USER_ENTITY (EMAIL);
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'BOT_TYPE' and upper(table_name) = 'CLIENT_BLOCKED_CREDENTIALS_ENTITY';
 ALTER TABLE CLIENT_BLOCKED_CREDENTIALS_ENTITY ADD BOT_TYPE VARCHAR(32) NOT NULL;
+--rollback not required
 
 --changeset akvine:TG-BOT-1-23
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'TOKEN' and upper(table_name) = 'CLIENT_ENTITY';
 ALTER TABLE CLIENT_ENTITY ADD TOKEN VARCHAR(255);
+--rollback not required
 
 --changeset akvine:TG-BOT-1-24
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'WAREHOUSE_ID' and upper(table_name) = 'CLIENT_ENTITY';
 ALTER TABLE CLIENT_ENTITY ADD WAREHOUSE_ID INTEGER;
+--rollback not required
 
 --changeset akvine:TG-BOT-1-25
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'CLIENT_ID' and upper(table_name) = 'CARD_ENTITY';
 ALTER TABLE CARD_ENTITY ADD CLIENT_ID BIGINT NOT NULL;
+--rollback not required
 
 --changeset akvine:TG-BOT-1-26
 --preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
 --precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(column_name) = 'LAUNCHED_BY_CLIENT_ID' and upper(table_name) = 'ADVERT_ENTITY';
 ALTER TABLE ADVERT_ENTITY DROP COLUMN LAUNCHED_BY_CLIENT_ID;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-27
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'CLIENT_STATES_ENTITY' and table_schema = 'public';
+CREATE TABLE CLIENT_STATES_ENTITY
+(
+    ID                          BIGINT       NOT NULL,
+    IDENTIFIER                  VARCHAR(255) NOT NULL,
+    STATES                      TEXT NOT NULL,
+    CREATED_DATE                TIMESTAMP    NOT NULL,
+    UPDATED_DATE                TIMESTAMP,
+    CONSTRAINT CLIENT_STATES_PKEY PRIMARY KEY (ID)
+);
+CREATE SEQUENCE SEQ_CLIENT_STATES_ENTITY START WITH 1 INCREMENT BY 1000;
+CREATE UNIQUE INDEX CLIENT_STATES_ENTITY_ID_INDEX ON CLIENT_STATES_ENTITY (ID);
+CREATE UNIQUE INDEX CLIENT_STATES_ENTITY_IDENTIFIER_INDEX ON CLIENT_STATES_ENTITY (IDENTIFIER);
+--rollback not required

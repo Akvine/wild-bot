@@ -1,5 +1,9 @@
 package ru.akvine.wild.bot.enums;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public enum ClientState {
     MAIN_MENU,
     TESTS_MENU,
@@ -21,5 +25,12 @@ public enum ClientState {
 
     WILDBERRIES_ACCOUNT_SETTINGS_MENU,
     INPUT_NEW_WILDBERRIES_TOKEN_MENU,
-    CHANGE_WAREHOUSE_ID_MENU
+    CHANGE_WAREHOUSE_ID_MENU;
+
+    private static final Map<String, ClientState> STATES_CACHE =
+            Arrays.stream(values()).collect(Collectors.toMap(c -> c.name().toLowerCase(), c -> c));
+
+    public static ClientState fromString(String name) {
+        return STATES_CACHE.get(name.toLowerCase());
+    }
 }

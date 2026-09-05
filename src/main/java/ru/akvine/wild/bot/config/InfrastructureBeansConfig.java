@@ -13,8 +13,10 @@ import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorageInMemoryImpl;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
+import ru.akvine.wild.bot.infrastructure.state.StateStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.state.StateStorageInMemoryImpl;
 import ru.akvine.wild.bot.repositories.infrastructure.ClientSessionDataRepository;
+import ru.akvine.wild.bot.repositories.infrastructure.ClientStatesRepository;
 import ru.akvine.wild.bot.repositories.infrastructure.IterationCounterRepository;
 import ru.akvine.wild.bot.services.AdvertService;
 
@@ -22,8 +24,15 @@ import ru.akvine.wild.bot.services.AdvertService;
 public class InfrastructureBeansConfig {
 
     @Bean
+    @ConditionalOnProperty(name = "states.storage.implementation.type", havingValue = "memory")
     public StateStorage<String, List<ClientState>> memoryStateStorage() {
         return new StateStorageInMemoryImpl();
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "states.storage.implementation.type", havingValue = "database")
+    public StateStorage<String, List<ClientState>> databaseStateStorage(ClientStatesRepository clientStatesRepository) {
+        return new StateStorageInDatabaseImpl(clientStatesRepository);
     }
 
     @Bean
