@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.infrastructure.exceptions.NoStateException;
 
@@ -20,51 +21,55 @@ public class StateStorageInMemoryImpl implements StateStorage<String, List<Clien
     private static final Map<String, List<ClientState>> STATES = new ConcurrentHashMap<>();
 
     @Override
-    public void add(String chatId, ClientState state) {
-        if (!containsState(chatId)) {
-            STATES.put(chatId, new ArrayList<>(Arrays.asList(state)));
+    public void add(String chatId, BotType botType, ClientState state) {
+        if (!containsState(chatId, botType)) {
+            STATES.put(createUniqueIdentifier(chatId, botType), new ArrayList<>(Arrays.asList(state)));
         } else {
-            STATES.get(chatId).add(state);
+            STATES.get(createUniqueIdentifier(chatId, botType)).add(state);
         }
     }
 
     @Override
-    public boolean containsState(String chatId) {
-        return STATES.containsKey(chatId);
+    public boolean containsState(String chatId, BotType botType) {
+        return STATES.containsKey(createUniqueIdentifier(chatId, botType));
     }
 
     @Override
-    public ClientState getCurrent(String chatId) {
-        validate(chatId);
-        return STATES.get(chatId).getLast();
+    public ClientState getCurrent(String chatId, BotType botType) {
+        validate(chatId, botType);
+        return STATES.get(createUniqueIdentifier(chatId, botType)).getLast();
     }
 
     @Override
-    public void removeCurrent(String chatId) {
-        validate(chatId);
-        STATES.get(chatId).removeLast();
+    public void removeCurrent(String chatId, BotType botType) {
+        validate(chatId, botType);
+        STATES.get(createUniqueIdentifier(chatId, botType)).removeLast();
     }
 
     @Override
-    public ClientState removeCurrentAndGetPrevious(String chatId) {
-        removeCurrent(chatId);
-        return getCurrent(chatId);
+    public ClientState removeCurrentAndGetPrevious(String chatId, BotType botType) {
+        removeCurrent(chatId, botType);
+        return getCurrent(chatId, botType);
     }
 
     @Override
-    public void close(String chatId) {
-        validate(chatId);
-        STATES.remove(chatId);
+    public void close(String chatId, BotType botType) {
+        validate(chatId, botType);
+        STATES.remove(createUniqueIdentifier(chatId, botType));
     }
 
     @Override
-    public int statesCount(String chatId) {
-        return STATES.get(chatId).size();
+    public int statesCount(String chatId, BotType botType) {
+        return STATES.get(createUniqueIdentifier(chatId, botType)).size();
     }
 
-    private void validate(String chatId) {
-        if (!containsState(chatId)) {
-            throw new NoStateException("No state for identifier = [" + chatId + "]");
+    private void validate(String chatId, BotType botType) {
+        if (!containsState(chatId, botType)) {
+            throw new NoStateException("No state for identifier = [" + chatId + "] and bot type = [" + botType + "]");
         }
+    }
+
+    private String createUniqueIdentifier(String chatId, BotType botType) {
+        return chatId + "_" + botType;
     }
 }

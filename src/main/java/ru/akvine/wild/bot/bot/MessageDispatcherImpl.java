@@ -52,14 +52,14 @@ public class MessageDispatcherImpl implements MessageDispatcher {
             return commandResolver.resolve(botType, chatId, text);
         }
 
-        if (!stateStorage.containsState(chatId)) {
-            stateStorage.add(chatId, ClientState.MAIN_MENU);
+        if (!stateStorage.containsState(chatId, botType)) {
+            stateStorage.add(chatId, botType, ClientState.MAIN_MENU);
             return formMessage(botType, chatId, ClientState.MAIN_MENU);
         }
 
-        if (stateStorage.containsState(chatId) && stateStorage.statesCount(chatId) > 1) {
+        if (stateStorage.containsState(chatId, botType) && stateStorage.statesCount(chatId, botType) > 1) {
             if (StringUtils.isNotBlank(text) && text.equals(BACK_BUTTON_TEXT)) {
-                ClientState previousState = stateStorage.removeCurrentAndGetPrevious(chatId);
+                ClientState previousState = stateStorage.removeCurrentAndGetPrevious(chatId, botType);
                 if (botType == BotType.TELEGRAM) {
                     telegramIntegrationService.answerCallback(
                             payload.getBotDataType(), payload.getTelegramCallbackQueryId());
@@ -71,7 +71,7 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 
         return stateResolverFacade
                 .getStateResolvers()
-                .get(stateStorage.getCurrent(chatId))
+                .get(stateStorage.getCurrent(chatId, botType))
                 .resolve(payload);
     }
 

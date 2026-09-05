@@ -50,7 +50,7 @@ public abstract class StateResolver {
     }
 
     protected Response setNextState(String chatId, ClientState nextState, BotType botType) {
-        stateStorage.add(chatId, nextState);
+        stateStorage.add(chatId, botType, nextState);
         BotView botView = viewFacade.getEventMap().get(nextState);
 
         String message = botView.getMessage(chatId, botType);

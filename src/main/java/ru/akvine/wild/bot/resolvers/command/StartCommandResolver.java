@@ -30,15 +30,15 @@ public class StartCommandResolver implements CommandResolver {
     public Response resolve(BotType botType, String chatId, String text) {
         logger.info("[{}] resolved", getCommand());
 
-        if (stateStorage.containsState(chatId)) {
-            stateStorage.close(chatId);
+        if (stateStorage.containsState(chatId, botType)) {
+            stateStorage.close(chatId, botType);
         }
         if (sessionStorage.hasSession(chatId)) {
             sessionStorage.close(chatId);
         }
 
         ClientState startState = ClientState.MAIN_MENU;
-        stateStorage.add(chatId, startState);
+        stateStorage.add(chatId, botType, startState);
         BotView view = botViewFacade.getEventMap().get(startState);
         String message = view.getMessage(chatId, botType);
         InlineKeyboard keyboardMarkup = view.getKeyboard(chatId, botType);

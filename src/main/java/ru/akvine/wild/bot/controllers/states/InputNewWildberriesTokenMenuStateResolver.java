@@ -20,7 +20,6 @@ import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationServi
 public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
     private final ClientService clientService;
 
-    private final MaxIntegrationService maxIntegrationService;
     private final BotIntegrationAdapter botIntegrationAdapter;
 
     private final boolean apiTokenValidateEnabled;
@@ -37,7 +36,6 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
             @Value("${wildberries.api.token.validate.pattern}") String apiTokenPattern) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.clientService = clientService;
-        this.maxIntegrationService = maxIntegrationService;
         this.botIntegrationAdapter = botIntegrationAdapter;
 
         this.apiTokenValidateEnabled = apiTokenValidateEnable;
@@ -64,7 +62,7 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
 
         clientService.update(action);
         botIntegrationAdapter.sendMessage(chatId, botType, "Токен успешно обновлен!");
-        return setNextState(chatId, stateStorage.removeCurrentAndGetPrevious(chatId), botType);
+        return setNextState(chatId, stateStorage.removeCurrentAndGetPrevious(chatId, botType), botType);
     }
 
     @Override
