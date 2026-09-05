@@ -15,9 +15,6 @@ public class BlockClientStart {
     private String chatId;
 
     @Nullable
-    private String username;
-
-    @Nullable
     private BotType botType;
 
     private long minutes;

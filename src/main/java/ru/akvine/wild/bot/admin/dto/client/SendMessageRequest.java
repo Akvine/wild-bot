@@ -15,7 +15,6 @@ public class SendMessageRequest {
 
     private List<String> chatIds;
 
-    private List<String> usernames;
-
+    @NotBlank
     private String botType;
 }

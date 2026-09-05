@@ -9,8 +9,6 @@ import lombok.experimental.Accessors;
 public class AddTestsRequest {
     private String chatId;
 
-    private String username;
-
     @NotBlank
     private String botType = "telegram";
 

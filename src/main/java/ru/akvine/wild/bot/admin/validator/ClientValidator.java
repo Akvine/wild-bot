@@ -21,7 +21,7 @@ public class ClientValidator {
 
     public void verifyAddTestsRequest(AddTestsRequest request) {
 
-        if (StringUtils.isBlank(request.getUsername()) && StringUtils.isBlank(request.getChatId())) {
+        if (StringUtils.isBlank(request.getChatId())) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,
                     "Username and chatId parameters is blank");
@@ -39,15 +39,6 @@ public class ClientValidator {
 
         if (!CollectionUtils.isEmpty(request.getChatIds())
                 && request.getChatIds().size() > maxClientsSendMessageCount) {
-            String errorMessage = String.format(
-                    "Clients count to send message = [%s] is greater than max = [%s]",
-                    request.getChatIds().size(), maxClientsSendMessageCount);
-            throw new ValidationException(
-                    ApiErrorConstants.Validation.MAX_CLIENTS_SEND_MESSAGE_COUNT_ERROR, errorMessage);
-        }
-
-        if (!CollectionUtils.isEmpty(request.getUsernames())
-                && request.getUsernames().size() > maxClientsSendMessageCount) {
             String errorMessage = String.format(
                     "Clients count to send message = [%s] is greater than max = [%s]",
                     request.getChatIds().size(), maxClientsSendMessageCount);
@@ -73,28 +64,22 @@ public class ClientValidator {
     }
 
     private void verifyBlockRequest(BlockRequest request) {
-        if (StringUtils.isBlank(request.getUuid())
-                && StringUtils.isBlank(request.getChatId())
-                && StringUtils.isBlank(request.getUsername())) {
+        if (StringUtils.isBlank(request.getUuid()) && StringUtils.isBlank(request.getChatId())) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.BOTH_PARAMETERS_BLANK_ERROR,
                     "Username, chatId and client uuid are not presented. Must be only one of these params");
         }
-        if (StringUtils.isNotBlank(request.getUuid())
-                && StringUtils.isNotBlank(request.getChatId())
-                && StringUtils.isNotBlank(request.getUsername())) {
+        if (StringUtils.isNotBlank(request.getUuid()) && StringUtils.isNotBlank(request.getChatId())) {
             throw new ValidationException(
                     ApiErrorConstants.Validation.BOTH_PARAMETERS_PRESENT_ERROR,
                     "Username, chatId and client uuid are presented. Must be only one of these params");
         }
 
-        if (StringUtils.isNotBlank(request.getChatId())
-                && (StringUtils.isBlank(request.getUsername()) || StringUtils.isBlank(request.getUuid()))) {
+        if (StringUtils.isNotBlank(request.getChatId()) && StringUtils.isBlank(request.getUuid())) {
             botTypeValidator.validate(request.getBotType());
         }
 
-        if (StringUtils.isNotBlank(request.getBotType())
-                && (StringUtils.isBlank(request.getUsername()) || StringUtils.isBlank(request.getUuid()))) {
+        if (StringUtils.isNotBlank(request.getBotType()) && StringUtils.isBlank(request.getUuid())) {
             if (StringUtils.isBlank(request.getChatId())) {
                 throw new ValidationException(
                         ApiErrorConstants.Validation.CHAT_ID_IS_NOT_PRESENTED_ERROR,

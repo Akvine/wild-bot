@@ -9,6 +9,4 @@ public class WhitelistRequest {
     private String chatId;
 
     private String botType;
-
-    private String username;
 }

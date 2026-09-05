@@ -41,7 +41,6 @@ public class ClientConverter {
     public AddTests convertToAddTests(AddTestsRequest request) {
         return new AddTests()
                 .setTestsCount(request.getCount())
-                .setUsername(request.getUsername())
                 .setChatId(request.getChatId())
                 .setBotType(BotType.safeValueOf(request.getBotType()));
     }
@@ -69,9 +68,6 @@ public class ClientConverter {
         }
         if (StringUtils.isNotBlank(request.getChatId())) {
             start.setChatId(request.getChatId());
-        }
-        if (StringUtils.isNotBlank(request.getUsername())) {
-            start.setUsername(request.getUsername());
         }
         if (StringUtils.isNotBlank(request.getBotType())) {
             start.setBotType(BotType.safeValueOf(request.getBotType()));
@@ -105,9 +101,6 @@ public class ClientConverter {
         if (StringUtils.isNotBlank(request.getChatId())) {
             unblockClient.setChatId(request.getChatId());
         }
-        if (StringUtils.isNotBlank(request.getUsername())) {
-            unblockClient.setUsername(request.getUsername());
-        }
         if (StringUtils.isNotBlank(request.getBotType())) {
             unblockClient.setBotType(BotType.safeValueOf(request.getBotType()));
         }
@@ -120,7 +113,6 @@ public class ClientConverter {
         return new SendMessage()
                 .setMessage(request.getMessage())
                 .setChatIds(request.getChatIds())
-                .setUsernames(request.getUsernames())
                 .setBotType(BotType.safeValueOf(request.getBotType()));
     }
 
@@ -136,7 +128,6 @@ public class ClientConverter {
         Preconditions.checkNotNull(request, "whitelistRequest is null");
         return new Whitelist()
                 .setChatId(request.getChatId())
-                .setUsername(request.getUsername())
                 .setBotType(
                         StringUtils.isNotBlank(request.getBotType())
                                 ? BotType.safeValueOf(request.getBotType())

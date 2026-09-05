@@ -89,12 +89,10 @@ public class ClientAdminService {
 
         if (StringUtils.isNotBlank(start.getUuid())) {
             chatId = clientService.verifyExistsByClientUuid(start.getUuid()).getChatId();
-        } else if (StringUtils.isNotBlank(start.getChatId()) && start.getBotType() != null) {
+        } else {
             chatId = clientService
                     .verifyExistsByChatIdAndBotType(start.getChatId(), botType)
                     .getChatId();
-        } else {
-            chatId = clientService.verifyExistsByUsername(start.getUsername()).getChatId();
         }
 
         LocalDateTime blockDate = LocalDateTime.now().plusMinutes(minutes);
@@ -155,18 +153,6 @@ public class ClientAdminService {
             if (CollectionUtils.isEmpty(activeClients)) {
                 String errorMessage =
                         String.format("Not found any client with chat ids = %s", sendMessage.getChatIds());
-                throw new ClientNotFoundException(errorMessage);
-            }
-
-            sendMessageInternal(activeClients, botType, message);
-            return;
-        }
-
-        if (!CollectionUtils.isEmpty(sendMessage.getUsernames())) {
-            activeClients = clientService.getAllByUsernames(sendMessage.getUsernames());
-            if (CollectionUtils.isEmpty(activeClients)) {
-                String errorMessage =
-                        String.format("Not found any client with usernames = %s", sendMessage.getUsernames());
                 throw new ClientNotFoundException(errorMessage);
             }
 

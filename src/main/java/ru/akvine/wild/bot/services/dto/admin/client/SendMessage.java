@@ -12,9 +12,6 @@ public class SendMessage {
     @Nullable
     private List<String> chatIds;
 
-    @Nullable
-    private List<String> usernames;
-
     private String message;
 
     private BotType botType;

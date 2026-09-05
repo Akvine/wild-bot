@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.admin.dto.client;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -10,7 +11,6 @@ public class BlockRequest {
 
     private String chatId;
 
+    @NotBlank
     private String botType;
-
-    private String username;
 }
