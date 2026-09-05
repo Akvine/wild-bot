@@ -10,7 +10,7 @@ import ru.akvine.wild.bot.max.MaxComponentsFactory;
 @Component
 public class UploadPhotoViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         return new InlineKeyboard(MaxComponentsFactory.getBackKeyboard());
     }
 

@@ -15,7 +15,7 @@ import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 @Component
 public class WildberriesAccountSettingsMenuTelegramKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         InlineKeyboardButton revokeTokenButton = new InlineKeyboardButton();
         revokeTokenButton.setText(REVOKE_TOKEN_BUTTON_TEXT);
         revokeTokenButton.setCallbackData(REVOKE_TOKEN_BUTTON_TEXT);

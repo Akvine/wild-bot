@@ -50,9 +50,9 @@ public class InputNewPriceStateResolver extends StateResolver {
                     new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести цену в виде числа!"));
         }
 
-        ClientSessionData sessionData = sessionStorage.get(chatId);
+        ClientSessionData sessionData = sessionStorage.get(chatId, botType);
         sessionData.setNewCardPrice(newPrice);
-        sessionStorage.save(sessionData);
+        sessionStorage.save(sessionData, botType);
 
         return setNextState(chatId, ClientState.INPUT_NEW_DISCOUNT_MENU, botType);
     }

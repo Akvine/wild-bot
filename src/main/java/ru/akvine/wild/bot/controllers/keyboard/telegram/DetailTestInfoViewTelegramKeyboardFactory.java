@@ -13,7 +13,7 @@ import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 public class DetailTestInfoViewTelegramKeyboardFactory implements BotKeyboardFactory {
 
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         return new InlineKeyboard(TelegramKeyboardFactory.getBackKeyboard());
     }
 

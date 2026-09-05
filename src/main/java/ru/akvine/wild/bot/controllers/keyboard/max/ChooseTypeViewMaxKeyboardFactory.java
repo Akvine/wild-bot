@@ -14,7 +14,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.Button;
 @Component
 public class ChooseTypeViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         Button maleButton = MaxComponentsFactory.callbackButton(MALE_BUTTON_TEXT);
         Button femaleButton = MaxComponentsFactory.callbackButton(FEMALE_BUTTON_TEXT);
 

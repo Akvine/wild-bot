@@ -13,7 +13,6 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.dto.ClientUpdate;
 import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
-import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
 @State
@@ -30,7 +29,6 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
             BotViewFacade viewFacade,
             TelegramIntegrationService telegramIntegrationService,
             ClientService clientService,
-            MaxIntegrationService maxIntegrationService,
             BotIntegrationAdapter botIntegrationAdapter,
             @Value("${wildberries.api.token.validate.enabled}") boolean apiTokenValidateEnable,
             @Value("${wildberries.api.token.validate.pattern}") String apiTokenPattern) {

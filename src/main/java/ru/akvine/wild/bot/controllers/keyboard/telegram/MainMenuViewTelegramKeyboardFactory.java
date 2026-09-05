@@ -16,7 +16,7 @@ import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 public class MainMenuViewTelegramKeyboardFactory implements BotKeyboardFactory {
 
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         InlineKeyboardButton menuButton = new InlineKeyboardButton();
         menuButton.setText(TESTS_MENU);
         menuButton.setCallbackData(TESTS_MENU);

@@ -13,7 +13,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.Button;
 @Component
 public class MainMenuViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         Button menuButton = MaxComponentsFactory.callbackButton(TESTS_MENU);
         Button instructionsForUseButton = MaxComponentsFactory.callbackButton(INSTRUCTIONS_FOR_USE_BUTTON_TEXT);
         Button addSubscriptionButton = MaxComponentsFactory.callbackButton(ADD_SUBSCRIPTION_BUTTON_TEXT);

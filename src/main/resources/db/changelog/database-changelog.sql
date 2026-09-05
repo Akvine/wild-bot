@@ -448,3 +448,9 @@ CREATE SEQUENCE SEQ_CLIENT_STATES_ENTITY START WITH 1 INCREMENT BY 1000;
 CREATE UNIQUE INDEX CLIENT_STATES_ENTITY_ID_INDEX ON CLIENT_STATES_ENTITY (ID);
 CREATE UNIQUE INDEX CLIENT_STATES_ENTITY_IDENTIFIER_INDEX ON CLIENT_STATES_ENTITY (IDENTIFIER);
 --rollback not required
+
+--changeset akvine:TG-BOT-1-28
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'BOT_TYPE' and upper(table_name) = 'CLIENT_SESSION_DATA_ENTITY';
+ALTER TABLE CLIENT_SESSION_DATA_ENTITY ADD BOT_TYPE VARCHAR(32) NOT NULL;
+--rollback not required

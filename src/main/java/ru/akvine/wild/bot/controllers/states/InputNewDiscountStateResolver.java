@@ -51,9 +51,9 @@ public class InputNewDiscountStateResolver extends StateResolver {
                     new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести скидку в виде числа без %"));
         }
 
-        ClientSessionData sessionData = sessionStorage.get(chatId);
+        ClientSessionData sessionData = sessionStorage.get(chatId, botType);
         sessionData.setNewCardDiscount(newDiscount);
-        sessionStorage.save(sessionData);
+        sessionStorage.save(sessionData, botType);
 
         return setNextState(chatId, ClientState.ACCEPT_NEW_PRICE_MENU, botType);
     }

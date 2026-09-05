@@ -14,7 +14,7 @@ import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 @Component
 public class GenerateReportViewTelegramKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         InlineKeyboardButton startGenerationButton = new InlineKeyboardButton();
         startGenerationButton.setText(START_GENERATION_BUTTON_TEXT);
         startGenerationButton.setCallbackData(START_GENERATION_BUTTON_TEXT);

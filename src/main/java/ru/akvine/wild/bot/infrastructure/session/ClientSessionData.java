@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.wild.bot.entities.infrastructure.ClientSessionDataEntity;
+import ru.akvine.wild.bot.enums.BotType;
 
 /**
  * Данные текущего диалога клиента с ботом: выбранный тип/категория карточки, загруженное фото,
@@ -17,6 +18,7 @@ import ru.akvine.wild.bot.entities.infrastructure.ClientSessionDataEntity;
 @NoArgsConstructor
 public class ClientSessionData {
     private Long id;
+    private BotType botType;
 
     @Nullable
     private String chatId;
@@ -35,6 +37,7 @@ public class ClientSessionData {
     public ClientSessionData(ClientSessionDataEntity clientSessionDataEntity) {
         this.id = clientSessionDataEntity.getId();
         this.chatId = clientSessionDataEntity.getChatId();
+        this.botType = clientSessionDataEntity.getBotType();
         this.selectedCardType = clientSessionDataEntity.getSelectedCardType();
         this.selectedCategoryId = clientSessionDataEntity.getSelectedCategoryId();
         this.inputNewCardPriceAndDiscount = clientSessionDataEntity.isInputNewCardPriceAndDiscount();

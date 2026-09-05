@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.resolvers.command;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,6 @@ import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

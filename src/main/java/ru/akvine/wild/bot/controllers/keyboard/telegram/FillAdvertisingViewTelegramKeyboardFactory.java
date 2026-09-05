@@ -14,7 +14,7 @@ import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 @Component
 public class FillAdvertisingViewTelegramKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         InlineKeyboardButton queryQrCodeButton = new InlineKeyboardButton();
         queryQrCodeButton.setText(QUERY_QR_CODE_BUTTON_TEXT);
         queryQrCodeButton.setCallbackData(QUERY_QR_CODE_BUTTON_TEXT);

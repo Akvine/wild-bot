@@ -25,8 +25,8 @@ public class ChooseCategoryViewTelegramKeyboardFactory implements BotKeyboardFac
     private final SessionStorage<String, ClientSessionData> sessionStorage;
 
     @Override
-    public InlineKeyboard create(String chatId) {
-        String selectedCardType = sessionStorage.get(chatId).getSelectedCardType();
+    public InlineKeyboard create(String chatId, BotType botType) {
+        String selectedCardType = sessionStorage.get(chatId, botType).getSelectedCardType();
         List<CardModel> cards = cardService.getByType(selectedCardType);
         List<AggregateCard> aggregateCards = cardAggregateService.aggregateByCategory(cards);
         InlineKeyboardMarkup keyboardMarkup = startConverter.buildCategories(aggregateCards);

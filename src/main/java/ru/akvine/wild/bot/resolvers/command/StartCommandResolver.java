@@ -33,8 +33,8 @@ public class StartCommandResolver implements CommandResolver {
         if (stateStorage.containsState(chatId, botType)) {
             stateStorage.close(chatId, botType);
         }
-        if (sessionStorage.hasSession(chatId)) {
-            sessionStorage.close(chatId);
+        if (sessionStorage.hasSession(chatId, botType)) {
+            sessionStorage.close(chatId, botType);
         }
 
         ClientState startState = ClientState.MAIN_MENU;

@@ -14,7 +14,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.Button;
 @Component
 public class AcceptNewPriceViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         Button changePriceButton = MaxComponentsFactory.callbackButton(CHANGE_PRICE_BUTTON_TEXT);
         Button keepPriceButton = MaxComponentsFactory.callbackButton(KEEP_PRICE_BUTTON_TEXT);
 

@@ -13,7 +13,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.Button;
 @Component
 public class GenerateReportViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         Button startGenerationButton = MaxComponentsFactory.callbackButton(START_GENERATION_BUTTON_TEXT);
         Button backButton = MaxComponentsFactory.getBackButton();
 

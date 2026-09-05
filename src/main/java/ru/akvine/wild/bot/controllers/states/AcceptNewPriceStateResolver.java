@@ -46,9 +46,9 @@ public class AcceptNewPriceStateResolver extends StateResolver {
 
         Response response = new Response(chatId, botType);
         if (text.equals(CHANGE_PRICE_BUTTON_TEXT)) {
-            ClientSessionData sessionData = sessionStorage.get(chatId);
+            ClientSessionData sessionData = sessionStorage.get(chatId, botType);
             sessionData.setInputNewCardPriceAndDiscount(true);
-            sessionStorage.save(sessionData);
+            sessionStorage.save(sessionData, botType);
             return setNextState(chatId, ClientState.INPUT_NEW_PRICE_MENU, botType);
         } else if (text.equals(KEEP_PRICE_BUTTON_TEXT)) {
             AdvertModel startedAdvert = advertStartService.start(chatId, botType);

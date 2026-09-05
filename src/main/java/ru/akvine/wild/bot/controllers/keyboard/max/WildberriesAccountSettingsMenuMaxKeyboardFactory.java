@@ -14,7 +14,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.Button;
 @Component
 public class WildberriesAccountSettingsMenuMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         Button revokeTokenButton = MaxComponentsFactory.callbackButton(REVOKE_TOKEN_BUTTON_TEXT);
         Button changeWarehouseIdButton = MaxComponentsFactory.callbackButton(CHANGE_WAREHOUSE_BUTTON_TEXT);
         Button backButton = MaxComponentsFactory.getBackButton();

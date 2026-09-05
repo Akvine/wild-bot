@@ -13,7 +13,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.Button;
 @Component
 public class FillAdvertisingViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         Button queryQrCodeButton = MaxComponentsFactory.callbackButton(QUERY_QR_CODE_BUTTON_TEXT);
 
         Button[][] keyboard =

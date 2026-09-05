@@ -15,7 +15,7 @@ import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 @Component
 public class AcceptNewPriceViewTelegramKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         InlineKeyboardButton changePriceButton = new InlineKeyboardButton();
         changePriceButton.setText(CHANGE_PRICE_BUTTON_TEXT);
         changePriceButton.setCallbackData(CHANGE_PRICE_BUTTON_TEXT);

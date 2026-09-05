@@ -77,9 +77,9 @@ public class UploadPhotoStateResolver extends StateResolver {
             photoValidator.validate(photo);
         }
 
-        ClientSessionData session = sessionStorage.get(chatId);
+        ClientSessionData session = sessionStorage.get(chatId, botType);
         session.setUploadedCardPhoto(photo);
-        sessionStorage.save(session);
+        sessionStorage.save(session, botType);
 
         return setNextState(chatId, ClientState.IS_CHANGE_PRICE_MENU, botType);
     }

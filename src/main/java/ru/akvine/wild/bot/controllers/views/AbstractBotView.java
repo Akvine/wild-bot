@@ -11,6 +11,6 @@ public abstract class AbstractBotView implements BotView {
 
     @Override
     public InlineKeyboard getKeyboard(String chatId, BotType botType) {
-        return facade.resolve(botType, byState()).create(chatId);
+        return facade.resolve(botType, byState()).create(chatId, botType);
     }
 }

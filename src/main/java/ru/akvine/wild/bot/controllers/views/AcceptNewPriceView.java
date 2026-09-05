@@ -20,7 +20,7 @@ public class AcceptNewPriceView extends AbstractBotView {
 
     @Override
     public String getMessage(String chatId, BotType botType) {
-        ClientSessionData sessionData = sessionStorage.get(chatId);
+        ClientSessionData sessionData = sessionStorage.get(chatId, botType);
         return buildMessage(sessionData.getNewCardPrice(), sessionData.getNewCardDiscount());
     }
 

@@ -5,7 +5,7 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 
 public interface BotKeyboardFactory {
-    InlineKeyboard create(String chatId);
+    InlineKeyboard create(String chatId, BotType botType);
 
     BotType getByType();
 

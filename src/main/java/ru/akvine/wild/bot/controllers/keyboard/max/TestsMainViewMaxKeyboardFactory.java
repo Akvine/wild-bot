@@ -17,7 +17,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.Button;
 @Component
 public class TestsMainViewMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         Button startTestButton = MaxComponentsFactory.callbackButton(START_TEST_BUTTON_TEXT);
         Button listStartedTestsButton = MaxComponentsFactory.callbackButton(LIST_STARTED_TESTS_BUTTON_TEXT);
         Button fillAdvertisingAccountButton = MaxComponentsFactory.callbackButton(FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT);

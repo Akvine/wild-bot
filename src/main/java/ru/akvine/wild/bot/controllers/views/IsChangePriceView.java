@@ -48,8 +48,8 @@ public class IsChangePriceView extends AbstractBotView {
     @Override
     public String getMessage(String chatId, BotType botType) {
         return dataBaseLockProvider.doWithLock(UPLOAD_PHOTO_LOCK + chatId, () -> {
-            String selectedCardType = sessionStorage.get(chatId).getSelectedCardType();
-            int selectedCategoryId = sessionStorage.get(chatId).getSelectedCategoryId();
+            String selectedCardType = sessionStorage.get(chatId, botType).getSelectedCardType();
+            int selectedCategoryId = sessionStorage.get(chatId, botType).getSelectedCategoryId();
 
             ClientModel client = clientService.getByChatIdAndBotType(chatId, botType);
 
@@ -57,9 +57,9 @@ public class IsChangePriceView extends AbstractBotView {
             advertBean.setLocked(true);
             advertService.update(advertBean);
 
-            ClientSessionData session = sessionStorage.get(chatId);
+            ClientSessionData session = sessionStorage.get(chatId, botType);
             session.setLockedAdvertId(advertBean.getExternalId());
-            sessionStorage.save(session);
+            sessionStorage.save(session, botType);
 
             int nmId = advertBean.getCardModel().getExternalId();
             GetGoodsRequest request = new GetGoodsRequest().setLimit(100).setFilterNmID(nmId);

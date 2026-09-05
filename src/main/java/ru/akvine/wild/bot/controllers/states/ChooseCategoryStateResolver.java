@@ -41,9 +41,9 @@ public class ChooseCategoryStateResolver extends StateResolver {
             return resolveDefaultResponse(chatId, botType);
         }
 
-        ClientSessionData sessionData = sessionStorage.get(chatId);
+        ClientSessionData sessionData = sessionStorage.get(chatId, botType);
         sessionData.setSelectedCategoryId(categoryId);
-        sessionStorage.save(sessionData);
+        sessionStorage.save(sessionData, botType);
         return setNextState(chatId, ClientState.UPLOAD_PHOTO_MENU, botType);
     }
 

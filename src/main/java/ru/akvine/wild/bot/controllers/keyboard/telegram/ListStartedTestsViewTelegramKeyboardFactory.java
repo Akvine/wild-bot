@@ -10,7 +10,7 @@ import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 @Component
 public class ListStartedTestsViewTelegramKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         return new InlineKeyboard(TelegramKeyboardFactory.getBackKeyboard());
     }
 

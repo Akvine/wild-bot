@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.entities.base.BaseEntity;
+import ru.akvine.wild.bot.enums.BotType;
 
 @Getter
 @Setter
@@ -26,6 +27,10 @@ public class ClientSessionDataEntity extends BaseEntity {
 
     @Column(name = "CHAT_ID", nullable = false)
     private String chatId;
+
+    @Column(name = "BOT_TYPE", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BotType botType;
 
     @Column(name = "SELECTED_CARD_TYPE")
     private String selectedCardType;

@@ -14,7 +14,7 @@ import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 @Component
 public class SubscriptionMenuViewTelegramKeyboardFactory implements BotKeyboardFactory {
     @Override
-    public InlineKeyboard create(String chatId) {
+    public InlineKeyboard create(String chatId, BotType botType) {
         InlineKeyboardButton paySubscriptionButton = new InlineKeyboardButton();
         paySubscriptionButton.setText(PAY_SUBSCRIPTION_BUTTON_TEXT);
         paySubscriptionButton.setCallbackData(PAY_SUBSCRIPTION_BUTTON_TEXT);
