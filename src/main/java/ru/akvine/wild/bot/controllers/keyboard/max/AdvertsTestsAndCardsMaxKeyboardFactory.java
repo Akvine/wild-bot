@@ -11,23 +11,16 @@ import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 
 @Component
-public class TestsMainViewMaxKeyboardFactory implements BotKeyboardFactory {
+public class AdvertsTestsAndCardsMaxKeyboardFactory implements BotKeyboardFactory {
     @Override
     public InlineKeyboard create(String chatId, BotType botType) {
-        Button startTestButton = MaxComponentsFactory.callbackButton(START_TEST_BUTTON_TEXT);
-        Button listStartedTestsButton = MaxComponentsFactory.callbackButton(ADVERTS_TESTS_AND_CARDS_BUTTON_TEXT);
-        Button fillAdvertisingAccountButton = MaxComponentsFactory.callbackButton(FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT);
-        Button generateReportButton = MaxComponentsFactory.callbackButton(GENERATE_REPORT_BUTTON_TEXT);
-        Button detailTestInfoButton = MaxComponentsFactory.callbackButton(DETAIL_TEST_INFORMATION_BUTTON_TEXT);
+        Button listStartedTestsButton = MaxComponentsFactory.callbackButton(LIST_STARTED_TESTS_BUTTON_TEXT);
+        Button listAdvertsButton = MaxComponentsFactory.callbackButton(LIST_ADVERTS_BUTTON_TEXT);
+        Button listCardsButton = MaxComponentsFactory.callbackButton(LIST_CARDS_BUTTON_TEXT);
         Button backButton = MaxComponentsFactory.getBackButton();
 
         Button[][] keyboard = MaxComponentsFactory.createVerticalKeyboard(
-                startTestButton,
-                listStartedTestsButton,
-                fillAdvertisingAccountButton,
-                generateReportButton,
-                detailTestInfoButton,
-                backButton);
+                listStartedTestsButton, listAdvertsButton, listCardsButton, backButton);
 
         return new InlineKeyboard(keyboard);
     }
@@ -39,6 +32,6 @@ public class TestsMainViewMaxKeyboardFactory implements BotKeyboardFactory {
 
     @Override
     public ClientState getByState() {
-        return ClientState.TESTS_MENU;
+        return ClientState.ADVERTS_TESTS_CARDS_MENU;
     }
 }

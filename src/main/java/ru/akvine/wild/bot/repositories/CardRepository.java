@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.akvine.wild.bot.entities.CardEntity;
+import ru.akvine.wild.bot.enums.BotType;
 
 public interface CardRepository extends JpaRepository<CardEntity, Long>, JpaSpecificationExecutor<CardEntity> {
     @Query("from CardEntity ce where ce.deleted = false and ce.ownerClient.uuid = :clientUuid")
@@ -22,4 +23,10 @@ public interface CardRepository extends JpaRepository<CardEntity, Long>, JpaSpec
 
     @Query("from CardEntity ce join ce.cardType cte where cte.type = :type and ce.deleted = false")
     List<CardEntity> findByCardType(@Param("type") String cardType);
+
+    @Query("from CardEntity ce join ce.ownerClient cec where cec.chatId = :chatId and cec.botType = :botType and "
+            + "cec.deleted = false "
+            + "and "
+            + "ce.deleted = false")
+    List<CardEntity> findByChatIdAndBotType(@Param("chatId") String chatId, @Param("botType") BotType botType);
 }

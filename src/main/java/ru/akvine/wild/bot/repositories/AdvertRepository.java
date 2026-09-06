@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.enums.BotType;
 
 public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
     @Query("from AdvertEntity ae where ae.status in :statuses " + "and " + "ae.deleted = false")
@@ -27,6 +28,12 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
             + "and "
             + "ae.deleted = false")
     List<AdvertEntity> findByClientIdAndStatuses(@Param("id") Long clientId, List<AdvertStatus> statuses);
+
+    @Query("from AdvertEntity ae join ae.card.ownerClient c where c.chatId = :chatId and c.botType = :botType and "
+            + "c.deleted = false "
+            + "and "
+            + "ae.deleted = false")
+    List<AdvertEntity> findByChatIdAndBotType(@Param("chatId") String chatId, @Param("botType") BotType botType);
 
     @Query("from AdvertEntity ae where ae.uuid = :uuid and ae.deleted = false")
     Optional<AdvertEntity> findByUuid(@Param("uuid") String uuid);

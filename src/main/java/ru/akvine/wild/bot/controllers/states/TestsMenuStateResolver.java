@@ -50,8 +50,8 @@ public class TestsMenuStateResolver extends StateResolver {
             return setNextState(chatId, ClientState.CHOOSE_TYPE_MENU, botType);
         } else if (text.equals(GENERATE_REPORT_BUTTON_TEXT)) {
             return setNextState(chatId, ClientState.GENERATE_REPORT_MENU, botType);
-        } else if (text.equals(LIST_STARTED_TESTS_BUTTON_TEXT)) {
-            return setNextState(chatId, ClientState.LIST_STARTED_TESTS_MENU, botType);
+        } else if (text.equals(ADVERTS_TESTS_AND_CARDS_BUTTON_TEXT)) {
+            return setNextState(chatId, ClientState.ADVERTS_TESTS_CARDS_MENU, botType);
         } else if (text.equals(FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT)) {
             return setNextState(chatId, ClientState.FILL_ADVERTISING_ACCOUNT_MENU, botType);
         } else if (text.equals(DETAIL_TEST_INFORMATION_BUTTON_TEXT)) {

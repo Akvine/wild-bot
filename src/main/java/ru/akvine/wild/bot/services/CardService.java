@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.CardEntity;
 import ru.akvine.wild.bot.entities.CardTypeEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
+import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.CardNotFoundException;
 import ru.akvine.wild.bot.exceptions.CardTypeNotFoundException;
 import ru.akvine.wild.bot.repositories.CardRepository;
@@ -111,6 +112,14 @@ public class CardService {
         Pageable pageable = PageRequest.of(listCards.getPage(), listCards.getCount());
 
         return cardRepository.findAll(specification, pageable).stream()
+                .map(CardModel::new)
+                .toList();
+    }
+
+    public List<CardModel> getByChatIdAndBotType(String chatId, BotType botType) {
+        logger.info("Get cards by chatId = [{}] and bot type = [{}]", chatId, botType);
+
+        return cardRepository.findByChatIdAndBotType(chatId, botType).stream()
                 .map(CardModel::new)
                 .toList();
     }

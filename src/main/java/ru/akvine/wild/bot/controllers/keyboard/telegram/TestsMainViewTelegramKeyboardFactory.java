@@ -22,9 +22,9 @@ public class TestsMainViewTelegramKeyboardFactory implements BotKeyboardFactory 
         startTestButton.setText(START_TEST_BUTTON_TEXT);
         startTestButton.setCallbackData(START_TEST_BUTTON_TEXT);
 
-        InlineKeyboardButton listStartedTestsButton = new InlineKeyboardButton();
-        listStartedTestsButton.setText(LIST_STARTED_TESTS_BUTTON_TEXT);
-        listStartedTestsButton.setCallbackData(LIST_STARTED_TESTS_BUTTON_TEXT);
+        InlineKeyboardButton listAdvertsTestsAndCardsButton = new InlineKeyboardButton();
+        listAdvertsTestsAndCardsButton.setText(ADVERTS_TESTS_AND_CARDS_BUTTON_TEXT);
+        listAdvertsTestsAndCardsButton.setCallbackData(ADVERTS_TESTS_AND_CARDS_BUTTON_TEXT);
 
         InlineKeyboardButton fillAdvertisingAccountButton = new InlineKeyboardButton();
         fillAdvertisingAccountButton.setText(FILL_ADVERTISING_ACCOUNT_BUTTON_TEXT);
@@ -42,7 +42,7 @@ public class TestsMainViewTelegramKeyboardFactory implements BotKeyboardFactory 
 
         InlineKeyboardMarkup markup = TelegramKeyboardFactory.createVerticalKeyboard(
                 startTestButton,
-                listStartedTestsButton,
+                listAdvertsTestsAndCardsButton,
                 fillAdvertisingAccountButton,
                 generateReportButton,
                 detailTestInfoButton,

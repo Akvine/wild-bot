@@ -214,6 +214,13 @@ public class AdvertService {
                         () -> new AdvertNotFoundException("Advert with external id = [" + externalId + "] not found!"));
     }
 
+    public List<AdvertModel> getByChatIdAndBotType(String chatId, BotType botType) {
+        logger.info("Get advert list by chat id and bot type = [{}} and bot type = [{}]", chatId, botType);
+        return advertRepository.findByChatIdAndBotType(chatId, botType).stream()
+                .map(AdvertModel::new)
+                .toList();
+    }
+
     public AdvertEntity verifyExistsByAdvertIdAndClientId(int advertId, long clientId) {
         logger.info("Verify advert exists with id = {} launched by client with id = {}", advertId, clientId);
         return advertRepository.findByExternalIdAndClientId(advertId, clientId).orElseThrow(() -> {
