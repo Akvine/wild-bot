@@ -36,4 +36,7 @@ public class MaxDummyBot implements MaxBot {
 
         return null;
     }
+
+    @Override
+    public void initCommands() {}
 }

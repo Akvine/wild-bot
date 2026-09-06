@@ -5,4 +5,6 @@ import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageReques
 
 public interface MaxBot {
     SendMessageRequest onUpdateReceived(Update[] updates);
+
+    void initCommands();
 }

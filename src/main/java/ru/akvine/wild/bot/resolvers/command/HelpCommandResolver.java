@@ -2,7 +2,6 @@ package ru.akvine.wild.bot.resolvers.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Response;
@@ -16,9 +15,6 @@ import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 public class HelpCommandResolver implements CommandResolver {
     private static final String NEW_LINE = "\n";
 
-    @Value("${telegram.bot.support.url}")
-    private String supportUsername;
-
     @Override
     public Response resolve(BotType botType, String chatId, String text) {
         logger.info("[{}] resolved", getCommand());
@@ -27,9 +23,7 @@ public class HelpCommandResolver implements CommandResolver {
         sb.append("/start - начать работу с ботом")
                 .append(NEW_LINE)
                 .append("/help - вывести список доступных команд")
-                .append(NEW_LINE)
-                .append("За доп. информацией обратитесь пожалуйста в поддержку: ")
-                .append(supportUsername);
+                .append(NEW_LINE);
 
         Response response = new Response().setBotType(botType).setChatId(chatId);
         if (botType == BotType.TELEGRAM) {

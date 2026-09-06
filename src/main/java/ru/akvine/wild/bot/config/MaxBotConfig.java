@@ -19,7 +19,9 @@ public class MaxBotConfig {
             MaxIntegrationService maxIntegrationService,
             InitMessageFilter startMessageFilter,
             BotDtoConverterFacade facade) {
-        return new MaxDevBot(maxIntegrationService, startMessageFilter, facade);
+        MaxBot bot = new MaxDevBot(maxIntegrationService, startMessageFilter, facade);
+        bot.initCommands();
+        return bot;
     }
 
     @Bean

@@ -15,9 +15,11 @@ import ru.akvine.wild.bot.bot.filter.InitMessageFilter;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.facades.BotDtoConverterFacade;
 import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
+import ru.akvine.wild.bot.services.integration.max.dto.CommandDto;
 import ru.akvine.wild.bot.services.integration.max.dto.Message;
 import ru.akvine.wild.bot.services.integration.max.dto.Update;
 import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
+import ru.akvine.wild.bot.services.integration.max.dto.request.UpdateCommandsRequest;
 
 @RequiredArgsConstructor
 public class MaxDevBot implements MaxBot {
@@ -72,6 +74,19 @@ public class MaxDevBot implements MaxBot {
         }
 
         return SendMessageRequest.empty();
+    }
+
+    @Override
+    public void initCommands() {
+        CommandDto startCommand = new CommandDto("/start", "Начать работу с ботом");
+        CommandDto currentStateCommand = new CommandDto("/current", "Вывести текущее сообщение из меню");
+        CommandDto helpCommand = new CommandDto("/help", "Получение списка доступных команд");
+        CommandDto[] commands = new CommandDto[] {startCommand, currentStateCommand, helpCommand};
+
+        UpdateCommandsRequest request = new UpdateCommandsRequest();
+        request.setCommands(commands);
+
+        maxIntegrationService.updateCommands(request);
     }
 
     @PreDestroy

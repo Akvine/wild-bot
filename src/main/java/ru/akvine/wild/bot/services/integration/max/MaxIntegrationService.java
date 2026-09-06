@@ -1,9 +1,11 @@
 package ru.akvine.wild.bot.services.integration.max;
 
+import ru.akvine.wild.bot.exceptions.IntegrationException;
 import ru.akvine.wild.bot.services.integration.max.dto.AttachmentType;
 import ru.akvine.wild.bot.services.integration.max.dto.Message;
 import ru.akvine.wild.bot.services.integration.max.dto.Update;
 import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
+import ru.akvine.wild.bot.services.integration.max.dto.request.UpdateCommandsRequest;
 import ru.akvine.wild.bot.services.integration.max.dto.response.LongPoolingSubscriptionResponse;
 
 /**
@@ -15,6 +17,20 @@ import ru.akvine.wild.bot.services.integration.max.dto.response.LongPoolingSubsc
  * транспорт. Единственная реализация — {@code MaxIntegrationServiceOrigin}.
  */
 public interface MaxIntegrationService {
+
+    /**
+     * Обновляет команды бота через API MAX.
+     * <p>
+     * Метод формирует HTTP-запрос с телом {@code request}, отправляет его на эндпоинт
+     * {@link MaxIntegrationServiceOrigin.MaxApiMethods#UPDATE_COMMAND} и обрабатывает возможные ошибки.
+     * В случае исключения при выполнении запроса выбрасывается {@link IntegrationException}
+     * с сообщением, содержащим информацию о методе API и причине ошибки.
+     *
+     * @param request объект {@link UpdateCommandsRequest}, содержащий данные для обновления команд
+     * @throws IntegrationException если произошла ошибка при вызове API MAX
+     */
+    void updateCommands(UpdateCommandsRequest request);
+
     /**
      * Метод получения обновления о событиях через Long Pooling
      *

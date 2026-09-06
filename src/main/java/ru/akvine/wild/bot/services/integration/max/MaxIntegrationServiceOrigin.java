@@ -34,6 +34,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.Message;
 import ru.akvine.wild.bot.services.integration.max.dto.Update;
 import ru.akvine.wild.bot.services.integration.max.dto.request.GetMessagesRequest;
 import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageRequest;
+import ru.akvine.wild.bot.services.integration.max.dto.request.UpdateCommandsRequest;
 import ru.akvine.wild.bot.services.integration.max.dto.response.*;
 import ru.akvine.wild.bot.utils.ByteUtils;
 import ru.akvine.wild.bot.utils.RequestUtils;
@@ -62,6 +63,24 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
             throw new RuntimeException("Exception while initialize " + MaxIntegrationServiceOrigin.class.getSimpleName()
                     + " class. Ex = "
                     + exception);
+        }
+    }
+
+    @Override
+    public void updateCommands(UpdateCommandsRequest request) {
+        HttpHeaders headers = buildHttpHeaders();
+        HttpEntity<UpdateCommandsRequest> httpEntity = new HttpEntity<>(request, headers);
+
+        String url = maxUrl + MaxApiMethods.UPDATE_COMMAND.getEndpoint();
+
+        try {
+            restTemplate.exchange(
+                    url, MaxApiMethods.UPDATE_COMMAND.getMethod(), httpEntity, UpdateCommandsRequest.class);
+        } catch (Exception exception) {
+            String errorMessage = String.format(
+                    "Error while calling MAX api method = [%s]. Message = %s",
+                    MaxApiMethods.UPDATE_COMMAND, exception.getMessage());
+            throw new IntegrationException(errorMessage);
         }
     }
 
@@ -293,6 +312,7 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
     @Getter
     enum MaxApiMethods {
         LONG_POOLING_SUBSCRIPTIONS_GET("/updates", HttpMethod.GET),
+        UPDATE_COMMAND("/me/commands", HttpMethod.PATCH),
 
         GET_MESSAGES("/messages", HttpMethod.GET),
         SEND_MESSAGE("/messages", HttpMethod.POST),

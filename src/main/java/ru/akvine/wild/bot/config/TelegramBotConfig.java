@@ -142,6 +142,7 @@ public class TelegramBotConfig {
     private List<BotCommand> initBotCommands() {
         return List.of(
                 new BotCommand("/start", "Начать работу с ботом"),
+                new BotCommand("/current", "Вывести текущее сообщение из меню"),
                 new BotCommand("/help", "Получение списка доступных команд"));
     }
 }

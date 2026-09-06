@@ -44,17 +44,7 @@ public class MainMenuView extends AbstractBotView {
                 .append(NEW_LINE)
                 .append("автоматическими \uD83E\uDD16, чтобы вы могли")
                 .append(NEW_LINE)
-                .append("сосредоточиться на более важных задачах.")
-                .append(NEW_LINE)
-                .append("Для начала работы просто выберите нужную")
-                .append(NEW_LINE)
-                .append("команду из меню. Если у вас возникнут")
-                .append(NEW_LINE)
-                .append("вопросы, не стесняйтесь обращаться за")
-                .append(NEW_LINE)
-                .append("помощью через команду /help")
-                .append(NEW_LINE)
-                .append("Давайте  начнем!");
+                .append("сосредоточиться на более важных задачах.");
         return sb.toString();
     }
 
