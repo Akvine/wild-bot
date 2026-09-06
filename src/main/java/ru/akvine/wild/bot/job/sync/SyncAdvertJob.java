@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
+import ru.akvine.wild.bot.constants.DbLockConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
+import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.services.AdvertService;
 import ru.akvine.wild.bot.services.ClientService;
@@ -28,6 +30,7 @@ public class SyncAdvertJob {
     private final AdvertService advertService;
     private final ClientService clientService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
+    private final DataBaseLockProvider lockProvider;
 
     public void sync() {
         logger.info("Start advert sync...");
@@ -35,71 +38,74 @@ public class SyncAdvertJob {
         // TODO: можно распараллелить через CompletableFuture
         List<ClientModel> activeClients = clientService.getAllActive();
         for (ClientModel activeClient : activeClients) {
-            logger.info("Sync adverts for client with uuid [{}]", activeClient.getUuid());
+            lockProvider.doWithLock(DbLockConstants.CLIENT_PREFIX + activeClient.getUuid(), () -> {
+                logger.info("Sync adverts for client with uuid [{}]", activeClient.getUuid());
 
-            String apiToken = activeClient.getToken();
-            AdvertListResponse advertListResponse = wildberriesIntegrationService.getAdverts(apiToken);
-            if (advertListResponse.getAll() != 0) {
-                List<Integer> advertsInWb = advertListResponse.getAdverts().stream()
-                        .filter(advertStatisticDto -> advertStatisticDto.getStatus() == AdvertStatus.PAUSE.getCode()
-                                || advertStatisticDto.getStatus() == AdvertStatus.READY_FOR_START.getCode())
-                        .flatMap(advertStatisticDto ->
-                                advertStatisticDto.getAdvertList().stream().map(AdvertDto::getAdvertId))
-                        .toList();
-                List<AdvertEntity> advertsInDb =
-                        advertRepository.findByStatuses(List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START));
-                List<Integer> advertsIdsInDb =
-                        advertsInDb.stream().map(AdvertEntity::getExternalId).collect(Collectors.toList());
+                String apiToken = activeClient.getToken();
+                AdvertListResponse advertListResponse = wildberriesIntegrationService.getAdverts(apiToken);
+                if (advertListResponse.getAll() != 0) {
+                    List<Integer> advertsInWb = advertListResponse.getAdverts().stream()
+                            .filter(advertStatisticDto -> advertStatisticDto.getStatus() == AdvertStatus.PAUSE.getCode()
+                                    || advertStatisticDto.getStatus() == AdvertStatus.READY_FOR_START.getCode())
+                            .flatMap(advertStatisticDto ->
+                                    advertStatisticDto.getAdvertList().stream().map(AdvertDto::getAdvertId))
+                            .toList();
+                    List<AdvertEntity> advertsInDb =
+                            advertRepository.findByStatuses(List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START));
+                    List<Integer> advertsIdsInDb = advertsInDb.stream()
+                            .map(AdvertEntity::getExternalId)
+                            .collect(Collectors.toList());
 
-                List<Integer> commonElements = new ArrayList<>(advertsInWb);
-                commonElements.retainAll(advertsIdsInDb);
+                    List<Integer> commonElements = new ArrayList<>(advertsInWb);
+                    commonElements.retainAll(advertsIdsInDb);
 
-                List<Integer> uniqueAdvertsInWb = new ArrayList<>(advertsInWb);
-                uniqueAdvertsInWb.removeAll(commonElements);
+                    List<Integer> uniqueAdvertsInWb = new ArrayList<>(advertsInWb);
+                    uniqueAdvertsInWb.removeAll(commonElements);
 
-                List<Integer> uniqueAdvertsInDb = new ArrayList<>(advertsIdsInDb);
-                uniqueAdvertsInDb.removeAll(commonElements);
+                    List<Integer> uniqueAdvertsInDb = new ArrayList<>(advertsIdsInDb);
+                    uniqueAdvertsInDb.removeAll(commonElements);
 
-                if (CollectionUtils.isNotEmpty(uniqueAdvertsInDb)) {
-                    logger.info("Delete unused db adverts. Client uuid = [{}]", activeClient.getUuid());
-                    advertsInDb.stream()
-                            .filter(advertEntity -> uniqueAdvertsInDb.contains(advertEntity.getExternalId()))
-                            .forEach(advertEntity -> {
-                                advertEntity.setDeleted(true);
-                                advertEntity.setDeletedDate(LocalDateTime.now());
-                                advertRepository.save(advertEntity);
-                            });
-                }
-
-                if (CollectionUtils.isNotEmpty(uniqueAdvertsInWb)) {
-                    int batchSize = 50;
-                    int batchNumber = 1;
-                    int batchSavedCount = 0;
-                    for (int i = 0; i < uniqueAdvertsInWb.size(); i += batchSize) {
-                        logger.info(
-                                "Get info for adverts by batch with number = {} and max size = {}. Client uuid = [{}]",
-                                batchNumber,
-                                batchSize,
-                                activeClient.getUuid());
-                        List<Integer> advertIdsBatch =
-                                uniqueAdvertsInWb.subList(i, Math.min(i + batchSize, uniqueAdvertsInWb.size()));
-                        AdvertsInfoResponse response =
-                                wildberriesIntegrationService.getAdvertsInfo(advertIdsBatch, apiToken);
-                        List<AdvertDto> filteredAdverts = response.getAdverts().stream()
-                                .filter(advertDto -> advertDto.getStatus() == AdvertStatus.PAUSE.getCode()
-                                        || advertDto.getStatus() == AdvertStatus.READY_FOR_START.getCode())
-                                .filter(advertDto -> advertDto.getAdvertParams() != null
-                                        && advertDto.getAdvertParams().getSubject() != null)
-                                .collect(Collectors.toList());
-                        advertService.saveAll(filteredAdverts);
-
-                        batchSavedCount += filteredAdverts.size();
-                        batchNumber += 1;
+                    if (CollectionUtils.isNotEmpty(uniqueAdvertsInDb)) {
+                        logger.info("Delete unused db adverts. Client uuid = [{}]", activeClient.getUuid());
+                        advertsInDb.stream()
+                                .filter(advertEntity -> uniqueAdvertsInDb.contains(advertEntity.getExternalId()))
+                                .forEach(advertEntity -> {
+                                    advertEntity.setDeleted(true);
+                                    advertEntity.setDeletedDate(LocalDateTime.now());
+                                    advertRepository.save(advertEntity);
+                                });
                     }
 
-                    printSaveStatistic(batchSavedCount, uniqueAdvertsInWb.size(), activeClient.getUuid());
+                    if (CollectionUtils.isNotEmpty(uniqueAdvertsInWb)) {
+                        int batchSize = 50;
+                        int batchNumber = 1;
+                        int batchSavedCount = 0;
+                        for (int i = 0; i < uniqueAdvertsInWb.size(); i += batchSize) {
+                            logger.info(
+                                    "Get info for adverts by batch with number = {} and max size = {}. Client uuid = [{}]",
+                                    batchNumber,
+                                    batchSize,
+                                    activeClient.getUuid());
+                            List<Integer> advertIdsBatch =
+                                    uniqueAdvertsInWb.subList(i, Math.min(i + batchSize, uniqueAdvertsInWb.size()));
+                            AdvertsInfoResponse response =
+                                    wildberriesIntegrationService.getAdvertsInfo(advertIdsBatch, apiToken);
+                            List<AdvertDto> filteredAdverts = response.getAdverts().stream()
+                                    .filter(advertDto -> advertDto.getStatus() == AdvertStatus.PAUSE.getCode()
+                                            || advertDto.getStatus() == AdvertStatus.READY_FOR_START.getCode())
+                                    .filter(advertDto -> advertDto.getAdvertParams() != null
+                                            && advertDto.getAdvertParams().getSubject() != null)
+                                    .collect(Collectors.toList());
+                            advertService.saveAll(filteredAdverts);
+
+                            batchSavedCount += filteredAdverts.size();
+                            batchNumber += 1;
+                        }
+
+                        printSaveStatistic(batchSavedCount, uniqueAdvertsInWb.size(), activeClient.getUuid());
+                    }
                 }
-            }
+            });
         }
 
         logger.info("End advert sync successful!");

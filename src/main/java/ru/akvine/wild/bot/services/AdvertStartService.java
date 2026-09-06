@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.akvine.wild.bot.constants.DbLockConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
@@ -15,6 +16,7 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.exceptions.AdvertStartException;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
+import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
@@ -39,6 +41,7 @@ public class AdvertStartService {
     private final CountersStorage countersStorage;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final StateStorage<String, List<ClientState>> stateStorage;
+    private final DataBaseLockProvider lockProvider;
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
@@ -64,8 +67,11 @@ public class AdvertStartService {
         try {
             Preconditions.checkNotNull(chatId, "chatId is null");
             Integer categoryId = sessionStorage.get(chatId, botType).getSelectedCategoryId();
+            ClientEntity currentClient = clientService.verifyExistsByChatIdAndBotType(chatId, botType);
             logger.info("Try to start first one advert with category id = {}", categoryId);
-            return startInternal(chatId, botType);
+            return lockProvider.doWithLock(
+                    DbLockConstants.CLIENT_PREFIX + currentClient.getUuid(),
+                    () -> startInternal(chatId, botType, currentClient));
         } catch (Exception exception) {
             AdvertModel advertBean = advertService.getByAdvertId(
                     sessionStorage.get(chatId, botType).getLockedAdvertId());
@@ -75,11 +81,10 @@ public class AdvertStartService {
         }
     }
 
-    private AdvertModel startInternal(String chatId, BotType botType) {
+    private AdvertModel startInternal(String chatId, BotType botType, ClientEntity client) {
         int advertId = sessionStorage.get(chatId, botType).getLockedAdvertId();
         AdvertModel advertToStart = advertService.getByAdvertId(advertId);
         CardModel card = advertToStart.getCardModel();
-        ClientEntity client = clientService.verifyExistsByChatIdAndBotType(chatId, botType);
         String clientToken = client.getToken();
 
         AdvertBudgetInfoResponse advertBudgetInfo =

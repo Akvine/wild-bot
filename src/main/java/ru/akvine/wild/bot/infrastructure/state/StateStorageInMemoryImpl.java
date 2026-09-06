@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import lombok.extern.slf4j.Slf4j;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
