@@ -12,20 +12,25 @@ import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
+import ru.akvine.wild.bot.services.ClientService;
+import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
 @State
 public class TestsMenuStateResolver extends StateResolver {
     private final StartValidator startValidator;
+    private final ClientService clientService;
 
     @Autowired
     public TestsMenuStateResolver(
             StateStorage<String, List<ClientState>> stateStorage,
             BotViewFacade viewFacade,
             StartValidator startValidator,
-            TelegramIntegrationService telegramIntegrationService) {
+            TelegramIntegrationService telegramIntegrationService,
+            ClientService clientService) {
         super(stateStorage, viewFacade, telegramIntegrationService);
         this.startValidator = startValidator;
+        this.clientService = clientService;
     }
 
     @Override
@@ -36,6 +41,11 @@ public class TestsMenuStateResolver extends StateResolver {
         BotType botType = payload.getBotType();
 
         if (text.equals(START_TEST_BUTTON_TEXT)) {
+            ClientModel client = clientService.getByChatIdAndBotType(chatId, botType);
+            if (client.getAvailableTestsCount() <= 0) {
+                return resolveDefaultResponse(chatId, botType, buildHasNoAvailableTestsCountMessage());
+            }
+
             startValidator.verifyStart(chatId);
             return setNextState(chatId, ClientState.CHOOSE_TYPE_MENU, botType);
         } else if (text.equals(GENERATE_REPORT_BUTTON_TEXT)) {
@@ -54,5 +64,11 @@ public class TestsMenuStateResolver extends StateResolver {
     @Override
     public ClientState getState() {
         return ClientState.TESTS_MENU;
+    }
+
+    private String buildHasNoAvailableTestsCountMessage() {
+        return """
+                У вас нет доступных попыток для запуска тестов. Пополните рекламный кабинет для увеличения числа попыток.
+                """;
     }
 }
