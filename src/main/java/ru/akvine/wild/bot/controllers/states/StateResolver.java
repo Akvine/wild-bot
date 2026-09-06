@@ -14,8 +14,10 @@ import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.max.MaxComponentsFactory;
+import ru.akvine.wild.bot.services.integration.max.dto.Button;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -47,6 +49,24 @@ public abstract class StateResolver {
         }
 
         return response.setText(message);
+    }
+
+    protected Response resolveResponseWithBackButton(String chatId, BotType botType, String message) {
+        Response response = new Response(chatId, botType);
+        if (botType == BotType.TELEGRAM) {
+            SendMessage responseMessage = new SendMessage(chatId, message);
+            responseMessage.enableMarkdown(true);
+            responseMessage.setParseMode("html");
+            responseMessage.setReplyMarkup(TelegramKeyboardFactory.getBackKeyboard());
+            return response.setTelegramResponse(responseMessage);
+        }
+
+        Button[][] backButton = MaxComponentsFactory.getBackKeyboard();
+        return response.setText(message)
+                .setMaxSendMessage(new MaxSendMessage()
+                        .setChatId(chatId)
+                        .setText(message)
+                        .setAttachments(List.of(MaxComponentsFactory.toInlineKeyboardAttachment(backButton))));
     }
 
     protected Response setNextState(String chatId, ClientState nextState, BotType botType) {

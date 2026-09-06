@@ -6,7 +6,6 @@ import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.KEEP_PRICE_B
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
@@ -52,13 +51,8 @@ public class IsChangePriceStateResolver extends StateResolver {
             return setNextState(chatId, ClientState.INPUT_NEW_PRICE_MENU, botType);
         } else if (text.equals(KEEP_PRICE_BUTTON_TEXT)) {
             AdvertModel startedAdvert = advertStartService.start(chatId, botType);
-
-            if (botType == BotType.TELEGRAM) {
-                SendMessage message = new SendMessage(chatId, buildMessage(startedAdvert));
-                return response.setTelegramResponse(message);
-            }
-
-            return response.setText("Необходимо выбрать действие из меню!");
+            String responseMessage = buildMessage(startedAdvert);
+            return resolveResponseWithBackButton(chatId, botType, responseMessage);
         } else {
             return resolveDefaultResponse(chatId, botType);
         }
