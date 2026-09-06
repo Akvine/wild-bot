@@ -84,7 +84,6 @@ public class AdvertAdminService {
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
-        advertEntity.setLocked(false);
         AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));
 
         countersStorage.delete(advertId);
@@ -131,7 +130,6 @@ public class AdvertAdminService {
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
-        advertEntity.setLocked(false);
         advertEntity.setAvailableForStart(DateUtils.getStartOfNextDay());
         AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));
 

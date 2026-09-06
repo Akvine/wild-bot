@@ -66,9 +66,6 @@ public class AdvertEntity extends SoftBaseEntity {
     @Column(name = "AVAILABLE_FOR_START")
     private LocalDateTime availableForStart = LocalDateTime.now();
 
-    @Column(name = "IS_LOCKED", nullable = false)
-    private boolean locked;
-
     @OneToOne
     @JoinColumn(name = "CARD_ID", nullable = false)
     private CardEntity card;

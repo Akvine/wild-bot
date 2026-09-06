@@ -29,7 +29,7 @@ public class ClientSessionData {
     private boolean inputNewCardPriceAndDiscount;
     private Integer newCardPrice;
     private Integer newCardDiscount;
-    private Integer lockedAdvertId;
+    private Integer advertIdToStart;
 
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
@@ -44,7 +44,7 @@ public class ClientSessionData {
         this.uploadedCardPhoto = clientSessionDataEntity.getUploadedCardPhoto();
         this.newCardPrice = clientSessionDataEntity.getNewCardPrice();
         this.newCardDiscount = clientSessionDataEntity.getNewCardDiscount();
-        this.lockedAdvertId = clientSessionDataEntity.getLockedAdvertId();
+        this.advertIdToStart = clientSessionDataEntity.getAdvertIdToStart();
 
         this.createdDate = clientSessionDataEntity.getCreatedDate();
         this.updatedDate = clientSessionDataEntity.getUpdatedDate();

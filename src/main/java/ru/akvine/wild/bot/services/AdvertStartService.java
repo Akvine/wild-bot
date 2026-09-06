@@ -74,15 +74,14 @@ public class AdvertStartService {
                     () -> startInternal(chatId, botType, currentClient));
         } catch (Exception exception) {
             AdvertModel advertBean = advertService.getByAdvertId(
-                    sessionStorage.get(chatId, botType).getLockedAdvertId());
-            advertBean.setLocked(false);
+                    sessionStorage.get(chatId, botType).getAdvertIdToStart());
             advertService.update(advertBean);
             throw new AdvertStartException(exception.getMessage());
         }
     }
 
     private AdvertModel startInternal(String chatId, BotType botType, ClientEntity client) {
-        int advertId = sessionStorage.get(chatId, botType).getLockedAdvertId();
+        int advertId = sessionStorage.get(chatId, botType).getAdvertIdToStart();
         AdvertModel advertToStart = advertService.getByAdvertId(advertId);
         CardModel card = advertToStart.getCardModel();
         String clientToken = client.getToken();

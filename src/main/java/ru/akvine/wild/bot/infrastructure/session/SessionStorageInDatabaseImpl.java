@@ -43,7 +43,7 @@ public class SessionStorageInDatabaseImpl implements SessionStorage<String, Clie
                 .setInputNewCardPriceAndDiscount(data.isInputNewCardPriceAndDiscount())
                 .setNewCardPrice(data.getNewCardPrice())
                 .setNewCardDiscount(data.getNewCardDiscount())
-                .setLockedAdvertId(data.getLockedAdvertId());
+                .setAdvertIdToStart(data.getAdvertIdToStart());
         return new ClientSessionData(clientSessionDataRepository.save(session));
     }
 

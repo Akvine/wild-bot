@@ -119,7 +119,6 @@ public class AdvertService {
                 .setOrdinalType(advertBean.getType().getCode())
                 .setStartCheckDateTime(advertBean.getStartCheckDateTime())
                 .setCheckBudgetSum(advertBean.getCheckBudgetSum())
-                .setLocked(advertBean.isLocked())
                 .setAvailableForStart(advertBean.getAvailableForStart())
                 .setUpdatedDate(LocalDateTime.now());
         AdvertModel updatedAdvert = new AdvertModel(advertRepository.save(advertEntity));
@@ -141,7 +140,6 @@ public class AdvertService {
 
         List<AdvertModel> pauseAdvertBeans = advertBeans.stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.PAUSE))
-                .filter(advertBean -> !advertBean.isLocked())
                 .filter(AdvertModel::isAvailableForStart)
                 .toList();
         if (!pauseAdvertBeans.isEmpty()) {
@@ -152,7 +150,6 @@ public class AdvertService {
 
         List<AdvertModel> readyForStartAdvertBeans = advertBeans.stream()
                 .filter(advertBean -> advertBean.getStatus().equals(AdvertStatus.READY_FOR_START))
-                .filter(advertBean -> !advertBean.isLocked())
                 .filter(AdvertModel::isAvailableForStart)
                 .toList();
         if (!readyForStartAdvertBeans.isEmpty()) {
@@ -187,7 +184,6 @@ public class AdvertService {
                     .setUuid(UUIDGenerator.uuidWithoutDashes())
                     .setExternalId(advertId)
                     .setChangeTime(new Date())
-                    .setLocked(false)
                     .setCpm(advertMinCpm)
                     .setExternalId(cardBean.getExternalId())
                     .setStatus(AdvertStatus.PAUSE)

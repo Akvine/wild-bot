@@ -36,14 +36,12 @@ public class AdvertModel extends SoftModel {
     private LocalDateTime nextCheckDateTime;
 
     private LocalDateTime availableForStart;
-    private boolean locked;
     private CardModel cardModel;
 
     public AdvertModel(AdvertEntity advertEntity) {
         this.id = advertEntity.getId();
         this.uuid = advertEntity.getUuid();
         this.name = advertEntity.getExternalTitle();
-        this.locked = advertEntity.isLocked();
         this.externalId = advertEntity.getExternalId();
         this.changeTime = advertEntity.getChangeTime();
         this.status = advertEntity.getStatus();

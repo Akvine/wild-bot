@@ -91,7 +91,6 @@ public class CheckRunningAdvertsJob {
                 advert.setUpdatedDate(LocalDateTime.now());
                 advert.setNextCheckDateTime(null);
                 advert.setCheckBudgetSum(null);
-                advert.setLocked(false);
                 advertRepository.save(advert);
                 countersStorage.delete(advertId);
 

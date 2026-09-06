@@ -52,13 +52,10 @@ public class IsChangePriceView extends AbstractBotView {
             int selectedCategoryId = sessionStorage.get(chatId, botType).getSelectedCategoryId();
 
             ClientModel client = clientService.getByChatIdAndBotType(chatId, botType);
-
             AdvertModel advertBean = advertService.getFirst(selectedCardType, selectedCategoryId, client);
-            advertBean.setLocked(true);
-            advertService.update(advertBean);
 
             ClientSessionData session = sessionStorage.get(chatId, botType);
-            session.setLockedAdvertId(advertBean.getExternalId());
+            session.setAdvertIdToStart(advertBean.getExternalId());
             sessionStorage.save(session, botType);
 
             int nmId = advertBean.getCardModel().getExternalId();

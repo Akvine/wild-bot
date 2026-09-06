@@ -454,3 +454,15 @@ CREATE UNIQUE INDEX CLIENT_STATES_ENTITY_IDENTIFIER_INDEX ON CLIENT_STATES_ENTIT
 --precondition-sql-check expectedResult:0 select count(*) from information_schema.columns where upper(column_name) = 'BOT_TYPE' and upper(table_name) = 'CLIENT_SESSION_DATA_ENTITY';
 ALTER TABLE CLIENT_SESSION_DATA_ENTITY ADD BOT_TYPE VARCHAR(32) NOT NULL;
 --rollback not required
+
+--changeset akvine:TG-BOT-1-29
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns where upper(column_name) = 'IS_LOCKED' and upper(table_name) = 'ADVERT_ENTITY';
+ALTER TABLE ADVERT_ENTITY DROP COLUMN IS_LOCKED;
+--rollback not required
+
+--changeset akvine:TG-BOT-1-30
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:1 select count(*) from information_schema.columns WHERE upper(table_name) = 'CLIENT_SESSION_DATA_ENTITY' AND upper(column_name) = 'LOCKED_ADVERT_ID';
+ALTER TABLE CLIENT_SESSION_DATA_ENTITY RENAME COLUMN LOCKED_ADVERT_ID TO ADVERT_ID_TO_START;
+--rollback not required

@@ -51,6 +51,6 @@ public class ClientSessionDataEntity extends BaseEntity {
     @Column(name = "NEW_CARD_DISCOUNT")
     private Integer newCardDiscount;
 
-    @Column(name = "LOCKED_ADVERT_ID")
-    private Integer lockedAdvertId;
+    @Column(name = "ADVERT_ID_TO_START")
+    private Integer advertIdToStart;
 }
