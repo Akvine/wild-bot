@@ -16,7 +16,7 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.exceptions.AdvertStartException;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
-import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
+import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
@@ -41,7 +41,7 @@ public class AdvertStartService {
     private final CountersStorage countersStorage;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final StateStorage<String, List<ClientState>> stateStorage;
-    private final DataBaseLockProvider lockProvider;
+    private final DistributedLockProvider lockProvider;
 
     @Value("${check.advert.cron.milliseconds}")
     private long checkMilliseconds;
@@ -69,7 +69,7 @@ public class AdvertStartService {
             Integer categoryId = sessionStorage.get(chatId, botType).getSelectedCategoryId();
             ClientEntity currentClient = clientService.verifyExistsByChatIdAndBotType(chatId, botType);
             logger.info("Try to start first one advert with category id = {}", categoryId);
-            return lockProvider.doWithLock(
+            return lockProvider.lock(
                     DbLockConstants.CLIENT_PREFIX + currentClient.getUuid(),
                     () -> startInternal(chatId, botType, currentClient));
         } catch (Exception exception) {

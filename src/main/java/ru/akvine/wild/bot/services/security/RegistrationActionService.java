@@ -45,7 +45,7 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
 
         verifyNotBlocked(login);
 
-        RegistrationActionEntity registrationActionEntity = lockProvider.doWithLock(getLock(login), () -> {
+        RegistrationActionEntity registrationActionEntity = lockProvider.lock(getLock(login), () -> {
             RegistrationActionEntity registrationAction = getRepository().findCurrentAction(login);
             if (registrationAction == null) {
                 return createNewActionAndSendOtp(login, sessionId);
@@ -91,7 +91,7 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
 
         verifyNotBlocked(login);
 
-        RegistrationActionEntity registrationActionEntity = lockProvider.doWithLock(getLock(login), () -> {
+        RegistrationActionEntity registrationActionEntity = lockProvider.lock(getLock(login), () -> {
             RegistrationActionEntity registrationAction = checkOtpInput(login, otp, sessionId);
             registrationAction.setState(ActionState.OTP_PASSED);
             registrationAction.getOtpAction().setOtpValueToNull();
@@ -117,7 +117,7 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
         String login = request.getEmail();
         verifyNotBlocked(login);
 
-        return lockProvider.doWithLock(getLock(login), () -> {
+        return lockProvider.lock(getLock(login), () -> {
             RegistrationActionEntity registrationAction = getRepository().findCurrentAction(login);
             if (registrationAction == null) {
                 logger.info("Registration for email = {} not started yet!", login);

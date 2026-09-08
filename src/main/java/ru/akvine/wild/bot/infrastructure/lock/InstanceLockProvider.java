@@ -5,32 +5,28 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import org.springframework.stereotype.Component;
 
 /**
- * Реализация {@link InMemoryLockProvider} на {@link ReentrantLock} внутри одного процесса —
+ * Реализация на {@link ReentrantLock} внутри одного процесса —
  * блокировки видны только в рамках текущего инстанса приложения и не координируются между
  * несколькими инстансами. Следует использовать только если в production-среде не более
- * 1 инстанса приложения. В противном случае стоит использовать RedisInMemoryLockProvider
- * или DataBaseLockProvider.
+ * 1 инстанса приложения. В противном случае стоит использовать {@link ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider}
+ * или {@link ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider}.
  */
-@Component
-public class InstanceLockProvider implements InMemoryLockProvider {
+@Deprecated
+public class InstanceLockProvider {
     private static final Map<String, LockWrapper> locks = new ConcurrentHashMap<>();
 
-    @Override
     public void lock(String key) {
         LockWrapper lockWrapper = locks.compute(key, (k, v) -> v == null ? new LockWrapper() : v.addThreadInQueue());
         lockWrapper.lock.lock();
     }
 
-    @Override
     public boolean tryLock(String key) {
         lock(key);
         return true;
     }
 
-    @Override
     public void unlock(String key) {
         LockWrapper lockWrapper = locks.get(key);
         lockWrapper.lock.unlock();

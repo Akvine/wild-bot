@@ -7,7 +7,7 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotKeyboardFactoryFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.View;
-import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
+import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
 import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.services.AdvertService;
@@ -24,7 +24,7 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.GoodSizeDt
 public class IsChangePriceView extends AbstractBotView {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final AdvertService advertService;
-    private final DataBaseLockProvider dataBaseLockProvider;
+    private final DistributedLockProvider lockProvider;
     private final SessionStorage<String, ClientSessionData> sessionStorage;
     private final ClientService clientService;
 
@@ -34,20 +34,20 @@ public class IsChangePriceView extends AbstractBotView {
             BotKeyboardFactoryFacade facade,
             WildberriesIntegrationService wildberriesIntegrationService,
             AdvertService advertService,
-            DataBaseLockProvider dataBaseLockProvider,
+            DistributedLockProvider lockProvider,
             SessionStorage<String, ClientSessionData> sessionStorage,
             ClientService clientService) {
         super(facade);
         this.wildberriesIntegrationService = wildberriesIntegrationService;
         this.advertService = advertService;
-        this.dataBaseLockProvider = dataBaseLockProvider;
+        this.lockProvider = lockProvider;
         this.sessionStorage = sessionStorage;
         this.clientService = clientService;
     }
 
     @Override
     public String getMessage(String chatId, BotType botType) {
-        return dataBaseLockProvider.doWithLock(UPLOAD_PHOTO_LOCK + chatId, () -> {
+        return lockProvider.lock(UPLOAD_PHOTO_LOCK + chatId, () -> {
             String selectedCardType = sessionStorage.get(chatId, botType).getSelectedCardType();
             int selectedCategoryId = sessionStorage.get(chatId, botType).getSelectedCategoryId();
 

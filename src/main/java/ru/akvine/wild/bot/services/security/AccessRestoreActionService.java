@@ -43,7 +43,7 @@ public class AccessRestoreActionService extends OtpActionService<AccessRestoreAc
 
         verifyNotBlocked(login);
 
-        AccessRestoreActionEntity accessRestoreActionEntity = lockProvider.doWithLock(getLock(login), () -> {
+        AccessRestoreActionEntity accessRestoreActionEntity = lockProvider.lock(getLock(login), () -> {
             AccessRestoreActionEntity accessRestoreAction = accessRestoreActionRepository.findCurrentAction(login);
             if (accessRestoreAction == null) {
                 return createNewActionAndSendOtp(login, sessionId);
@@ -87,7 +87,7 @@ public class AccessRestoreActionService extends OtpActionService<AccessRestoreAc
         String login = actionRequest.getLogin();
         String otpValue = actionRequest.getOtp();
 
-        AccessRestoreActionEntity accessRestoreActionEntity = lockProvider.doWithLock(getLock(login), () -> {
+        AccessRestoreActionEntity accessRestoreActionEntity = lockProvider.lock(getLock(login), () -> {
             AccessRestoreActionEntity accessRestoreAction = accessRestoreActionRepository.findCurrentAction(login);
             if (accessRestoreAction == null) {
                 logger.info("Client tried to check otp of {}, but action is not started", getActionName());
@@ -155,7 +155,7 @@ public class AccessRestoreActionService extends OtpActionService<AccessRestoreAc
         String login = actionRequest.getLogin();
         String password = actionRequest.getPassword();
 
-        return lockProvider.doWithLock(getLock(login), () -> {
+        return lockProvider.lock(getLock(login), () -> {
             AccessRestoreActionEntity accessRestoreAction = accessRestoreActionRepository.findCurrentAction(login);
             if (accessRestoreAction == null) {
                 logger.info("Client tried to finish {}, but action is not started", getActionName());

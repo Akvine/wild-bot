@@ -2,14 +2,21 @@ package ru.akvine.wild.bot.config;
 
 import java.time.Duration;
 import java.util.List;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.support.TransactionTemplate;
+import ru.akvine.commons.cluster.lock.ConcurrentOperationsHelper;
+import ru.akvine.commons.cluster.lock.SLockProvider;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInMemoryImpl;
+import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
+import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
+import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
 import ru.akvine.wild.bot.infrastructure.retry.DefaultRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.ExponentialRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.RetryExecutor;
@@ -86,5 +93,20 @@ public class InfrastructureBeansConfig {
             @Value("${send.file.retry.attempts.count}") int attempts,
             @Value("${send.file.retry.initial.delay.millis}") int retryInitialDelayMillis) {
         return new DefaultRetryExecutor(attempts, Duration.ofMillis(retryInitialDelayMillis));
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true")
+    public DistributedLockProvider redisLockProvider(RedissonClient redisson) {
+        return new RedisLockProvider(redisson);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "false")
+    public DistributedLockProvider databaseLockProvider(
+            ConcurrentOperationsHelper concurrentOperationsHelper,
+            SLockProvider sLockProvider,
+            TransactionTemplate transactionTemplate) {
+        return new DataBaseLockProvider(concurrentOperationsHelper, sLockProvider, transactionTemplate);
     }
 }

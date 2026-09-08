@@ -47,7 +47,7 @@ public class AuthActionService extends PasswordRequiredActionService<AuthActionE
         SupportUserModel clientBean = supportService.getByEmail(login);
         final boolean isPasswordValid = isValidPassword(clientBean, password);
 
-        AuthActionEntity authActionEntity = lockProvider.doWithLock(getLock(login), () -> {
+        AuthActionEntity authActionEntity = lockProvider.lock(getLock(login), () -> {
             AuthActionEntity authAction = getRepository().findCurrentAction(login);
             if (authAction == null) {
                 OtpCreateNewAction otpCreateNewAction = new OtpCreateNewAction(login, sessionId, isPasswordValid);
@@ -94,7 +94,7 @@ public class AuthActionService extends PasswordRequiredActionService<AuthActionE
         verifyNotBlocked(login);
         SupportUserModel clientBean = supportService.getByEmail(login);
 
-        return lockProvider.doWithLock((getLock(login)), () -> {
+        return lockProvider.lock((getLock(login)), () -> {
             AuthActionEntity authActionEntity = checkOtpInput(login, otp, sessionId);
             logger.info("Client with email = {} successfully passed otp!", login);
             getRepository().delete(authActionEntity);

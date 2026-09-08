@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.constants.DbLockConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
-import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
+import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.services.AdvertService;
 import ru.akvine.wild.bot.services.ClientService;
@@ -30,7 +30,7 @@ public class SyncAdvertJob {
     private final AdvertService advertService;
     private final ClientService clientService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
-    private final DataBaseLockProvider lockProvider;
+    private final DistributedLockProvider lockProvider;
 
     public void sync() {
         logger.info("Start advert sync...");
@@ -38,7 +38,7 @@ public class SyncAdvertJob {
         // TODO: можно распараллелить через CompletableFuture
         List<ClientModel> activeClients = clientService.getAllActive();
         for (ClientModel activeClient : activeClients) {
-            lockProvider.doWithLock(DbLockConstants.CLIENT_PREFIX + activeClient.getUuid(), () -> {
+            lockProvider.lock(DbLockConstants.CLIENT_PREFIX + activeClient.getUuid(), () -> {
                 logger.info("Sync adverts for client with uuid [{}]", activeClient.getUuid());
 
                 String apiToken = activeClient.getToken();

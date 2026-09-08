@@ -11,7 +11,7 @@ import ru.akvine.wild.bot.entities.security.OneTimePasswordable;
 import ru.akvine.wild.bot.entities.security.OtpActionEntity;
 import ru.akvine.wild.bot.entities.security.OtpInfo;
 import ru.akvine.wild.bot.exceptions.security.*;
-import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
+import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
 import ru.akvine.wild.bot.repositories.security.ActionRepository;
 import ru.akvine.wild.bot.services.notification.TwoFactorNotificationSender;
 
@@ -19,7 +19,7 @@ import ru.akvine.wild.bot.services.notification.TwoFactorNotificationSender;
 @Slf4j
 public abstract class OtpActionService<T extends OneTimePasswordable> {
     @Autowired
-    protected DataBaseLockProvider lockProvider;
+    protected DistributedLockProvider lockProvider;
 
     @Autowired
     protected SupportBlockingService supportBlockingService;
@@ -38,7 +38,7 @@ public abstract class OtpActionService<T extends OneTimePasswordable> {
 
         String lockId = getLock(payload);
 
-        T otpAction = lockProvider.doWithLock(lockId, () -> {
+        T otpAction = lockProvider.lock(lockId, () -> {
             T action = getRepository().findCurrentAction(payload);
             if (action == null) {
                 logger.info("Client tried to get new otp, but {} is not initiated", getActionName());
