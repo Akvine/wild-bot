@@ -1,13 +1,12 @@
 package ru.akvine.wild.bot.services.integration;
 
-import java.time.Duration;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.RetryException;
-import ru.akvine.wild.bot.helpers.RetryHelper;
+import ru.akvine.wild.bot.infrastructure.retry.RetryExecutor;
 import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
 import ru.akvine.wild.bot.services.integration.max.dto.AttachmentType;
@@ -20,7 +19,7 @@ public class BotIntegrationAdapterImpl implements BotIntegrationAdapter {
     private final TelegramIntegrationService telegramIntegrationService;
     private final MaxIntegrationService maxIntegrationService;
 
-    private final RetryHelper retryHelper;
+    private final RetryExecutor retryExecutor;
 
     @Value("${send.file.retry.attempts.count}")
     private int retryAttemptsCount;
@@ -44,11 +43,7 @@ public class BotIntegrationAdapterImpl implements BotIntegrationAdapter {
 
             String errorMessage =
                     String.format("Retry attempts limit = [%s] exceeded for sending image message", retryAttemptsCount);
-            retryHelper.retryWithExponentialBackoffWithoutResult(
-                    retryAttemptsCount,
-                    Duration.ofMillis(retryInitialDelayMillis),
-                    retryExponentialBackoffMultiplier,
-                    Duration.ofMillis(retryMaxDelayMillis),
+            retryExecutor.execute(
                     () -> {
                         SendMessageRequest request = new SendMessageRequest()
                                 .setAttachments(MaxComponentsFactory.createFileAttachment(AttachmentType.IMAGE, token));
@@ -68,11 +63,7 @@ public class BotIntegrationAdapterImpl implements BotIntegrationAdapter {
 
             String errorMessage =
                     String.format("Retry attempts limit = [%s] exceeded for sending file message", retryAttemptsCount);
-            retryHelper.retryWithExponentialBackoffWithoutResult(
-                    retryAttemptsCount,
-                    Duration.ofMillis(retryInitialDelayMillis),
-                    retryExponentialBackoffMultiplier,
-                    Duration.ofMillis(retryMaxDelayMillis),
+            retryExecutor.execute(
                     () -> {
                         SendMessageRequest request = new SendMessageRequest()
                                 .setAttachments(MaxComponentsFactory.createFileAttachment(AttachmentType.FILE, token));
