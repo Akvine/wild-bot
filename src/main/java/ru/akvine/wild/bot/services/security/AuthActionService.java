@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
-import ru.akvine.wild.bot.constants.DbLockConstants;
+import ru.akvine.wild.bot.constants.LockConstants;
 import ru.akvine.wild.bot.entities.security.AuthActionEntity;
 import ru.akvine.wild.bot.entities.security.OtpActionEntity;
 import ru.akvine.wild.bot.exceptions.security.NoMoreNewOtpAvailableException;
@@ -135,7 +135,7 @@ public class AuthActionService extends PasswordRequiredActionService<AuthActionE
 
     @Override
     protected String getLock(String payload) {
-        return DbLockConstants.AUTH_PREFIX + payload;
+        return LockConstants.AUTH_PREFIX + payload;
     }
 
     @Override

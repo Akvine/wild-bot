@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
-import ru.akvine.wild.bot.constants.DbLockConstants;
+import ru.akvine.wild.bot.constants.LockConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
@@ -38,7 +38,7 @@ public class SyncAdvertJob {
         // TODO: можно распараллелить через CompletableFuture
         List<ClientModel> activeClients = clientService.getAllActive();
         for (ClientModel activeClient : activeClients) {
-            lockProvider.lock(DbLockConstants.CLIENT_PREFIX + activeClient.getUuid(), () -> {
+            lockProvider.lock(LockConstants.CLIENT_LOCK_ID_PREFIX + activeClient.getUuid(), () -> {
                 logger.info("Sync adverts for client with uuid [{}]", activeClient.getUuid());
 
                 String apiToken = activeClient.getToken();

@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.akvine.wild.bot.constants.DbLockConstants;
+import ru.akvine.wild.bot.constants.LockConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
@@ -70,7 +70,7 @@ public class AdvertStartService {
             ClientEntity currentClient = clientService.verifyExistsByChatIdAndBotType(chatId, botType);
             logger.info("Try to start first one advert with category id = {}", categoryId);
             return lockProvider.lock(
-                    DbLockConstants.CLIENT_PREFIX + currentClient.getUuid(),
+                    LockConstants.CLIENT_LOCK_ID_PREFIX + currentClient.getUuid(),
                     () -> startInternal(chatId, botType, currentClient));
         } catch (Exception exception) {
             AdvertModel advertBean = advertService.getByAdvertId(

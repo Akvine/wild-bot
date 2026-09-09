@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.akvine.wild.bot.constants.DbLockConstants;
+import ru.akvine.wild.bot.constants.LockConstants;
 import ru.akvine.wild.bot.entities.security.OtpActionEntity;
 import ru.akvine.wild.bot.entities.security.RegistrationActionEntity;
 import ru.akvine.wild.bot.enums.security.ActionState;
@@ -165,7 +165,7 @@ public class RegistrationActionService extends OtpActionService<RegistrationActi
 
     @Override
     protected String getLock(String payload) {
-        return DbLockConstants.REG_PREFIX + payload;
+        return LockConstants.REG_PREFIX + payload;
     }
 
     @Override

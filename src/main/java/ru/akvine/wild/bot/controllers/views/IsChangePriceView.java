@@ -1,6 +1,6 @@
 package ru.akvine.wild.bot.controllers.views;
 
-import static ru.akvine.wild.bot.constants.DbLockConstants.UPLOAD_PHOTO_LOCK;
+import static ru.akvine.wild.bot.constants.LockConstants.UPLOAD_PHOTO_LOCK;
 
 import org.springframework.util.CollectionUtils;
 import ru.akvine.wild.bot.enums.BotType;
