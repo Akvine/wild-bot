@@ -1,4 +1,4 @@
-package ru.akvine.wild.bot.services.impl;
+package ru.akvine.wild.bot.services.encryption;
 
 import java.nio.charset.StandardCharsets;
 import org.bouncycastle.crypto.engines.ChaChaEngine;
@@ -7,7 +7,6 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.akvine.wild.bot.services.EncryptionService;
 
 @Service
 public class ChaCha20EncryptionService implements EncryptionService {

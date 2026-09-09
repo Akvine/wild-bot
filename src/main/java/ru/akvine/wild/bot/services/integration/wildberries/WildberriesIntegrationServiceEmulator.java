@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.akvine.wild.bot.constants.ProxyConstants;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
-import ru.akvine.wild.bot.services.EncryptionService;
+import ru.akvine.wild.bot.services.encryption.EncryptionService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardListResponse;

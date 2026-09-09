@@ -1,4 +1,4 @@
-package ru.akvine.wild.bot.services;
+package ru.akvine.wild.bot.services.encryption;
 
 /**
  * Интерфейс для шифрования и дешифрования.

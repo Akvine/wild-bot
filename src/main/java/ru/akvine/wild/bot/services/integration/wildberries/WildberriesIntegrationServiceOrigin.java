@@ -13,7 +13,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
-import ru.akvine.wild.bot.services.EncryptionService;
+import ru.akvine.wild.bot.services.encryption.EncryptionService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;

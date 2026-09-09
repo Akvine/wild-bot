@@ -16,6 +16,7 @@ import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.ClientCreate;
 import ru.akvine.wild.bot.services.dto.ClientUpdate;
+import ru.akvine.wild.bot.services.encryption.EncryptionService;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
 
 @Service
