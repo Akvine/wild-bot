@@ -91,6 +91,12 @@ public class RedisLockProvider implements DistributedLockProvider {
         fairLock.unlock();
     }
 
+    @Override
+    public boolean isLocked(String key) {
+        RLock lock = redisson.getLock(key);
+        return lock.isLocked();
+    }
+
     private <T> T launchAndUnlock(String lockId, RLock rLock, Callable<T> job) {
         try {
             return job.call();

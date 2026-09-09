@@ -158,4 +158,10 @@ public class DataBaseLockProvider implements DistributedLockProvider {
         SLock lock = sLockProvider.getLock(key);
         lock.unlock();
     }
+
+    @Override
+    public boolean isLocked(String key) {
+        SLock lock = sLockProvider.getLock(key);
+        return lock.isLocked();
+    }
 }

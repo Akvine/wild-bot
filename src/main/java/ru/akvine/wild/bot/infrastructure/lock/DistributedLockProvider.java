@@ -108,4 +108,12 @@ public interface DistributedLockProvider {
      * @throws RuntimeException если блокировка не удерживается текущим участником или возникает ошибка при её снятии
      */
     void unlock(String key);
+
+    /**
+     * Есть ли распределённая блокировка по ключу.
+     *
+     * @param key идентификатор блокировки
+     * @return true - если блокировка по идентификатору взята, false - нет блокировки по идентификатору
+     */
+    boolean isLocked(String key);
 }
