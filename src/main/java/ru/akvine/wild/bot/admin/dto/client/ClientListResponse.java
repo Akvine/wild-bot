@@ -8,5 +8,6 @@ import ru.akvine.wild.bot.admin.dto.common.SuccessfulResponse;
 @Data
 @Accessors(chain = true)
 public class ClientListResponse extends SuccessfulResponse {
+    private int count;
     private List<ClientDto> clients;
 }

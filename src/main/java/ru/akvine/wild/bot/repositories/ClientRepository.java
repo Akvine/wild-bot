@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.BotType;
 
-public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
+public interface ClientRepository extends JpaRepository<ClientEntity, Long>, JpaSpecificationExecutor<ClientEntity> {
     @Query("from ClientEntity ce where ce.chatId = :chatId " + "and ce.botType = :botType "
             + "and ce.deleted = false and ce.deletedDate is null")
     Optional<ClientEntity> findByChatIdAndBotType(@Param("chatId") String chatId, @Param("botType") BotType botType);
@@ -26,6 +27,7 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
     @Query("from ClientEntity ce where ce.chatId in :chatIds and ce.deleted = false and ce.deletedDate is null")
     List<ClientEntity> findByListChatId(@Param("chatIds") List<String> chatIds);
 
+    // TODO: добавить пагинацию, иначе при большом кол-ве может начать тормозить приложение
     @Query("from ClientEntity ce where ce.deleted = false and ce.deletedDate is null")
     @NotNull
     List<ClientEntity> findAll();

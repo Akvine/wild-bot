@@ -18,8 +18,8 @@ public class ClientConverter {
     private static final int BLOCK_TIME_YEARS = 100;
 
     public ClientListResponse convertToClientListResponse(List<ClientModel> clients) {
-        return new ClientListResponse()
-                .setClients(clients.stream().map(this::buildClientDto).toList());
+        List<ClientDto> clientsDto = clients.stream().map(this::buildClientDto).toList();
+        return new ClientListResponse().setCount(clientsDto.size()).setClients(clientsDto);
     }
 
     private ClientDto buildClientDto(ClientModel clientModel) {
@@ -50,6 +50,26 @@ public class ClientConverter {
                 .setChatId(clientBean.getChatId())
                 .setUsername(clientBean.getUsername())
                 .setTotalAvailableTestsCount(clientBean.getAvailableTestsCount());
+    }
+
+    public ListClients convertToListClients(ListClientsRequest request) {
+        ListClients action = new ListClients()
+                .setPage(request.getNextPage().getPage())
+                .setCount(request.getNextPage().getCount());
+
+        if (request.getFilter() != null) {
+            return action.setBotType(
+                            StringUtils.isNotBlank(request.getFilter().getBotType())
+                                    ? BotType.safeValueOf(request.getFilter().getBotType())
+                                    : null)
+                    .setChatIds(request.getFilter().getChatIds())
+                    .setDeleted(request.getFilter().getDeleted())
+                    .setClientUuids(request.getFilter().getUuids())
+                    .setTokenIsNull(request.getFilter().getTokenIsNull())
+                    .setInWhitelist(request.getFilter().getInWhitelist());
+        }
+
+        return action;
     }
 
     public BlockClientStart convertToBlockClientStart(BlockClientRequest request) {

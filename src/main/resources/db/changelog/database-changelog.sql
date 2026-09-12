@@ -466,3 +466,9 @@ ALTER TABLE ADVERT_ENTITY DROP COLUMN IS_LOCKED;
 --precondition-sql-check expectedResult:1 select count(*) from information_schema.columns WHERE upper(table_name) = 'CLIENT_SESSION_DATA_ENTITY' AND upper(column_name) = 'LOCKED_ADVERT_ID';
 ALTER TABLE CLIENT_SESSION_DATA_ENTITY RENAME COLUMN LOCKED_ADVERT_ID TO ADVERT_ID_TO_START;
 --rollback not required
+
+--changeset akvine:TG-BOT-1-31
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSql:FAIL
+--precondition-sql-check expectedResult:1 select count(*) from pg_indexes where schemaname = current_schema() and indexname = 'client_username_index';
+ DROP INDEX CLIENT_USERNAME_INDEX;
+ --rollback not required

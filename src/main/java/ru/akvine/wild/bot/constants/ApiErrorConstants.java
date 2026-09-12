@@ -24,6 +24,8 @@ public final class ApiErrorConstants {
         String BOTH_PARAMETERS_BLANK_ERROR = "both.parameters.blank.error";
         String FIELD_NOT_PRESENTED_ERROR = "field.not.presented.error";
 
+        String LIST_MAX_CLIENTS_COUNT_ERROR = "list.max.clients.count.error";
+
         String BAD_CREDENTIALS_ERROR = "bad.credentials.error";
 
         String ADVERT_STATUS_BLANK_ERROR = "advert.status.blank.error";

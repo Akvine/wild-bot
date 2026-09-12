@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.akvine.wild.bot.entities.ClientBlockedCredentialsEntity;
@@ -17,6 +20,7 @@ import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
 import ru.akvine.wild.bot.facades.QrCodeGenerationServiceFacade;
 import ru.akvine.wild.bot.repositories.ClientRepository;
+import ru.akvine.wild.bot.repositories.specifications.ClientSpecification;
 import ru.akvine.wild.bot.services.ClientBlockingService;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
@@ -34,6 +38,7 @@ public class ClientAdminService {
     private final ClientRepository clientRepository;
     private final BotIntegrationAdapter botIntegrationAdapter;
     private final QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade;
+    private final ClientSpecification clientSpecification;
 
     @Value("${qraft.integration.enabled}")
     private boolean qraftIntegrationEnabled;
@@ -65,8 +70,12 @@ public class ClientAdminService {
     @Value("${qraft.request.param.image.type}")
     private String imageType;
 
-    public List<ClientModel> list() {
-        return clientService.getAll();
+    public List<ClientModel> list(ListClients listClients) {
+
+        Specification<ClientEntity> specification = clientSpecification.build(listClients);
+        Pageable pageable = PageRequest.of(listClients.getPage(), listClients.getCount());
+        return clientRepository.findAll(specification, pageable).map(ClientModel::new).stream()
+                .toList();
     }
 
     public ClientModel addTestsToClient(AddTests addTests) {

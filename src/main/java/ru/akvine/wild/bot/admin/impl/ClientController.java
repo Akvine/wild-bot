@@ -22,8 +22,10 @@ public class ClientController implements ClientControllerMeta {
     private final ClientConverter clientConverter;
 
     @Override
-    public Response list() {
-        List<ClientModel> clients = clientAdminService.list();
+    public Response list(ListClientsRequest request) {
+        clientValidator.verifyListClientsRequest(request);
+        ListClients action = clientConverter.convertToListClients(request);
+        List<ClientModel> clients = clientAdminService.list(action);
         return clientConverter.convertToClientListResponse(clients);
     }
 

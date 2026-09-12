@@ -17,6 +17,9 @@ public class ClientValidator {
     @Value("${max.clients.send.message.count}")
     private int maxClientsSendMessageCount;
 
+    @Value("${max.clients.list.per.request}")
+    private int maxListClientsPerRequest;
+
     private final BotTypeValidator botTypeValidator;
 
     public void verifyAddTestsRequest(AddTestsRequest request) {
@@ -57,6 +60,16 @@ public class ClientValidator {
     public void verifyUnblockClientRequest(UnblockClientRequest request) {
         Preconditions.checkNotNull(request, "unblockClientRequest is null");
         verifyBlockRequest(request);
+    }
+
+    public void verifyListClientsRequest(ListClientsRequest request) {
+        Preconditions.checkNotNull(request, "listClientsRequest is null");
+        if (maxListClientsPerRequest < request.getNextPage().getCount()) {
+            String errorMessage = String.format(
+                    "List max client in request = [%s] greater than available limit = [%s]",
+                    request.getNextPage().getCount(), maxListClientsPerRequest);
+            throw new ValidationException(ApiErrorConstants.Validation.LIST_MAX_CLIENTS_COUNT_ERROR, errorMessage);
+        }
     }
 
     public void verifyBotType(String botType) {

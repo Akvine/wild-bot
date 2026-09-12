@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.akvine.wild.bot.admin.dto.client.*;
+import ru.akvine.wild.bot.admin.dto.common.NextPage;
 import ru.akvine.wild.bot.admin.dto.common.Response;
 
 /**
@@ -15,12 +16,29 @@ import ru.akvine.wild.bot.admin.dto.common.Response;
 @RequestMapping(value = "/admin/clients")
 public interface ClientControllerMeta {
     /**
-     * Возвращает список всех клиентов.
+     * Возвращает список клиентов с учётом фильтрации и пагинации.
+     * <p>
+     * Метод принимает тело запроса {@link ListClientsRequest}, которое содержит:
+     * <ul>
+     *     <li>{@link ClientFilter} — фильтр для отбора клиентов. Поддерживаются следующие критерии:
+     *         <ul>
+     *             <li>{@code chatIds} — набор идентификаторов чатов;</li>
+     *             <li>{@code uuids} — набор UUID клиентов;</li>
+     *             <li>{@code botType} — тип бота;</li>
+     *             <li>{@code deleted} — признак удаления;</li>
+     *             <li>{@code tokenIsNull} — наличие/отсутствие токена;</li>
+     *             <li>{@code inWhitelist} — признак нахождения в белом списке.</li>
+     *         </ul>
+     *     </li>
+     *     <li>{@link NextPage} — параметры пагинации (номер страницы и количество записей). Поле обязательно для заполнения ({@code @NotNull}).</li>
+     * </ul>
+     * Тело запроса валидируется с помощью {@code @Valid}.
      *
-     * @return список клиентов
+     * @param request запрос на получение списка клиентов, содержащий фильтр и параметры пагинации
+     * @return {@link Response} со списком клиентов, удовлетворяющих условиям фильтрации, и, возможно, метаданными пагинации
      */
     @GetMapping
-    Response list();
+    Response list(@Valid @RequestBody ListClientsRequest request);
 
     /**
      * Начисляет клиенту дополнительные тесты (запуски рекламных кампаний).

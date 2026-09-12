@@ -25,7 +25,7 @@ public class ClientEntity extends SoftBaseEntity {
     @Column(name = "CHAT_ID", nullable = false)
     private String chatId;
 
-    @Column(name = "USERNAME", nullable = false)
+    @Column(name = "USERNAME")
     private String username;
 
     @Column(name = "FIRST_NAME", nullable = false)
