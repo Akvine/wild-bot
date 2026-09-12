@@ -21,7 +21,8 @@ public enum ProxyType {
     RETRY("retry"),
     EXCEPTION("exception"),
     RATELIMITING("ratelimiting"),
-    VALIDATION("validation");
+    VALIDATION("validation"),
+    THROW_EXCEPTION_RANDOMLY("throw_exception_randomly");
 
     private final String value;
 
