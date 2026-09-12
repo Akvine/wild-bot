@@ -10,9 +10,11 @@ import ru.akvine.wild.bot.infrastructure.property.printers.PropertiesPrinter;
 import ru.akvine.wild.bot.job.CheckRunningAdvertsJob;
 import ru.akvine.wild.bot.job.PrintPropertiesJob;
 import ru.akvine.wild.bot.job.SubscriptionJob;
+import ru.akvine.wild.bot.job.domain.DeleteAdvertsAndStatisticsJob;
 import ru.akvine.wild.bot.job.monitoring.HikariPoolMetricsJob;
 import ru.akvine.wild.bot.job.sync.*;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
+import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
@@ -73,5 +75,10 @@ public class ScheduledConfig {
     @ConditionalOnProperty(name = "hikari.pool.metrics.log.enabled", havingValue = "true")
     public HikariPoolMetricsJob hikariPoolMetricsJob(HikariDataSource hikariDataSource) {
         return new HikariPoolMetricsJob(hikariDataSource);
+    }
+
+    @Bean
+    public DeleteAdvertsAndStatisticsJob deleteAdvertsAndStatisticsJob(AdvertStatisticRepository statisticRepository, AdvertRepository advertRepository) {
+        return new DeleteAdvertsAndStatisticsJob(statisticRepository, advertRepository, DeleteAdvertsAndStatisticsJob.class.getSimpleName(), SYSTEM, SYSTEM);
     }
 }

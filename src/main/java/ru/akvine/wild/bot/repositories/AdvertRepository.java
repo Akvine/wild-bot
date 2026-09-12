@@ -1,13 +1,18 @@
 package ru.akvine.wild.bot.repositories;
 
-import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.BotType;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
     @Query("from AdvertEntity ae where ae.status in :statuses " + "and " + "ae.deleted = false")
@@ -46,4 +51,13 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
             + "ae.deleted = false")
     Optional<AdvertEntity> findByExternalIdAndClientId(
             @Param("externalId") int externalId, @Param("clientId") long clientId);
+
+    @Query("from AdvertEntity ae where ae.deleted = true " +
+            "and ae.deletedDate < :thresholdDate")
+    List<AdvertEntity> findDeletedAfterExpiringDateCome(@Param("thresholdDate") LocalDateTime thresholdDate);
+
+    @Query("delete from AdvertEntity ae where ae.id in :ids")
+    @Modifying
+    @Transactional
+    void deleteAll(@Param("ids") Collection<Long> ids);
 }

@@ -1,10 +1,13 @@
 package ru.akvine.wild.bot.repositories;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 
 public interface AdvertStatisticRepository extends JpaRepository<AdvertStatisticEntity, Long> {
@@ -24,4 +27,9 @@ public interface AdvertStatisticRepository extends JpaRepository<AdvertStatistic
             + "ase.id = :id and "
             + "c.deleted = false and ase.deleted = false")
     Optional<AdvertStatisticEntity> findByClientIdAndId(@Param("clientId") Long clientId, @Param("id") Long id);
+
+    @Query("from AdvertStatisticEntity ase join ase.advertEntity aseae where aseae.id in :advertIds")
+    @Modifying
+    @Transactional
+    void deleteByAdvertIds(@Param("advertIds") Collection<Long> advertIds);
 }
