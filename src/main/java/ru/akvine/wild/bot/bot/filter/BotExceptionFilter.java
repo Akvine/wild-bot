@@ -64,8 +64,7 @@ public class BotExceptionFilter extends MessageFilter {
 
         String messageToUser;
         if (botType == BotType.TELEGRAM) {
-            messageToUser = String.format(
-                    "Произошла неизвестная ошибка :( \nПожалуйста, обратитесь в поддержку: %s", supportUrl);
+            messageToUser = "Произошла неизвестная ошибка :( \nПожалуйста, обратитесь в поддержку";
             return response.setTelegramResponse(new SendMessage(chatId, messageToUser));
         }
 

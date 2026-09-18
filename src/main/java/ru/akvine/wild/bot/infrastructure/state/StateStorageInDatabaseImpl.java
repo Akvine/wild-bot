@@ -37,8 +37,8 @@ public class StateStorageInDatabaseImpl implements StateStorage<String, List<Cli
 
     @Override
     public boolean containsState(String chatId, BotType botType) {
-        Optional<ClientStatesEntity> clientState = clientStatesRepository
-                .findByIdentifier(createUniqueIdentifier(chatId, botType));
+        Optional<ClientStatesEntity> clientState =
+                clientStatesRepository.findByIdentifier(createUniqueIdentifier(chatId, botType));
         return clientState.isPresent() && !clientState.get().getStates().isEmpty();
     }
 

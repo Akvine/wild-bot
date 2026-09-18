@@ -111,4 +111,16 @@ public class BotExceptionHandler {
         logger.info("Client's subscription is expired");
         return new Response(chatId, CLIENT_SUBSCRIPTION_EXPIRED_MESSAGE, botType);
     }
+
+    @ErrorHandler(InvalidPriceException.class)
+    public Response handleInvalidPriceException(String chatId, BotType botType, InvalidPriceException exception) {
+        logger.info("Client input invalid price");
+        return new Response(chatId, "Необходимо ввести цену больше 0", botType);
+    }
+
+    @ErrorHandler(InvalidDiscountException.class)
+    public Response handleInvalidDiscountException(String chatId, BotType botType, InvalidDiscountException exception) {
+        logger.info("Client input invalid discount");
+        return new Response(chatId, "Необходимо ввести скидку в диапазоне [0, 100]", botType);
+    }
 }

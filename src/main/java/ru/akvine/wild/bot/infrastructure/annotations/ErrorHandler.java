@@ -13,5 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ErrorHandler {
+    // TODO: добавить поддержку списка исключений
     Class<? extends Throwable> value();
 }

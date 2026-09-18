@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
+import ru.akvine.wild.bot.controllers.validators.WildberriesValidator;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.facades.BotViewFacade;
@@ -19,6 +20,7 @@ import ru.akvine.wild.bot.services.property.PropertyService;
 @State
 public class InputNewPriceStateResolver extends StateResolver {
     private final SessionStorage<String, ClientSessionData> sessionStorage;
+    private final WildberriesValidator wildberriesValidator;
 
     @Autowired
     public InputNewPriceStateResolver(
@@ -26,9 +28,11 @@ public class InputNewPriceStateResolver extends StateResolver {
             BotViewFacade viewFacade,
             SessionStorage<String, ClientSessionData> sessionStorage,
             TelegramIntegrationService telegramIntegrationService,
-            PropertyService propertyService) {
+            PropertyService propertyService,
+            WildberriesValidator wildberriesValidator) {
         super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.sessionStorage = sessionStorage;
+        this.wildberriesValidator = wildberriesValidator;
     }
 
     @Override
@@ -52,6 +56,7 @@ public class InputNewPriceStateResolver extends StateResolver {
                     new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести цену в виде числа!"));
         }
 
+        wildberriesValidator.validatePrice(newPrice);
         ClientSessionData sessionData = sessionStorage.get(chatId, botType);
         sessionData.setNewCardPrice(newPrice);
         sessionStorage.save(sessionData, botType);

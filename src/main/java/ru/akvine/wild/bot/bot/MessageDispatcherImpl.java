@@ -22,7 +22,6 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.resolvers.command.CommandResolver;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
-import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 
 @Component
 @RequiredArgsConstructor
@@ -34,7 +33,6 @@ public class MessageDispatcherImpl implements MessageDispatcher {
     private final StateResolverFacade stateResolverFacade;
 
     private final CommandResolverFacade commandResolverFacade;
-    private final TelegramIntegrationService telegramIntegrationService;
 
     public Response doDispatch(Payload payload) {
         String chatId = payload.getChatId();
