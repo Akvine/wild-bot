@@ -1,4 +1,4 @@
-package ru.akvine.wild.bot.services.integration.property.dto;
+package ru.akvine.wild.bot.services.integration.custodian.dto;
 
 import java.util.List;
 import lombok.Data;

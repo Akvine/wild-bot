@@ -18,8 +18,10 @@ import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
-import ru.akvine.wild.bot.services.integration.property.PropertyService;
+import ru.akvine.wild.bot.services.integration.custodian.CustodianIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
+import ru.akvine.wild.bot.services.property.PropertyServiceImpl;
 
 @Configuration
 @EnableScheduling
@@ -40,13 +42,15 @@ public class ScheduledConfig {
             WildberriesIntegrationService wildberriesIntegrationService,
             CountersStorage countersStorage,
             AdvertStatisticService advertStatisticService,
-            BotIntegrationAdapter botIntegrationAdapter) {
+            BotIntegrationAdapter botIntegrationAdapter,
+            PropertyService propertyService) {
         return new CheckRunningAdvertsJob(
                 advertRepository,
                 botIntegrationAdapter,
                 wildberriesIntegrationService,
                 countersStorage,
                 advertStatisticService,
+                propertyService,
                 CheckRunningAdvertsJob.class.getSimpleName(),
                 SYSTEM,
                 SYSTEM);
@@ -60,15 +64,17 @@ public class ScheduledConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "sync.application.properties.enabled", havingValue = "true")
-    public SyncPropertiesJob syncPropertiesJob(PropertyService propertyService) {
-        return new SyncPropertiesJob(propertyService);
+    @ConditionalOnProperty(name = "custodian.integration.enabled", havingValue = "true")
+    public SyncPropertiesJob syncPropertiesJob(
+            PropertyService propertyService, CustodianIntegrationService custodianIntegrationService) {
+        return new SyncPropertiesJob(propertyService, custodianIntegrationService);
     }
 
     @Bean
     @ConditionalOnProperty(name = "print.properties.enabled", havingValue = "true")
-    public PrintPropertiesJob printPropertiesJob(PropertyService propertyService, PropertiesPrinter propertiesPrinter) {
-        return new PrintPropertiesJob(propertyService, propertiesPrinter);
+    public PrintPropertiesJob printPropertiesJob(
+            PropertyServiceImpl propertyServiceImpl, PropertiesPrinter propertiesPrinter) {
+        return new PrintPropertiesJob(propertyServiceImpl, propertiesPrinter);
     }
 
     @Bean
@@ -78,7 +84,13 @@ public class ScheduledConfig {
     }
 
     @Bean
-    public DeleteAdvertsAndStatisticsJob deleteAdvertsAndStatisticsJob(AdvertStatisticRepository statisticRepository, AdvertRepository advertRepository) {
-        return new DeleteAdvertsAndStatisticsJob(statisticRepository, advertRepository, DeleteAdvertsAndStatisticsJob.class.getSimpleName(), SYSTEM, SYSTEM);
+    public DeleteAdvertsAndStatisticsJob deleteAdvertsAndStatisticsJob(
+            AdvertStatisticRepository statisticRepository, AdvertRepository advertRepository) {
+        return new DeleteAdvertsAndStatisticsJob(
+                statisticRepository,
+                advertRepository,
+                DeleteAdvertsAndStatisticsJob.class.getSimpleName(),
+                SYSTEM,
+                SYSTEM);
     }
 }

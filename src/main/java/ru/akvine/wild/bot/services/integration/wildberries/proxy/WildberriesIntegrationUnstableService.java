@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.services.integration.wildberries.proxy;
 
+import java.util.List;
+import java.util.Random;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.enums.ProxyType;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
@@ -7,9 +9,6 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.CardDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.type.CardTypeResponse;
-
-import java.util.List;
-import java.util.Random;
 
 /**
  * Сервис для тестирования нестабильных ситуаций при взаимодействии с внешним сервисом на тестовых стендах или локально.
@@ -144,7 +143,8 @@ public class WildberriesIntegrationUnstableService extends WildberriesIntegratio
     }
 
     @Override
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(List<AdvertFullStatisticDatesDto> request, String apiToken) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByDates(
+            List<AdvertFullStatisticDatesDto> request, String apiToken) {
         boolean throwException = random.nextBoolean();
         if (throwException) {
             throw new IntegrationException("Error with communicate to service");
@@ -154,7 +154,8 @@ public class WildberriesIntegrationUnstableService extends WildberriesIntegratio
     }
 
     @Override
-    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(List<AdvertFullStatisticIntervalDto> request, String apiToken) {
+    public AdvertFullStatisticResponse[] getAdvertsFullStatisticByInterval(
+            List<AdvertFullStatisticIntervalDto> request, String apiToken) {
         boolean throwException = random.nextBoolean();
         if (throwException) {
             throw new IntegrationException("Error with communicate to service");

@@ -52,13 +52,15 @@ public class SubscriptionMenuStateResolver extends StateResolver {
             if (isSuccessfulPayment) {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
                 SubscriptionModel existedSubscription = subscriptionService.getByChatIdOrNull(chatId);
-                if (existedSubscription != null) {
+                if (existedSubscription != null && !existedSubscription.isExpired()) {
                     String errorMessage = String.format(
                             "Подписка еще активна до %s.\nОплатить можно будет только после этой даты",
                             DateUtils.formatLocalDateTime(existedSubscription.getExpiresAt(), dateTimeFormatter));
                     return new Response(chatId, errorMessage, botType);
                 }
-                Subscription subscription = new Subscription().setChatId(chatId);
+                Subscription subscription = new Subscription()
+                        .setChatId(chatId)
+                        .setBotType(botType);
                 SubscriptionModel subscriptionModel = subscriptionService.add(subscription);
                 String successfulPaymentMessage = String.format(
                         "Платеж прошел успешно! :)\nПодписка оформлена до: %s",

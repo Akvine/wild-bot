@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import ru.akvine.wild.bot.infrastructure.property.printers.PropertiesPrinter;
-import ru.akvine.wild.bot.services.integration.property.PropertyService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @RequiredArgsConstructor
 public class PrintPropertiesJob {
@@ -18,14 +18,14 @@ public class PrintPropertiesJob {
     @PostConstruct
     private void init() {
         if (printPropertiesOnlyAtStart) {
-            propertiesPrinter.print(propertyService.getProperties());
+            propertiesPrinter.print(propertyService.getAll());
         }
     }
 
     @Scheduled(cron = "${print.properties.cron}")
     public void printProperties() {
         if (!printPropertiesOnlyAtStart) {
-            propertiesPrinter.print(propertyService.getProperties());
+            propertiesPrinter.print(propertyService.getAll());
         }
     }
 }

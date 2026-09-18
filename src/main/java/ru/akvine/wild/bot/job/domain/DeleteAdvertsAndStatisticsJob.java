@@ -1,5 +1,7 @@
 package ru.akvine.wild.bot.job.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -9,9 +11,6 @@ import ru.akvine.wild.bot.constants.MDCConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -37,8 +36,9 @@ public class DeleteAdvertsAndStatisticsJob {
             logger.info("Start delete expired deleted adverts and statistics...");
 
             LocalDateTime thresholdDate = LocalDateTime.now().minusDays(afterDaysExpiredCount);
-            List<Long> advertsIdsToDelete = advertRepository.findDeletedAfterExpiringDateCome(thresholdDate)
-                    .stream().map(AdvertEntity::getId).toList();
+            List<Long> advertsIdsToDelete = advertRepository.findDeletedAfterExpiringDateCome(thresholdDate).stream()
+                    .map(AdvertEntity::getId)
+                    .toList();
 
             if (!advertsIdsToDelete.isEmpty()) {
                 statisticRepository.deleteByAdvertIds(advertsIdsToDelete);

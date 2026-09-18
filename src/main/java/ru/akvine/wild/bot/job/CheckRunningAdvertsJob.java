@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import ru.akvine.wild.bot.constants.MDCConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
@@ -20,6 +19,8 @@ import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegratio
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
+import ru.akvine.wild.bot.services.property.PropertyCodes;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,28 +30,11 @@ public class CheckRunningAdvertsJob {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final CountersStorage countersStorage;
     private final AdvertStatisticService advertStatisticService;
+    private final PropertyService propertyService;
 
     private final String name;
     private final String chatId;
     private final String botType;
-
-    @Value("${check.advert.cron.milliseconds}")
-    private long checkMilliseconds;
-
-    @Value("${max.start.sum.difference}")
-    private int maxStartSumDifference;
-
-    @Value("${advert.cpm.increase.value}")
-    private int advertCpmIncreaseValue;
-
-    @Value("${check.advert.iterations.before.increase}")
-    private int maxIterationsBeforeIncreaseCpm;
-
-    @Value("${advert.max.cpm}")
-    private int advertMaxCpm;
-
-    @Value("${wildberries.warehouse.id}")
-    private int warehouseId;
 
     @Scheduled(fixedDelayString = "${check.advert.cron.milliseconds}")
     public void checkRunningAdverts() {
@@ -72,6 +56,8 @@ public class CheckRunningAdvertsJob {
             int differenceBudgetSum = startBudgetSum - currentBudgetSum;
             int currentCpm = advert.getCpm();
 
+            int maxStartSumDifference =
+                    propertyService.getAs(PropertyCodes.CustomPropertiesCodes.MAX_START_SUM_DIFFERENCE, Integer.class);
             if (currentBudgetSum == 0 || differenceBudgetSum >= maxStartSumDifference) {
                 logger.info("Get statistic and pause advert with id = {}", advertId);
                 if (currentBudgetSum != 0) {
@@ -83,6 +69,9 @@ public class CheckRunningAdvertsJob {
                 CardEntity cardEntity = advert.getCard();
                 ChangeStocksRequest request = new ChangeStocksRequest()
                         .setStocks(List.of(new SkuDto().setAmount(0).setSku(cardEntity.getBarcode())));
+
+                int warehouseId = propertyService.getAs(
+                        PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_WAREHOUSE_ID, Integer.class);
                 wildberriesIntegrationService.changeStocks(request, warehouseId, clientToken);
 
                 String chatId = advert.getCard().getOwnerClient().getChatId();
@@ -101,10 +90,17 @@ public class CheckRunningAdvertsJob {
                         chatId, cardEntity.getOwnerClient().getBotType(), finishedTestMessage);
                 continue;
             }
+
+            int advertMaxCpm =
+                    propertyService.getAs(PropertyCodes.CustomPropertiesCodes.MAX_ADVERT_CPM_LIMIT, Integer.class);
             if (currentCpm < advertMaxCpm) {
+                int maxIterationsBeforeIncreaseCpm = propertyService.getAs(
+                        PropertyCodes.ScheduledPropertiesCodes.CHECK_ADVERT_ITERATIONS_BEFORE_INCREASE, Integer.class);
                 if (countersStorage.check(advertId, maxIterationsBeforeIncreaseCpm)) {
                     logger.info("Increase cpm for advert with id = {}", advertId);
 
+                    int advertCpmIncreaseValue = propertyService.getAs(
+                            PropertyCodes.CustomPropertiesCodes.ADVERT_CPM_INCREASE_VALUE, Integer.class);
                     int newCpm = advert.getCpm() + advertCpmIncreaseValue;
                     AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
                             .setCpm(newCpm)
@@ -117,6 +113,8 @@ public class CheckRunningAdvertsJob {
                 }
                 countersStorage.increase(advertId);
             }
+            long checkMilliseconds = propertyService.getAs(
+                    PropertyCodes.ScheduledPropertiesCodes.CHECK_ADVERT_CRON_MILLISECONDS, Long.class);
             long seconds = checkMilliseconds / 1000;
             advert.setCheckBudgetSum(currentBudgetSum);
             advert.setNextCheckDateTime(startCheckDateTime.plusSeconds(seconds));
