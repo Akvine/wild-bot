@@ -2,7 +2,6 @@ package ru.akvine.wild.bot.controllers.states;
 
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
@@ -14,6 +13,8 @@ import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.dto.ClientUpdate;
 import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyCodes;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
@@ -21,23 +22,16 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
 
     private final BotIntegrationAdapter botIntegrationAdapter;
 
-    private final boolean apiTokenValidateEnabled;
-    private final String apiTokenPattern;
-
     public InputNewWildberriesTokenMenuStateResolver(
             StateStorage<String, List<ClientState>> stateStorage,
             BotViewFacade viewFacade,
             TelegramIntegrationService telegramIntegrationService,
             ClientService clientService,
             BotIntegrationAdapter botIntegrationAdapter,
-            @Value("${wildberries.api.token.validate.enabled}") boolean apiTokenValidateEnable,
-            @Value("${wildberries.api.token.validate.pattern}") String apiTokenPattern) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.clientService = clientService;
         this.botIntegrationAdapter = botIntegrationAdapter;
-
-        this.apiTokenValidateEnabled = apiTokenValidateEnable;
-        this.apiTokenPattern = apiTokenPattern;
     }
 
     @Override
@@ -48,6 +42,11 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
         BotType botType = payload.getBotType();
 
         ClientUpdate action = new ClientUpdate().setChatId(chatId).setBotType(botType);
+        boolean apiTokenValidateEnabled = propertyService.getAs(
+                PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_API_TOKEN_VALIDATE_ENABLED,
+                Boolean.class);
+        String apiTokenPattern = propertyService.get(
+                PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_API_TOKEN_VALIDATE_PATTERN);
         if (apiTokenValidateEnabled && StringUtils.isNotBlank(apiTokenPattern)) {
             if (token.matches(apiTokenPattern)) {
                 action.setTokenToUpdate(token);

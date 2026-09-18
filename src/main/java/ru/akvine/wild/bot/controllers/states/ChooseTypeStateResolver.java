@@ -16,6 +16,7 @@ import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.CardTypeService;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 public class ChooseTypeStateResolver extends StateResolver {
@@ -28,8 +29,9 @@ public class ChooseTypeStateResolver extends StateResolver {
             StateStorage<String, List<ClientState>> stateStorage,
             SessionStorage<String, ClientSessionData> sessionStorage,
             CardTypeService cardTypeService,
-            TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            TelegramIntegrationService telegramIntegrationService,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.sessionStorage = sessionStorage;
         this.cardTypeService = cardTypeService;
     }

@@ -14,6 +14,7 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.ReportService;
 import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 public class GenerateReportStateResolver extends StateResolver {
@@ -28,8 +29,9 @@ public class GenerateReportStateResolver extends StateResolver {
             BotViewFacade viewFacade,
             ReportService reportService,
             TelegramIntegrationService telegramIntegrationService,
-            BotIntegrationAdapter botIntegrationAdapter) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            BotIntegrationAdapter botIntegrationAdapter,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.reportService = reportService;
         this.botIntegrationAdapter = botIntegrationAdapter;
     }

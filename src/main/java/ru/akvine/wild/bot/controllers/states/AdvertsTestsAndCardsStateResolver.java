@@ -21,6 +21,7 @@ import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 import ru.akvine.wild.bot.services.domain.CardModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 import ru.akvine.wild.bot.utils.DateUtils;
 
 @State
@@ -41,8 +42,9 @@ public class AdvertsTestsAndCardsStateResolver extends StateResolver {
             ClientService clientService,
             CardService cardService,
             AdvertService advertService,
-            StartedAdvertsConverter startedAdvertsConverter) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            StartedAdvertsConverter startedAdvertsConverter,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.clientService = clientService;
         this.cardService = cardService;
         this.advertService = advertService;

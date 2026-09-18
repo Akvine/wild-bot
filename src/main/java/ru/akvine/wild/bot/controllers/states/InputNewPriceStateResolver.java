@@ -14,6 +14,7 @@ import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 public class InputNewPriceStateResolver extends StateResolver {
@@ -24,8 +25,9 @@ public class InputNewPriceStateResolver extends StateResolver {
             StateStorage<String, List<ClientState>> stateStorage,
             BotViewFacade viewFacade,
             SessionStorage<String, ClientSessionData> sessionStorage,
-            TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            TelegramIntegrationService telegramIntegrationService,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.sessionStorage = sessionStorage;
     }
 

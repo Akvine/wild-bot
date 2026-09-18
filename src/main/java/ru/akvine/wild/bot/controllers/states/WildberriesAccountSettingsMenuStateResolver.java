@@ -13,6 +13,7 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 public class WildberriesAccountSettingsMenuStateResolver extends StateResolver {
@@ -22,8 +23,9 @@ public class WildberriesAccountSettingsMenuStateResolver extends StateResolver {
             StateStorage<String, List<ClientState>> stateStorage,
             BotViewFacade viewFacade,
             TelegramIntegrationService telegramIntegrationService,
-            ClientService clientService) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            ClientService clientService,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.clientService = clientService;
     }
 

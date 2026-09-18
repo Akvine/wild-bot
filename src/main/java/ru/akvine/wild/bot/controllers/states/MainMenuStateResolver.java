@@ -17,6 +17,7 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.SubscriptionService;
 import ru.akvine.wild.bot.services.domain.SubscriptionModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 @Slf4j
@@ -28,8 +29,9 @@ public class MainMenuStateResolver extends StateResolver {
             StateStorage<String, List<ClientState>> stateStorage,
             BotViewFacade viewFacade,
             SubscriptionService subscriptionService,
-            TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            TelegramIntegrationService telegramIntegrationService,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.subscriptionService = subscriptionService;
     }
 

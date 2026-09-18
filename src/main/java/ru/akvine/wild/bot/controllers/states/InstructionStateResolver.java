@@ -10,6 +10,7 @@ import ru.akvine.wild.bot.facades.BotViewFacade;
 import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 public class InstructionStateResolver extends StateResolver {
@@ -18,8 +19,9 @@ public class InstructionStateResolver extends StateResolver {
     public InstructionStateResolver(
             BotViewFacade viewFacade,
             StateStorage<String, List<ClientState>> stateStorage,
-            TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            TelegramIntegrationService telegramIntegrationService,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
     }
 
     @Override

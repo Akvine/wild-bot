@@ -18,6 +18,7 @@ import ru.akvine.wild.bot.services.domain.SubscriptionModel;
 import ru.akvine.wild.bot.services.dto.admin.client.Subscription;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.integration.yookassa.YooKassaIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 import ru.akvine.wild.bot.utils.DateUtils;
 
 @State
@@ -32,8 +33,9 @@ public class SubscriptionMenuStateResolver extends StateResolver {
             BotViewFacade viewFacade,
             YooKassaIntegrationService yooKassaIntegrationService,
             SubscriptionService subscriptionService,
-            TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            TelegramIntegrationService telegramIntegrationService,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.yooKassaIntegrationService = yooKassaIntegrationService;
         this.subscriptionService = subscriptionService;
     }
@@ -58,9 +60,7 @@ public class SubscriptionMenuStateResolver extends StateResolver {
                             DateUtils.formatLocalDateTime(existedSubscription.getExpiresAt(), dateTimeFormatter));
                     return new Response(chatId, errorMessage, botType);
                 }
-                Subscription subscription = new Subscription()
-                        .setChatId(chatId)
-                        .setBotType(botType);
+                Subscription subscription = new Subscription().setChatId(chatId).setBotType(botType);
                 SubscriptionModel subscriptionModel = subscriptionService.add(subscription);
                 String successfulPaymentMessage = String.format(
                         "Платеж прошел успешно! :)\nПодписка оформлена до: %s",

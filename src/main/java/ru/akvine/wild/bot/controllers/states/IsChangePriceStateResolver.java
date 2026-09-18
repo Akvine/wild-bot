@@ -18,6 +18,7 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.AdvertStartService;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 public class IsChangePriceStateResolver extends StateResolver {
@@ -30,8 +31,9 @@ public class IsChangePriceStateResolver extends StateResolver {
             BotViewFacade viewFacade,
             SessionStorage<String, ClientSessionData> sessionStorage,
             AdvertStartService advertStartService,
-            TelegramIntegrationService telegramIntegrationService) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            TelegramIntegrationService telegramIntegrationService,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.sessionStorage = sessionStorage;
         this.advertStartService = advertStartService;
     }

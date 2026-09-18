@@ -16,6 +16,7 @@ import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 public class DetailTestInfoStateResolver extends StateResolver {
@@ -29,8 +30,9 @@ public class DetailTestInfoStateResolver extends StateResolver {
             ClientService clientService,
             TelegramIntegrationService telegramIntegrationService,
             BotViewFacade botViewFacade,
-            StateStorage<String, List<ClientState>> stateStorage) {
-        super(stateStorage, botViewFacade, telegramIntegrationService);
+            StateStorage<String, List<ClientState>> stateStorage,
+            PropertyService propertyService) {
+        super(stateStorage, botViewFacade, telegramIntegrationService, propertyService);
         this.advertStatisticService = advertStatisticService;
         this.clientService = clientService;
         this.telegramIntegrationService = telegramIntegrationService;

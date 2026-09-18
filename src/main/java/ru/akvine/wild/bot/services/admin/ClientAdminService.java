@@ -26,6 +26,7 @@ import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
 import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
+import ru.akvine.wild.bot.services.property.PropertyService;
 import ru.akvine.wild.bot.utils.DateUtils;
 
 @Service
@@ -39,6 +40,7 @@ public class ClientAdminService {
     private final BotIntegrationAdapter botIntegrationAdapter;
     private final QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade;
     private final ClientSpecification clientSpecification;
+    private final PropertyService propertyService;
 
     @Value("${qraft.integration.enabled}")
     private boolean qraftIntegrationEnabled;

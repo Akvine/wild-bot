@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import ru.akvine.wild.bot.bot.dto.Payload;
 import ru.akvine.wild.bot.bot.dto.Response;
 import ru.akvine.wild.bot.enums.BotType;
@@ -20,6 +19,8 @@ import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationService;
 import ru.akvine.wild.bot.services.integration.qrcode.QrCodeGenerationServiceType;
 import ru.akvine.wild.bot.services.integration.qrcode.dto.GenerateQrCodeRequest;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyCodes;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 @Slf4j
@@ -29,47 +30,15 @@ public class FillAdvertisingStateResolver extends StateResolver {
     private final BotIntegrationAdapter botIntegrationAdapter;
     private final QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade;
 
-    @Value("${qr.code.url}")
-    private String qrCodeUrl;
-
-    @Value("${qraft.integration.enabled}")
-    private boolean qraftIntegrationEnabled;
-
-    @Value("${qraft.request.param.ecl}")
-    private String errorCorrectionLevel;
-
-    @Value("${qraft.request.param.qr.size}")
-    private int qrSize;
-
-    @Value("${qraft.request.param.border.size}")
-    private int borderSize;
-
-    @Value("${qraft.request.param.radiusFactor}")
-    private int radiusFactor;
-
-    @Value("${qraft.request.param.cornerBlockRadiusFactor}")
-    private double cornerBlockRadiusFactor;
-
-    @Value("${qraft.request.param.roundInnerCorners}")
-    private boolean roundInnerCorners;
-
-    @Value("${qraft.request.param.roundOuterCorners}")
-    private boolean roundOuterCorners;
-
-    @Value("${qraft.request.param.cornerBlocksAsCircles}")
-    private boolean cornerBlocksAsCircles;
-
-    @Value("${qraft.request.param.image.type}")
-    private String imageType;
-
     @Autowired
     public FillAdvertisingStateResolver(
             StateStorage<String, List<ClientState>> stateStorage,
             BotViewFacade botViewFacade,
             TelegramIntegrationService telegramIntegrationService,
             BotIntegrationAdapter botIntegrationAdapter,
-            QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade) {
-        super(stateStorage, botViewFacade, telegramIntegrationService);
+            QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade,
+            PropertyService propertyService) {
+        super(stateStorage, botViewFacade, telegramIntegrationService, propertyService);
         this.botIntegrationAdapter = botIntegrationAdapter;
         this.qrCodeGenerationServiceFacade = qrCodeGenerationServiceFacade;
     }
@@ -81,10 +50,31 @@ public class FillAdvertisingStateResolver extends StateResolver {
         String text = payload.getMessage().getText();
         BotType botType = payload.getBotType();
 
+        String qrCodeUrl = propertyService.get(PropertyCodes.CustomPropertiesCodes.QR_CODE_URL);
         Response response = new Response(chatId, botType);
         if (text.equals(QUERY_QR_CODE_BUTTON_TEXT)) {
             Map<QrCodeGenerationServiceType, QrCodeGenerationService> serviceMap =
                     qrCodeGenerationServiceFacade.getServicesMap();
+
+            // TODO: подумать над доп. методом в PropertyService для получения группы настроек через префикс по аналогии
+            // с @ConfigurationProperties
+            String errorCorrectionLevel =
+                    propertyService.get(PropertyCodes.QRaftIntegrationPropertiesCodes.ERROR_CORRECTION_LEVEL);
+            int qrSize = propertyService.getAs(PropertyCodes.QRaftIntegrationPropertiesCodes.QR_SIZE, Integer.class);
+            int borderSize =
+                    propertyService.getAs(PropertyCodes.QRaftIntegrationPropertiesCodes.BORDER_SIZE, Integer.class);
+            int radiusFactor =
+                    propertyService.getAs(PropertyCodes.QRaftIntegrationPropertiesCodes.RADIUS_FACTOR, Integer.class);
+            double cornerBlockRadiusFactor = propertyService.getAs(
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.CORNER_BLOCK_RADIUS_FACTOR, Double.class);
+            boolean roundInnerCorners = propertyService.getAs(
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.ROUND_INNER_CORNERS, Boolean.class);
+            boolean roundOuterCorners = propertyService.getAs(
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.ROUND_OUTER_CORNERS, Boolean.class);
+            boolean cornerBlocksAsCircles = propertyService.getAs(
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.CORNER_BLOCKS_AS_CIRCLES, Boolean.class);
+            String imageType = propertyService.get(PropertyCodes.QRaftIntegrationPropertiesCodes.IMAGE_TYPE);
+
             GenerateQrCodeRequest request = new GenerateQrCodeRequest()
                     .setUrl(qrCodeUrl)
                     .setQrSize(qrSize)
@@ -98,6 +88,8 @@ public class FillAdvertisingStateResolver extends StateResolver {
                     .setImageType(imageType);
 
             byte[] image;
+            boolean qraftIntegrationEnabled = propertyService.getAs(
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.INTEGRATION_ENABLED, Boolean.class);
             if (qraftIntegrationEnabled) {
                 try {
                     image = serviceMap.get(QrCodeGenerationServiceType.EXTERNAL).generateQrCode(request);

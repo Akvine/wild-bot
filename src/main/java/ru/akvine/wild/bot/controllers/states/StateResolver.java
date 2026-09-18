@@ -17,6 +17,7 @@ import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.Button;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 import ru.akvine.wild.bot.telegram.TelegramKeyboardFactory;
 
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public abstract class StateResolver {
     protected final StateStorage<String, List<ClientState>> stateStorage;
     protected final BotViewFacade viewFacade;
     protected final TelegramIntegrationService telegramIntegrationService;
+    protected final PropertyService propertyService;
 
     @Nullable
     public Response resolve(Payload payload) {

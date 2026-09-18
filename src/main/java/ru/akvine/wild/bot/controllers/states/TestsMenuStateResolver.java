@@ -15,6 +15,7 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 
 @State
 public class TestsMenuStateResolver extends StateResolver {
@@ -27,8 +28,9 @@ public class TestsMenuStateResolver extends StateResolver {
             BotViewFacade viewFacade,
             StartValidator startValidator,
             TelegramIntegrationService telegramIntegrationService,
-            ClientService clientService) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            ClientService clientService,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.startValidator = startValidator;
         this.clientService = clientService;
     }

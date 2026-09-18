@@ -18,6 +18,7 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
+import ru.akvine.wild.bot.services.property.PropertyService;
 import ru.akvine.wild.bot.validator.PhotoValidator;
 
 @State
@@ -37,8 +38,9 @@ public class UploadPhotoStateResolver extends StateResolver {
             TelegramPhotoHelper telegramPhotoHelper,
             TelegramIntegrationService telegramIntegrationService,
             MaxIntegrationService maxIntegrationService,
-            PhotoValidator photoValidator) {
-        super(stateStorage, viewFacade, telegramIntegrationService);
+            PhotoValidator photoValidator,
+            PropertyService propertyService) {
+        super(stateStorage, viewFacade, telegramIntegrationService, propertyService);
         this.sessionStorage = sessionStorage;
         this.telegramPhotoHelper = telegramPhotoHelper;
         this.telegramIntegrationService = telegramIntegrationService;
