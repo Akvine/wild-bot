@@ -31,7 +31,8 @@ public class StateStorageInMemoryImpl implements StateStorage<String, List<Clien
 
     @Override
     public boolean containsState(String chatId, BotType botType) {
-        return STATES.containsKey(createUniqueIdentifier(chatId, botType));
+        String key = createUniqueIdentifier(chatId, botType);
+        return STATES.containsKey(key) && !STATES.get(key).isEmpty();
     }
 
     @Override

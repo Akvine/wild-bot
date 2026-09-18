@@ -60,6 +60,20 @@ public class InputNewPriceStateResolver extends StateResolver {
     }
 
     @Override
+    public Response setPreviousStateForBackButton(Payload payload) {
+        String chatId = payload.getChatId();
+        BotType botType = payload.getBotType();
+
+        ClientSessionData sessionData = sessionStorage.get(chatId, botType);
+        sessionData.setInputNewCardPriceAndDiscount(false);
+        sessionData.setNewCardPrice(null);
+        sessionData.setNewCardDiscount(null);
+        sessionStorage.save(sessionData, botType);
+
+        return super.setPreviousStateForBackButton(payload);
+    }
+
+    @Override
     public ClientState getState() {
         return ClientState.INPUT_NEW_PRICE_MENU;
     }

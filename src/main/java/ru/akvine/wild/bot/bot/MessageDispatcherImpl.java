@@ -54,18 +54,37 @@ public class MessageDispatcherImpl implements MessageDispatcher {
 
         if (!stateStorage.containsState(chatId, botType)) {
             stateStorage.add(chatId, botType, ClientState.MAIN_MENU);
-            return formMessage(botType, chatId, ClientState.MAIN_MENU);
+
+            BotView view = botViewFacade.getEventMap().get(ClientState.MAIN_MENU);
+            String message = view.getMessage(chatId, botType);
+            InlineKeyboard keyboard = view.getKeyboard(chatId, botType);
+
+            Response response = new Response(chatId, botType);
+            if (botType == BotType.TELEGRAM) {
+                SendMessage sendMessage = new SendMessage(chatId, message);
+                sendMessage.enableMarkdown(true);
+                sendMessage.setParseMode("html");
+                sendMessage.setReplyMarkup(keyboard.getTelegramKeyboard());
+                response.setTelegramResponse(sendMessage);
+            } else {
+                MaxSendMessage maxSendMessage =
+                        new MaxSendMessage().setChatId(chatId).setText(message);
+                if (keyboard.getMaxButtons() != null) {
+                    maxSendMessage.setAttachments(
+                            List.of(MaxComponentsFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
+                }
+                response.setMaxSendMessage(maxSendMessage);
+            }
+
+            return response;
         }
 
         if (stateStorage.containsState(chatId, botType) && stateStorage.statesCount(chatId, botType) > 1) {
             if (StringUtils.isNotBlank(text) && text.equals(BACK_BUTTON_TEXT)) {
-                ClientState previousState = stateStorage.removeCurrentAndGetPrevious(chatId, botType);
-                if (botType == BotType.TELEGRAM) {
-                    telegramIntegrationService.answerCallback(
-                            payload.getBotDataType(), payload.getTelegramCallbackQueryId());
-                }
-
-                return formMessage(botType, chatId, previousState);
+                return stateResolverFacade
+                        .getStateResolvers()
+                        .get(stateStorage.getCurrent(chatId, botType))
+                        .setPreviousStateForBackButton(payload);
             }
         }
 
@@ -73,30 +92,5 @@ public class MessageDispatcherImpl implements MessageDispatcher {
                 .getStateResolvers()
                 .get(stateStorage.getCurrent(chatId, botType))
                 .resolve(payload);
-    }
-
-    private Response formMessage(BotType botType, String chatId, ClientState state) {
-        BotView view = botViewFacade.getEventMap().get(state);
-        String message = view.getMessage(chatId, botType);
-        InlineKeyboard keyboard = view.getKeyboard(chatId, botType);
-
-        Response response = new Response(chatId, botType);
-        if (botType == BotType.TELEGRAM) {
-            SendMessage sendMessage = new SendMessage(chatId, message);
-            sendMessage.enableMarkdown(true);
-            sendMessage.setParseMode("html");
-            sendMessage.setReplyMarkup(keyboard.getTelegramKeyboard());
-            response.setTelegramResponse(sendMessage);
-        } else {
-            MaxSendMessage maxSendMessage =
-                    new MaxSendMessage().setChatId(chatId).setText(message);
-            if (keyboard.getMaxButtons() != null) {
-                maxSendMessage.setAttachments(
-                        List.of(MaxComponentsFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
-            }
-            response.setMaxSendMessage(maxSendMessage);
-        }
-
-        return response;
     }
 }

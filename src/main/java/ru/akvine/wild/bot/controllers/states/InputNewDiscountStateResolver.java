@@ -53,6 +53,7 @@ public class InputNewDiscountStateResolver extends StateResolver {
                     new MaxSendMessage().setChatId(chatId).setText("Необходимо ввести скидку в виде числа без %"));
         }
 
+        // TODO: добавить валидацию скидки через WildberriesUtils
         ClientSessionData sessionData = sessionStorage.get(chatId, botType);
         sessionData.setNewCardDiscount(newDiscount);
         sessionStorage.save(sessionData, botType);

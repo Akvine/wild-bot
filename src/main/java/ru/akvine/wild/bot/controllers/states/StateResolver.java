@@ -71,6 +71,39 @@ public abstract class StateResolver {
                         .setAttachments(List.of(MaxComponentsFactory.toInlineKeyboardAttachment(backButton))));
     }
 
+    public Response setPreviousStateForBackButton(Payload payload) {
+        String chatId = payload.getChatId();
+        BotType botType = payload.getBotType();
+
+        ClientState previousState = stateStorage.removeCurrentAndGetPrevious(chatId, botType);
+        if (botType == BotType.TELEGRAM) {
+            telegramIntegrationService.answerCallback(payload.getBotDataType(), payload.getTelegramCallbackQueryId());
+        }
+
+        BotView view = viewFacade.getEventMap().get(previousState);
+        String message = view.getMessage(chatId, botType);
+        InlineKeyboard keyboard = view.getKeyboard(chatId, botType);
+
+        Response response = new Response(chatId, botType);
+        if (botType == BotType.TELEGRAM) {
+            SendMessage sendMessage = new SendMessage(chatId, message);
+            sendMessage.enableMarkdown(true);
+            sendMessage.setParseMode("html");
+            sendMessage.setReplyMarkup(keyboard.getTelegramKeyboard());
+            response.setTelegramResponse(sendMessage);
+        } else {
+            MaxSendMessage maxSendMessage =
+                    new MaxSendMessage().setChatId(chatId).setText(message);
+            if (keyboard.getMaxButtons() != null) {
+                maxSendMessage.setAttachments(
+                        List.of(MaxComponentsFactory.toInlineKeyboardAttachment(keyboard.getMaxButtons())));
+            }
+            response.setMaxSendMessage(maxSendMessage);
+        }
+
+        return response;
+    }
+
     protected Response setNextState(String chatId, ClientState nextState, BotType botType) {
         stateStorage.add(chatId, botType, nextState);
         BotView botView = viewFacade.getEventMap().get(nextState);
