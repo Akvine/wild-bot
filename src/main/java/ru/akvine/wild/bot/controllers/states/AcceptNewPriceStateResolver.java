@@ -3,7 +3,6 @@ package ru.akvine.wild.bot.controllers.states;
 import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.CHANGE_PRICE_BUTTON_TEXT;
 import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.KEEP_PRICE_BUTTON_TEXT;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.akvine.wild.bot.bot.dto.Payload;
@@ -19,6 +18,7 @@ import ru.akvine.wild.bot.services.AdvertStartService;
 import ru.akvine.wild.bot.services.domain.AdvertModel;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.property.PropertyService;
+import ru.akvine.wild.bot.utils.DateUtils;
 
 @State
 public class AcceptNewPriceStateResolver extends StateResolver {
@@ -45,7 +45,6 @@ public class AcceptNewPriceStateResolver extends StateResolver {
         String text = payload.getMessage().getText();
         BotType botType = payload.getBotType();
 
-        Response response = new Response(chatId, botType);
         if (text.equals(CHANGE_PRICE_BUTTON_TEXT)) {
             ClientSessionData sessionData = sessionStorage.get(chatId, botType);
             sessionData.setInputNewCardPriceAndDiscount(true);
@@ -69,8 +68,10 @@ public class AcceptNewPriceStateResolver extends StateResolver {
         int advertId = startedAdvert.getExternalId();
         int startCpm = startedAdvert.getCpm();
         Integer startBudgetSum = startedAdvert.getStartBudgetSum();
-        LocalDateTime nextCheckDateTime = startedAdvert.getNextCheckDateTime();
-        String message = String.format(
+        String nextCheckDateTime = DateUtils.formatLocalDateTime(
+                startedAdvert.getNextCheckDateTime(), DateUtils.RUSSIAN_DATE_TIME_FORMATTER);
+
+        return String.format(
                 """
                            Запущена кампания с:
                            1. Advert id = %s
@@ -79,7 +80,5 @@ public class AcceptNewPriceStateResolver extends StateResolver {
                            4. Датой следующей проверки = %s
                         """,
                 advertId, startCpm, startBudgetSum, nextCheckDateTime);
-
-        return message;
     }
 }

@@ -2,7 +2,6 @@ package ru.akvine.wild.bot.controllers.states;
 
 import static ru.akvine.wild.bot.constants.telegram.ButtonConstants.*;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,6 @@ public class AdvertsTestsAndCardsStateResolver extends StateResolver {
     private final StartedAdvertsConverter startedAdvertsConverter;
 
     private static final String NEW_LINE = "\n";
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
 
     @Autowired
     public AdvertsTestsAndCardsStateResolver(
@@ -84,7 +82,7 @@ public class AdvertsTestsAndCardsStateResolver extends StateResolver {
         sb.append("===============================").append(NEW_LINE);
         for (int i = 0; i < adverts.size(); ++i) {
             sb.append("ID: ")
-                    .append(adverts.get(i).getId())
+                    .append(adverts.get(i).getExternalId())
                     .append(NEW_LINE)
                     .append("Назание: ")
                     .append(adverts.get(i).getName())
@@ -93,7 +91,8 @@ public class AdvertsTestsAndCardsStateResolver extends StateResolver {
                     .append(adverts.get(i).getStatus())
                     .append(NEW_LINE)
                     .append("Дата создания: ")
-                    .append(DateUtils.formatLocalDateTime(adverts.get(i).getCreatedDate(), DATE_TIME_FORMATTER))
+                    .append(DateUtils.formatLocalDateTime(
+                            adverts.get(i).getCreatedDate(), DateUtils.RUSSIAN_DATE_TIME_FORMATTER))
                     .append(NEW_LINE);
 
             sb.append("===============================");
@@ -113,7 +112,7 @@ public class AdvertsTestsAndCardsStateResolver extends StateResolver {
         sb.append("===============================").append(NEW_LINE);
         for (int i = 0; i < cards.size(); ++i) {
             sb.append("ID: ")
-                    .append(cards.get(i).getId())
+                    .append(cards.get(i).getExternalId())
                     .append(NEW_LINE)
                     .append("Название: ")
                     .append(cards.get(i).getExternalTitle())
@@ -122,7 +121,8 @@ public class AdvertsTestsAndCardsStateResolver extends StateResolver {
                     .append(cards.get(i).getCardType().getType())
                     .append(NEW_LINE)
                     .append("Дата создания: ")
-                    .append(DateUtils.formatLocalDateTime(cards.get(i).getCreatedDate(), DATE_TIME_FORMATTER))
+                    .append(DateUtils.formatLocalDateTime(
+                            cards.get(i).getCreatedDate(), DateUtils.RUSSIAN_DATE_TIME_FORMATTER))
                     .append(NEW_LINE);
 
             sb.append("===============================");

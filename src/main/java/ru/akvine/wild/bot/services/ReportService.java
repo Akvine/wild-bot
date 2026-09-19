@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
+import ru.akvine.wild.bot.utils.DateUtils;
 import ru.akvine.wild.bot.utils.POIUtils;
 
 @Service
@@ -73,12 +74,13 @@ public class ReportService {
             Cell advertIdCell = row.createCell(11);
             advertIdCell.setCellValue(advertStatistics.get(i).getAdvertEntity().getExternalId());
 
+            // TODO: время запуска теста для одной той же компании будет дублироваться. Лучше хранить время запуска в
+            // статистике
             Cell startDateTimeCell = row.createCell(12);
-            startDateTimeCell.setCellValue(advertStatistics
-                    .get(i)
-                    .getAdvertEntity()
-                    .getStartCheckDateTime()
-                    .toString());
+            String startCheckDateTime = DateUtils.formatLocalDateTime(
+                    advertStatistics.get(i).getAdvertEntity().getStartCheckDateTime(),
+                    DateUtils.RUSSIAN_DATE_TIME_FORMATTER);
+            startDateTimeCell.setCellValue(startCheckDateTime);
         }
 
         return POIUtils.mapToBytes(workbook);

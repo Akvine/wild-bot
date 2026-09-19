@@ -18,6 +18,7 @@ import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.property.PropertyService;
+import ru.akvine.wild.bot.utils.DateUtils;
 
 @State
 public class DetailTestInfoStateResolver extends StateResolver {
@@ -121,11 +122,10 @@ public class DetailTestInfoStateResolver extends StateResolver {
         sb.append("12. Идентификатор РК (Advert ID): ")
                 .append(advertStatistic.getAdvertEntity().getExternalId())
                 .append("\n");
-        sb.append("13. Время запуска теста: ")
-                .append(advertStatistic
-                        .getAdvertEntity()
-                        .getStartCheckDateTime()
-                        .toString());
+
+        String startCheckDateTime = DateUtils.formatLocalDateTime(
+                advertStatistic.getAdvertEntity().getStartCheckDateTime(), DateUtils.RUSSIAN_DATE_TIME_FORMATTER);
+        sb.append("13. Время запуска теста: ").append(startCheckDateTime);
         return sb.toString();
     }
 }

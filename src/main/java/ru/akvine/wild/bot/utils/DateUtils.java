@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 public class DateUtils {
     public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter RUSSIAN_DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
 
     /**
      * Считает разницу между двумя датами в минутах.
