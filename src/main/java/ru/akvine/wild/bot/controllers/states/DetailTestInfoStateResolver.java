@@ -14,6 +14,7 @@ import ru.akvine.wild.bot.infrastructure.annotations.State;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.ClientService;
+import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
 import ru.akvine.wild.bot.services.integration.max.dto.MaxSendMessage;
 import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationService;
 import ru.akvine.wild.bot.services.property.PropertyService;
@@ -22,7 +23,9 @@ import ru.akvine.wild.bot.services.property.PropertyService;
 public class DetailTestInfoStateResolver extends StateResolver {
     private final AdvertStatisticService advertStatisticService;
     private final ClientService clientService;
-    private final TelegramIntegrationService telegramIntegrationService;
+    private final BotIntegrationAdapter botIntegrationAdapter;
+
+    private static final String DEFAULT_IMAGE_NAME = "image.jpg";
 
     @Autowired
     public DetailTestInfoStateResolver(
@@ -31,11 +34,12 @@ public class DetailTestInfoStateResolver extends StateResolver {
             TelegramIntegrationService telegramIntegrationService,
             BotViewFacade botViewFacade,
             StateStorage<String, List<ClientState>> stateStorage,
-            PropertyService propertyService) {
+            PropertyService propertyService,
+            BotIntegrationAdapter botIntegrationAdapter) {
         super(stateStorage, botViewFacade, telegramIntegrationService, propertyService);
         this.advertStatisticService = advertStatisticService;
         this.clientService = clientService;
-        this.telegramIntegrationService = telegramIntegrationService;
+        this.botIntegrationAdapter = botIntegrationAdapter;
     }
 
     @Override
@@ -76,8 +80,7 @@ public class DetailTestInfoStateResolver extends StateResolver {
         }
 
         byte[] photo = advertStatisticEntity.getPhoto();
-        // TODO: заменить на BotIntegrationAdapter
-        telegramIntegrationService.sendImage(chatId, photo);
+        botIntegrationAdapter.sendImage(chatId, botType, photo, DEFAULT_IMAGE_NAME);
         String statisticMessage = buildStatisticMessage(advertStatisticEntity);
 
         if (botType == BotType.TELEGRAM) {
