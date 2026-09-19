@@ -25,6 +25,8 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertCrea
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
+import ru.akvine.wild.bot.services.property.PropertyCodes;
+import ru.akvine.wild.bot.services.property.PropertyService;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
 
 @Service
@@ -36,20 +38,10 @@ public class AdvertService {
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final CardService cardService;
 
-    @Value("${create.adverts.by.api.enabled}")
-    private boolean createAdvertsByApi;
-
-    @Value("${advert.budget.sum.increase.value}")
-    private int advertBudgetSumIncrease;
-
-    @Value("${advert.min.cpm}")
-    private int advertMinCpm;
+    private final PropertyService propertyService;
 
     @Value("${wildberries.warehouse.id}")
     private int warehouseId;
-
-    @Value("${wildberries.change.stocks.count}")
-    private int changeStocksCount;
 
     public void saveAll(List<AdvertDto> adverts) {
         Preconditions.checkNotNull(adverts, "loadedAdverts is null");
@@ -158,9 +150,14 @@ public class AdvertService {
             return advertReadyForStart;
         }
 
+        boolean createAdvertsByApi =
+                propertyService.getAs(PropertyCodes.CustomPropertiesCodes.CREATE_ADVERTS_BY_API_ENABLED, Boolean.class);
         if (createAdvertsByApi) {
             logger.info("Create advert with category id = {} by API", categoryId);
             CardModel cardBean = cardService.getFirst(categoryId);
+            int changeStocksCount = propertyService.getAs(
+                    PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_CHANGE_STOCKS_COUNT_VALUE,
+                    Integer.class);
             wildberriesIntegrationService.changeStocks(
                     new ChangeStocksRequest()
                             .setStocks(List.of(
@@ -169,6 +166,9 @@ public class AdvertService {
                     client.getToken());
 
             String advertName = "Created by API: " + LocalDateTime.now();
+            int advertMinCpm = propertyService.getAs(PropertyCodes.CustomPropertiesCodes.ADVERT_MIN_CPM, Integer.class);
+            int advertBudgetSumIncrease = propertyService.getAs(
+                    PropertyCodes.CustomPropertiesCodes.ADVERT_BUDGET_SUM_INCREASE_VALUE, Integer.class);
             AdvertCreateRequest request = new AdvertCreateRequest()
                     .setSubjectId(categoryId)
                     .setSum(advertBudgetSumIncrease)

@@ -10,7 +10,10 @@ public class PropertyCodes {
     }
 
     public interface CustomPropertiesCodes {
+        String CREATE_ADVERTS_BY_API_ENABLED = "create.adverts.by.api.enabled";
         String ADVERT_CPM_INCREASE_VALUE = "advert.cpm.increase.value";
+        String ADVERT_MIN_CPM = "advert.min.cpm";
+        String ADVERT_BUDGET_SUM_INCREASE_VALUE = "advert.budget.sum.increase.value";
         String ADVERT_SET_AVAILABLE_FOR_NEXT_DAY_ENABLED = "advert.set.available.for.next.day.enabled";
         String MAX_START_SUM_DIFFERENCE = "max.start.sum.difference";
         String MAX_ADVERT_CPM_LIMIT = "advert.max.cpm";
@@ -21,6 +24,7 @@ public class PropertyCodes {
         String WILDBERRIES_WAREHOUSE_ID = "wildberries.warehouse.id";
         String WILDBERRIES_API_TOKEN_VALIDATE_ENABLED = "wildberries.api.token.validate.enabled";
         String WILDBERRIES_API_TOKEN_VALIDATE_PATTERN = "wildberries.api.token.validate.pattern";
+        String WILDBERRIES_CHANGE_STOCKS_COUNT_VALUE = "wildberries.change.stocks.count";
     }
 
     public interface QRaftIntegrationPropertiesCodes {
