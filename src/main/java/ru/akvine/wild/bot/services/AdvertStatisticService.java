@@ -21,6 +21,8 @@ import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertFull
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticIntervalDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertFullStatisticResponse;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertStatisticInterval;
+import ru.akvine.wild.bot.services.property.PropertyCodes;
+import ru.akvine.wild.bot.services.property.PropertyService;
 import ru.akvine.wild.bot.utils.DateUtils;
 
 @Service
@@ -32,6 +34,7 @@ public class AdvertStatisticService {
     private final ClientRepository clientRepository;
     private final ClientService clientService;
     private final AdvertService advertService;
+    private final PropertyService propertyService;
 
     public AdvertStatisticModel getAndSave(AdvertEntity advert, ClientModel currentClient) {
         logger.info("Start getting advert full statistic for advert = [{}]", advert);
@@ -83,8 +86,12 @@ public class AdvertStatisticService {
         client.decreaseOneTest();
         clientRepository.save(client);
 
-        advert.setAvailableForStart(DateUtils.getStartOfNextDay());
-        advertService.update(new AdvertModel(advert));
+        boolean setAvailableForNexDayEnabled = propertyService.getAs(
+                PropertyCodes.CustomPropertiesCodes.ADVERT_SET_AVAILABLE_FOR_NEXT_DAY_ENABLED, Boolean.class);
+        if (setAvailableForNexDayEnabled) {
+            advert.setAvailableForStart(DateUtils.getStartOfNextDay());
+            advertService.update(new AdvertModel(advert));
+        }
 
         logger.info("Successful get statistic from wb and save it = [{}]", savedAdvertStatistic);
         return savedAdvertStatistic;

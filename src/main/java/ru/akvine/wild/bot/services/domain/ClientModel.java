@@ -29,6 +29,7 @@ public class ClientModel extends SoftModel {
     private BotType botType;
 
     @Nullable
+    // TODO: добавить @ToString.Exclude
     private String token;
 
     @Nullable

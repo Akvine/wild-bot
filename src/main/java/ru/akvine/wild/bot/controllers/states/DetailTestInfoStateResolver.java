@@ -76,6 +76,7 @@ public class DetailTestInfoStateResolver extends StateResolver {
         }
 
         byte[] photo = advertStatisticEntity.getPhoto();
+        // TODO: заменить на BotIntegrationAdapter
         telegramIntegrationService.sendImage(chatId, photo);
         String statisticMessage = buildStatisticMessage(advertStatisticEntity);
 

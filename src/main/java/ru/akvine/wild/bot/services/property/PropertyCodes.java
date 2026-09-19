@@ -11,6 +11,7 @@ public class PropertyCodes {
 
     public interface CustomPropertiesCodes {
         String ADVERT_CPM_INCREASE_VALUE = "advert.cpm.increase.value";
+        String ADVERT_SET_AVAILABLE_FOR_NEXT_DAY_ENABLED = "advert.set.available.for.next.day.enabled";
         String MAX_START_SUM_DIFFERENCE = "max.start.sum.difference";
         String MAX_ADVERT_CPM_LIMIT = "advert.max.cpm";
         String QR_CODE_URL = "qr.code.url";
