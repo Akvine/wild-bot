@@ -59,13 +59,13 @@ public class PropertyCodes {
     @Getter
     @AllArgsConstructor
     public enum CustomPropertiesCodes {
-        CREATE_ADVERTS_BY_API_ENABLED("create.adverts.by.api.enabled", false, boolean.class),
-        ADVERT_CPM_INCREASE_VALUE("advert.cpm.increase.value", false, int.class),
-        ADVERT_MIN_CPM("advert.min.cpm", false, int.class),
-        ADVERT_BUDGET_SUM_INCREASE_VALUE("advert.budget.sum.increase.value", false, int.class),
-        ADVERT_SET_AVAILABLE_FOR_NEXT_DAY_ENABLED("advert.set.available.for.next.day.enabled", false, boolean.class),
-        MAX_START_SUM_DIFFERENCE("max.start.sum.difference", false, int.class),
-        MAX_ADVERT_CPM_LIMIT("advert.max.cpm", false, int.class),
+        CREATE_ADVERTS_BY_API_ENABLED("create.adverts.by.api.enabled", false, Boolean.class),
+        ADVERT_CPM_INCREASE_VALUE("advert.cpm.increase.value", false, Integer.class),
+        ADVERT_MIN_CPM("advert.min.cpm", false, Integer.class),
+        ADVERT_BUDGET_SUM_INCREASE_VALUE("advert.budget.sum.increase.value", false, Integer.class),
+        ADVERT_SET_AVAILABLE_FOR_NEXT_DAY_ENABLED("advert.set.available.for.next.day.enabled", false, Boolean.class),
+        MAX_START_SUM_DIFFERENCE("max.start.sum.difference", false, Integer.class),
+        MAX_ADVERT_CPM_LIMIT("advert.max.cpm", false, Integer.class),
         QR_CODE_URL("qr.code.url", false, String.class);
 
         private final String name;
@@ -81,10 +81,10 @@ public class PropertyCodes {
     @AllArgsConstructor
     @Getter
     public enum WildberriesIntegrationPropertiesCodes {
-        WILDBERRIES_WAREHOUSE_ID("wildberries.warehouse.id", false, int.class),
-        WILDBERRIES_API_TOKEN_VALIDATE_ENABLED("wildberries.api.token.validate.enabled", false, boolean.class),
+        WILDBERRIES_WAREHOUSE_ID("wildberries.warehouse.id", false, Integer.class),
+        WILDBERRIES_API_TOKEN_VALIDATE_ENABLED("wildberries.api.token.validate.enabled", false, Boolean.class),
         WILDBERRIES_API_TOKEN_VALIDATE_PATTERN("wildberries.api.token.validate.pattern", false, String.class),
-        WILDBERRIES_CHANGE_STOCKS_COUNT_VALUE("wildberries.change.stocks.count", false, int.class);
+        WILDBERRIES_CHANGE_STOCKS_COUNT_VALUE("wildberries.change.stocks.count", false, Integer.class);
 
         private final String name;
         private final boolean immutable;
@@ -99,15 +99,15 @@ public class PropertyCodes {
     @AllArgsConstructor
     @Getter
     public enum QRaftIntegrationPropertiesCodes {
-        INTEGRATION_ENABLED("qraft.integration.enabled", false, boolean.class),
+        INTEGRATION_ENABLED("qraft.integration.enabled", false, Boolean.class),
         ERROR_CORRECTION_LEVEL("qraft.request.param.ecl", false, String.class),
-        QR_SIZE("qraft.request.param.qr.size", false, int.class),
-        BORDER_SIZE("qraft.request.param.border.size", false, int.class),
-        RADIUS_FACTOR("qraft.request.param.radiusFactor", false, int.class),
-        CORNER_BLOCK_RADIUS_FACTOR("qraft.request.param.cornerBlockRadiusFactor", false, double.class),
-        ROUND_INNER_CORNERS("qraft.request.param.roundInnerCorners", false, boolean.class),
-        ROUND_OUTER_CORNERS("qraft.request.param.roundOuterCorners", false, boolean.class),
-        CORNER_BLOCKS_AS_CIRCLES("qraft.request.param.cornerBlocksAsCircles", false, boolean.class),
+        QR_SIZE("qraft.request.param.qr.size", false, Integer.class),
+        BORDER_SIZE("qraft.request.param.border.size", false, Integer.class),
+        RADIUS_FACTOR("qraft.request.param.radiusFactor", false, Integer.class),
+        CORNER_BLOCK_RADIUS_FACTOR("qraft.request.param.cornerBlockRadiusFactor", false, Double.class),
+        ROUND_INNER_CORNERS("qraft.request.param.roundInnerCorners", false, Boolean.class),
+        ROUND_OUTER_CORNERS("qraft.request.param.roundOuterCorners", false, Boolean.class),
+        CORNER_BLOCKS_AS_CIRCLES("qraft.request.param.cornerBlocksAsCircles", false, Boolean.class),
         IMAGE_TYPE("qraft.request.param.image.type", false, String.class);
 
         private final String name;
