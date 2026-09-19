@@ -61,19 +61,26 @@ public class FillAdvertisingStateResolver extends StateResolver {
             String errorCorrectionLevel =
                     propertyService.get(PropertyCodes.QRaftIntegrationPropertiesCodes.ERROR_CORRECTION_LEVEL.getName());
             int qrSize = propertyService.getAs(
-                    PropertyCodes.QRaftIntegrationPropertiesCodes.QR_SIZE.getName(), Integer.class);
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.QR_SIZE.getName(),
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.QR_SIZE.getType());
             int borderSize = propertyService.getAs(
-                    PropertyCodes.QRaftIntegrationPropertiesCodes.BORDER_SIZE.getName(), Integer.class);
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.BORDER_SIZE.getName(),
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.BORDER_SIZE.getType());
             int radiusFactor = propertyService.getAs(
-                    PropertyCodes.QRaftIntegrationPropertiesCodes.RADIUS_FACTOR.getName(), Integer.class);
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.RADIUS_FACTOR.getName(),
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.RADIUS_FACTOR.getType());
             double cornerBlockRadiusFactor = propertyService.getAs(
-                    PropertyCodes.QRaftIntegrationPropertiesCodes.CORNER_BLOCK_RADIUS_FACTOR.getName(), Double.class);
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.CORNER_BLOCK_RADIUS_FACTOR.getName(),
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.CORNER_BLOCK_RADIUS_FACTOR.getType());
             boolean roundInnerCorners = propertyService.getAs(
-                    PropertyCodes.QRaftIntegrationPropertiesCodes.ROUND_INNER_CORNERS.getName(), Boolean.class);
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.ROUND_INNER_CORNERS.getName(),
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.ROUND_INNER_CORNERS.getType());
             boolean roundOuterCorners = propertyService.getAs(
-                    PropertyCodes.QRaftIntegrationPropertiesCodes.ROUND_OUTER_CORNERS.getName(), Boolean.class);
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.ROUND_OUTER_CORNERS.getName(),
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.ROUND_OUTER_CORNERS.getType());
             boolean cornerBlocksAsCircles = propertyService.getAs(
-                    PropertyCodes.QRaftIntegrationPropertiesCodes.CORNER_BLOCKS_AS_CIRCLES.getName(), Boolean.class);
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.CORNER_BLOCKS_AS_CIRCLES.getName(),
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.CORNER_BLOCKS_AS_CIRCLES.getType());
             String imageType = propertyService.get(PropertyCodes.QRaftIntegrationPropertiesCodes.IMAGE_TYPE.getName());
 
             GenerateQrCodeRequest request = new GenerateQrCodeRequest()
@@ -90,7 +97,8 @@ public class FillAdvertisingStateResolver extends StateResolver {
 
             byte[] image;
             boolean qraftIntegrationEnabled = propertyService.getAs(
-                    PropertyCodes.QRaftIntegrationPropertiesCodes.INTEGRATION_ENABLED.getName(), Boolean.class);
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.INTEGRATION_ENABLED.getName(),
+                    PropertyCodes.QRaftIntegrationPropertiesCodes.INTEGRATION_ENABLED.getType());
             if (qraftIntegrationEnabled) {
                 try {
                     image = serviceMap.get(QrCodeGenerationServiceType.EXTERNAL).generateQrCode(request);

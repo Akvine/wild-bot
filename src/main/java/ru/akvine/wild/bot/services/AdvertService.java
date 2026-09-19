@@ -151,13 +151,15 @@ public class AdvertService {
         }
 
         boolean createAdvertsByApi = propertyService.getAs(
-                PropertyCodes.CustomPropertiesCodes.CREATE_ADVERTS_BY_API_ENABLED.getName(), Boolean.class);
+                PropertyCodes.CustomPropertiesCodes.CREATE_ADVERTS_BY_API_ENABLED.getName(),
+                PropertyCodes.CustomPropertiesCodes.CREATE_ADVERTS_BY_API_ENABLED.getType());
         if (createAdvertsByApi) {
             logger.info("Create advert with category id = {} by API", categoryId);
             CardModel cardBean = cardService.getFirst(categoryId);
             int changeStocksCount = propertyService.getAs(
                     PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_CHANGE_STOCKS_COUNT_VALUE.getName(),
-                    Integer.class);
+                    PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_CHANGE_STOCKS_COUNT_VALUE
+                            .getType());
             wildberriesIntegrationService.changeStocks(
                     new ChangeStocksRequest()
                             .setStocks(List.of(
@@ -166,10 +168,12 @@ public class AdvertService {
                     client.getToken());
 
             String advertName = "Created by API: " + LocalDateTime.now();
-            int advertMinCpm =
-                    propertyService.getAs(PropertyCodes.CustomPropertiesCodes.ADVERT_MIN_CPM.getName(), Integer.class);
+            int advertMinCpm = propertyService.getAs(
+                    PropertyCodes.CustomPropertiesCodes.ADVERT_MIN_CPM.getName(),
+                    PropertyCodes.CustomPropertiesCodes.ADVERT_MIN_CPM.getType());
             int advertBudgetSumIncrease = propertyService.getAs(
-                    PropertyCodes.CustomPropertiesCodes.ADVERT_BUDGET_SUM_INCREASE_VALUE.getName(), Integer.class);
+                    PropertyCodes.CustomPropertiesCodes.ADVERT_BUDGET_SUM_INCREASE_VALUE.getName(),
+                    PropertyCodes.CustomPropertiesCodes.ADVERT_BUDGET_SUM_INCREASE_VALUE.getType());
             AdvertCreateRequest request = new AdvertCreateRequest()
                     .setSubjectId(categoryId)
                     .setSum(advertBudgetSumIncrease)
