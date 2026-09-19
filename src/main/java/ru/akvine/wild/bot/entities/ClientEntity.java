@@ -3,6 +3,7 @@ package ru.akvine.wild.bot.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import ru.akvine.wild.bot.entities.base.SoftBaseEntity;
 import ru.akvine.wild.bot.enums.BotType;
@@ -45,6 +46,7 @@ public class ClientEntity extends SoftBaseEntity {
     private BotType botType;
 
     @Column(name = "TOKEN")
+    @ToString.Exclude
     private String token;
 
     @Column(name = "WAREHOUSE_ID")

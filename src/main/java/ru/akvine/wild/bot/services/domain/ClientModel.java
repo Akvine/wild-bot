@@ -2,6 +2,7 @@ package ru.akvine.wild.bot.services.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Nullable;
 import ru.akvine.wild.bot.entities.ClientEntity;
@@ -29,7 +30,7 @@ public class ClientModel extends SoftModel {
     private BotType botType;
 
     @Nullable
-    // TODO: добавить @ToString.Exclude
+    @ToString.Exclude
     private String token;
 
     @Nullable
