@@ -56,8 +56,8 @@ public class CheckRunningAdvertsJob {
             int differenceBudgetSum = startBudgetSum - currentBudgetSum;
             int currentCpm = advert.getCpm();
 
-            int maxStartSumDifference =
-                    propertyService.getAs(PropertyCodes.CustomPropertiesCodes.MAX_START_SUM_DIFFERENCE, Integer.class);
+            int maxStartSumDifference = propertyService.getAs(
+                    PropertyCodes.CustomPropertiesCodes.MAX_START_SUM_DIFFERENCE.getName(), Integer.class);
             if (currentBudgetSum == 0 || differenceBudgetSum >= maxStartSumDifference) {
                 logger.info("Get statistic and pause advert with id = {}", advertId);
                 if (currentBudgetSum != 0) {
@@ -71,7 +71,8 @@ public class CheckRunningAdvertsJob {
                         .setStocks(List.of(new SkuDto().setAmount(0).setSku(cardEntity.getBarcode())));
 
                 int warehouseId = propertyService.getAs(
-                        PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_WAREHOUSE_ID, Integer.class);
+                        PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_WAREHOUSE_ID.getName(),
+                        Integer.class);
                 wildberriesIntegrationService.changeStocks(request, warehouseId, clientToken);
 
                 String chatId = advert.getCard().getOwnerClient().getChatId();
@@ -91,16 +92,17 @@ public class CheckRunningAdvertsJob {
                 continue;
             }
 
-            int advertMaxCpm =
-                    propertyService.getAs(PropertyCodes.CustomPropertiesCodes.MAX_ADVERT_CPM_LIMIT, Integer.class);
+            int advertMaxCpm = propertyService.getAs(
+                    PropertyCodes.CustomPropertiesCodes.MAX_ADVERT_CPM_LIMIT.getName(), Integer.class);
             if (currentCpm < advertMaxCpm) {
                 int maxIterationsBeforeIncreaseCpm = propertyService.getAs(
-                        PropertyCodes.ScheduledPropertiesCodes.CHECK_ADVERT_ITERATIONS_BEFORE_INCREASE, Integer.class);
+                        PropertyCodes.ScheduledPropertiesCodes.CHECK_ADVERT_ITERATIONS_BEFORE_INCREASE.getName(),
+                        Integer.class);
                 if (countersStorage.check(advertId, maxIterationsBeforeIncreaseCpm)) {
                     logger.info("Increase cpm for advert with id = {}", advertId);
 
                     int advertCpmIncreaseValue = propertyService.getAs(
-                            PropertyCodes.CustomPropertiesCodes.ADVERT_CPM_INCREASE_VALUE, Integer.class);
+                            PropertyCodes.CustomPropertiesCodes.ADVERT_CPM_INCREASE_VALUE.getName(), Integer.class);
                     int newCpm = advert.getCpm() + advertCpmIncreaseValue;
                     AdvertChangeCpmRequest request = new AdvertChangeCpmRequest()
                             .setCpm(newCpm)
@@ -114,7 +116,7 @@ public class CheckRunningAdvertsJob {
                 countersStorage.increase(advertId);
             }
             long checkMilliseconds = propertyService.getAs(
-                    PropertyCodes.ScheduledPropertiesCodes.CHECK_ADVERT_CRON_MILLISECONDS, Long.class);
+                    PropertyCodes.ScheduledPropertiesCodes.CHECK_ADVERT_CRON_MILLISECONDS.getName(), Long.class);
             long seconds = checkMilliseconds / 1000;
             advert.setCheckBudgetSum(currentBudgetSum);
             advert.setNextCheckDateTime(startCheckDateTime.plusSeconds(seconds));

@@ -87,7 +87,7 @@ public class AdvertStatisticService {
         clientRepository.save(client);
 
         boolean setAvailableForNexDayEnabled = propertyService.getAs(
-                PropertyCodes.CustomPropertiesCodes.ADVERT_SET_AVAILABLE_FOR_NEXT_DAY_ENABLED, Boolean.class);
+                PropertyCodes.CustomPropertiesCodes.ADVERT_SET_AVAILABLE_FOR_NEXT_DAY_ENABLED.getName(), Boolean.class);
         if (setAvailableForNexDayEnabled) {
             advert.setAvailableForStart(DateUtils.getStartOfNextDay());
             advertService.update(new AdvertModel(advert));

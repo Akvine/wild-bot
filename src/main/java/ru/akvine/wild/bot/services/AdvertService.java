@@ -150,13 +150,13 @@ public class AdvertService {
             return advertReadyForStart;
         }
 
-        boolean createAdvertsByApi =
-                propertyService.getAs(PropertyCodes.CustomPropertiesCodes.CREATE_ADVERTS_BY_API_ENABLED, Boolean.class);
+        boolean createAdvertsByApi = propertyService.getAs(
+                PropertyCodes.CustomPropertiesCodes.CREATE_ADVERTS_BY_API_ENABLED.getName(), Boolean.class);
         if (createAdvertsByApi) {
             logger.info("Create advert with category id = {} by API", categoryId);
             CardModel cardBean = cardService.getFirst(categoryId);
             int changeStocksCount = propertyService.getAs(
-                    PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_CHANGE_STOCKS_COUNT_VALUE,
+                    PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_CHANGE_STOCKS_COUNT_VALUE.getName(),
                     Integer.class);
             wildberriesIntegrationService.changeStocks(
                     new ChangeStocksRequest()
@@ -166,9 +166,10 @@ public class AdvertService {
                     client.getToken());
 
             String advertName = "Created by API: " + LocalDateTime.now();
-            int advertMinCpm = propertyService.getAs(PropertyCodes.CustomPropertiesCodes.ADVERT_MIN_CPM, Integer.class);
+            int advertMinCpm =
+                    propertyService.getAs(PropertyCodes.CustomPropertiesCodes.ADVERT_MIN_CPM.getName(), Integer.class);
             int advertBudgetSumIncrease = propertyService.getAs(
-                    PropertyCodes.CustomPropertiesCodes.ADVERT_BUDGET_SUM_INCREASE_VALUE, Integer.class);
+                    PropertyCodes.CustomPropertiesCodes.ADVERT_BUDGET_SUM_INCREASE_VALUE.getName(), Integer.class);
             AdvertCreateRequest request = new AdvertCreateRequest()
                     .setSubjectId(categoryId)
                     .setSum(advertBudgetSumIncrease)

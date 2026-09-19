@@ -43,10 +43,10 @@ public class InputNewWildberriesTokenMenuStateResolver extends StateResolver {
 
         ClientUpdate action = new ClientUpdate().setChatId(chatId).setBotType(botType);
         boolean apiTokenValidateEnabled = propertyService.getAs(
-                PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_API_TOKEN_VALIDATE_ENABLED,
+                PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_API_TOKEN_VALIDATE_ENABLED.getName(),
                 Boolean.class);
         String apiTokenPattern = propertyService.get(
-                PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_API_TOKEN_VALIDATE_PATTERN);
+                PropertyCodes.WildberriesIntegrationPropertiesCodes.WILDBERRIES_API_TOKEN_VALIDATE_PATTERN.getName());
         if (apiTokenValidateEnabled && StringUtils.isNotBlank(apiTokenPattern)) {
             if (token.matches(apiTokenPattern)) {
                 action.setTokenToUpdate(token);

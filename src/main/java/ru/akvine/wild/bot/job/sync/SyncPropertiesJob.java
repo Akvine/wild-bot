@@ -10,6 +10,7 @@ import ru.akvine.wild.bot.services.integration.custodian.CustodianIntegrationSer
 import ru.akvine.wild.bot.services.integration.custodian.dto.GetPropertiesRequest;
 import ru.akvine.wild.bot.services.integration.custodian.dto.PropertyDto;
 import ru.akvine.wild.bot.services.integration.custodian.dto.PropertyResponse;
+import ru.akvine.wild.bot.services.property.PropertyCodes;
 import ru.akvine.wild.bot.services.property.PropertyService;
 
 @RequiredArgsConstructor
@@ -18,8 +19,8 @@ public class SyncPropertiesJob {
     @Value("${custodian.properties.profile}")
     private String activeProfile;
 
-    @Value("${sync.application.properties.differences.allowed}")
-    private boolean allowedDifference;
+    @Value("${sync.application.properties.validation.enabled}")
+    private boolean validationEnabled;
 
     private final PropertyService propertyService;
     private final CustodianIntegrationService custodianIntegrationService;
@@ -34,13 +35,21 @@ public class SyncPropertiesJob {
         List<PropertyDto> properties = propertyResponse.getProperties();
         for (PropertyDto property : properties) {
             String propertyKey = property.getKey();
-            if (!allowedDifference && !propertyService.contains(property.getKey())) {
-                // Не должно быть расхождений в настройках между локальным хранилищем и удаленным
-                String errorMessage = String.format(
-                        "Can't put property [%s] cause internal store has no property [%s]. Check properties file and external service for difference",
-                        propertyKey, propertyKey);
-                throw new PropertySyncException(errorMessage);
+            if (validationEnabled) {
+                if (!propertyService.contains(property.getKey())) {
+                    // Не должно быть расхождений в настройках между локальным хранилищем и удаленным
+                    String errorMessage = String.format(
+                            "Can't put property [%s] cause internal store has no property [%s]. Check properties file and external service for difference",
+                            propertyKey, propertyKey);
+                    throw new PropertySyncException(errorMessage);
+                }
+
+                if (PropertyCodes.isImmutable(propertyKey)) {
+                    logger.info("Can't put property [{}] cause property is immutable", propertyKey);
+                    continue;
+                }
             }
+
             propertyService.put(propertyKey, property.getValue());
         }
 

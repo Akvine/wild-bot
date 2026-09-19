@@ -55,7 +55,8 @@ public class PropertyServiceImpl implements PropertyService {
         }
 
         for (Object key : properties.keySet()) {
-            applicationProperties.put(key.toString(), properties.getProperty(key.toString()));
+            applicationProperties.put(
+                    key.toString().trim(), properties.getProperty(key.toString().trim()));
         }
 
         logger.info("Successful loaded all application properties. Count = {}", applicationProperties.size());
