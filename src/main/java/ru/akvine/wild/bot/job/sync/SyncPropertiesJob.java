@@ -25,7 +25,7 @@ public class SyncPropertiesJob {
     private final PropertyService propertyService;
     private final CustodianIntegrationService custodianIntegrationService;
 
-    @Scheduled(cron = "${sync.application.properties.cron}")
+    @Scheduled(fixedDelayString = "${sync.application.properties.milliseconds}")
     public void sync() {
         logger.info("Start sync properties from custodian service...");
 

@@ -34,7 +34,7 @@ public class CustodianPropertyServiceIntegration implements CustodianIntegration
         HttpEntity<GetPropertiesRequest> httpEntity = new HttpEntity<>(request, headers);
         ResponseEntity<PropertyResponse> response;
         try {
-            response = restTemplate.postForEntity(url + GET_PROPERTIES, httpEntity, PropertyResponse.class);
+            response = restTemplate.postForEntity(url + GET_PROPERTIES.getUrl(), httpEntity, PropertyResponse.class);
         } catch (Exception exception) {
             String errorMessage = String.format(
                     "Error while calling custodian api method = [%s]. Message = [%s]",
@@ -59,7 +59,7 @@ public class CustodianPropertyServiceIntegration implements CustodianIntegration
     @Getter
     @AllArgsConstructor
     enum CustodianApiMethods {
-        GET_PROPERTIES("/get", HttpMethod.POST);
+        GET_PROPERTIES("/properties", HttpMethod.POST);
 
         private final String url;
         private final HttpMethod method;
