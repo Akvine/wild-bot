@@ -3,6 +3,8 @@ package ru.akvine.wild.bot.config;
 import com.zaxxer.hikari.HikariDataSource;
 import java.time.Duration;
 import java.util.List;
+import java.security.KeyStore;
+import javax.net.ssl.SSLContext;
 import javax.sql.DataSource;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
@@ -19,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.web.client.RestTemplate;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import ru.akvine.commons.cluster.lock.ConcurrentOperationsHelper;
@@ -27,6 +31,11 @@ import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInMemoryImpl;
+import ru.akvine.wild.bot.infrastructure.http.CommonHttpClientBuilder;
+import ru.akvine.wild.bot.infrastructure.http.HttpClientBuilderFactory;
+import ru.akvine.wild.bot.infrastructure.http.HttpClientProperties;
+import ru.akvine.wild.bot.infrastructure.http.keystore.DefaultKeystoreFactory;
+import ru.akvine.wild.bot.infrastructure.http.keystore.SslContextUtils;
 import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingFilter;
 import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingFilterFactory;
 import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingProperties;
@@ -304,5 +313,79 @@ public class InfrastructureBeansConfig {
             KeyStoreObserver keyStoreObserver, KeystoreMonitoringProperties properties) {
         return new KeystoreExpirationMonitor(
                 keyStoreObserver, properties.getCheckIntervalHours(), properties.getDaysToExpire());
+    }
+
+    /**
+     * Настройки общего http-клиента - свойства {@code http.client.*}
+     */
+    @Bean
+    @ConditionalOnProperty(name = "http.client.enabled", havingValue = "true")
+    @ConfigurationProperties("http.client")
+    public HttpClientProperties httpClientProperties() {
+        return new HttpClientProperties();
+    }
+
+    /**
+     * Фабрика билдеров http-клиентов. Если задана {@code http.client.keystore.location}, SSL-контекст
+     * строится из этой ключницы (её сертификаты - и клиентские, и единственные доверенные), иначе
+     * используется системный набор сертификатов JVM.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "http.client.enabled", havingValue = "true")
+    public HttpClientBuilderFactory httpClientBuilderFactory(
+            HttpClientProperties properties, ResourceLoader resourceLoader) {
+        String location = properties.getKeystore().getLocation();
+        if (location == null || location.isBlank()) {
+            return HttpClientBuilderFactory.withDefaultSsl();
+        }
+
+        String password = properties.getKeystore().getPassword();
+        KeyStore keyStore = new DefaultKeystoreFactory(location, password, resourceLoader)
+                .createKeystoreBuilder()
+                .includeAllLocalClientCertificates()
+                .includeAllLocalTrustCertificates()
+                .buildSilently()
+                .build();
+        SSLContext sslContext = SslContextUtils.keyStoreToSslContext(keyStore, password);
+        return new HttpClientBuilderFactory(() -> sslContext, () -> null);
+    }
+
+    /**
+     * Общий именованный http-клиент (закрывается вместе с контекстом).
+     */
+    @Bean
+    @ConditionalOnProperty(name = "http.client.enabled", havingValue = "true")
+    public CloseableHttpClient commonHttpClient(
+            HttpClientBuilderFactory httpClientBuilderFactory, HttpClientProperties properties) {
+        return commonHttpClientBuilder(httpClientBuilderFactory, properties).buildHttpClient();
+    }
+
+    /**
+     * {@link RestTemplate} поверх {@link #commonHttpClient}: SSL из ключницы, таймауты, пул, retry при
+     * потере соединения и логирование запросов/ответов на DEBUG. Именованные клиенты для отдельных
+     * интеграций создаются так же: {@code httpClientBuilderFactory.createBuilder().withName("...").buildRestTemplate()}.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "http.client.enabled", havingValue = "true")
+    public RestTemplate commonRestTemplate(
+            HttpClientBuilderFactory httpClientBuilderFactory,
+            HttpClientProperties properties,
+            CloseableHttpClient commonHttpClient) {
+        return commonHttpClientBuilder(httpClientBuilderFactory, properties).buildRestTemplate(commonHttpClient);
+    }
+
+    private static CommonHttpClientBuilder commonHttpClientBuilder(
+            HttpClientBuilderFactory httpClientBuilderFactory, HttpClientProperties properties) {
+        CommonHttpClientBuilder builder = httpClientBuilderFactory
+                .createBuilder()
+                .withName(properties.getName())
+                .withConnectTimeout(properties.getConnectTimeoutMillis())
+                .withReadTimeout(properties.getReadTimeoutMillis())
+                .withConnectionPoolSize(properties.getConnectionPoolSize())
+                .withVerifyHostname(properties.isVerifyHostname());
+        if (properties.getRetryCount() > 0) {
+            builder.withRetryCount(properties.getRetryCount());
+        }
+        return builder;
     }
 }
