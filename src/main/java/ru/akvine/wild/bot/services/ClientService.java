@@ -7,6 +7,8 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.BotType;
@@ -26,6 +28,9 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientBlockingService clientBlockingService;
     private final EncryptionService encryptionService;
+
+    @Value("${clients.batch.size:50}")
+    private int batchSize;
 
     @Nullable
     public ClientModel findByChatIdAndBotType(String chatId, BotType botType) {
@@ -137,9 +142,11 @@ public class ClientService {
                 .toList();
     }
 
-    public List<ClientModel> getAll() {
-        logger.info("Get all clients");
-        return clientRepository.findAll().stream().map(ClientModel::new).toList();
+    public List<ClientModel> getBatchAfterId(long afterId) {
+        logger.debug("Get clients batch after id = {}, size = {}", afterId, batchSize);
+        return clientRepository.findBatchAfterId(afterId, PageRequest.ofSize(batchSize)).stream()
+                .map(ClientModel::new)
+                .toList();
     }
 
     public List<ClientModel> getAllActive() {

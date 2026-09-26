@@ -171,8 +171,21 @@ public class ClientAdminService {
             return;
         }
 
-        activeClients = clientService.getAll();
-        sendMessageInternal(activeClients, botType, message);
+
+        long lastId = 0;
+        while (true) {
+            List<ClientModel> batch = clientService.getBatchAfterId(lastId);
+            if (batch.isEmpty()) {
+                break;
+            }
+
+            List<ClientModel> botClients =
+                    batch.stream().filter(client -> client.getBotType() == botType).toList();
+            if (!botClients.isEmpty()) {
+                sendMessageInternal(botClients, botType, message);
+            }
+            lastId = batch.getLast().getId();
+        }
     }
 
     public void addToWhitelist(Whitelist whitelist) {

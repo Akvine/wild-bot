@@ -3,6 +3,7 @@ package ru.akvine.wild.bot.repositories;
 import java.util.List;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -27,10 +28,9 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long>, Jpa
     @Query("from ClientEntity ce where ce.chatId in :chatIds and ce.deleted = false and ce.deletedDate is null")
     List<ClientEntity> findByListChatId(@Param("chatIds") List<String> chatIds);
 
-    // TODO: добавить пагинацию, иначе при большом кол-ве может начать тормозить приложение
-    @Query("from ClientEntity ce where ce.deleted = false and ce.deletedDate is null")
-    @NotNull
-    List<ClientEntity> findAll();
+    @Query("from ClientEntity ce where ce.deleted = false and ce.deletedDate is null and ce.id > :afterId "
+            + "order by ce.id")
+    List<ClientEntity> findBatchAfterId(@Param("afterId") long afterId, Pageable pageable);
 
     @Query("from ClientEntity ce where ce.token is not null and ce.deleted = false")
     @NotNull
