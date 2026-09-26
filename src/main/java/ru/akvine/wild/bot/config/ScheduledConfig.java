@@ -1,10 +1,16 @@
 package ru.akvine.wild.bot.config;
 
+import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.support.TransactionTemplate;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
+import ru.akvine.wild.bot.infrastructure.outbox.OutboxHandler;
+import ru.akvine.wild.bot.infrastructure.outbox.OutboxProperties;
+import ru.akvine.wild.bot.infrastructure.outbox.OutboxRelay;
+import ru.akvine.wild.bot.infrastructure.outbox.OutboxStore;
 import ru.akvine.wild.bot.infrastructure.property.printers.PropertiesPrinter;
 import ru.akvine.wild.bot.job.CheckRunningAdvertsJob;
 import ru.akvine.wild.bot.job.PrintPropertiesJob;
@@ -15,7 +21,7 @@ import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
-import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
+import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 import ru.akvine.wild.bot.services.integration.custodian.CustodianIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.property.PropertyService;
@@ -40,15 +46,17 @@ public class ScheduledConfig {
             WildberriesIntegrationService wildberriesIntegrationService,
             CountersStorage countersStorage,
             AdvertStatisticService advertStatisticService,
-            BotIntegrationAdapter botIntegrationAdapter,
-            PropertyService propertyService) {
+            BotMessageOutbox botMessageOutbox,
+            PropertyService propertyService,
+            TransactionTemplate transactionTemplate) {
         return new CheckRunningAdvertsJob(
                 advertRepository,
-                botIntegrationAdapter,
+                botMessageOutbox,
                 wildberriesIntegrationService,
                 countersStorage,
                 advertStatisticService,
                 propertyService,
+                transactionTemplate,
                 CheckRunningAdvertsJob.class.getSimpleName(),
                 SYSTEM,
                 SYSTEM);
@@ -56,9 +64,9 @@ public class ScheduledConfig {
 
     @Bean
     public SubscriptionJob subscriptionJob(
-            BotIntegrationAdapter botIntegrationAdapter, SubscriptionRepository subscriptionRepository) {
+            BotMessageOutbox botMessageOutbox, SubscriptionRepository subscriptionRepository) {
         return new SubscriptionJob(
-                botIntegrationAdapter, subscriptionRepository, SubscriptionJob.class.getSimpleName(), SYSTEM);
+                botMessageOutbox, subscriptionRepository, SubscriptionJob.class.getSimpleName(), SYSTEM);
     }
 
     @Bean
@@ -84,5 +92,16 @@ public class ScheduledConfig {
                 DeleteAdvertsAndStatisticsJob.class.getSimpleName(),
                 SYSTEM,
                 SYSTEM);
+    }
+
+    /**
+     * Relay transactional outbox: доставляет записанные в БД сообщения клиентам (см. {@link OutboxRelay}).
+     * Выключается свойством {@code outbox.relay.enabled=false} (например, в тестах).
+     */
+    @Bean
+    @ConditionalOnProperty(name = "outbox.relay.enabled", havingValue = "true")
+    public OutboxRelay outboxRelay(
+            OutboxStore outboxStore, List<OutboxHandler> outboxHandlers, OutboxProperties outboxProperties) {
+        return new OutboxRelay(outboxStore, outboxHandlers, outboxProperties);
     }
 }

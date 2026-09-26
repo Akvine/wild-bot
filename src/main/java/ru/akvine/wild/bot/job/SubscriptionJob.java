@@ -13,12 +13,12 @@ import ru.akvine.wild.bot.constants.MDCConstants;
 import ru.akvine.wild.bot.entities.SubscriptionEntity;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
-import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
+import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 
 @RequiredArgsConstructor
 @Slf4j
 public class SubscriptionJob {
-    private final BotIntegrationAdapter botIntegrationAdapter;
+    private final BotMessageOutbox botMessageOutbox;
     private final SubscriptionRepository subscriptionRepository;
     private final String mdcName;
     private final String mdcChatId;
@@ -37,6 +37,7 @@ public class SubscriptionJob {
         logger.info("End delete expired subscriptions");
     }
 
+    @Transactional
     @Scheduled(cron = "${notify.clients.expired.subscription.cron}")
     public void notifyClients() {
         MDC.put(MDCConstants.USERNAME, mdcName);
@@ -57,7 +58,9 @@ public class SubscriptionJob {
                     String message = String.format(
                             "Уважаемый пользователь! Уведомляем вас о том, что через %s дня у вас заканчивается подписка на бота",
                             daysBeforeExpire);
-                    botIntegrationAdapter.sendMessage(chatId, botType, message);
+                    // сообщение и пометка «уведомлён» фиксируются одной транзакцией: не будет ни потерянного
+                    // уведомления, ни повторного; отправляет сообщение relay outbox
+                    botMessageOutbox.enqueue(chatId, botType, message, "subscription-expiring:" + subscription.getId());
                     subscription.setNotifiedThatExpires(true);
                     subscriptionRepository.save(subscription);
                 });

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.support.TransactionTemplate;
 import ru.akvine.wild.bot.constants.MDCConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.CardEntity;
@@ -14,7 +15,7 @@ import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
-import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
+import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
@@ -26,11 +27,12 @@ import ru.akvine.wild.bot.services.property.PropertyService;
 @Slf4j
 public class CheckRunningAdvertsJob {
     private final AdvertRepository advertRepository;
-    private final BotIntegrationAdapter botIntegrationAdapter;
+    private final BotMessageOutbox botMessageOutbox;
     private final WildberriesIntegrationService wildberriesIntegrationService;
     private final CountersStorage countersStorage;
     private final AdvertStatisticService advertStatisticService;
     private final PropertyService propertyService;
+    private final TransactionTemplate transactionTemplate;
 
     private final String name;
     private final String chatId;
@@ -77,19 +79,25 @@ public class CheckRunningAdvertsJob {
                 wildberriesIntegrationService.changeStocks(request, warehouseId, clientToken);
 
                 String chatId = advert.getCard().getOwnerClient().getChatId();
-                advert.setStatus(AdvertStatus.PAUSE);
-                advert.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
-                advert.setUpdatedDate(LocalDateTime.now());
-                advert.setNextCheckDateTime(null);
-                advert.setCheckBudgetSum(null);
-                advertRepository.save(advert);
-                countersStorage.delete(advertId);
-
                 String finishedTestMessage = String.format(
                         "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику",
                         advertId);
-                botIntegrationAdapter.sendMessage(
-                        chatId, cardEntity.getOwnerClient().getBotType(), finishedTestMessage);
+                // статус кампании и уведомление клиенту фиксируются одной транзакцией (transactional outbox):
+                // клиент не останется без уведомления, а сбой Telegram или Max не оборвёт проверку остальных кампаний
+                String dedupKey = advert.getStartCheckDateTime() == null
+                        ? null
+                        : "advert-finished:" + advertId + ":" + advert.getStartCheckDateTime();
+                transactionTemplate.executeWithoutResult(status -> {
+                    advert.setStatus(AdvertStatus.PAUSE);
+                    advert.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
+                    advert.setUpdatedDate(LocalDateTime.now());
+                    advert.setNextCheckDateTime(null);
+                    advert.setCheckBudgetSum(null);
+                    advertRepository.save(advert);
+                    botMessageOutbox.enqueue(
+                            chatId, cardEntity.getOwnerClient().getBotType(), finishedTestMessage, dedupKey);
+                });
+                countersStorage.delete(advertId);
                 continue;
             }
 

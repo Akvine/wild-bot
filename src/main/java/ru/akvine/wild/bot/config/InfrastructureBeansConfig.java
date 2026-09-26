@@ -55,6 +55,10 @@ import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyStore;
 import ru.akvine.wild.bot.infrastructure.idempotency.InMemoryIdempotencyStore;
 import ru.akvine.wild.bot.infrastructure.idempotency.RedisIdempotencyStore;
 import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
+import ru.akvine.wild.bot.infrastructure.outbox.DatabaseOutboxStore;
+import ru.akvine.wild.bot.infrastructure.outbox.OutboxProperties;
+import ru.akvine.wild.bot.infrastructure.outbox.OutboxService;
+import ru.akvine.wild.bot.infrastructure.outbox.OutboxStore;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
 import ru.akvine.wild.bot.infrastructure.monitoring.MonitoringDataSourceProxy;
@@ -100,6 +104,7 @@ import ru.akvine.wild.bot.repositories.infrastructure.ClientSessionDataRepositor
 import ru.akvine.wild.bot.repositories.infrastructure.ClientStatesRepository;
 import ru.akvine.wild.bot.repositories.infrastructure.IdempotencyKeyRepository;
 import ru.akvine.wild.bot.repositories.infrastructure.IterationCounterRepository;
+import ru.akvine.wild.bot.repositories.infrastructure.OutboxMessageRepository;
 import ru.akvine.wild.bot.services.AdvertService;
 
 @Configuration
@@ -619,5 +624,28 @@ public class InfrastructureBeansConfig {
         FilterRegistrationBean<IdempotencyFilter> registration = new FilterRegistrationBean<>(filter);
         registration.setEnabled(false);
         return registration;
+    }
+
+    /**
+     * Настройки transactional outbox - свойства {@code outbox.*}
+     */
+    @Bean
+    @ConfigurationProperties("outbox")
+    public OutboxProperties outboxProperties() {
+        return new OutboxProperties();
+    }
+
+    /**
+     * Outbox в БД: сообщение пишется в той же транзакции, что и бизнес-изменение. Требует таблицу
+     * {@code OUTBOX_MESSAGE_ENTITY} (миграция Liquibase).
+     */
+    @Bean
+    public OutboxStore outboxStore(OutboxMessageRepository outboxMessageRepository) {
+        return new DatabaseOutboxStore(outboxMessageRepository);
+    }
+
+    @Bean
+    public OutboxService outboxService(OutboxStore outboxStore) {
+        return new OutboxService(outboxStore);
     }
 }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
@@ -23,7 +24,7 @@ import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.UpdateAdvert;
-import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
+import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
@@ -35,7 +36,8 @@ import ru.akvine.wild.bot.utils.DateUtils;
 public class AdvertAdminService {
     private final AdvertService advertService;
     private final WildberriesIntegrationService wildberriesIntegrationService;
-    private final BotIntegrationAdapter botIntegrationAdapter;
+    private final BotMessageOutbox botMessageOutbox;
+    private final TransactionTemplate transactionTemplate;
     private final AdvertStatisticService advertStatisticService;
     private final CountersStorage countersStorage;
     private final ClientService clientService;
@@ -79,12 +81,17 @@ public class AdvertAdminService {
         BotType botType = advertEntity.getCard().getOwnerClient().getBotType();
         String finishedTestMessage = String.format(
                 "Тест с advert id = %s успешно завершился.\nСгенерируйте отчет, чтобы посмотреть статистику", advertId);
-        botIntegrationAdapter.sendMessage(chatId, botType, finishedTestMessage);
 
         advertEntity.setNextCheckDateTime(null);
         advertEntity.setStatus(AdvertStatus.PAUSE);
         advertEntity.setOrdinalStatus(AdvertStatus.PAUSE.getCode());
-        AdvertModel updatedAdvert = advertService.update(new AdvertModel(advertEntity));
+        // статус кампании и уведомление клиенту фиксируются одной транзакцией (transactional outbox): раньше
+        // сообщение уходило до обновления БД, и при сбое обновления клиент получал уведомление о несостоявшейся паузе
+        AdvertModel updatedAdvert = transactionTemplate.execute(status -> {
+            AdvertModel updated = advertService.update(new AdvertModel(advertEntity));
+            botMessageOutbox.enqueue(chatId, botType, finishedTestMessage, null);
+            return updated;
+        });
 
         countersStorage.delete(advertId);
 
