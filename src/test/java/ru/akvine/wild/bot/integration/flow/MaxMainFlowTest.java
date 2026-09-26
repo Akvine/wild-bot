@@ -83,7 +83,8 @@ class MaxMainFlowTest extends MaxBaseTest {
         sendText(chatId, "/start");
         sendCallback(chatId, WILDBERRIES_ACCOUNT_SETTINGS_BUTTON_TEXT);
         sendCallback(chatId, REVOKE_TOKEN_BUTTON_TEXT);
-        assertThat(stateStorage.getCurrent(chatId, BotType.MAX)).isEqualTo(ClientState.INPUT_NEW_WILDBERRIES_TOKEN_MENU);
+        assertThat(stateStorage.getCurrent(chatId, BotType.MAX))
+                .isEqualTo(ClientState.INPUT_NEW_WILDBERRIES_TOKEN_MENU);
 
         String newToken = "AABBCCDD00112233AABBCCDD00112233";
         sendText(chatId, newToken);
@@ -91,9 +92,11 @@ class MaxMainFlowTest extends MaxBaseTest {
         // "Токен успешно обновлен!" уходит отдельным сообщением через BotIntegrationAdapter,
         // а не в ответе на само обновление (там - сообщение меню, в которое произошёл откат).
         verify(maxIntegrationService).sendMessage(chatId, new SendMessageRequest().setText("Токен успешно обновлен!"));
-        assertThat(stateStorage.getCurrent(chatId, BotType.MAX)).isEqualTo(ClientState.WILDBERRIES_ACCOUNT_SETTINGS_MENU);
+        assertThat(stateStorage.getCurrent(chatId, BotType.MAX))
+                .isEqualTo(ClientState.WILDBERRIES_ACCOUNT_SETTINGS_MENU);
 
-        ClientEntity persisted = clientRepository.findByChatIdAndBotType(chatId, BotType.MAX).orElseThrow();
+        ClientEntity persisted =
+                clientRepository.findByChatIdAndBotType(chatId, BotType.MAX).orElseThrow();
         assertThat(encryptionService.decrypt(persisted.getToken())).isEqualTo(newToken);
     }
 

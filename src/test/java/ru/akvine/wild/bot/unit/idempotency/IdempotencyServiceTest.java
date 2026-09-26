@@ -89,11 +89,10 @@ class IdempotencyServiceTest {
     void failedOperationReleasesKey() {
         AtomicInteger executions = new AtomicInteger();
 
-        assertThatThrownBy(() -> service.executeOnce(
-                        "key-1", "fp", Result.class, IN_PROGRESS_TTL, RESULT_TTL, () -> {
-                            executions.incrementAndGet();
-                            throw new IllegalStateException("boom");
-                        }))
+        assertThatThrownBy(() -> service.executeOnce("key-1", "fp", Result.class, IN_PROGRESS_TTL, RESULT_TTL, () -> {
+                    executions.incrementAndGet();
+                    throw new IllegalStateException("boom");
+                }))
                 .isInstanceOf(IllegalStateException.class);
         Result retried = execute("key-1", "fp", executions);
 

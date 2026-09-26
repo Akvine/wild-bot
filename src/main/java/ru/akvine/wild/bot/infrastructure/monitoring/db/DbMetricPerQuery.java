@@ -73,7 +73,8 @@ public class DbMetricPerQuery {
         if (!StringUtils.hasText(excludeClasses)) {
             return this;
         }
-        this.excludeClasses.addAll(Arrays.asList(excludeClasses.replaceAll(" ", "").split(",")));
+        this.excludeClasses.addAll(
+                Arrays.asList(excludeClasses.replaceAll(" ", "").split(",")));
         return this;
     }
 

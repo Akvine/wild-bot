@@ -63,9 +63,7 @@ class OutboxTest {
             LocalDateTime now = LocalDateTime.now();
             List<OutboxMessage> batch = new ArrayList<>();
             for (Row row : rows) {
-                if (batch.size() < batchSize
-                        && row.status == OutboxStatus.PENDING
-                        && !row.nextAttemptAt.isAfter(now)) {
+                if (batch.size() < batchSize && row.status == OutboxStatus.PENDING && !row.nextAttemptAt.isAfter(now)) {
                     row.status = OutboxStatus.PROCESSING;
                     row.lockedUntil = now.plus(lease);
                     batch.add(new OutboxMessage(row.id, row.type, row.payload, row.dedupKey, row.attempts));
@@ -241,7 +239,8 @@ class OutboxTest {
     @Test
     @DisplayName("Два обработчика одного типа - ошибка конфигурации")
     void duplicateHandlersAreRejected() {
-        assertThatThrownBy(() -> relay(handler("T", new AtomicInteger(), false), handler("T", new AtomicInteger(), false)))
+        assertThatThrownBy(
+                        () -> relay(handler("T", new AtomicInteger(), false), handler("T", new AtomicInteger(), false)))
                 .isInstanceOf(IllegalStateException.class);
     }
 

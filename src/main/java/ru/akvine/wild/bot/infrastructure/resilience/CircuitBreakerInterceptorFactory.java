@@ -22,13 +22,12 @@ public class CircuitBreakerInterceptorFactory {
 
     public CircuitBreakerInterceptorFactory(CircuitBreakerProperties properties) {
         this.properties = properties;
-        registry.getEventPublisher()
-                .onEntryAdded(event -> event.getAddedEntry()
-                        .getEventPublisher()
-                        .onStateTransition(transition -> logger.warn(
-                                "Circuit breaker [{}] changed state: {}",
-                                transition.getCircuitBreakerName(),
-                                transition.getStateTransition())));
+        registry.getEventPublisher().onEntryAdded(event -> event.getAddedEntry()
+                .getEventPublisher()
+                .onStateTransition(transition -> logger.warn(
+                        "Circuit breaker [{}] changed state: {}",
+                        transition.getCircuitBreakerName(),
+                        transition.getStateTransition())));
     }
 
     /**

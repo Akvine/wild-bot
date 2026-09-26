@@ -1,6 +1,10 @@
 package ru.akvine.wild.bot.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,11 +71,6 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorageInRedisImpl;
 import ru.akvine.wild.bot.repositories.infrastructure.*;
 import ru.akvine.wild.bot.services.AdvertService;
 import ru.akvine.wild.bot.services.integration.redis.RedisOperationService;
-
-import javax.sql.DataSource;
-import java.time.Duration;
-import java.util.List;
-import java.util.Map;
 
 @Configuration
 public class InfrastructureBeansConfig {
@@ -210,7 +209,9 @@ public class InfrastructureBeansConfig {
     @Bean(initMethod = "start", destroyMethod = "stop")
     @ConditionalOnProperty(name = "diagnostic.stack.trace.enabled", havingValue = "true")
     public HouseKeeper stackTraceHouseKeeper(@Value("${diagnostic.stack.trace.dir}") String dir) {
-        return new HouseKeeper(StackTracePrinter.simpleHouseKeeperConfig(dir), Duration.ofHours(1).toMillis());
+        return new HouseKeeper(
+                StackTracePrinter.simpleHouseKeeperConfig(dir),
+                Duration.ofHours(1).toMillis());
     }
 
     /**
@@ -225,7 +226,10 @@ public class InfrastructureBeansConfig {
     @ConditionalOnExpression("${monitoring.slow.query.enabled:false} or ${db.metrics.enabled:false}")
     @ConfigurationProperties("spring.datasource.hikari")
     public HikariDataSource hikariDataSource(DataSourceProperties properties) {
-        return properties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+        return properties
+                .initializeDataSourceBuilder()
+                .type(HikariDataSource.class)
+                .build();
     }
 
     /**
@@ -316,8 +320,7 @@ public class InfrastructureBeansConfig {
     @Bean
     @ConditionalOnProperty(name = "http.logging.enabled", havingValue = "true")
     public FilterRegistrationBean<HttpLoggingFilter> httpLoggingFilter(
-            HttpLoggingProperties httpLoggingProperties,
-            ObjectProvider<RequestMappingHandlerMapping> handlerMappings) {
+            HttpLoggingProperties httpLoggingProperties, ObjectProvider<RequestMappingHandlerMapping> handlerMappings) {
         log.info("Http logging enabled");
         FilterRegistrationBean<HttpLoggingFilter> registration =
                 new FilterRegistrationBean<>(HttpLoggingFilterFactory.create(httpLoggingProperties, handlerMappings));
@@ -382,7 +385,8 @@ public class InfrastructureBeansConfig {
                         keystore.getProvider(),
                         keystore.getPassword()))
                 .toList();
-        return new FileKeyStoreObserver(keyStoreConfigs, properties.getDaysToExpire(), true, properties.getDaysExpired());
+        return new FileKeyStoreObserver(
+                keyStoreConfigs, properties.getDaysToExpire(), true, properties.getDaysExpired());
     }
 
     /**

@@ -44,7 +44,8 @@ class CachingRequestWrapper extends HttpServletRequestWrapper {
         if (reader == null) {
             String encoding = getCharacterEncoding();
             Charset charset = encoding != null ? Charset.forName(encoding) : StandardCharsets.ISO_8859_1;
-            reader = new BufferedReader(new InputStreamReader(new CachingServletInputStream(super.getInputStream()), charset));
+            reader = new BufferedReader(
+                    new InputStreamReader(new CachingServletInputStream(super.getInputStream()), charset));
         }
         return reader;
     }

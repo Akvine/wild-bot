@@ -34,8 +34,7 @@ public class MonitoringConnectionProxy implements Connection {
     public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)
             throws SQLException {
         return new MonitoringStatementProxy(
-                targetConnection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability),
-                listener);
+                targetConnection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability), listener);
     }
 
     @Override
@@ -73,8 +72,7 @@ public class MonitoringConnectionProxy implements Connection {
 
     @Override
     public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
-        return new MonitoringPreparedStatementProxy(
-                targetConnection.prepareStatement(sql, columnNames), sql, listener);
+        return new MonitoringPreparedStatementProxy(targetConnection.prepareStatement(sql, columnNames), sql, listener);
     }
 
     @Override
@@ -83,8 +81,7 @@ public class MonitoringConnectionProxy implements Connection {
     }
 
     @Override
-    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency)
-            throws SQLException {
+    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         return targetConnection.prepareCall(sql, resultSetType, resultSetConcurrency);
     }
 

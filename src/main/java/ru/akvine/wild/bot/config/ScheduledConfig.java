@@ -21,9 +21,9 @@ import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
-import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 import ru.akvine.wild.bot.services.integration.custodian.CustodianIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
+import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 import ru.akvine.wild.bot.services.property.PropertyService;
 import ru.akvine.wild.bot.services.property.PropertyServiceImpl;
 

@@ -2,6 +2,7 @@ package ru.akvine.wild.bot.services.integration.max;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -21,7 +22,6 @@ import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -31,6 +31,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
+import ru.akvine.wild.bot.infrastructure.resilience.BulkheadFactory;
+import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerInterceptorFactory;
 import ru.akvine.wild.bot.services.integration.max.dto.AttachmentType;
 import ru.akvine.wild.bot.services.integration.max.dto.Message;
 import ru.akvine.wild.bot.services.integration.max.dto.Update;
@@ -39,8 +41,6 @@ import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageReques
 import ru.akvine.wild.bot.services.integration.max.dto.request.UpdateCommandsRequest;
 import ru.akvine.wild.bot.services.integration.max.dto.response.*;
 import ru.akvine.wild.bot.utils.ByteUtils;
-import ru.akvine.wild.bot.infrastructure.resilience.BulkheadFactory;
-import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerInterceptorFactory;
 import ru.akvine.wild.bot.utils.RequestUtils;
 
 @Service

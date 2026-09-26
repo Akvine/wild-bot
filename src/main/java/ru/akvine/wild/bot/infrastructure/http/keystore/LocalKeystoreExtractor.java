@@ -71,12 +71,14 @@ public class LocalKeystoreExtractor implements KeystoreExtractor {
                     new SilentUtils.ThrowOrWarner()
                             .exceptionMapper(AliasDoesNotExistException::new)
                             .silent(silent)
-                            .messageTemplate("Local keystore doesn't contain client certificate with alias '%s'.", alias)
+                            .messageTemplate(
+                                    "Local keystore doesn't contain client certificate with alias '%s'.", alias)
                             .throwOrWarn();
                     continue;
                 }
 
-                // без приватного ключа это не клиентский сертификат - для вызывающего это то же, что «нет такого алиаса»
+                // без приватного ключа это не клиентский сертификат - для вызывающего это то же, что «нет такого
+                // алиаса»
                 if (!localKeystore.isKeyEntry(alias)) {
                     new SilentUtils.ThrowOrWarner()
                             .exceptionMapper(AliasDoesNotExistException::new)

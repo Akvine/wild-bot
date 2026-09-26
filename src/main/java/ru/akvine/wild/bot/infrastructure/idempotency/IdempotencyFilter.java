@@ -78,7 +78,10 @@ public class IdempotencyFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String clientKey = request.getHeader(properties.getHeader()).trim();
         if (clientKey.isEmpty() || clientKey.length() > MAX_KEY_LENGTH) {
-            writeError(response, HttpServletResponse.SC_BAD_REQUEST, INVALID_CODE,
+            writeError(
+                    response,
+                    HttpServletResponse.SC_BAD_REQUEST,
+                    INVALID_CODE,
                     "Idempotency key must be 1.." + MAX_KEY_LENGTH + " characters");
             return;
         }
@@ -107,12 +110,14 @@ public class IdempotencyFilter extends OncePerRequestFilter {
                 replay(response, begin.payload());
                 return;
             case IN_PROGRESS:
-                writeError(response, HttpServletResponse.SC_CONFLICT, IN_PROGRESS_CODE,
+                writeError(
+                        response,
+                        HttpServletResponse.SC_CONFLICT,
+                        IN_PROGRESS_CODE,
                         "Request with this idempotency key is still being processed");
                 return;
             case MISMATCH:
-                writeError(response, 422, REUSED_CODE,
-                        "Idempotency key was already used with a different request");
+                writeError(response, 422, REUSED_CODE, "Idempotency key was already used with a different request");
                 return;
             default:
                 break;
@@ -153,8 +158,7 @@ public class IdempotencyFilter extends OncePerRequestFilter {
         response.getOutputStream().write(Base64.getDecoder().decode(stored.bodyBase64()));
     }
 
-    private void writeError(HttpServletResponse response, int status, String code, String message)
-            throws IOException {
+    private void writeError(HttpServletResponse response, int status, String code, String message) throws IOException {
         response.setStatus(status);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getOutputStream().write(objectMapper.writeValueAsBytes(new ErrorResponse(code, message)));

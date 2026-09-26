@@ -28,7 +28,8 @@ public class JdbcUrlParser {
             infoConnection.setHost(uri.getHost());
             infoConnection.setPort(uri.getPort() < 0 ? null : String.valueOf(uri.getPort()));
             infoConnection.setSchema(schema);
-            infoConnection.setServiceName(uri.getPath() == null ? null : uri.getPath().replace("/", ""));
+            infoConnection.setServiceName(
+                    uri.getPath() == null ? null : uri.getPath().replace("/", ""));
             return infoConnection;
         } catch (Exception e) {
             logger.warn("Failed to parse JDBC URL: {}", jdbcUrl);

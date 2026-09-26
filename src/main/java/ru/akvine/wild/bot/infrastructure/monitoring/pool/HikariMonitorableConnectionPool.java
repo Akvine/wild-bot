@@ -22,9 +22,8 @@ class HikariMonitorableConnectionPool implements MonitorableConnectionPool {
     HikariMonitorableConnectionPool(DataSource dataSource, String poolName) {
         Objects.requireNonNull(dataSource, "dataSource");
         if (!(dataSource instanceof HikariDataSource)) {
-            throw new IllegalArgumentException(
-                    "Object of class [" + dataSource.getClass().getName() + "] must be an instance of "
-                            + HikariDataSource.class);
+            throw new IllegalArgumentException("Object of class ["
+                    + dataSource.getClass().getName() + "] must be an instance of " + HikariDataSource.class);
         }
 
         this.dataSource = (HikariDataSource) dataSource;

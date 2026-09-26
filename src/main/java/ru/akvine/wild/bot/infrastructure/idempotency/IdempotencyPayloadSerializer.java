@@ -20,7 +20,8 @@ public class IdempotencyPayloadSerializer {
         try {
             return mapper.writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Can't serialize " + value.getClass().getSimpleName(), e);
+            throw new IllegalStateException(
+                    "Can't serialize " + value.getClass().getSimpleName(), e);
         }
     }
 

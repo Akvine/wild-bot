@@ -26,8 +26,7 @@ public class RedisIdempotencyStore implements IdempotencyStore {
                 IdempotencyStatus.IN_PROGRESS,
                 null,
                 LocalDateTime.now().plus(inProgressTtl));
-        return redisOperationService.putValueIfAbsentWithTtl(
-                redisKey(key), serializer.toJson(record), inProgressTtl);
+        return redisOperationService.putValueIfAbsentWithTtl(redisKey(key), serializer.toJson(record), inProgressTtl);
     }
 
     @Override

@@ -32,7 +32,8 @@ public class ApiStatisticsPrinter {
     }
 
     public void start() {
-        executor.scheduleWithFixedDelay(this::printEndpointStatistic, intervalMinutes, intervalMinutes, TimeUnit.MINUTES);
+        executor.scheduleWithFixedDelay(
+                this::printEndpointStatistic, intervalMinutes, intervalMinutes, TimeUnit.MINUTES);
     }
 
     public void stop() {
@@ -54,8 +55,8 @@ public class ApiStatisticsPrinter {
 
         List<EndpointMetric> called = apiMetricsCollector.getEndpointMetrics().stream()
                 .filter(endpoint -> endpoint.getTimer() != null)
-                .sorted(Comparator.comparingLong((EndpointMetric endpoint) ->
-                                endpoint.getTimer().getCount())
+                .sorted(Comparator.comparingLong(
+                                (EndpointMetric endpoint) -> endpoint.getTimer().getCount())
                         .reversed())
                 .toList();
         called.forEach(endpoint -> {

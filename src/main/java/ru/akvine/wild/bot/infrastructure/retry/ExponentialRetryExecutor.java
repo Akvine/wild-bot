@@ -27,12 +27,7 @@ public class ExponentialRetryExecutor extends AbstractRetryExecutor {
     }
 
     public ExponentialRetryExecutor(
-            int attempts,
-            Duration delay,
-            double multiplier,
-            Duration maxDelay,
-            double jitterFactor,
-            Sleeper sleeper) {
+            int attempts, Duration delay, double multiplier, Duration maxDelay, double jitterFactor, Sleeper sleeper) {
         super(attempts, delay, sleeper);
         if (!(multiplier >= 1.0) || Double.isInfinite(multiplier)) {
             throw new IllegalArgumentException("multiplier must be a finite number >= 1 but was " + multiplier);
@@ -54,7 +49,9 @@ public class ExponentialRetryExecutor extends AbstractRetryExecutor {
         double maxMillis = maxDelay.toMillis();
         double millis = Math.min(delay.toMillis() * Math.pow(multiplier, failedAttempt - 1), maxMillis);
         if (jitterFactor > 0) {
-            double jitter = 1 - jitterFactor + 2 * jitterFactor * ThreadLocalRandom.current().nextDouble();
+            double jitter = 1
+                    - jitterFactor
+                    + 2 * jitterFactor * ThreadLocalRandom.current().nextDouble();
             millis = Math.min(millis * jitter, maxMillis);
         }
         return Duration.ofMillis((long) millis);

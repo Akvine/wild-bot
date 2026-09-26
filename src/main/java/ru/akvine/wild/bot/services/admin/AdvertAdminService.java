@@ -24,10 +24,10 @@ import ru.akvine.wild.bot.services.dto.admin.advert.ListAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.PauseAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.RenameAdvert;
 import ru.akvine.wild.bot.services.dto.admin.advert.UpdateAdvert;
-import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertDto;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertsInfoResponse;
+import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 import ru.akvine.wild.bot.utils.DateUtils;
 
 @Service

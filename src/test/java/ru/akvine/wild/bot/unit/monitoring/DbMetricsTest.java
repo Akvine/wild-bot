@@ -138,7 +138,8 @@ class DbMetricsTest {
     void parsesJdbcUrl() {
         JdbcUrlParser parser = new JdbcUrlParser();
 
-        DbInfoConnection postgres = parser.parseUrl("jdbc:postgresql://db.local:5432/wild?sslmode=disable", "wild_user");
+        DbInfoConnection postgres =
+                parser.parseUrl("jdbc:postgresql://db.local:5432/wild?sslmode=disable", "wild_user");
 
         assertThat(postgres.getHost()).isEqualTo("db.local");
         assertThat(postgres.getPort()).isEqualTo("5432");

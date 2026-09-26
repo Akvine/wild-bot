@@ -17,9 +17,10 @@ public interface IdempotencyKeyRepository extends JpaRepository<IdempotencyKeyEn
      */
     @Modifying
     @Query(
-            value = "insert into IDEMPOTENCY_KEY_ENTITY (IDEMPOTENCY_KEY, FINGERPRINT, STATUS, EXPIRES_AT, CREATED_DATE) "
-                    + "values (:key, :fingerprint, 'IN_PROGRESS', :expiresAt, :now) "
-                    + "on conflict (IDEMPOTENCY_KEY) do nothing",
+            value =
+                    "insert into IDEMPOTENCY_KEY_ENTITY (IDEMPOTENCY_KEY, FINGERPRINT, STATUS, EXPIRES_AT, CREATED_DATE) "
+                            + "values (:key, :fingerprint, 'IN_PROGRESS', :expiresAt, :now) "
+                            + "on conflict (IDEMPOTENCY_KEY) do nothing",
             nativeQuery = true)
     int insertIfAbsent(
             @Param("key") String key,

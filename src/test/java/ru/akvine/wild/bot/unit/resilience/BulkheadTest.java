@@ -39,8 +39,7 @@ class BulkheadTest {
         return request;
     }
 
-    private final ClientHttpRequestExecution ok =
-            (req, body) -> new MockClientHttpResponse(new byte[0], HttpStatus.OK);
+    private final ClientHttpRequestExecution ok = (req, body) -> new MockClientHttpResponse(new byte[0], HttpStatus.OK);
 
     /** Вызов, который «висит», пока не откроют защёлку */
     private CompletableFuture<Void> blockedCall(

@@ -21,8 +21,8 @@ public class BotIntegrationAdapterImpl implements BotIntegrationAdapter {
     /**
      * Ошибки 4xx (кроме 429) повторять бессмысленно: запрос некорректен и с тем же телом получит тот же ответ
      */
-    private static final Predicate<Exception> RETRY_ON_TRANSIENT_ERRORS = exception ->
-            !(exception instanceof HttpClientErrorException clientError)
+    private static final Predicate<Exception> RETRY_ON_TRANSIENT_ERRORS =
+            exception -> !(exception instanceof HttpClientErrorException clientError)
                     || clientError.getStatusCode().value() == TOO_MANY_REQUESTS;
 
     private final TelegramIntegrationService telegramIntegrationService;

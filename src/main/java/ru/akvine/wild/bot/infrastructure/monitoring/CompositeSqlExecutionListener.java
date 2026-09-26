@@ -21,7 +21,10 @@ public class CompositeSqlExecutionListener implements SqlExecutionListener {
             try {
                 listener.onQueryExecuted(sql, startedAtNanos);
             } catch (RuntimeException e) {
-                logger.error("SQL execution listener [{}] failed", listener.getClass().getSimpleName(), e);
+                logger.error(
+                        "SQL execution listener [{}] failed",
+                        listener.getClass().getSimpleName(),
+                        e);
             }
         }
     }
@@ -32,7 +35,10 @@ public class CompositeSqlExecutionListener implements SqlExecutionListener {
             try {
                 listener.onCommit();
             } catch (RuntimeException e) {
-                logger.error("SQL execution listener [{}] failed", listener.getClass().getSimpleName(), e);
+                logger.error(
+                        "SQL execution listener [{}] failed",
+                        listener.getClass().getSimpleName(),
+                        e);
             }
         }
     }

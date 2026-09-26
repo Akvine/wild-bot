@@ -31,7 +31,8 @@ import ru.akvine.wild.bot.infrastructure.httplogging.logformat.writer.ResponseLo
 @Setter
 @Slf4j
 public class HttpLoggingFilter extends OncePerRequestFilter {
-    private static final Set<String> CONTENT_ENCODINGS = new HashSet<>(Arrays.asList("gzip", "compress", "deflate", "br"));
+    private static final Set<String> CONTENT_ENCODINGS =
+            new HashSet<>(Arrays.asList("gzip", "compress", "deflate", "br"));
     private static final byte[] ENCODED_PAYLOAD_DUMMY = "[encoded payload]".getBytes();
     private static final String CONTENT_ENCODING_HEADER = "Content-Encoding";
 

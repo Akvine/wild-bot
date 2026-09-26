@@ -94,8 +94,8 @@ public class StackTracePrinter {
         writer.write("Dump of " + stacks.size() + " thread at " + DATE_FORMAT.format(ZonedDateTime.now()) + "\n\n");
         for (Map.Entry<Thread, StackTraceElement[]> entry : stacks.entrySet()) {
             Thread thread = entry.getKey();
-            writer.write("\"" + thread.getName() + "\" prio=" + thread.getPriority() + " tid=" + thread.threadId()
-                    + " " + thread.getState() + " " + (thread.isDaemon() ? "deamon" : "worker") + "\n");
+            writer.write("\"" + thread.getName() + "\" prio=" + thread.getPriority() + " tid=" + thread.threadId() + " "
+                    + thread.getState() + " " + (thread.isDaemon() ? "deamon" : "worker") + "\n");
             ThreadInfo threadInfo = threadInfoMap.get(thread.threadId());
             if (threadInfo != null) {
                 writer.write("    native=" + threadInfo.isInNative() + ", suspended=" + threadInfo.isSuspended()

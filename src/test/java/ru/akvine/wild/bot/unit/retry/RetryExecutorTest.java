@@ -48,14 +48,15 @@ class RetryExecutorTest {
     void supplierReturnsResultOfSuccessfulAttempt() {
         AtomicInteger calls = new AtomicInteger();
 
-        String result = exponential(3).execute(
-                () -> {
-                    if (calls.incrementAndGet() < 3) {
-                        throw new IllegalStateException("fail #" + calls.get());
-                    }
-                    return "ok";
-                },
-                MESSAGE);
+        String result = exponential(3)
+                .execute(
+                        () -> {
+                            if (calls.incrementAndGet() < 3) {
+                                throw new IllegalStateException("fail #" + calls.get());
+                            }
+                            return "ok";
+                        },
+                        MESSAGE);
 
         assertThat(result).isEqualTo("ok");
         assertThat(calls).hasValue(3);
@@ -68,10 +69,10 @@ class RetryExecutorTest {
         AtomicInteger calls = new AtomicInteger();
 
         assertThatThrownBy(() -> fixed(3).execute(
-                        (Runnable) () -> {
-                            throw new IllegalStateException("fail #" + calls.incrementAndGet());
-                        },
-                        MESSAGE))
+                                (Runnable) () -> {
+                                    throw new IllegalStateException("fail #" + calls.incrementAndGet());
+                                },
+                                MESSAGE))
                 .isInstanceOf(RetryException.class)
                 .hasMessageContaining(MESSAGE)
                 .hasMessageContaining("[3]")
@@ -86,10 +87,10 @@ class RetryExecutorTest {
     @DisplayName("Фиксированная задержка одинакова между всеми попытками")
     void fixedDelayIsConstant() {
         assertThatThrownBy(() -> fixed(4).execute(
-                        (Runnable) () -> {
-                            throw new IllegalStateException();
-                        },
-                        MESSAGE))
+                                (Runnable) () -> {
+                                    throw new IllegalStateException();
+                                },
+                                MESSAGE))
                 .isInstanceOf(RetryException.class);
 
         assertThat(pauses).containsExactly(Duration.ofMillis(100), Duration.ofMillis(100), Duration.ofMillis(100));
@@ -98,11 +99,12 @@ class RetryExecutorTest {
     @Test
     @DisplayName("Экспоненциальная задержка растёт по множителю и ограничена maxDelay")
     void exponentialDelayGrowsAndIsCapped() {
-        assertThatThrownBy(() -> exponential(5).execute(
-                        (Runnable) () -> {
-                            throw new IllegalStateException();
-                        },
-                        MESSAGE))
+        assertThatThrownBy(() -> exponential(5)
+                        .execute(
+                                (Runnable) () -> {
+                                    throw new IllegalStateException();
+                                },
+                                MESSAGE))
                 .isInstanceOf(RetryException.class);
 
         assertThat(pauses)
@@ -134,12 +136,12 @@ class RetryExecutorTest {
         IllegalArgumentException original = new IllegalArgumentException("bad input");
 
         assertThatThrownBy(() -> fixed(3).execute(
-                        (Runnable) () -> {
-                            calls.incrementAndGet();
-                            throw original;
-                        },
-                        e -> !(e instanceof IllegalArgumentException),
-                        MESSAGE))
+                                (Runnable) () -> {
+                                    calls.incrementAndGet();
+                                    throw original;
+                                },
+                                e -> !(e instanceof IllegalArgumentException),
+                                MESSAGE))
                 .isSameAs(original);
 
         assertThat(calls).hasValue(1);
@@ -150,11 +152,11 @@ class RetryExecutorTest {
     @DisplayName("Проверяемое исключение из Callable оборачивается в RetryException")
     void checkedExceptionIsWrapped() {
         assertThatThrownBy(() -> fixed(2).call(
-                        () -> {
-                            throw new IOException("disk");
-                        },
-                        RetryExecutor.RETRY_ON_ANY,
-                        MESSAGE))
+                                () -> {
+                                    throw new IOException("disk");
+                                },
+                                RetryExecutor.RETRY_ON_ANY,
+                                MESSAGE))
                 .isInstanceOf(RetryException.class)
                 .hasCauseInstanceOf(IOException.class);
     }

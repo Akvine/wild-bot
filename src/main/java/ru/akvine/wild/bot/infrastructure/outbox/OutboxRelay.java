@@ -52,7 +52,8 @@ public class OutboxRelay {
     public int process() {
         int released = store.releaseExpiredLeases();
         if (released > 0) {
-            logger.warn("Returned {} outbox message(s) to the queue: their processing did not finish in time", released);
+            logger.warn(
+                    "Returned {} outbox message(s) to the queue: their processing did not finish in time", released);
         }
 
         List<OutboxMessage> batch = store.claimBatch(properties.getBatchSize(), properties.lease());
@@ -71,8 +72,7 @@ public class OutboxRelay {
     @Scheduled(fixedDelayString = "${outbox.cleanup.interval.milliseconds:3600000}")
     public void cleanup() {
         try {
-            int deleted =
-                    store.deleteSentBefore(LocalDateTime.now().minusDays(properties.getSentRetentionDays()));
+            int deleted = store.deleteSentBefore(LocalDateTime.now().minusDays(properties.getSentRetentionDays()));
             if (deleted > 0) {
                 logger.info("Deleted {} delivered outbox message(s)", deleted);
             }

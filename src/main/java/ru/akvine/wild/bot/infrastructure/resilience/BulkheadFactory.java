@@ -33,10 +33,9 @@ public class BulkheadFactory {
 
     public BulkheadFactory(BulkheadProperties properties) {
         this.properties = properties;
-        registry.getEventPublisher()
-                .onEntryAdded(event -> event.getAddedEntry()
-                        .getEventPublisher()
-                        .onCallRejected(rejected -> logRejection(rejected.getBulkheadName())));
+        registry.getEventPublisher().onEntryAdded(event -> event.getAddedEntry()
+                .getEventPublisher()
+                .onCallRejected(rejected -> logRejection(rejected.getBulkheadName())));
     }
 
     private void logRejection(String bulkheadName) {
@@ -62,8 +61,8 @@ public class BulkheadFactory {
             return (request, body, execution) -> execution.execute(request, body);
         }
         BulkheadProperties.Settings settings = properties.resolve(name);
-        boolean perTenant = settings.getMaxConcurrentCallsPerTenant() != null
-                && settings.getMaxConcurrentCallsPerTenant() > 0;
+        boolean perTenant =
+                settings.getMaxConcurrentCallsPerTenant() != null && settings.getMaxConcurrentCallsPerTenant() > 0;
         Function<HttpRequest, Bulkhead> tenantResolver =
                 perTenant ? request -> tenantBulkhead(name, request, settings) : null;
         return new BulkheadInterceptor(bulkhead(name, settings), tenantResolver);
@@ -92,10 +91,11 @@ public class BulkheadFactory {
      */
     public Map<String, String> states() {
         Map<String, String> states = new TreeMap<>();
-        registry.getAllBulkheads().forEach(bulkhead -> states.put(
-                bulkhead.getName(),
-                bulkhead.getMetrics().getAvailableConcurrentCalls() + "/"
-                        + bulkhead.getMetrics().getMaxAllowedConcurrentCalls()));
+        registry.getAllBulkheads()
+                .forEach(bulkhead -> states.put(
+                        bulkhead.getName(),
+                        bulkhead.getMetrics().getAvailableConcurrentCalls() + "/"
+                                + bulkhead.getMetrics().getMaxAllowedConcurrentCalls()));
         return states;
     }
 

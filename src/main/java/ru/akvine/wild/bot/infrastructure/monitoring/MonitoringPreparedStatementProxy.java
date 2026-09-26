@@ -220,8 +220,7 @@ public class MonitoringPreparedStatementProxy extends MonitoringStatementProxy i
     }
 
     @Override
-    public void setObject(int parameterIndex, Object x, SQLType targetSqlType, int scaleOrLength)
-            throws SQLException {
+    public void setObject(int parameterIndex, Object x, SQLType targetSqlType, int scaleOrLength) throws SQLException {
         targetStatement.setObject(parameterIndex, x, targetSqlType, scaleOrLength);
     }
 

@@ -119,7 +119,9 @@ class TelegramMainFlowTest extends TelegramBaseTest {
         assertThat(stateStorage.getCurrent(chatId, BotType.TELEGRAM))
                 .isEqualTo(ClientState.WILDBERRIES_ACCOUNT_SETTINGS_MENU);
 
-        ClientEntity persisted = clientRepository.findByChatIdAndBotType(chatId, BotType.TELEGRAM).orElseThrow();
+        ClientEntity persisted = clientRepository
+                .findByChatIdAndBotType(chatId, BotType.TELEGRAM)
+                .orElseThrow();
         assertThat(persisted.getToken()).isNotNull();
         assertThat(encryptionService.decrypt(persisted.getToken())).isEqualTo(newToken);
     }
@@ -135,7 +137,10 @@ class TelegramMainFlowTest extends TelegramBaseTest {
         assertThat(text(apiMethod)).isEqualTo("Не похоже на токен. Попробуйте еще раз!");
         assertThat(stateStorage.getCurrent(chatId, BotType.TELEGRAM))
                 .isEqualTo(ClientState.INPUT_NEW_WILDBERRIES_TOKEN_MENU);
-        assertThat(clientRepository.findByChatIdAndBotType(chatId, BotType.TELEGRAM).orElseThrow().getToken())
+        assertThat(clientRepository
+                        .findByChatIdAndBotType(chatId, BotType.TELEGRAM)
+                        .orElseThrow()
+                        .getToken())
                 .isNull();
     }
 
@@ -210,7 +215,8 @@ class TelegramMainFlowTest extends TelegramBaseTest {
         client = clientRepository.save(client);
 
         if (withSubscription) {
-            SubscriptionEntity subscription = new SubscriptionEntity().setClient(client).setExpiresAt(expiresAt);
+            SubscriptionEntity subscription =
+                    new SubscriptionEntity().setClient(client).setExpiresAt(expiresAt);
             subscriptionRepository.save(subscription);
         }
 
@@ -232,7 +238,8 @@ class TelegramMainFlowTest extends TelegramBaseTest {
     }
 
     private BotApiMethod<?> sendCallback(String chatId, String buttonText) {
-        Update update = new UpdateBuilder().withChatId(chatId).withText(buttonText).build(BotDataType.CALLBACK);
+        Update update =
+                new UpdateBuilder().withChatId(chatId).withText(buttonText).build(BotDataType.CALLBACK);
         return telegramBot.onWebhookUpdateReceived(update);
     }
 

@@ -34,7 +34,8 @@ public class ApiMetricsCollector implements ApplicationListener<ContextRefreshed
 
     public ApiMetricsCollector(ApplicationContext applicationContext, String domain) {
         this.applicationContext = applicationContext;
-        this.jmxReporter = JmxReporter.forRegistry(metricRegistry).inDomain(domain).build();
+        this.jmxReporter =
+                JmxReporter.forRegistry(metricRegistry).inDomain(domain).build();
     }
 
     @Override
@@ -80,8 +81,10 @@ public class ApiMetricsCollector implements ApplicationListener<ContextRefreshed
     }
 
     private void initEndpointMetrics() {
-        applicationContext.getBeansOfType(RequestMappingHandlerMapping.class).values().forEach(mapping ->
-                mapping.getHandlerMethods().keySet().forEach(info -> info.getPatternValues()
+        applicationContext
+                .getBeansOfType(RequestMappingHandlerMapping.class)
+                .values()
+                .forEach(mapping -> mapping.getHandlerMethods().keySet().forEach(info -> info.getPatternValues()
                         .forEach(pattern -> endpointMetrics.put(pattern, new EndpointMetric(metricName(pattern))))));
         logger.info("Endpoint statistics. [{}] endpoints found", endpointMetrics.size());
     }

@@ -19,8 +19,9 @@ public class MonitorableConnectionPoolFactory {
     // and all it's imports, which exactly what we want to avoid because that Pool Provider may not be
     // on the classpath
     private static final ClassToMonitorConstructor[] constructors = new ClassToMonitorConstructor[] {
-        of("com.zaxxer.hikari.HikariDataSource", (dataSource, poolName) -> new HikariMonitorableConnectionPool(
-                dataSource, poolName))
+        of(
+                "com.zaxxer.hikari.HikariDataSource",
+                (dataSource, poolName) -> new HikariMonitorableConnectionPool(dataSource, poolName))
     };
 
     public static MonitorableConnectionPool create(DataSource dataSource, String poolName) {

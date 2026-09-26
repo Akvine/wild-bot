@@ -67,7 +67,8 @@ public class OutboxService {
         try {
             return mapper.writeValueAsString(payload);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Can't serialize outbox payload " + payload.getClass().getSimpleName(), e);
+            throw new IllegalArgumentException(
+                    "Can't serialize outbox payload " + payload.getClass().getSimpleName(), e);
         }
     }
 }

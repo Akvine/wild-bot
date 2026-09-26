@@ -93,7 +93,8 @@ class MessageDispatcherImplTest {
         Payload payload = payload("1", BotType.TELEGRAM, "hello");
         when(stateStorage.containsState("1", BotType.TELEGRAM)).thenReturn(false);
         when(mainMenuView.getMessage("1", BotType.TELEGRAM)).thenReturn("menu text");
-        when(mainMenuView.getKeyboard("1", BotType.TELEGRAM)).thenReturn(new InlineKeyboard((InlineKeyboardMarkup) null));
+        when(mainMenuView.getKeyboard("1", BotType.TELEGRAM))
+                .thenReturn(new InlineKeyboard((InlineKeyboardMarkup) null));
 
         Response response = dispatcher.doDispatch(payload);
 

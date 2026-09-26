@@ -62,7 +62,8 @@ public class FileKeyStoreObserver extends AbstractKeystoreObserver implements Ke
                 continue;
             }
             String location = keyStoreConfig.getKeystoreFile().getURI().toString();
-            String hash = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(certificate.getEncoded()));
+            String hash = HexFormat.of()
+                    .formatHex(MessageDigest.getInstance("SHA-256").digest(certificate.getEncoded()));
             data.add(new ExpireCertData(alias, getDaysBetween(certificate), hash, location));
         }
         return data;

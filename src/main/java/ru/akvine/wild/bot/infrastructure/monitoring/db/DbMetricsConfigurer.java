@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import ru.akvine.wild.bot.infrastructure.monitoring.db.exception.MissConfigurationException;
@@ -129,7 +128,10 @@ public final class DbMetricsConfigurer {
         line(sb, "totalCommitCountDisplayedInJmx = ", String.valueOf(metrics.isTotalCommitCountDisplayedInJmx()));
         if (metrics.getJmxCommitCounter() != null) {
             line(sb, "jmxCommitCounter.name = ", metrics.getJmxCommitCounterName());
-            line(sb, "jmxCommitCounter.value = ", String.valueOf(metrics.getJmxCommitCounter().getCount()));
+            line(
+                    sb,
+                    "jmxCommitCounter.value = ",
+                    String.valueOf(metrics.getJmxCommitCounter().getCount()));
         } else {
             line(sb, "jmxCommitCounter NOT initialized");
         }

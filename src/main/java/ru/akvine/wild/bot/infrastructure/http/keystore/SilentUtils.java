@@ -34,8 +34,7 @@ final class SilentUtils {
         }
 
         ThrowOrWarner messageTemplate(String messageTemplateString, Object... messageTemplateParams) {
-            this.messageTemplateString =
-                    Objects.requireNonNull(messageTemplateString, "messageTemplateString is null");
+            this.messageTemplateString = Objects.requireNonNull(messageTemplateString, "messageTemplateString is null");
             this.messageTemplateParams = messageTemplateParams;
             return this;
         }

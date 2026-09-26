@@ -15,11 +15,11 @@ import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
-import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.AdvertChangeCpmRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.ChangeStocksRequest;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.SkuDto;
+import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 import ru.akvine.wild.bot.services.property.PropertyCodes;
 import ru.akvine.wild.bot.services.property.PropertyService;
 
