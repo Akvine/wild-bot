@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -33,6 +34,9 @@ import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
 import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryDataSourceProxy;
 import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryLogger;
+import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsCollector;
+import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsFilter;
+import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiStatisticsPrinter;
 import ru.akvine.wild.bot.infrastructure.monitoring.pool.ConnectionPoolMonitor;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.HouseKeeper;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.StackTracePrinter;
@@ -222,5 +226,41 @@ public class InfrastructureBeansConfig {
                 new FilterRegistrationBean<>(HttpLoggingFilterFactory.create(httpLoggingProperties, handlerMappings));
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 10);
         return registration;
+    }
+
+    /**
+     * Codahale-таймеры по эндпоинтам, доступные через JMX (см. {@link ApiMetricsCollector}).
+     */
+    @Bean(destroyMethod = "stop")
+    @ConditionalOnProperty(name = "monitoring.api.metrics.enabled", havingValue = "true")
+    public ApiMetricsCollector apiMetricsCollector(
+            ApplicationContext applicationContext, @Value("${monitoring.api.metrics.domain}") String domain) {
+        return new ApiMetricsCollector(applicationContext, domain);
+    }
+
+    /**
+     * Замеряет время обработки каждого запроса; стоит вне цепочки Security, чтобы в замер входила
+     * вся обработка.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "monitoring.api.metrics.enabled", havingValue = "true")
+    public FilterRegistrationBean<ApiMetricsFilter> apiMetricsFilter(ApiMetricsCollector apiMetricsCollector) {
+        FilterRegistrationBean<ApiMetricsFilter> registration =
+                new FilterRegistrationBean<>(new ApiMetricsFilter(apiMetricsCollector));
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 20);
+        return registration;
+    }
+
+    /**
+     * Периодически пишет таблицу статистики по эндпоинтам в отдельный лог.
+     */
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    @ConditionalOnProperty(
+            name = {"monitoring.api.metrics.enabled", "monitoring.api.metrics.print.enabled"},
+            havingValue = "true")
+    public ApiStatisticsPrinter apiStatisticsPrinter(
+            ApiMetricsCollector apiMetricsCollector,
+            @Value("${monitoring.api.metrics.print.interval.minutes}") long intervalMinutes) {
+        return new ApiStatisticsPrinter(apiMetricsCollector, intervalMinutes);
     }
 }
