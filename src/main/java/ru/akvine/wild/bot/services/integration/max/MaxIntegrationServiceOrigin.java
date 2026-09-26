@@ -21,6 +21,8 @@ import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -37,6 +39,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageReques
 import ru.akvine.wild.bot.services.integration.max.dto.request.UpdateCommandsRequest;
 import ru.akvine.wild.bot.services.integration.max.dto.response.*;
 import ru.akvine.wild.bot.utils.ByteUtils;
+import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerInterceptorFactory;
 import ru.akvine.wild.bot.utils.RequestUtils;
 
 @Service
@@ -53,7 +56,15 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
     @Value("${max.bot.long.pooling.update-types}")
     private String updateTypes;
 
+    @Autowired
+    private CircuitBreakerInterceptorFactory circuitBreakerInterceptorFactory;
+
     private final RestTemplate restTemplate;
+
+    @PostConstruct
+    void initCircuitBreaker() {
+        restTemplate.getInterceptors().add(circuitBreakerInterceptorFactory.create("max"));
+    }
 
     // TODO: поменять на инжект RestTemplate и перейти к @RequiredArgsConstructor из Lombok
     public MaxIntegrationServiceOrigin() {

@@ -56,6 +56,8 @@ import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeystoreMonitoringP
 import ru.akvine.wild.bot.infrastructure.monitoring.pool.ConnectionPoolMonitor;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.HouseKeeper;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.StackTracePrinter;
+import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerInterceptorFactory;
+import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerProperties;
 import ru.akvine.wild.bot.infrastructure.retry.DefaultRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.ExponentialRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.RetryExecutor;
@@ -416,5 +418,23 @@ public class InfrastructureBeansConfig {
             builder.withRetryCount(properties.getRetryCount());
         }
         return builder;
+    }
+
+    /**
+     * Настройки circuit breaker'ов внешних систем - свойства {@code circuit.breaker.*}
+     */
+    @Bean
+    @ConfigurationProperties("circuit.breaker")
+    public CircuitBreakerProperties circuitBreakerProperties() {
+        return new CircuitBreakerProperties();
+    }
+
+    /**
+     * Выдаёт {@code RestTemplate}-перехватчики с circuit breaker'ом по имени внешней системы. Бин
+     * есть всегда: при {@code circuit.breaker.enabled=false} перехватчики просто пропускают вызовы.
+     */
+    @Bean
+    public CircuitBreakerInterceptorFactory circuitBreakerInterceptorFactory(CircuitBreakerProperties properties) {
+        return new CircuitBreakerInterceptorFactory(properties);
     }
 }

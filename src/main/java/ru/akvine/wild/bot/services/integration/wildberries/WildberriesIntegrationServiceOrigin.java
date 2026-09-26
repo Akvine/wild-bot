@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.services.integration.wildberries;
 
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import jakarta.annotation.PostConstruct;
 import java.util.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
+import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerInterceptorFactory;
 import ru.akvine.wild.bot.services.encryption.EncryptionService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.card.*;
@@ -25,8 +27,14 @@ import ru.akvine.wild.bot.utils.RequestUtils;
 @Profile("!local")
 public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrationService {
     private final EncryptionService encryptionService;
+    private final CircuitBreakerInterceptorFactory circuitBreakerInterceptorFactory;
 
     private final RestTemplate restTemplate = new RestTemplate();
+
+    @PostConstruct
+    void initCircuitBreaker() {
+        restTemplate.getInterceptors().add(circuitBreakerInterceptorFactory.create("wildberries"));
+    }
 
     private static final int BUDGET_TYPE = 0;
     private static final String ADVERT_QUERY_ID_PARAM = "id";
