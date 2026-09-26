@@ -112,6 +112,36 @@ public class RedisOperationService<T> {
     }
 
     /**
+     * Возвращает размер списка (0, если списка нет)
+     */
+    public int getListSize(String listKey) {
+        return redisson.getList(listKey).size();
+    }
+
+    /**
+     * Возвращает последний элемент списка, не удаляя его, или {@code null}, если список пуст
+     */
+    public T peekLastInList(String listKey) {
+        RDeque<T> deque = redisson.getDeque(listKey);
+        return deque.peekLast();
+    }
+
+    /**
+     * Атомарно удаляет и возвращает последний элемент списка или {@code null}, если список пуст
+     */
+    public T pollLastInList(String listKey) {
+        RDeque<T> deque = redisson.getDeque(listKey);
+        return deque.pollLast();
+    }
+
+    /**
+     * Оставляет в списке только элементы с индексами от {@code fromIndex} до {@code toIndex} включительно
+     */
+    public void trimList(String listKey, int fromIndex, int toIndex) {
+        redisson.getList(listKey).trim(fromIndex, toIndex);
+    }
+
+    /**
      * Сохраняет объект
      */
     public void putValue(String key, T value) {

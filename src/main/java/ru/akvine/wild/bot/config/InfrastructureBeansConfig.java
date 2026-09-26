@@ -31,6 +31,7 @@ import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInMemoryImpl;
+import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInRedisImpl;
 import ru.akvine.wild.bot.infrastructure.http.CommonHttpClientBuilder;
 import ru.akvine.wild.bot.infrastructure.http.HttpClientBuilderFactory;
 import ru.akvine.wild.bot.infrastructure.http.HttpClientProperties;
@@ -62,9 +63,12 @@ import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.session.SessionStorageInMemoryImpl;
+import ru.akvine.wild.bot.infrastructure.session.SessionStorageInRedisImpl;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.state.StateStorageInMemoryImpl;
+import ru.akvine.wild.bot.infrastructure.state.StateStorageInRedisImpl;
+import ru.akvine.wild.bot.services.integration.redis.RedisOperationService;
 import ru.akvine.wild.bot.repositories.infrastructure.ClientSessionDataRepository;
 import ru.akvine.wild.bot.repositories.infrastructure.ClientStatesRepository;
 import ru.akvine.wild.bot.repositories.infrastructure.IterationCounterRepository;
@@ -82,6 +86,13 @@ public class InfrastructureBeansConfig {
     }
 
     @Bean
+    @ConditionalOnProperty(name = "states.storage.implementation.type", havingValue = "redis")
+    public StateStorage<String, List<ClientState>> redisStateStorage(
+            RedisOperationService<ClientState> redisOperationService) {
+        return new StateStorageInRedisImpl(redisOperationService);
+    }
+
+    @Bean
     @ConditionalOnProperty(name = "states.storage.implementation.type", havingValue = "database")
     public StateStorage<String, List<ClientState>> databaseStateStorage(ClientStatesRepository clientStatesRepository) {
         return new StateStorageInDatabaseImpl(clientStatesRepository);
@@ -91,6 +102,13 @@ public class InfrastructureBeansConfig {
     @ConditionalOnProperty(name = "session.storage.implementation.type", havingValue = "memory")
     public SessionStorage<String, ClientSessionData> memorySessionStorage() {
         return new SessionStorageInMemoryImpl();
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "session.storage.implementation.type", havingValue = "redis")
+    public SessionStorage<String, ClientSessionData> redisSessionStorage(
+            RedisOperationService<ClientSessionData> redisOperationService) {
+        return new SessionStorageInRedisImpl(redisOperationService);
     }
 
     @Bean
@@ -104,6 +122,12 @@ public class InfrastructureBeansConfig {
     @ConditionalOnProperty(name = "counter.storage.implementation.type", havingValue = "memory")
     public CountersStorage memoryIterationsStorage(AdvertService advertService) {
         return new CountersStorageInMemoryImpl(advertService);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "counter.storage.implementation.type", havingValue = "redis")
+    public CountersStorage redisIterationsStorage(RedisOperationService<Long> redisOperationService) {
+        return new CountersStorageInRedisImpl(redisOperationService);
     }
 
     @Bean
