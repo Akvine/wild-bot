@@ -1,12 +1,19 @@
 package ru.akvine.wild.bot.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import java.time.Duration;
 import java.util.List;
+import javax.sql.DataSource;
 import org.redisson.api.RedissonClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.support.TransactionTemplate;
 import ru.akvine.commons.cluster.lock.ConcurrentOperationsHelper;
 import ru.akvine.commons.cluster.lock.SLockProvider;
@@ -17,6 +24,8 @@ import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInMemoryImpl;
 import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
+import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryDataSourceProxy;
+import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryLogger;
 import ru.akvine.wild.bot.infrastructure.retry.DefaultRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.ExponentialRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.RetryExecutor;
@@ -34,6 +43,8 @@ import ru.akvine.wild.bot.services.AdvertService;
 
 @Configuration
 public class InfrastructureBeansConfig {
+
+    private static final Logger log = LoggerFactory.getLogger(InfrastructureBeansConfig.class);
 
     @Bean
     @ConditionalOnProperty(name = "states.storage.implementation.type", havingValue = "memory")
@@ -108,5 +119,36 @@ public class InfrastructureBeansConfig {
             SLockProvider sLockProvider,
             TransactionTemplate transactionTemplate) {
         return new DataBaseLockProvider(concurrentOperationsHelper, sLockProvider, transactionTemplate);
+    }
+
+    /**
+     * Как только в контексте появляется свой бин {@link DataSource}, автоконфигурация Spring Boot
+     * перестаёт создавать пул сама, поэтому при включённом мониторинге медленных запросов
+     * {@link HikariDataSource} объявляется явно - с теми же {@code spring.datasource.*} и
+     * {@code spring.datasource.hikari.*} настройками. Именно на него по типу смотрит
+     * {@code ScheduledConfig#hikariPoolMetricsJob}. При {@code monitoring.slow.query.enabled=false}
+     * (или отсутствии свойства) бин не создаётся и пул поднимает автоконфигурация, как раньше.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "monitoring.slow.query.enabled", havingValue = "true")
+    @ConfigurationProperties("spring.datasource.hikari")
+    public HikariDataSource hikariDataSource(DataSourceProperties properties) {
+        return properties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+    }
+
+    /**
+     * {@link Primary}-обёртка над {@link HikariDataSource}, замеряющая время каждого SQL-запроса
+     * (см. {@link SlowQueryDataSourceProxy}): все обычные потребители {@code DataSource} (JPA,
+     * Liquibase, локи и т.д.) получают её, а код, которому нужен именно {@code HikariDataSource},
+     * - оригинал.
+     */
+    @Bean
+    @Primary
+    @ConditionalOnProperty(name = "monitoring.slow.query.enabled", havingValue = "true")
+    public DataSource slowQueryDataSource(
+            HikariDataSource hikariDataSource,
+            @Value("${monitoring.slow.query.threshold.milliseconds:3000}") long thresholdMillis) {
+        log.info("Slow query data source monitoring enabled");
+        return new SlowQueryDataSourceProxy(hikariDataSource, new SlowQueryLogger(thresholdMillis));
     }
 }

@@ -20,10 +20,27 @@
         </encoder>
     </appender>
 
+    <appender name="SLOW_QUERY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH:-log}/slow-queries.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH:-log}/slow-queries.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <!-- Root Logger -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
+
+    <logger name="ru.akvine.wild.bot.monitoring.SlowQuery" level="WARN" additivity="false">
+        <appender-ref ref="SLOW_QUERY_FILE"/>
+    </logger>
 
 </configuration>
