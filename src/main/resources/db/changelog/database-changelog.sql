@@ -472,3 +472,20 @@ ALTER TABLE CLIENT_SESSION_DATA_ENTITY RENAME COLUMN LOCKED_ADVERT_ID TO ADVERT_
 --precondition-sql-check expectedResult:1 select count(*) from pg_indexes where schemaname = current_schema() and indexname = 'client_username_index';
  DROP INDEX CLIENT_USERNAME_INDEX;
  --rollback not required
+
+--changeset akvine:TG-BOT-1-32
+--preconditions onFail:MARK_RAN onError:HALT onUpdateSQL:FAIL
+--precondition-sql-check expectedResult:0 select count(*) from information_schema.tables where upper(table_name) = 'IDEMPOTENCY_KEY_ENTITY' and table_schema = 'public';
+CREATE TABLE IDEMPOTENCY_KEY_ENTITY
+(
+    IDEMPOTENCY_KEY VARCHAR(255) NOT NULL,
+    FINGERPRINT     VARCHAR(255),
+    STATUS          VARCHAR(32)  NOT NULL,
+    PAYLOAD         TEXT,
+    EXPIRES_AT      TIMESTAMP    NOT NULL,
+    CREATED_DATE    TIMESTAMP    NOT NULL,
+    UPDATED_DATE    TIMESTAMP,
+    CONSTRAINT IDEMPOTENCY_KEY_PKEY PRIMARY KEY (IDEMPOTENCY_KEY)
+);
+CREATE INDEX IDEMPOTENCY_KEY_EXPIRES_AT_INDEX ON IDEMPOTENCY_KEY_ENTITY (EXPIRES_AT);
+--rollback not required

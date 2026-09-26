@@ -16,6 +16,9 @@ public class TelegramDtoConverter implements BotDtoConverter<Update, BotApiMetho
     @Override
     public Payload fromRequest(Update update) {
         Payload payload = new Payload().setBotType(getType()).setChatId(getChatId(update));
+        if (update.getUpdateId() != null) {
+            payload.setUpdateId(String.valueOf(update.getUpdateId()));
+        }
 
         if (update.getMessage() != null && update.getMessage().getFrom() != null) {
             User user = update.getMessage().getFrom();

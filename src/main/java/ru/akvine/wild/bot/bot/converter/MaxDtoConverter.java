@@ -32,6 +32,8 @@ public class MaxDtoConverter implements BotDtoConverter<Update, SendMessageReque
                 .setFirstName(update.getUpdateMessage().getSender().getFirstName())
                 .setLastName(update.getUpdateMessage().getSender().getLastName());
 
+        payload.setUpdateId(getUpdateId(update));
+
         if (CALLBACK_PAYLOAD_TYPE.equalsIgnoreCase(update.getUpdateType())) {
             payload.setBotDataType(BotDataType.CALLBACK);
             if (update.getCallback() != null && update.getCallback().getPayload() != null) {
@@ -90,6 +92,20 @@ public class MaxDtoConverter implements BotDtoConverter<Update, SendMessageReque
     @Override
     public BotType getType() {
         return BotType.MAX;
+    }
+
+    /**
+     * У обновлений MAX нет собственного идентификатора: для нажатия на кнопку это {@code callback_id},
+     * для сообщения - его идентификатор {@code mid}
+     */
+    private String getUpdateId(Update update) {
+        if (CALLBACK_PAYLOAD_TYPE.equalsIgnoreCase(update.getUpdateType())) {
+            return update.getCallback() == null ? null : update.getCallback().getCallbackId();
+        }
+        if (update.getMessage() != null && update.getMessage().getBody() != null) {
+            return update.getMessage().getBody().getMid();
+        }
+        return null;
     }
 
     private String getChatId(Update update) {

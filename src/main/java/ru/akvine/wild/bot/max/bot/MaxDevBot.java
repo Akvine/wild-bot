@@ -65,6 +65,9 @@ public class MaxDevBot implements MaxBot {
 
                 Payload payload = facade.getConverter(BotType.MAX).fromRequest(update);
                 Response response = startMessageFilter.handle(payload);
+                if (response.isIgnored()) {
+                    return SendMessageRequest.empty();
+                }
 
                 SendMessageRequest sendMessageRequest =
                         (SendMessageRequest) facade.getConverter(BotType.MAX).toResponse(response);

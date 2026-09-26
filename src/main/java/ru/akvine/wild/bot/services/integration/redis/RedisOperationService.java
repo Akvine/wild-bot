@@ -1,5 +1,6 @@
 package ru.akvine.wild.bot.services.integration.redis;
 
+import java.time.Duration;
 import java.util.*;
 import org.redisson.api.*;
 
@@ -147,6 +148,24 @@ public class RedisOperationService<T> {
     public void putValue(String key, T value) {
         RBucket<Object> bucket = redisson.getBucket(key);
         bucket.set(value);
+    }
+
+    /**
+     * Сохраняет объект со сроком жизни: по истечении {@code ttl} Redis удалит его сам
+     */
+    public void putValueWithTtl(String key, T value, Duration ttl) {
+        RBucket<T> bucket = redisson.getBucket(key);
+        bucket.set(value, ttl);
+    }
+
+    /**
+     * Атомарно сохраняет объект со сроком жизни, только если ключа ещё нет
+     *
+     * @return {@code true}, если объект сохранён этим вызовом
+     */
+    public boolean putValueIfAbsentWithTtl(String key, T value, Duration ttl) {
+        RBucket<T> bucket = redisson.getBucket(key);
+        return bucket.setIfAbsent(value, ttl);
     }
 
     /**

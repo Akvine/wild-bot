@@ -32,6 +32,9 @@ public class TelegramDevBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Payload payload = facade.getConverter(BotType.TELEGRAM).fromRequest(update);
         Response response = startMessageFilter.handle(payload);
+        if (response.isIgnored()) {
+            return;
+        }
         sendMessage((BotApiMethod<?>) facade.getConverter(BotType.TELEGRAM).toResponse(response));
     }
 

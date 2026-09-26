@@ -37,6 +37,9 @@ public class TelegramProductionBot extends TelegramWebhookBot {
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         Payload payload = facade.getConverter(BotType.TELEGRAM).fromRequest(update);
         Response response = messageFilter.handle(payload);
+        if (response.isIgnored()) {
+            return null;
+        }
         return (BotApiMethod<?>) facade.getConverter(BotType.TELEGRAM).toResponse(response);
     }
 

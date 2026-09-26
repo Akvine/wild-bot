@@ -1,6 +1,7 @@
 package ru.akvine.wild.bot.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +10,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import ru.akvine.wild.bot.admin.filters.AuthFilter;
 import ru.akvine.wild.bot.admin.filters.MDCAdminFilter;
+import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,7 +27,11 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthFilter authFilter, MDCAdminFilter mdcAdminFilter)
+    public SecurityFilterChain filterChain(
+            HttpSecurity http,
+            AuthFilter authFilter,
+            MDCAdminFilter mdcAdminFilter,
+            ObjectProvider<IdempotencyFilter> idempotencyFilter)
             throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
@@ -44,6 +51,8 @@ public class SecurityConfig {
                 })
                 .addFilterBefore(authFilter, BasicAuthenticationFilter.class)
                 .addFilterAfter(mdcAdminFilter, BasicAuthenticationFilter.class);
+        // после проверки авторизации: идемпотентность применяется только к разрешённым запросам
+        idempotencyFilter.ifAvailable(filter -> http.addFilterAfter(filter, AuthorizationFilter.class));
         return http.build();
     }
 

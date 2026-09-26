@@ -29,6 +29,9 @@ public class MaxDummyBot implements MaxBot {
 
                 Payload payload = facade.getConverter(BotType.MAX).fromRequest(update);
                 Response response = startMessageFilter.handle(payload);
+                if (response.isIgnored()) {
+                    return null;
+                }
 
                 return (SendMessageRequest) facade.getConverter(BotType.MAX).toResponse(response);
             }

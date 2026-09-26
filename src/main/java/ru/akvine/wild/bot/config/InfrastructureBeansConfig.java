@@ -45,6 +45,15 @@ import ru.akvine.wild.bot.infrastructure.http.keystore.SslContextUtils;
 import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingFilter;
 import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingFilterFactory;
 import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingProperties;
+import ru.akvine.wild.bot.infrastructure.idempotency.DatabaseIdempotencyStore;
+import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyCleanupJob;
+import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyFilter;
+import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyPayloadSerializer;
+import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyProperties;
+import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyService;
+import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyStore;
+import ru.akvine.wild.bot.infrastructure.idempotency.InMemoryIdempotencyStore;
+import ru.akvine.wild.bot.infrastructure.idempotency.RedisIdempotencyStore;
 import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
@@ -87,6 +96,7 @@ import ru.akvine.wild.bot.infrastructure.state.StateStorageInRedisImpl;
 import ru.akvine.wild.bot.services.integration.redis.RedisOperationService;
 import ru.akvine.wild.bot.repositories.infrastructure.ClientSessionDataRepository;
 import ru.akvine.wild.bot.repositories.infrastructure.ClientStatesRepository;
+import ru.akvine.wild.bot.repositories.infrastructure.IdempotencyKeyRepository;
 import ru.akvine.wild.bot.repositories.infrastructure.IterationCounterRepository;
 import ru.akvine.wild.bot.services.AdvertService;
 
@@ -504,5 +514,89 @@ public class InfrastructureBeansConfig {
     @Bean
     public CircuitBreakerInterceptorFactory circuitBreakerInterceptorFactory(CircuitBreakerProperties properties) {
         return new CircuitBreakerInterceptorFactory(properties);
+    }
+
+    /**
+     * Настройки идемпотентности - свойства {@code idempotency.*}
+     */
+    @Bean
+    @ConfigurationProperties("idempotency")
+    public IdempotencyProperties idempotencyProperties() {
+        return new IdempotencyProperties();
+    }
+
+    @Bean
+    public IdempotencyPayloadSerializer idempotencyPayloadSerializer() {
+        return new IdempotencyPayloadSerializer();
+    }
+
+    /**
+     * Ключи идемпотентности в памяти (по умолчанию): защищает от дублей только в пределах одного инстанса
+     * и не переживает рестарт.
+     */
+    @Bean
+    @ConditionalOnProperty(
+            name = "idempotency.store.implementation.type",
+            havingValue = "memory",
+            matchIfMissing = true)
+    public IdempotencyStore memoryIdempotencyStore() {
+        return new InMemoryIdempotencyStore();
+    }
+
+    /**
+     * Ключи идемпотентности в БД: общие для всех инстансов, переживают рестарт. Требуют таблицу
+     * {@code IDEMPOTENCY_KEY_ENTITY} (миграция Liquibase).
+     */
+    @Bean
+    @ConditionalOnProperty(name = "idempotency.store.implementation.type", havingValue = "database")
+    public DatabaseIdempotencyStore databaseIdempotencyStore(IdempotencyKeyRepository idempotencyKeyRepository) {
+        return new DatabaseIdempotencyStore(idempotencyKeyRepository);
+    }
+
+    /**
+     * Ключи идемпотентности в Redis: общие для всех инстансов, истекают по сроку жизни ключа Redis.
+     * Требуют {@code spring.redis.enabled=true}.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "idempotency.store.implementation.type", havingValue = "redis")
+    public IdempotencyStore redisIdempotencyStore(
+            RedisOperationService<String> redisOperationService, IdempotencyPayloadSerializer serializer) {
+        return new RedisIdempotencyStore(redisOperationService, serializer);
+    }
+
+    /**
+     * Очистка истёкших ключей идемпотентности в БД.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "idempotency.store.implementation.type", havingValue = "database")
+    public IdempotencyCleanupJob idempotencyCleanupJob(DatabaseIdempotencyStore databaseIdempotencyStore) {
+        return new IdempotencyCleanupJob(databaseIdempotencyStore);
+    }
+
+    @Bean
+    public IdempotencyService idempotencyService(
+            IdempotencyStore idempotencyStore, IdempotencyPayloadSerializer serializer) {
+        return new IdempotencyService(idempotencyStore, serializer);
+    }
+
+    /**
+     * Идемпотентность HTTP API по заголовку {@code Idempotency-Key}. Фильтр включается в цепочку Spring
+     * Security (см. {@code SecurityConfig}), поэтому в контейнер сервлетов отдельно не регистрируется.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "idempotency.http.enabled", havingValue = "true")
+    public IdempotencyFilter idempotencyFilter(
+            IdempotencyService idempotencyService,
+            IdempotencyPayloadSerializer serializer,
+            IdempotencyProperties idempotencyProperties) {
+        return new IdempotencyFilter(idempotencyService, serializer, idempotencyProperties.getHttp());
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "idempotency.http.enabled", havingValue = "true")
+    public FilterRegistrationBean<IdempotencyFilter> idempotencyFilterRegistration(IdempotencyFilter filter) {
+        FilterRegistrationBean<IdempotencyFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
     }
 }

@@ -23,4 +23,10 @@ public final class Payload {
     private String lastName;
 
     private String telegramCallbackQueryId;
+
+    /**
+     * Идентификатор обновления, уникальный в пределах бота: по нему отбрасываются повторные доставки
+     * одного и того же обновления. {@code null}, если бот не сообщает такого идентификатора
+     */
+    private String updateId;
 }

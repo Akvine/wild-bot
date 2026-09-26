@@ -20,6 +20,18 @@ public final class Response {
     private SendMessage telegramResponse;
     private MaxSendMessage maxSendMessage;
 
+    /** Обновление обработано ранее: отвечать не нужно */
+    private boolean ignored;
+
+    /**
+     * Ответ «ничего не делать»: боты, получив его, ничего не отправляют пользователю
+     */
+    public static Response ignored(String chatId, BotType botType) {
+        Response response = new Response(chatId, botType);
+        response.setIgnored(true);
+        return response;
+    }
+
     public Response(String chatId, BotType botType) {
         this(chatId, null, botType);
     }
