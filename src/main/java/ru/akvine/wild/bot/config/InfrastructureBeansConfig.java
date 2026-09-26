@@ -1,12 +1,6 @@
 package ru.akvine.wild.bot.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-import java.security.KeyStore;
-import javax.net.ssl.SSLContext;
-import javax.sql.DataSource;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,20 +8,18 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.bind.Bindable;
-import org.springframework.boot.context.properties.bind.Binder;
-import org.springframework.core.env.Environment;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.web.client.RestTemplate;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import ru.akvine.commons.cluster.lock.ConcurrentOperationsHelper;
@@ -37,52 +29,29 @@ import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInMemoryImpl;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInRedisImpl;
-import ru.akvine.wild.bot.infrastructure.http.CommonHttpClientBuilder;
-import ru.akvine.wild.bot.infrastructure.http.HttpClientBuilderFactory;
-import ru.akvine.wild.bot.infrastructure.http.HttpClientProperties;
-import ru.akvine.wild.bot.infrastructure.http.keystore.DefaultKeystoreFactory;
-import ru.akvine.wild.bot.infrastructure.http.keystore.SslContextUtils;
 import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingFilter;
 import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingFilterFactory;
 import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingProperties;
-import ru.akvine.wild.bot.infrastructure.idempotency.DatabaseIdempotencyStore;
-import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyCleanupJob;
-import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyFilter;
-import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyPayloadSerializer;
-import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyProperties;
-import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyService;
-import ru.akvine.wild.bot.infrastructure.idempotency.IdempotencyStore;
-import ru.akvine.wild.bot.infrastructure.idempotency.InMemoryIdempotencyStore;
-import ru.akvine.wild.bot.infrastructure.idempotency.RedisIdempotencyStore;
+import ru.akvine.wild.bot.infrastructure.idempotency.*;
 import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
+import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
+import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
+import ru.akvine.wild.bot.infrastructure.monitoring.CompositeSqlExecutionListener;
+import ru.akvine.wild.bot.infrastructure.monitoring.MonitoringDataSourceProxy;
+import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryLogger;
+import ru.akvine.wild.bot.infrastructure.monitoring.SqlExecutionListener;
+import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsCollector;
+import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsFilter;
+import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiStatisticsPrinter;
+import ru.akvine.wild.bot.infrastructure.monitoring.db.*;
+import ru.akvine.wild.bot.infrastructure.monitoring.keystore.*;
+import ru.akvine.wild.bot.infrastructure.monitoring.pool.ConnectionPoolMonitor;
+import ru.akvine.wild.bot.infrastructure.monitoring.threads.HouseKeeper;
+import ru.akvine.wild.bot.infrastructure.monitoring.threads.StackTracePrinter;
 import ru.akvine.wild.bot.infrastructure.outbox.DatabaseOutboxStore;
 import ru.akvine.wild.bot.infrastructure.outbox.OutboxProperties;
 import ru.akvine.wild.bot.infrastructure.outbox.OutboxService;
 import ru.akvine.wild.bot.infrastructure.outbox.OutboxStore;
-import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
-import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
-import ru.akvine.wild.bot.infrastructure.monitoring.MonitoringDataSourceProxy;
-import ru.akvine.wild.bot.infrastructure.monitoring.CompositeSqlExecutionListener;
-import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryLogger;
-import ru.akvine.wild.bot.infrastructure.monitoring.SqlExecutionListener;
-import ru.akvine.wild.bot.infrastructure.monitoring.db.DbConnectionJmxRegister;
-import ru.akvine.wild.bot.infrastructure.monitoring.db.DbInfoConnection;
-import ru.akvine.wild.bot.infrastructure.monitoring.db.DbMetricsConfigurer;
-import ru.akvine.wild.bot.infrastructure.monitoring.db.DbMetricsListener;
-import ru.akvine.wild.bot.infrastructure.monitoring.db.DbMetricsService;
-import ru.akvine.wild.bot.infrastructure.monitoring.db.JdbcUrlParser;
-import ru.akvine.wild.bot.infrastructure.monitoring.db.JmxMetrics;
-import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsCollector;
-import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsFilter;
-import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiStatisticsPrinter;
-import ru.akvine.wild.bot.infrastructure.monitoring.keystore.FileKeyStoreObserver;
-import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeyStoreConfig;
-import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeyStoreObserver;
-import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeystoreExpirationMonitor;
-import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeystoreMonitoringProperties;
-import ru.akvine.wild.bot.infrastructure.monitoring.pool.ConnectionPoolMonitor;
-import ru.akvine.wild.bot.infrastructure.monitoring.threads.HouseKeeper;
-import ru.akvine.wild.bot.infrastructure.monitoring.threads.StackTracePrinter;
 import ru.akvine.wild.bot.infrastructure.resilience.BulkheadFactory;
 import ru.akvine.wild.bot.infrastructure.resilience.BulkheadProperties;
 import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerInterceptorFactory;
@@ -90,22 +59,19 @@ import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerProperties;
 import ru.akvine.wild.bot.infrastructure.retry.DefaultRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.ExponentialRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.RetryExecutor;
-import ru.akvine.wild.bot.infrastructure.session.ClientSessionData;
-import ru.akvine.wild.bot.infrastructure.session.SessionStorage;
-import ru.akvine.wild.bot.infrastructure.session.SessionStorageInDatabaseImpl;
-import ru.akvine.wild.bot.infrastructure.session.SessionStorageInMemoryImpl;
-import ru.akvine.wild.bot.infrastructure.session.SessionStorageInRedisImpl;
+import ru.akvine.wild.bot.infrastructure.session.*;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.state.StateStorageInMemoryImpl;
 import ru.akvine.wild.bot.infrastructure.state.StateStorageInRedisImpl;
-import ru.akvine.wild.bot.services.integration.redis.RedisOperationService;
-import ru.akvine.wild.bot.repositories.infrastructure.ClientSessionDataRepository;
-import ru.akvine.wild.bot.repositories.infrastructure.ClientStatesRepository;
-import ru.akvine.wild.bot.repositories.infrastructure.IdempotencyKeyRepository;
-import ru.akvine.wild.bot.repositories.infrastructure.IterationCounterRepository;
-import ru.akvine.wild.bot.repositories.infrastructure.OutboxMessageRepository;
+import ru.akvine.wild.bot.repositories.infrastructure.*;
 import ru.akvine.wild.bot.services.AdvertService;
+import ru.akvine.wild.bot.services.integration.redis.RedisOperationService;
+
+import javax.sql.DataSource;
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
 public class InfrastructureBeansConfig {
@@ -429,80 +395,6 @@ public class InfrastructureBeansConfig {
             KeyStoreObserver keyStoreObserver, KeystoreMonitoringProperties properties) {
         return new KeystoreExpirationMonitor(
                 keyStoreObserver, properties.getCheckIntervalHours(), properties.getDaysToExpire());
-    }
-
-    /**
-     * Настройки общего http-клиента - свойства {@code http.client.*}
-     */
-    @Bean
-    @ConditionalOnProperty(name = "http.client.enabled", havingValue = "true")
-    @ConfigurationProperties("http.client")
-    public HttpClientProperties httpClientProperties() {
-        return new HttpClientProperties();
-    }
-
-    /**
-     * Фабрика билдеров http-клиентов. Если задана {@code http.client.keystore.location}, SSL-контекст
-     * строится из этой ключницы (её сертификаты - и клиентские, и единственные доверенные), иначе
-     * используется системный набор сертификатов JVM.
-     */
-    @Bean
-    @ConditionalOnProperty(name = "http.client.enabled", havingValue = "true")
-    public HttpClientBuilderFactory httpClientBuilderFactory(
-            HttpClientProperties properties, ResourceLoader resourceLoader) {
-        String location = properties.getKeystore().getLocation();
-        if (location == null || location.isBlank()) {
-            return HttpClientBuilderFactory.withDefaultSsl();
-        }
-
-        String password = properties.getKeystore().getPassword();
-        KeyStore keyStore = new DefaultKeystoreFactory(location, password, resourceLoader)
-                .createKeystoreBuilder()
-                .includeAllLocalClientCertificates()
-                .includeAllLocalTrustCertificates()
-                .buildSilently()
-                .build();
-        SSLContext sslContext = SslContextUtils.keyStoreToSslContext(keyStore, password);
-        return new HttpClientBuilderFactory(() -> sslContext, () -> null);
-    }
-
-    /**
-     * Общий именованный http-клиент (закрывается вместе с контекстом).
-     */
-    @Bean
-    @ConditionalOnProperty(name = "http.client.enabled", havingValue = "true")
-    public CloseableHttpClient commonHttpClient(
-            HttpClientBuilderFactory httpClientBuilderFactory, HttpClientProperties properties) {
-        return commonHttpClientBuilder(httpClientBuilderFactory, properties).buildHttpClient();
-    }
-
-    /**
-     * {@link RestTemplate} поверх {@link #commonHttpClient}: SSL из ключницы, таймауты, пул, retry при
-     * потере соединения и логирование запросов/ответов на DEBUG. Именованные клиенты для отдельных
-     * интеграций создаются так же: {@code httpClientBuilderFactory.createBuilder().withName("...").buildRestTemplate()}.
-     */
-    @Bean
-    @ConditionalOnProperty(name = "http.client.enabled", havingValue = "true")
-    public RestTemplate commonRestTemplate(
-            HttpClientBuilderFactory httpClientBuilderFactory,
-            HttpClientProperties properties,
-            CloseableHttpClient commonHttpClient) {
-        return commonHttpClientBuilder(httpClientBuilderFactory, properties).buildRestTemplate(commonHttpClient);
-    }
-
-    private static CommonHttpClientBuilder commonHttpClientBuilder(
-            HttpClientBuilderFactory httpClientBuilderFactory, HttpClientProperties properties) {
-        CommonHttpClientBuilder builder = httpClientBuilderFactory
-                .createBuilder()
-                .withName(properties.getName())
-                .withConnectTimeout(properties.getConnectTimeoutMillis())
-                .withReadTimeout(properties.getReadTimeoutMillis())
-                .withConnectionPoolSize(properties.getConnectionPoolSize())
-                .withVerifyHostname(properties.isVerifyHostname());
-        if (properties.getRetryCount() > 0) {
-            builder.withRetryCount(properties.getRetryCount());
-        }
-        return builder;
     }
 
     /**
