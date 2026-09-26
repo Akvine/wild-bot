@@ -3,6 +3,7 @@ package ru.akvine.wild.bot.config;
 import com.zaxxer.hikari.HikariDataSource;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.security.KeyStore;
 import javax.net.ssl.SSLContext;
 import javax.sql.DataSource;
@@ -11,7 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.core.env.Environment;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -43,8 +48,17 @@ import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingProperties;
 import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
-import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryDataSourceProxy;
+import ru.akvine.wild.bot.infrastructure.monitoring.MonitoringDataSourceProxy;
+import ru.akvine.wild.bot.infrastructure.monitoring.CompositeSqlExecutionListener;
 import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryLogger;
+import ru.akvine.wild.bot.infrastructure.monitoring.SqlExecutionListener;
+import ru.akvine.wild.bot.infrastructure.monitoring.db.DbConnectionJmxRegister;
+import ru.akvine.wild.bot.infrastructure.monitoring.db.DbInfoConnection;
+import ru.akvine.wild.bot.infrastructure.monitoring.db.DbMetricsConfigurer;
+import ru.akvine.wild.bot.infrastructure.monitoring.db.DbMetricsListener;
+import ru.akvine.wild.bot.infrastructure.monitoring.db.DbMetricsService;
+import ru.akvine.wild.bot.infrastructure.monitoring.db.JdbcUrlParser;
+import ru.akvine.wild.bot.infrastructure.monitoring.db.JmxMetrics;
 import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsCollector;
 import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsFilter;
 import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiStatisticsPrinter;
@@ -217,34 +231,88 @@ public class InfrastructureBeansConfig {
     }
 
     /**
-     * Как только в контексте появляется свой бин {@link DataSource},автоконфигурация Spring Boot
-     * перестаёт создавать пул сама, поэтому при включённом мониторинге медленных запросов
-     * {@link HikariDataSource} объявляется явно - с теми же {@code spring.datasource.*} и
-     * {@code spring.datasource.hikari.*} настройками. Именно на него по типу смотрит
-     * {@code ScheduledConfig#hikariPoolMetricsJob}. При {@code monitoring.slow.query.enabled=false}
-     * (или отсутствии свойства) бин не создаётся и пул поднимает автоконфигурация, как раньше.
+     * Как только в контексте появляется свой бин {@link DataSource}, автоконфигурация Spring Boot
+     * перестаёт создавать пул сама, поэтому при включённом мониторинге запросов (медленные запросы
+     * или {@code db.metrics}) {@link HikariDataSource} объявляется явно - с теми же
+     * {@code spring.datasource.*} и {@code spring.datasource.hikari.*} настройками. Именно на него
+     * по типу смотрит {@code ScheduledConfig#hikariPoolMetricsJob}. Когда оба мониторинга выключены
+     * (или свойств нет), бин не создаётся и пул поднимает автоконфигурация, как раньше.
      */
     @Bean
-    @ConditionalOnProperty(name = "monitoring.slow.query.enabled", havingValue = "true")
+    @ConditionalOnExpression("${monitoring.slow.query.enabled:false} or ${db.metrics.enabled:false}")
     @ConfigurationProperties("spring.datasource.hikari")
     public HikariDataSource hikariDataSource(DataSourceProperties properties) {
         return properties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 
     /**
-     * {@link Primary}-обёртка над {@link HikariDataSource}, замеряющая время каждого SQL-запроса
-     * (см. {@link SlowQueryDataSourceProxy}): все обычные потребители {@code DataSource} (JPA,
-     * Liquibase, локи и т.д.) получают её, а код, которому нужен именно {@code HikariDataSource},
-     * - оригинал.
+     * {@link Primary}-обёртка над {@link HikariDataSource}, сообщающая всем включённым слушателям
+     * ({@link SqlExecutionListener}: {@link SlowQueryLogger}, {@link DbMetricsListener}) о каждом
+     * запросе и коммите (см. {@link MonitoringDataSourceProxy}): все обычные потребители
+     * {@code DataSource} (JPA, Liquibase, локи и т.д.) получают её, а код, которому нужен именно
+     * {@code HikariDataSource}, - оригинал.
      */
     @Bean
     @Primary
+    @ConditionalOnExpression("${monitoring.slow.query.enabled:false} or ${db.metrics.enabled:false}")
+    public DataSource monitoredDataSource(HikariDataSource hikariDataSource, List<SqlExecutionListener> listeners) {
+        log.info("Database monitoring enabled, listeners: {}", listeners);
+        return new MonitoringDataSourceProxy(hikariDataSource, new CompositeSqlExecutionListener(listeners));
+    }
+
+    /**
+     * Пишет в отдельный лог запросы дольше порога {@code monitoring.slow.query.threshold.milliseconds}.
+     */
+    @Bean
     @ConditionalOnProperty(name = "monitoring.slow.query.enabled", havingValue = "true")
-    public DataSource slowQueryDataSource(
-            HikariDataSource hikariDataSource,
+    public SlowQueryLogger slowQueryLogger(
             @Value("${monitoring.slow.query.threshold.milliseconds:3000}") long thresholdMillis) {
-        log.info("Slow query data source monitoring enabled");
-        return new SlowQueryDataSourceProxy(hikariDataSource, new SlowQueryLogger(thresholdMillis));
+        return new SlowQueryLogger(thresholdMillis);
+    }
+
+    /**
+     * Реестр JMX-метрик БД (общий счётчик коммитов); домен - {@code db.metrics.jmx.domain}.
+     */
+    @Bean(destroyMethod = "stop")
+    @ConditionalOnProperty(name = "db.metrics.enabled", havingValue = "true")
+    public JmxMetrics dbJmxMetrics(@Value("${db.metrics.jmx.domain:wild.bot.db}") String domain) {
+        JmxMetrics jmxMetrics = new JmxMetrics(domain);
+        jmxMetrics.start();
+        return jmxMetrics;
+    }
+
+    /**
+     * Метрики работы с БД по группам потоков: число коммитов и запросов, подходящих под заданные
+     * регулярные выражения, логирование коммитов со стеком вызовов, общий счётчик коммитов в JMX.
+     * Настраивается свойствами {@code db.metrics.*} (см. {@link DbMetricsConfigurer}), меняется на
+     * лету через {@link DbMetricsService}.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "db.metrics.enabled", havingValue = "true")
+    public DbMetricsService dbMetricsService(Environment environment, JmxMetrics dbJmxMetrics) {
+        Map<String, String> properties = Binder.get(environment)
+                .bind("db.metrics", Bindable.mapOf(String.class, String.class))
+                .orElseGet(Map::of);
+        return DbMetricsConfigurer.configure(properties, dbJmxMetrics);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "db.metrics.enabled", havingValue = "true")
+    public DbMetricsListener dbMetricsListener(DbMetricsService dbMetricsService) {
+        return new DbMetricsListener(dbMetricsService.getMetrics());
+    }
+
+    /**
+     * Публикует в JMX, к какой базе подключено приложение (хост, порт, имя базы, пользователь).
+     */
+    @Bean
+    @ConditionalOnProperty(name = "db.metrics.enabled", havingValue = "true")
+    public DbConnectionJmxRegister dbConnectionJmxRegister(
+            DataSourceProperties dataSourceProperties, @Value("${db.metrics.jmx.domain:wild.bot.db}") String domain)
+            throws Exception {
+        DbInfoConnection connection =
+                new JdbcUrlParser().parseUrl(dataSourceProperties.getUrl(), dataSourceProperties.getUsername());
+        return connection == null ? null : new DbConnectionJmxRegister(domain + ".monitoring", connection);
     }
 
     /**

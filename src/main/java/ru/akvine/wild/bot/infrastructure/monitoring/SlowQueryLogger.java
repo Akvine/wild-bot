@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
  * выполнявшийся дольше порога. Порог {@code <= 0} выключает мониторинг.
  */
 @Slf4j(topic = SlowQueryLogger.LOGGER_NAME)
-public class SlowQueryLogger {
+public class SlowQueryLogger implements SqlExecutionListener {
     public static final String LOGGER_NAME = "ru.akvine.wild.bot.monitoring.SlowQuery";
 
     private final long thresholdMillis;
@@ -20,7 +20,8 @@ public class SlowQueryLogger {
     /**
      * @param startedAtNanos значение {@link System#nanoTime()} на момент начала выполнения
      */
-    void logIfSlow(String sql, long startedAtNanos) {
+    @Override
+    public void onQueryExecuted(String sql, long startedAtNanos) {
         if (thresholdMillis <= 0) {
             return;
         }

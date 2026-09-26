@@ -7,21 +7,21 @@ import java.util.List;
 /**
  * {@link Statement} с замером времени выполнения: все {@code execute*} измеряются, остальные
  * методы - чистое делегирование. Для {@link PreparedStatement} см. наследника
- * {@link SlowQueryPreparedStatementProxy}.
+ * {@link MonitoringPreparedStatementProxy}.
  */
-public class SlowQueryStatementProxy implements Statement {
+public class MonitoringStatementProxy implements Statement {
     @FunctionalInterface
     protected interface SqlCall<T> {
         T call() throws SQLException;
     }
 
     private final Statement targetStatement;
-    private final SlowQueryLogger slowQueryLogger;
+    private final SqlExecutionListener listener;
     private final List<String> batchedSql = new ArrayList<>();
 
-    public SlowQueryStatementProxy(Statement targetStatement, SlowQueryLogger slowQueryLogger) {
+    public MonitoringStatementProxy(Statement targetStatement, SqlExecutionListener listener) {
         this.targetStatement = targetStatement;
-        this.slowQueryLogger = slowQueryLogger;
+        this.listener = listener;
     }
 
     protected <T> T timed(String sql, SqlCall<T> call) throws SQLException {
@@ -29,7 +29,7 @@ public class SlowQueryStatementProxy implements Statement {
         try {
             return call.call();
         } finally {
-            slowQueryLogger.logIfSlow(sql, startedAtNanos);
+            listener.onQueryExecuted(sql, startedAtNanos);
         }
     }
 

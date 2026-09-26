@@ -61,6 +61,20 @@
         </encoder>
     </appender>
 
+    <!-- Метрики работы с БД: коммиты (InfrastructureBeansConfig#dbMetricsListener) - отдельный файл -->
+    <appender name="DB_METRICS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH:-log}/db-metrics.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH:-log}/db-metrics.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>5</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <!-- Root Logger -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
@@ -69,6 +83,10 @@
 
     <logger name="ru.akvine.wild.bot.monitoring.SlowQuery" level="WARN" additivity="false">
         <appender-ref ref="SLOW_QUERY_FILE"/>
+    </logger>
+
+    <logger name="ru.akvine.wild.bot.monitoring.DbMetrics" level="INFO" additivity="false">
+        <appender-ref ref="DB_METRICS_FILE"/>
     </logger>
 
     <logger name="ru.akvine.wild.bot.httplogging" level="INFO" additivity="false">

@@ -10,15 +10,15 @@ import java.util.Calendar;
 /**
  * {@link PreparedStatement} с замером времени выполнения. Всё, что относится к обычному
  * {@link Statement} (в том числе {@code executeBatch}), унаследовано от
- * {@link SlowQueryStatementProxy}, здесь - только методы, специфичные для PreparedStatement.
+ * {@link MonitoringStatementProxy}, здесь - только методы, специфичные для PreparedStatement.
  */
-public class SlowQueryPreparedStatementProxy extends SlowQueryStatementProxy implements PreparedStatement {
+public class MonitoringPreparedStatementProxy extends MonitoringStatementProxy implements PreparedStatement {
     private final PreparedStatement targetStatement;
     private final String sql;
 
-    public SlowQueryPreparedStatementProxy(
-            PreparedStatement targetStatement, String sql, SlowQueryLogger slowQueryLogger) {
-        super(targetStatement, slowQueryLogger);
+    public MonitoringPreparedStatementProxy(
+            PreparedStatement targetStatement, String sql, SqlExecutionListener listener) {
+        super(targetStatement, listener);
         this.targetStatement = targetStatement;
         this.sql = sql;
     }

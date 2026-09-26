@@ -9,26 +9,26 @@ import javax.sql.DataSource;
 
 /**
  * Обёртка над {@link DataSource}: отдаёт соединения, замеряющие время выполнения каждого запроса
- * (см. {@link SlowQueryConnectionProxy}). Не зависит от Hibernate - видит и JPA, и JdbcTemplate,
+ * (см. {@link MonitoringConnectionProxy}). Не зависит от Hibernate - видит и JPA, и JdbcTemplate,
  * и Liquibase, и любые другие обращения к базе через этот DataSource.
  */
-public class SlowQueryDataSourceProxy implements DataSource {
+public class MonitoringDataSourceProxy implements DataSource {
     private final DataSource targetDataSource;
-    private final SlowQueryLogger slowQueryLogger;
+    private final SqlExecutionListener listener;
 
-    public SlowQueryDataSourceProxy(DataSource targetDataSource, SlowQueryLogger slowQueryLogger) {
+    public MonitoringDataSourceProxy(DataSource targetDataSource, SqlExecutionListener listener) {
         this.targetDataSource = targetDataSource;
-        this.slowQueryLogger = slowQueryLogger;
+        this.listener = listener;
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        return new SlowQueryConnectionProxy(targetDataSource.getConnection(), slowQueryLogger);
+        return new MonitoringConnectionProxy(targetDataSource.getConnection(), listener);
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return new SlowQueryConnectionProxy(targetDataSource.getConnection(username, password), slowQueryLogger);
+        return new MonitoringConnectionProxy(targetDataSource.getConnection(username, password), listener);
     }
 
     @Override
