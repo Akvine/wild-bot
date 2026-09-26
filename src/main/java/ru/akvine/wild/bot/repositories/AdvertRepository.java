@@ -31,7 +31,8 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
             + "c.id = :id "
             + "and "
             + "ae.deleted = false")
-    List<AdvertEntity> findByClientIdAndStatuses(@Param("id") Long clientId, List<AdvertStatus> statuses);
+    List<AdvertEntity> findByClientIdAndStatuses(
+            @Param("id") Long clientId, @Param("statuses") List<AdvertStatus> statuses);
 
     @Query("from AdvertEntity ae join ae.card.ownerClient c where c.chatId = :chatId and c.botType = :botType and "
             + "c.deleted = false "

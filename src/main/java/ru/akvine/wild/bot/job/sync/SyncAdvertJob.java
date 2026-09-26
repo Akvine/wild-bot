@@ -50,8 +50,8 @@ public class SyncAdvertJob {
                             .flatMap(advertStatisticDto ->
                                     advertStatisticDto.getAdvertList().stream().map(AdvertDto::getAdvertId))
                             .toList();
-                    List<AdvertEntity> advertsInDb =
-                            advertRepository.findByStatuses(List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START));
+                    List<AdvertEntity> advertsInDb = advertRepository.findByClientIdAndStatuses(
+                            activeClient.getId(), List.of(AdvertStatus.PAUSE, AdvertStatus.READY_FOR_START));
                     List<Integer> advertsIdsInDb = advertsInDb.stream()
                             .map(AdvertEntity::getExternalId)
                             .collect(Collectors.toList());
