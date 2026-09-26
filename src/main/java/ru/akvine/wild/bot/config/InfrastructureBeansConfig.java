@@ -26,6 +26,7 @@ import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
 import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryDataSourceProxy;
 import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryLogger;
+import ru.akvine.wild.bot.infrastructure.monitoring.pool.ConnectionPoolMonitor;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.HouseKeeper;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.StackTracePrinter;
 import ru.akvine.wild.bot.infrastructure.retry.DefaultRetryExecutor;
@@ -121,6 +122,19 @@ public class InfrastructureBeansConfig {
             SLockProvider sLockProvider,
             TransactionTemplate transactionTemplate) {
         return new DataBaseLockProvider(concurrentOperationsHelper, sLockProvider, transactionTemplate);
+    }
+
+    /**
+     * Периодически пишет в лог состояние пула соединений HikariCP (всего/занято/свободно). Бину
+     * нужен именно {@link HikariDataSource}: при включённом мониторинге медленных запросов это
+     * оригинальный пул под {@link Primary}-обёрткой.
+     */
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    @ConditionalOnProperty(name = "monitoring.connection.pool.enabled", havingValue = "true")
+    public ConnectionPoolMonitor connectionPoolMonitor(
+            HikariDataSource hikariDataSource,
+            @Value("${monitoring.connection.pool.print.interval.milliseconds}") long intervalMillis) {
+        return new ConnectionPoolMonitor(hikariDataSource, intervalMillis, hikariDataSource.getPoolName());
     }
 
     /**
