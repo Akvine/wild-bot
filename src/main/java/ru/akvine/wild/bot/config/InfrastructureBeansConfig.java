@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import ru.akvine.commons.cluster.lock.ConcurrentOperationsHelper;
@@ -37,6 +38,11 @@ import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryLogger;
 import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsCollector;
 import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiMetricsFilter;
 import ru.akvine.wild.bot.infrastructure.monitoring.api.ApiStatisticsPrinter;
+import ru.akvine.wild.bot.infrastructure.monitoring.keystore.FileKeyStoreObserver;
+import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeyStoreConfig;
+import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeyStoreObserver;
+import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeystoreExpirationMonitor;
+import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeystoreMonitoringProperties;
 import ru.akvine.wild.bot.infrastructure.monitoring.pool.ConnectionPoolMonitor;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.HouseKeeper;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.StackTracePrinter;
@@ -262,5 +268,41 @@ public class InfrastructureBeansConfig {
             ApiMetricsCollector apiMetricsCollector,
             @Value("${monitoring.api.metrics.print.interval.minutes}") long intervalMinutes) {
         return new ApiStatisticsPrinter(apiMetricsCollector, intervalMinutes);
+    }
+
+    /**
+     * Настройки слежения за сертификатами в ключницах - свойства {@code monitoring.keystore.*}
+     */
+    @Bean
+    @ConditionalOnProperty(name = "monitoring.keystore.enabled", havingValue = "true")
+    @ConfigurationProperties("monitoring.keystore")
+    public KeystoreMonitoringProperties keystoreMonitoringProperties() {
+        return new KeystoreMonitoringProperties();
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "monitoring.keystore.enabled", havingValue = "true")
+    public KeyStoreObserver fileKeyStoreObserver(
+            KeystoreMonitoringProperties properties, ResourceLoader resourceLoader) {
+        List<KeyStoreConfig> keyStoreConfigs = properties.getKeystores().stream()
+                .map(keystore -> new KeyStoreConfig(
+                        keystore.getType(),
+                        resourceLoader.getResource(keystore.getLocation()),
+                        keystore.getProvider(),
+                        keystore.getPassword()))
+                .toList();
+        return new FileKeyStoreObserver(keyStoreConfigs, properties.getDaysToExpire(), true, properties.getDaysExpired());
+    }
+
+    /**
+     * Раз в {@code monitoring.keystore.check-interval-hours} часов пишет в лог сертификаты,
+     * которые скоро истекут или уже истекли.
+     */
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    @ConditionalOnProperty(name = "monitoring.keystore.enabled", havingValue = "true")
+    public KeystoreExpirationMonitor keystoreExpirationMonitor(
+            KeyStoreObserver keyStoreObserver, KeystoreMonitoringProperties properties) {
+        return new KeystoreExpirationMonitor(
+                keyStoreObserver, properties.getCheckIntervalHours(), properties.getDaysToExpire());
     }
 }
