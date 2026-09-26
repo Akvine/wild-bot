@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,7 +17,6 @@ import ru.akvine.wild.bot.entities.ClientBlockedCredentialsEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
-import ru.akvine.wild.bot.facades.QrCodeGenerationServiceFacade;
 import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.repositories.specifications.ClientSpecification;
 import ru.akvine.wild.bot.services.ClientBlockingService;
@@ -26,7 +24,6 @@ import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.dto.admin.client.*;
 import ru.akvine.wild.bot.services.integration.BotIntegrationAdapter;
-import ru.akvine.wild.bot.services.property.PropertyService;
 import ru.akvine.wild.bot.utils.DateUtils;
 
 @Service
@@ -38,39 +35,7 @@ public class ClientAdminService {
     // TODO : лучше делать обновление сущности в ClientService, так по канону
     private final ClientRepository clientRepository;
     private final BotIntegrationAdapter botIntegrationAdapter;
-    private final QrCodeGenerationServiceFacade qrCodeGenerationServiceFacade;
     private final ClientSpecification clientSpecification;
-    private final PropertyService propertyService;
-
-    @Value("${qraft.integration.enabled}")
-    private boolean qraftIntegrationEnabled;
-
-    @Value("${qraft.request.param.ecl}")
-    private String errorCorrectionLevel;
-
-    @Value("${qraft.request.param.qr.size}")
-    private int qrSize;
-
-    @Value("${qraft.request.param.border.size}")
-    private int borderSize;
-
-    @Value("${qraft.request.param.radiusFactor}")
-    private int radiusFactor;
-
-    @Value("${qraft.request.param.cornerBlockRadiusFactor}")
-    private double cornerBlockRadiusFactor;
-
-    @Value("${qraft.request.param.roundInnerCorners}")
-    private boolean roundInnerCorners;
-
-    @Value("${qraft.request.param.roundOuterCorners}")
-    private boolean roundOuterCorners;
-
-    @Value("${qraft.request.param.cornerBlocksAsCircles}")
-    private boolean cornerBlocksAsCircles;
-
-    @Value("${qraft.request.param.image.type}")
-    private String imageType;
 
     public List<ClientModel> list(ListClients listClients) {
 
@@ -171,7 +136,6 @@ public class ClientAdminService {
             return;
         }
 
-
         long lastId = 0;
         while (true) {
             List<ClientModel> batch = clientService.getBatchAfterId(lastId);
@@ -179,8 +143,9 @@ public class ClientAdminService {
                 break;
             }
 
-            List<ClientModel> botClients =
-                    batch.stream().filter(client -> client.getBotType() == botType).toList();
+            List<ClientModel> botClients = batch.stream()
+                    .filter(client -> client.getBotType() == botType)
+                    .toList();
             if (!botClients.isEmpty()) {
                 sendMessageInternal(botClients, botType, message);
             }

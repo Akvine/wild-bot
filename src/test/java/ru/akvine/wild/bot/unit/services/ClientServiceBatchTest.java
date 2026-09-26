@@ -49,7 +49,8 @@ class ClientServiceBatchTest {
     }
 
     @Test
-    @DisplayName("Обход всех клиентов циклом: каждая следующая пачка запрашивается после id последнего клиента предыдущей")
+    @DisplayName(
+            "Обход всех клиентов циклом: каждая следующая пачка запрашивается после id последнего клиента предыдущей")
     void loopWalksThroughAllClients() {
         when(clientRepository.findBatchAfterId(0, PAGE)).thenReturn(List.of(client(1), client(5)));
         when(clientRepository.findBatchAfterId(5, PAGE)).thenReturn(List.of(client(7), client(9)));
