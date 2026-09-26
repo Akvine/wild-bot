@@ -7,20 +7,27 @@ import javax.sql.DataSource;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.Ordered;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import ru.akvine.commons.cluster.lock.ConcurrentOperationsHelper;
 import ru.akvine.commons.cluster.lock.SLockProvider;
 import ru.akvine.wild.bot.enums.ClientState;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInDatabaseImpl;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorageInMemoryImpl;
+import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingFilter;
+import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingFilterFactory;
+import ru.akvine.wild.bot.infrastructure.httplogging.HttpLoggingProperties;
 import ru.akvine.wild.bot.infrastructure.lock.DistributedLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
@@ -188,5 +195,32 @@ public class InfrastructureBeansConfig {
             @Value("${monitoring.slow.query.threshold.milliseconds:3000}") long thresholdMillis) {
         log.info("Slow query data source monitoring enabled");
         return new SlowQueryDataSourceProxy(hikariDataSource, new SlowQueryLogger(thresholdMillis));
+    }
+
+    /**
+     * Настройки логирования HTTP-запросов и ответов - свойства {@code http.logging.*}
+     */
+    @Bean
+    @ConditionalOnProperty(name = "http.logging.enabled", havingValue = "true")
+    @ConfigurationProperties("http.logging")
+    public HttpLoggingProperties httpLoggingProperties() {
+        return new HttpLoggingProperties();
+    }
+
+    /**
+     * Регистрирует {@link HttpLoggingFilter} в цепочке сервлет-фильтров сразу после
+     * {@code CharacterEncodingFilter} и до Spring Security, поэтому в лог попадают и запросы,
+     * отклонённые авторизацией.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "http.logging.enabled", havingValue = "true")
+    public FilterRegistrationBean<HttpLoggingFilter> httpLoggingFilter(
+            HttpLoggingProperties httpLoggingProperties,
+            ObjectProvider<RequestMappingHandlerMapping> handlerMappings) {
+        log.info("Http logging enabled");
+        FilterRegistrationBean<HttpLoggingFilter> registration =
+                new FilterRegistrationBean<>(HttpLoggingFilterFactory.create(httpLoggingProperties, handlerMappings));
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 10);
+        return registration;
     }
 }
