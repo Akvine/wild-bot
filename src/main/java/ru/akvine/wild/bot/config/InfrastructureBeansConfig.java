@@ -26,6 +26,8 @@ import ru.akvine.wild.bot.infrastructure.lock.distributed.DataBaseLockProvider;
 import ru.akvine.wild.bot.infrastructure.lock.distributed.RedisLockProvider;
 import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryDataSourceProxy;
 import ru.akvine.wild.bot.infrastructure.monitoring.SlowQueryLogger;
+import ru.akvine.wild.bot.infrastructure.monitoring.threads.HouseKeeper;
+import ru.akvine.wild.bot.infrastructure.monitoring.threads.StackTracePrinter;
 import ru.akvine.wild.bot.infrastructure.retry.DefaultRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.ExponentialRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.RetryExecutor;
@@ -122,7 +124,29 @@ public class InfrastructureBeansConfig {
     }
 
     /**
-     * Как только в контексте появляется свой бин {@link DataSource}, автоконфигурация Spring Boot
+     * Периодический дамп стеков всех потоков в {@code diagnostic.stack.trace.dir}. Запускается и
+     * останавливается вместе с контекстом (init/destroy-методы).
+     */
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    @ConditionalOnProperty(name = "diagnostic.stack.trace.enabled", havingValue = "true")
+    public StackTracePrinter stackTracePrinter(
+            @Value("${diagnostic.stack.trace.dir}") String dir,
+            @Value("${diagnostic.stack.trace.interval.milliseconds}") long intervalMillis) {
+        return new StackTracePrinter(dir, intervalMillis);
+    }
+
+    /**
+     * Раз в час архивирует дампы старше 2 часов в {@code <dir>-archive} и удаляет архивы старше 7
+     * дней (правила - {@link StackTracePrinter#simpleHouseKeeperConfig}).
+     */
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    @ConditionalOnProperty(name = "diagnostic.stack.trace.enabled", havingValue = "true")
+    public HouseKeeper stackTraceHouseKeeper(@Value("${diagnostic.stack.trace.dir}") String dir) {
+        return new HouseKeeper(StackTracePrinter.simpleHouseKeeperConfig(dir), Duration.ofHours(1).toMillis());
+    }
+
+    /**
+     * Как только в контексте появляется свой бин {@link DataSource},автоконфигурация Spring Boot
      * перестаёт создавать пул сама, поэтому при включённом мониторинге медленных запросов
      * {@link HikariDataSource} объявляется явно - с теми же {@code spring.datasource.*} и
      * {@code spring.datasource.hikari.*} настройками. Именно на него по типу смотрит
