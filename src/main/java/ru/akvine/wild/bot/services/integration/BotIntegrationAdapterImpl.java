@@ -1,11 +1,11 @@
 package ru.akvine.wild.bot.services.integration;
 
 import java.util.Set;
+import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import ru.akvine.wild.bot.enums.BotType;
-import ru.akvine.wild.bot.exceptions.RetryException;
 import ru.akvine.wild.bot.infrastructure.retry.RetryExecutor;
 import ru.akvine.wild.bot.max.MaxComponentsFactory;
 import ru.akvine.wild.bot.services.integration.max.MaxIntegrationService;
@@ -16,22 +16,19 @@ import ru.akvine.wild.bot.services.integration.telegram.TelegramIntegrationServi
 @Component
 @RequiredArgsConstructor
 public class BotIntegrationAdapterImpl implements BotIntegrationAdapter {
+    private static final int TOO_MANY_REQUESTS = 429;
+
+    /**
+     * Ошибки 4xx (кроме 429) повторять бессмысленно: запрос некорректен и с тем же телом получит тот же ответ
+     */
+    private static final Predicate<Exception> RETRY_ON_TRANSIENT_ERRORS = exception ->
+            !(exception instanceof HttpClientErrorException clientError)
+                    || clientError.getStatusCode().value() == TOO_MANY_REQUESTS;
+
     private final TelegramIntegrationService telegramIntegrationService;
     private final MaxIntegrationService maxIntegrationService;
 
     private final RetryExecutor retryExecutor;
-
-    @Value("${send.file.retry.attempts.count}")
-    private int retryAttemptsCount;
-
-    @Value("${send.file.retry.initial.delay.millis}")
-    private int retryInitialDelayMillis;
-
-    @Value("${send.file.retry.exponential.backoff.multiplier}")
-    private double retryExponentialBackoffMultiplier;
-
-    @Value("${send.file.retry.max.delay.millis}")
-    private int retryMaxDelayMillis;
 
     @Override
     public void sendImage(String chatId, BotType botType, byte[] image, String caption) {
@@ -41,15 +38,14 @@ public class BotIntegrationAdapterImpl implements BotIntegrationAdapter {
             String url = maxIntegrationService.getUploadFileUrl(AttachmentType.IMAGE);
             String token = maxIntegrationService.uploadImageAtServer(url, image, caption);
 
-            String errorMessage =
-                    String.format("Retry attempts limit = [%s] exceeded for sending image message", retryAttemptsCount);
             retryExecutor.execute(
                     () -> {
                         SendMessageRequest request = new SendMessageRequest()
                                 .setAttachments(MaxComponentsFactory.createFileAttachment(AttachmentType.IMAGE, token));
                         maxIntegrationService.sendMessage(chatId, request);
                     },
-                    new RetryException(errorMessage));
+                    RETRY_ON_TRANSIENT_ERRORS,
+                    "Sending image message");
         }
     }
 
@@ -61,15 +57,14 @@ public class BotIntegrationAdapterImpl implements BotIntegrationAdapter {
             String url = maxIntegrationService.getUploadFileUrl(AttachmentType.FILE);
             String token = maxIntegrationService.uploadFileAtServer(url, file, fileName);
 
-            String errorMessage =
-                    String.format("Retry attempts limit = [%s] exceeded for sending file message", retryAttemptsCount);
             retryExecutor.execute(
                     () -> {
                         SendMessageRequest request = new SendMessageRequest()
                                 .setAttachments(MaxComponentsFactory.createFileAttachment(AttachmentType.FILE, token));
                         maxIntegrationService.sendMessage(chatId, request);
                     },
-                    new RetryException(errorMessage));
+                    RETRY_ON_TRANSIENT_ERRORS,
+                    "Sending file message");
         }
     }
 

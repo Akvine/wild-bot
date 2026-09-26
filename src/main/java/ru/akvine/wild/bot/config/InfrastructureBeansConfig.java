@@ -113,18 +113,23 @@ public class InfrastructureBeansConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "retry.executor.implementation.type", havingValue = "exponential")
+    @ConditionalOnProperty(
+            name = "retry.executor.implementation.type",
+            havingValue = "exponential",
+            matchIfMissing = true)
     public RetryExecutor exponentialRetryExecutor(
             @Value("${send.file.retry.attempts.count}") int attempts,
             @Value("${send.file.retry.initial.delay.millis}") int retryInitialDelayMillis,
             @Value("${send.file.retry.exponential.backoff.multiplier}") double retryExponentialBackoffMultiplier,
-            @Value("${send.file.retry.max.delay.millis}") int retryMaxDelayMillis) {
+            @Value("${send.file.retry.max.delay.millis}") int retryMaxDelayMillis,
+            @Value("${send.file.retry.jitter.factor:0.2}") double retryJitterFactor) {
 
         return new ExponentialRetryExecutor(
                 attempts,
                 Duration.ofMillis(retryInitialDelayMillis),
                 retryExponentialBackoffMultiplier,
-                Duration.ofMillis(retryMaxDelayMillis));
+                Duration.ofMillis(retryMaxDelayMillis),
+                retryJitterFactor);
     }
 
     @Bean
