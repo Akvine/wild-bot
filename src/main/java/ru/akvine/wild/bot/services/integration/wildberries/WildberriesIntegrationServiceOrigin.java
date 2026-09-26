@@ -14,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import ru.akvine.wild.bot.exceptions.IntegrationException;
+import ru.akvine.wild.bot.infrastructure.resilience.BulkheadFactory;
 import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerInterceptorFactory;
 import ru.akvine.wild.bot.services.encryption.EncryptionService;
 import ru.akvine.wild.bot.services.integration.wildberries.dto.advert.*;
@@ -28,11 +29,14 @@ import ru.akvine.wild.bot.utils.RequestUtils;
 public class WildberriesIntegrationServiceOrigin implements WildberriesIntegrationService {
     private final EncryptionService encryptionService;
     private final CircuitBreakerInterceptorFactory circuitBreakerInterceptorFactory;
+    private final BulkheadFactory bulkheadFactory;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     @PostConstruct
-    void initCircuitBreaker() {
+    void initResilience() {
+        // bulkhead снаружи circuit breaker: отказ из-за нехватки мест не считается сбоем системы
+        restTemplate.getInterceptors().add(bulkheadFactory.interceptor("wildberries"));
         restTemplate.getInterceptors().add(circuitBreakerInterceptorFactory.create("wildberries"));
     }
 

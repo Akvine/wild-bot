@@ -39,6 +39,7 @@ import ru.akvine.wild.bot.services.integration.max.dto.request.SendMessageReques
 import ru.akvine.wild.bot.services.integration.max.dto.request.UpdateCommandsRequest;
 import ru.akvine.wild.bot.services.integration.max.dto.response.*;
 import ru.akvine.wild.bot.utils.ByteUtils;
+import ru.akvine.wild.bot.infrastructure.resilience.BulkheadFactory;
 import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerInterceptorFactory;
 import ru.akvine.wild.bot.utils.RequestUtils;
 
@@ -59,10 +60,15 @@ public class MaxIntegrationServiceOrigin implements MaxIntegrationService {
     @Autowired
     private CircuitBreakerInterceptorFactory circuitBreakerInterceptorFactory;
 
+    @Autowired
+    private BulkheadFactory bulkheadFactory;
+
     private final RestTemplate restTemplate;
 
     @PostConstruct
-    void initCircuitBreaker() {
+    void initResilience() {
+        // bulkhead снаружи circuit breaker: отказ из-за нехватки мест не считается сбоем системы
+        restTemplate.getInterceptors().add(bulkheadFactory.interceptor("max"));
         restTemplate.getInterceptors().add(circuitBreakerInterceptorFactory.create("max"));
     }
 

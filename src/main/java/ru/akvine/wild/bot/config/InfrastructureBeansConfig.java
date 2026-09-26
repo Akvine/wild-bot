@@ -79,6 +79,8 @@ import ru.akvine.wild.bot.infrastructure.monitoring.keystore.KeystoreMonitoringP
 import ru.akvine.wild.bot.infrastructure.monitoring.pool.ConnectionPoolMonitor;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.HouseKeeper;
 import ru.akvine.wild.bot.infrastructure.monitoring.threads.StackTracePrinter;
+import ru.akvine.wild.bot.infrastructure.resilience.BulkheadFactory;
+import ru.akvine.wild.bot.infrastructure.resilience.BulkheadProperties;
 import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerInterceptorFactory;
 import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerProperties;
 import ru.akvine.wild.bot.infrastructure.retry.DefaultRetryExecutor;
@@ -514,6 +516,25 @@ public class InfrastructureBeansConfig {
     @Bean
     public CircuitBreakerInterceptorFactory circuitBreakerInterceptorFactory(CircuitBreakerProperties properties) {
         return new CircuitBreakerInterceptorFactory(properties);
+    }
+
+    /**
+     * Настройки bulkhead'ов внешних систем - свойства {@code bulkhead.*}
+     */
+    @Bean
+    @ConfigurationProperties("bulkhead")
+    public BulkheadProperties bulkheadProperties() {
+        return new BulkheadProperties();
+    }
+
+    /**
+     * Ограничивает число одновременных вызовов к внешней системе (в целом и на одного клиента), чтобы зависшая
+     * система не заняла все потоки приложения. Бин есть всегда: при {@code bulkhead.enabled=false} ничего не
+     * ограничивает.
+     */
+    @Bean
+    public BulkheadFactory bulkheadFactory(BulkheadProperties properties) {
+        return new BulkheadFactory(properties);
     }
 
     /**
