@@ -3,6 +3,9 @@ package ru.akvine.wild.bot.job.sync;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,59 +27,72 @@ public class SyncCardJob {
     private final CardRepository cardRepository;
     private final CardService cardService;
     private final ClientService clientService;
+    private final ExecutorService syncCardExecutor;
 
     public void sync() {
         logger.info("Start card sync...");
 
-        // TODO: можно распараллелить через CompletableFuture
         List<ClientModel> activeClients = clientService.getAllActive();
-        for (ClientModel activeClient : activeClients) {
-            logger.info("Start card sync for client with uuid = [{}]", activeClient.getUuid());
 
-            List<CardDto> cardsDto = wildberriesIntegrationService.getCards(activeClient.getToken());
-            if (CollectionUtils.isNotEmpty(cardsDto)) {
-                List<CardEntity> cards = cardRepository.findAll(activeClient.getUuid());
-                List<Integer> cardsIdDb =
-                        cards.stream().map(CardEntity::getExternalId).collect(Collectors.toList());
-                List<Integer> cardsInWb =
-                        cardsDto.stream().map(CardDto::getNmID).toList();
+        // Синхронизация карточек одного клиента: клиенты не пересекаются по данным, поэтому обрабатываются параллельно
+        AtomicInteger failedCount = new AtomicInteger();
+        List<CompletableFuture<Void>> futures = activeClients.stream()
+                .map(activeClient -> CompletableFuture.runAsync(() -> syncClient(activeClient), syncCardExecutor)
+                        .exceptionally(error -> {
+                            failedCount.incrementAndGet();
+                            logger.error("Card sync failed for client with uuid [{}]", activeClient.getUuid(), error);
+                            return null;
+                        }))
+                .toList();
+        CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).join();
 
-                List<Integer> commonElements = new ArrayList<>(cardsInWb);
-                commonElements.retainAll(cardsIdDb);
+        logger.info("End card sync! Clients = {}, failed = {}", activeClients.size(), failedCount.get());
+    }
 
-                List<Integer> uniqueCardsInWb = new ArrayList<>(cardsInWb);
-                uniqueCardsInWb.removeAll(commonElements);
+    private void syncClient(ClientModel activeClient) {
+        logger.info("Start card sync for client with uuid = [{}]", activeClient.getUuid());
 
-                List<Integer> uniqueCardsInDb = new ArrayList<>(cardsIdDb);
-                uniqueCardsInDb.removeAll(commonElements);
-
-                if (CollectionUtils.isNotEmpty(uniqueCardsInDb)) {
-                    logger.info(
-                            "Delete unused db cards. Size = {}. Client uuid = [{}]",
-                            uniqueCardsInDb.size(),
-                            activeClient.getUuid());
-                    cards.stream()
-                            .filter(cardEntity -> uniqueCardsInDb.contains(cardEntity.getExternalId()))
-                            .forEach(cardEntity -> {
-                                cardEntity.setDeleted(true);
-                                cardEntity.setDeletedDate(LocalDateTime.now());
-                                cardRepository.save(cardEntity);
-                            });
-                }
-
-                if (CollectionUtils.isNotEmpty(uniqueCardsInWb)) {
-                    logger.info(
-                            "Save new cards in db. Size = {}. Client uuid = [{}]",
-                            uniqueCardsInWb.size(),
-                            activeClient.getUuid());
-                    List<CardDto> newCardsDto = cardsDto.stream()
-                            .filter(cardDto -> uniqueCardsInWb.contains(cardDto.getNmID()))
-                            .collect(Collectors.toList());
-                    cardService.create(newCardsDto, activeClient.getUuid());
-                }
-            }
+        List<CardDto> cardsDto = wildberriesIntegrationService.getCards(activeClient.getToken());
+        if (CollectionUtils.isEmpty(cardsDto)) {
+            return;
         }
 
-        logger.info("End card sync...");
+        List<CardEntity> cards = cardRepository.findAll(activeClient.getUuid());
+        List<Integer> cardsIdDb = cards.stream().map(CardEntity::getExternalId).collect(Collectors.toList());
+        List<Integer> cardsInWb = cardsDto.stream().map(CardDto::getNmID).toList();
+
+        List<Integer> commonElements = new ArrayList<>(cardsInWb);
+        commonElements.retainAll(cardsIdDb);
+
+        List<Integer> uniqueCardsInWb = new ArrayList<>(cardsInWb);
+        uniqueCardsInWb.removeAll(commonElements);
+
+        List<Integer> uniqueCardsInDb = new ArrayList<>(cardsIdDb);
+        uniqueCardsInDb.removeAll(commonElements);
+
+        if (CollectionUtils.isNotEmpty(uniqueCardsInDb)) {
+            logger.info(
+                    "Delete unused db cards. Size = {}. Client uuid = [{}]",
+                    uniqueCardsInDb.size(),
+                    activeClient.getUuid());
+            cards.stream()
+                    .filter(cardEntity -> uniqueCardsInDb.contains(cardEntity.getExternalId()))
+                    .forEach(cardEntity -> {
+                        cardEntity.setDeleted(true);
+                        cardEntity.setDeletedDate(LocalDateTime.now());
+                        cardRepository.save(cardEntity);
+                    });
+        }
+
+        if (CollectionUtils.isNotEmpty(uniqueCardsInWb)) {
+            logger.info(
+                    "Save new cards in db. Size = {}. Client uuid = [{}]",
+                    uniqueCardsInWb.size(),
+                    activeClient.getUuid());
+            List<CardDto> newCardsDto = cardsDto.stream()
+                    .filter(cardDto -> uniqueCardsInWb.contains(cardDto.getNmID()))
+                    .collect(Collectors.toList());
+            cardService.create(newCardsDto, activeClient.getUuid());
+        }
     }
 }

@@ -105,7 +105,11 @@ class IdempotencyFilterTest {
     void requestDuringExecutionGetsConflict() throws Exception {
         MockHttpServletResponse[] nested = new MockHttpServletResponse[1];
         FilterChain slowController = (req, res) -> {
-            nested[0] = call(request("key-1", "hello"), controller(201));
+            try {
+                nested[0] = call(request("key-1", "hello"), controller(201));
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
             ((HttpServletResponse) res).setStatus(201);
         };
 

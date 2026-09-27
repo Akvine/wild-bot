@@ -2,8 +2,12 @@ package ru.akvine.wild.bot.services.admin;
 
 import com.google.common.base.Preconditions;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +21,7 @@ import ru.akvine.wild.bot.entities.ClientBlockedCredentialsEntity;
 import ru.akvine.wild.bot.entities.ClientEntity;
 import ru.akvine.wild.bot.enums.BotType;
 import ru.akvine.wild.bot.exceptions.ClientNotFoundException;
+import ru.akvine.wild.bot.exceptions.IntegrationException;
 import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.repositories.specifications.ClientSpecification;
 import ru.akvine.wild.bot.services.ClientBlockingService;
@@ -36,6 +41,7 @@ public class ClientAdminService {
     private final ClientRepository clientRepository;
     private final BotIntegrationAdapter botIntegrationAdapter;
     private final ClientSpecification clientSpecification;
+    private final ExecutorService messageExecutor;
 
     public List<ClientModel> list(ListClients listClients) {
 
@@ -132,10 +138,14 @@ public class ClientAdminService {
                 throw new ClientNotFoundException(errorMessage);
             }
 
-            sendMessageInternal(activeClients, botType, message);
+            List<String> failedChatIds = new ArrayList<>();
+            int total = sendMessageInternal(activeClients, botType, message, failedChatIds);
+            failIfNotDelivered(total, failedChatIds);
             return;
         }
 
+        int total = 0;
+        List<String> failedChatIds = new ArrayList<>();
         long lastId = 0;
         while (true) {
             List<ClientModel> batch = clientService.getBatchAfterId(lastId);
@@ -147,10 +157,11 @@ public class ClientAdminService {
                     .filter(client -> client.getBotType() == botType)
                     .toList();
             if (!botClients.isEmpty()) {
-                sendMessageInternal(botClients, botType, message);
+                total += sendMessageInternal(botClients, botType, message, failedChatIds);
             }
             lastId = batch.getLast().getId();
         }
+        failIfNotDelivered(total, failedChatIds);
     }
 
     public void addToWhitelist(Whitelist whitelist) {
@@ -191,9 +202,50 @@ public class ClientAdminService {
                 client.getUsername());
     }
 
-    private void sendMessageInternal(List<ClientModel> activeClients, BotType botType, String message) {
+    /**
+     * Отправляет сообщение каждому клиенту отдельным запросом параллельно: недоступный клиент (заблокировал бота,
+     * удалил чат) не срывает рассылку остальным, как это было при отправке всей пачки одним вызовом.
+     *
+     * @param failedChatIds в этот список добавляются чаты, в которые доставить не удалось
+     * @return сколько чатов обработано
+     */
+    private int sendMessageInternal(
+            List<ClientModel> activeClients, BotType botType, String message, List<String> failedChatIds) {
         Set<String> activeChatIds =
                 activeClients.stream().map(ClientModel::getChatId).collect(Collectors.toSet());
-        botIntegrationAdapter.sendMessage(activeChatIds, botType, message);
+        List<CompletableFuture<String>> futures = activeChatIds.stream()
+                .map(chatId -> CompletableFuture.supplyAsync(
+                        () -> {
+                            try {
+                                botIntegrationAdapter.sendMessage(Set.of(chatId), botType, message);
+                                return null;
+                            } catch (Exception exception) {
+                                logger.warn(
+                                        "Can't send message to chat with id = [{}]: {}",
+                                        chatId,
+                                        exception.getMessage());
+                                return chatId;
+                            }
+                        },
+                        messageExecutor))
+                .toList();
+        CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).join();
+
+        futures.stream().map(CompletableFuture::join).filter(Objects::nonNull).forEach(failedChatIds::add);
+        return activeChatIds.size();
+    }
+
+    /**
+     * Рассылка доведена до всех доступных клиентов; если кому-то не доставлено, администратор узнаёт об этом
+     * ошибкой в конце, а не обрывом рассылки на первом сбое
+     */
+    private void failIfNotDelivered(int total, List<String> failedChatIds) {
+        if (failedChatIds.isEmpty()) {
+            return;
+        }
+        String errorMessage = String.format(
+                "Message was not delivered to %d of %d clients. First failed chat ids = %s",
+                failedChatIds.size(), total, failedChatIds.stream().limit(20).toList());
+        throw new IntegrationException(errorMessage);
     }
 }
