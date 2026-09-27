@@ -42,8 +42,11 @@ public class MessageDispatcherImpl implements MessageDispatcher {
         logger.info("Received in dispatcher message = [{}] [{}]", text, payload.getBotDataType());
 
         if (StringUtils.isNotBlank(text) && text.startsWith("/")) {
-            CommandResolver commandResolver =
-                    commandResolverFacade.getCommandResolvers().get(Command.getByText(text));
+            Command command = Command.getByText(text);
+            if (command == null) {
+                return new Response().setChatId(chatId).setText("Такой команды не существует!");
+            }
+            CommandResolver commandResolver = commandResolverFacade.getCommandResolvers().get(command);
             if (commandResolver == null) {
                 return new Response().setChatId(chatId).setText("Такой команды не существует!");
             }
