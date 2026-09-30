@@ -31,7 +31,7 @@ public interface AdvertStatisticRepository extends JpaRepository<AdvertStatistic
             + "c.deleted = false and ase.deleted = false")
     Optional<AdvertStatisticEntity> findByClientIdAndId(@Param("clientId") Long clientId, @Param("id") Long id);
 
-    @Query("from AdvertStatisticEntity ase join ase.advertEntity aseae where aseae.id in :advertIds")
+    @Query("delete from AdvertStatisticEntity ase where ase.advertEntity.id in :advertIds")
     @Modifying
     @Transactional
     void deleteByAdvertIds(@Param("advertIds") Collection<Long> advertIds);
