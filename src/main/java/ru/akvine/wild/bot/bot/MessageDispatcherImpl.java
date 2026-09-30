@@ -46,7 +46,8 @@ public class MessageDispatcherImpl implements MessageDispatcher {
             if (command == null) {
                 return new Response().setChatId(chatId).setText("Такой команды не существует!");
             }
-            CommandResolver commandResolver = commandResolverFacade.getCommandResolvers().get(command);
+            CommandResolver commandResolver =
+                    commandResolverFacade.getCommandResolvers().get(command);
             if (commandResolver == null) {
                 return new Response().setChatId(chatId).setText("Такой команды не существует!");
             }

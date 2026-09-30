@@ -11,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.wild.bot.entities.AdvertStatisticEntity;
 
 public interface AdvertStatisticRepository extends JpaRepository<AdvertStatisticEntity, Long> {
-    @Query("from AdvertStatisticEntity ase join ase.advertEntity ae join ase.client c where " + "c.id = :id and "
+    @Query("from AdvertStatisticEntity ase join fetch ase.advertEntity ae join ase.client c where "
+            + "c.id = :id and "
             + "ase.active = false and "
             + "ase.deleted = false")
     List<AdvertStatisticEntity> findByClientId(@Param("id") Long clientId);
+
 
     @Query("from AdvertStatisticEntity ase join ase.advertEntity ae join ase.client c where " + "c.id = :clientId and "
             + "ae.id = :advertId and "
@@ -23,7 +25,8 @@ public interface AdvertStatisticRepository extends JpaRepository<AdvertStatistic
     Optional<AdvertStatisticEntity> findByClientIdAndAdvertId(
             @Param("clientId") Long clientId, @Param("advertId") Long advertId);
 
-    @Query("from AdvertStatisticEntity ase join ase.client c where " + "c.id = :clientId and "
+    @Query("from AdvertStatisticEntity ase join fetch ase.advertEntity join ase.client c where "
+            + "c.id = :clientId and "
             + "ase.id = :id and "
             + "c.deleted = false and ase.deleted = false")
     Optional<AdvertStatisticEntity> findByClientIdAndId(@Param("clientId") Long clientId, @Param("id") Long id);

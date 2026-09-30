@@ -59,11 +59,11 @@ public class AdvertStatisticEntity extends SoftBaseEntity {
     @Column(name = "IS_ACTIVE")
     private boolean active;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ADVERT_ID", nullable = false)
     private AdvertEntity advertEntity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CLIENT_ID", nullable = false)
     private ClientEntity client;
 }

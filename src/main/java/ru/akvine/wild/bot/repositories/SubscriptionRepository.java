@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 import ru.akvine.wild.bot.entities.SubscriptionEntity;
 
 public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, Long> {
-    @Query("from SubscriptionEntity se join se.client sec " + "where sec.chatId = :chatId")
+    @Query("from SubscriptionEntity se join fetch se.client sec " + "where sec.chatId = :chatId")
     Optional<SubscriptionEntity> findByChatId(@Param("chatId") String chatId);
 }

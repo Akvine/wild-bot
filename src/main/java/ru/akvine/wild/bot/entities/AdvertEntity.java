@@ -66,7 +66,7 @@ public class AdvertEntity extends SoftBaseEntity {
     @Column(name = "AVAILABLE_FOR_START")
     private LocalDateTime availableForStart = LocalDateTime.now();
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CARD_ID", nullable = false)
     private CardEntity card;
 

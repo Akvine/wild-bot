@@ -23,7 +23,7 @@ public class SubscriptionEntity extends BaseEntity {
     @SequenceGenerator(name = "subscriptionEntitySeq", sequenceName = "SEQ_SUBSCRIPTION_ENTITY", allocationSize = 1000)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CLIENT_ID", nullable = false)
     private ClientEntity client;
 

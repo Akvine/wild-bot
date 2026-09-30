@@ -37,10 +37,10 @@ public class CardEntity extends SoftBaseEntity {
     private String barcode;
 
     @JoinColumn(name = "CLIENT_ID", nullable = false)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ClientEntity ownerClient;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CARD_TYPE_ID", nullable = false)
     private CardTypeEntity cardType;
 }

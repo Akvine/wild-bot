@@ -14,10 +14,15 @@ import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.enums.BotType;
 
 public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
-    @Query("from AdvertEntity ae where ae.status in :statuses " + "and " + "ae.deleted = false")
+    @Query("from AdvertEntity ae join fetch ae.card aec join fetch aec.ownerClient join fetch aec.cardType "
+            + "where ae.status in :statuses "
+            + "and "
+            + "ae.deleted = false")
     List<AdvertEntity> findByStatuses(@Param("statuses") List<AdvertStatus> states);
 
-    @Query("from AdvertEntity ae join ae.card aec join aec.cardType aecct where ae.status in :statuses " + "and "
+    @Query("from AdvertEntity ae join fetch ae.card aec join fetch aec.cardType aecct join fetch aec.ownerClient "
+            + "where ae.status in :statuses "
+            + "and "
             + "aecct.type = :cardType and "
             + "aec.categoryId = :categoryId "
             + "and "
@@ -27,26 +32,32 @@ public interface AdvertRepository extends JpaRepository<AdvertEntity, Long> {
             @Param("cardType") String cardType,
             @Param("categoryId") Integer categoryId);
 
-    @Query("from AdvertEntity ae join ae.card.ownerClient c where ae.status in :statuses " + "and "
+    @Query("from AdvertEntity ae join fetch ae.card aec join fetch aec.ownerClient c join fetch aec.cardType "
+            + "where ae.status in :statuses "
+            + "and "
             + "c.id = :id "
             + "and "
             + "ae.deleted = false")
     List<AdvertEntity> findByClientIdAndStatuses(
             @Param("id") Long clientId, @Param("statuses") List<AdvertStatus> statuses);
 
-    @Query("from AdvertEntity ae join ae.card.ownerClient c where c.chatId = :chatId and c.botType = :botType and "
+    @Query("from AdvertEntity ae join fetch ae.card aec join fetch aec.ownerClient c join fetch aec.cardType "
+            + "where c.chatId = :chatId and c.botType = :botType and "
             + "c.deleted = false "
             + "and "
             + "ae.deleted = false")
     List<AdvertEntity> findByChatIdAndBotType(@Param("chatId") String chatId, @Param("botType") BotType botType);
 
-    @Query("from AdvertEntity ae where ae.uuid = :uuid and ae.deleted = false")
+    @Query("from AdvertEntity ae join fetch ae.card aec join fetch aec.ownerClient join fetch aec.cardType "
+            + "where ae.uuid = :uuid and ae.deleted = false")
     Optional<AdvertEntity> findByUuid(@Param("uuid") String uuid);
 
-    @Query("from AdvertEntity ae where ae.externalId = :externalId and ae.deleted = false")
+    @Query("from AdvertEntity ae join fetch ae.card aec join fetch aec.ownerClient join fetch aec.cardType "
+            + "where ae.externalId = :externalId and ae.deleted = false")
     Optional<AdvertEntity> findByExternalId(@Param("externalId") int externalId);
 
-    @Query("from AdvertEntity ae join ae.card.ownerClient c " + "where ae.externalId = :externalId and "
+    @Query("from AdvertEntity ae join fetch ae.card aec join fetch aec.ownerClient c join fetch aec.cardType "
+            + "where ae.externalId = :externalId and "
             + "c.id = :clientId and "
             + "ae.deleted = false")
     Optional<AdvertEntity> findByExternalIdAndClientId(
