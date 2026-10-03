@@ -34,6 +34,7 @@ public class AccessRestoreActionService extends OtpActionService<AccessRestoreAc
 
     private final AccessRestoreActionRepository accessRestoreActionRepository;
     private final SupportService supportService;
+    private final PasswordService passwordService;
 
     public AccessRestoreActionResult startAccessRestore(AccessRestoreActionRequest accessRestoreActionRequest) {
         Preconditions.checkNotNull(accessRestoreActionRequest, "accessRestoreActionRequest is null");
@@ -177,7 +178,8 @@ public class AccessRestoreActionService extends OtpActionService<AccessRestoreAc
 
             if (accessRestoreAction.getState() == ActionState.OTP_PASSED) {
                 accessRestoreActionRepository.delete(accessRestoreAction);
-                return supportService.updatePassword(login, password);
+                // updatePassword принимает хеш: открытый пароль в БД класть нельзя
+                return supportService.updatePassword(login, passwordService.encodePassword(password));
             }
 
             throw new OtpAuthRequiredException(String.format("Can't finish %s, otp auth required!", getActionName()));

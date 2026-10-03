@@ -56,6 +56,7 @@ public class SubscriptionService {
                         "Client subscription for chat with id = [" + chatId + "] not found!"));
     }
 
+    @Transactional
     public SubscriptionModel add(Subscription subscription) {
         Preconditions.checkNotNull(subscription, "subscription is null");
         logger.info("Add subscription by [{}]", subscription);

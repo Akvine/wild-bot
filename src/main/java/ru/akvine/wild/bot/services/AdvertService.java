@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.CardEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
@@ -91,6 +92,7 @@ public class AdvertService {
                 .toList();
     }
 
+    @Transactional
     public AdvertModel update(AdvertModel advertBean) {
         Preconditions.checkNotNull(advertBean, "advertBean is null");
         logger.info("Update advert by bean = [{}]", advertBean);

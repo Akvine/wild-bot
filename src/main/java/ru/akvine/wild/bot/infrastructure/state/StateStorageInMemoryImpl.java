@@ -55,7 +55,9 @@ public class StateStorageInMemoryImpl implements StateStorage<String, List<Clien
 
     @Override
     public boolean backAt(String chatId, BotType botType, ClientState targetClientState) {
-        validate(chatId, botType);
+        if (!containsState(chatId, botType)) {
+            return false;
+        }
 
         String uniqueIdentifier = createUniqueIdentifier(chatId, botType);
         List<ClientState> states = STATES.get(uniqueIdentifier);
@@ -77,7 +79,8 @@ public class StateStorageInMemoryImpl implements StateStorage<String, List<Clien
 
     @Override
     public int statesCount(String chatId, BotType botType) {
-        return STATES.get(createUniqueIdentifier(chatId, botType)).size();
+        List<ClientState> states = STATES.get(createUniqueIdentifier(chatId, botType));
+        return states == null ? 0 : states.size();
     }
 
     private void validate(String chatId, BotType botType) {

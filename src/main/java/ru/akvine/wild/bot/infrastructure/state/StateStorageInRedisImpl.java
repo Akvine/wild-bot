@@ -59,7 +59,7 @@ public class StateStorageInRedisImpl implements StateStorage<String, List<Client
         String key = key(chatId, botType);
         List<ClientState> states = redisOperationService.getListValues(key);
         if (states.isEmpty()) {
-            throw noState(chatId, botType);
+            return false;
         }
 
         int targetIndex = states.indexOf(targetClientState);

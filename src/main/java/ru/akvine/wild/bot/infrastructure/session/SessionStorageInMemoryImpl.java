@@ -15,7 +15,9 @@ public class SessionStorageInMemoryImpl implements SessionStorage<String, Client
 
     @Override
     public void init(String chatId, BotType botType) {
-        sessions.put(createUniqueIdentifier(chatId, botType), new ClientSessionData());
+        sessions.put(
+                createUniqueIdentifier(chatId, botType),
+                new ClientSessionData().setChatId(chatId).setBotType(botType));
     }
 
     @Override
@@ -27,7 +29,10 @@ public class SessionStorageInMemoryImpl implements SessionStorage<String, Client
     @Override
     public ClientSessionData save(ClientSessionData data, BotType botType) {
         String chatId = data.getChatId();
-        return sessions.replace(createUniqueIdentifier(chatId, botType), data);
+        validate(chatId, botType);
+        data.setBotType(botType);
+        sessions.put(createUniqueIdentifier(chatId, botType), data);
+        return data;
     }
 
     @Override

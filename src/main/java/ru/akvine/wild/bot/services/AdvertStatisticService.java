@@ -36,6 +36,9 @@ public class AdvertStatisticService {
     private final AdvertService advertService;
     private final PropertyService propertyService;
 
+    // статистика читается и сохраняется в одной транзакции: без неё (при open-in-view=false) save возвращает копию
+    // с ленивой кампанией, и сборка AdvertStatisticModel падает с LazyInitializationException
+    @Transactional
     public AdvertStatisticModel getAndSave(AdvertEntity advert, ClientModel currentClient) {
         logger.info("Start getting advert full statistic for advert = [{}]", advert);
 

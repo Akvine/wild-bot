@@ -61,7 +61,7 @@ public class AdvertModel extends SoftModel {
     }
 
     public void plusStartBudget(int value) {
-        this.startBudgetSum += value;
+        this.startBudgetSum = (this.startBudgetSum == null ? 0 : this.startBudgetSum) + value;
     }
 
     public boolean isAvailableForStart() {

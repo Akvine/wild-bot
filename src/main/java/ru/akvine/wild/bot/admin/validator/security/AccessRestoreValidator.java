@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.admin.dto.security.EmailRequest;
 import ru.akvine.wild.bot.admin.dto.security.access_restore.AccessRestoreFinishRequest;
-import ru.akvine.wild.bot.exceptions.admin.SupportUserAlreadyExistsException;
 import ru.akvine.wild.bot.services.admin.SupportService;
 import ru.akvine.wild.bot.validator.EmailValidator;
 import ru.akvine.wild.bot.validator.PasswordValidator;
@@ -23,7 +22,7 @@ public class AccessRestoreValidator {
 
         String email = request.getEmail();
         emailValidator.validate(email);
-        verifyNotExistsByLogin(email);
+        verifyExistsByLogin(email);
     }
 
     public void verifyAccessRestoreFinish(AccessRestoreFinishRequest request) {
@@ -31,14 +30,12 @@ public class AccessRestoreValidator {
         Preconditions.checkNotNull(request.getEmail(), "accessRestoreFinishRequest.email is null");
         Preconditions.checkNotNull(request.getPassword(), "accessRestoreFinishRequest.password is null");
 
-        verifyNotExistsByLogin(request.getEmail());
+        verifyExistsByLogin(request.getEmail());
         passwordValidator.validate(request.getPassword());
     }
 
-    public void verifyNotExistsByLogin(String email) {
-        boolean exists = supportService.isExistsByEmail(email);
-        if (exists) {
-            throw new SupportUserAlreadyExistsException("Support user with email = [" + email + "] already exists!");
-        }
+    /** Восстановить доступ можно только существующему пользователю */
+    public void verifyExistsByLogin(String email) {
+        supportService.verifyExistsByEmail(email);
     }
 }

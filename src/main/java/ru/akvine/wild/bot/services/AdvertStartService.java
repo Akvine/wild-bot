@@ -91,7 +91,9 @@ public class AdvertStartService {
         Integer advertTotalBudget = advertBudgetInfo.getTotal();
         if (advertTotalBudget < budgetMinSum) {
             wildberriesIntegrationService.advertBudgetDeposit(advertId, advertBudgetSumIncreaseValue, clientToken);
-            advertToStart.plusStartBudget(advertBudgetSumIncreaseValue);
+            // стартовый бюджет - то, что реально лежит на кампании после пополнения: остаток + пополнение. Прежнее
+            // startBudgetSum (null у только что синхронизированной кампании) здесь не участвует
+            advertToStart.setStartBudgetSum(advertTotalBudget + advertBudgetSumIncreaseValue);
         } else {
             advertToStart.setStartBudgetSum(advertTotalBudget);
         }
