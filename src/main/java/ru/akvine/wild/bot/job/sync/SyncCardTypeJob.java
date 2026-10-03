@@ -13,6 +13,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 import ru.akvine.wild.bot.entities.CardTypeEntity;
 import ru.akvine.wild.bot.repositories.CardTypeRepository;
+import ru.akvine.wild.bot.services.CardTypeService;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
@@ -26,6 +27,7 @@ public class SyncCardTypeJob {
     private final CardTypeRepository cardTypeRepository;
     private final ClientService clientService;
     private final ExecutorService syncCardTypeExecutor;
+    private final CardTypeService cardTypeService;
 
     /**
      * Типы карточек - общий справочник, а не данные клиента. Поэтому параллельно выполняются только запросы к
@@ -81,6 +83,8 @@ public class SyncCardTypeJob {
                 CardTypeEntity cardTypeToSave = new CardTypeEntity().setType(uniqueType);
                 cardTypeRepository.save(cardTypeToSave);
             });
+            // справочник изменился: сбрасываем кеш типов, чтобы бот не отдавал устаревшие значения
+            cardTypeService.evictCache();
         }
 
         if (CollectionUtils.isNotEmpty(uniqueCardTypesInDb)) {

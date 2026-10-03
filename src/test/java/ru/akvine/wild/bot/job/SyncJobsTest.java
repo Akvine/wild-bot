@@ -40,6 +40,7 @@ import ru.akvine.wild.bot.repositories.CardRepository;
 import ru.akvine.wild.bot.repositories.CardTypeRepository;
 import ru.akvine.wild.bot.services.AdvertService;
 import ru.akvine.wild.bot.services.CardService;
+import ru.akvine.wild.bot.services.CardTypeService;
 import ru.akvine.wild.bot.services.ClientService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
 import ru.akvine.wild.bot.services.integration.custodian.CustodianIntegrationService;
@@ -62,12 +63,14 @@ class SyncJobsTest {
     private ExecutorService executor;
     private WildberriesIntegrationService wb;
     private ClientService clientService;
+    private CardTypeService cardTypeService;
 
     @BeforeEach
     void setUp() {
         executor = Executors.newFixedThreadPool(2);
         wb = mock(WildberriesIntegrationService.class);
         clientService = mock(ClientService.class);
+        cardTypeService = mock(CardTypeService.class);
     }
 
     @AfterEach
@@ -212,10 +215,11 @@ class SyncJobsTest {
         when(repository.findAll())
                 .thenReturn(List.of(new CardTypeEntity().setType("Женский"), new CardTypeEntity().setType("Старый")));
 
-        new SyncCardTypeJob(wb, repository, clientService, executor).sync();
+        new SyncCardTypeJob(wb, repository, clientService, executor, cardTypeService).sync();
 
         ArgumentCaptor<CardTypeEntity> saved = ArgumentCaptor.forClass(CardTypeEntity.class);
         verify(repository, times(2)).save(saved.capture());
+        verify(cardTypeService).evictCache();
         assertThat(saved.getAllValues())
                 .extracting(CardTypeEntity::getType)
                 .containsExactlyInAnyOrder("Мужской", "Детский");
@@ -228,7 +232,7 @@ class SyncJobsTest {
         when(clientService.getAllActive()).thenReturn(List.of(client(1, "a")));
         when(wb.getTypes(anyString())).thenThrow(new IllegalStateException("down"));
 
-        new SyncCardTypeJob(wb, repository, clientService, executor).sync();
+        new SyncCardTypeJob(wb, repository, clientService, executor, cardTypeService).sync();
 
         verify(repository, never()).findAll();
         verify(repository, never()).save(any());

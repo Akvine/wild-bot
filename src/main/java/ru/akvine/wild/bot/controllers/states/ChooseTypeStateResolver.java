@@ -44,14 +44,14 @@ public class ChooseTypeStateResolver extends StateResolver {
         BotType botType = payload.getBotType();
 
         if (text.equals(MALE_BUTTON_TEXT)) {
-            String cardType = cardTypeService.verifyExistsByType(text).getType();
+            String cardType = cardTypeService.getByType(text).type();
             sessionStorage.init(chatId, botType);
             ClientSessionData sessionData = sessionStorage.get(chatId, botType);
             sessionData.setSelectedCardType(cardType);
             sessionStorage.save(sessionData, botType);
             return setNextState(chatId, ClientState.CHOOSE_CATEGORY_MENU, botType);
         } else if (text.equals(FEMALE_BUTTON_TEXT)) {
-            String cardType = cardTypeService.verifyExistsByType(text).getType();
+            String cardType = cardTypeService.getByType(text).type();
             sessionStorage.init(chatId, botType);
             ClientSessionData sessionData = sessionStorage.get(chatId, botType);
             sessionData.setSelectedCardType(cardType);

@@ -6,7 +6,9 @@ import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.BatchStrategies;
@@ -18,6 +20,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import ru.akvine.wild.bot.config.properties.RedisConfigProperties;
+import ru.akvine.wild.bot.infrastructure.cache.CacheNames;
 import ru.akvine.wild.bot.services.integration.redis.RedisOperationService;
 import ru.akvine.wild.bot.services.integration.redis.RedisOperationServiceBuilder;
 
@@ -27,6 +30,7 @@ import ru.akvine.wild.bot.services.integration.redis.RedisOperationServiceBuilde
 public class RedisConfig {
 
     private static final String CACHE_PREFIX = "CACHE_";
+    private static final Duration CARD_TYPES_TTL = Duration.ofHours(1L);
 
     @Bean
     @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true")
@@ -56,7 +60,20 @@ public class RedisConfig {
                         RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory, BatchStrategies.scan(1000)))
                 .transactionAware()
                 .cacheDefaults(defaults)
+                // справочник типов меняется только синхронизацией с WB и сбрасывается явно, поэтому TTL длиннее
+                .withCacheConfiguration(CacheNames.CARD_TYPES, defaults.entryTtl(CARD_TYPES_TTL))
                 .build();
+    }
+
+    /**
+     * Без Redis кеш живёт в памяти процесса. Менеджер задан явно: иначе Spring Boot выбирает JCache-провайдер из
+     * classpath, у которого нет ни одного кеша, и {@code @Cacheable} падает. TTL у такого кеша нет, поэтому записи
+     * сбрасываются явно (см. {@code CardTypeService#evictCache}) и при перезапуске.
+     */
+    @Bean
+    @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "false", matchIfMissing = true)
+    public CacheManager inMemoryCacheManager() {
+        return new ConcurrentMapCacheManager(CacheNames.CARD_TYPES);
     }
 
     @Bean
