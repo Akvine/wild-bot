@@ -1,6 +1,5 @@
 package ru.akvine.wild.bot.job.sync;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -89,8 +88,7 @@ public class SyncAdvertJob {
                     advertsInDb.stream()
                             .filter(advertEntity -> uniqueAdvertsInDb.contains(advertEntity.getExternalId()))
                             .forEach(advertEntity -> {
-                                advertEntity.setDeleted(true);
-                                advertEntity.setDeletedDate(LocalDateTime.now());
+                                advertEntity.markDeleted();
                                 advertRepository.save(advertEntity);
                             });
                 }

@@ -25,11 +25,7 @@ import ru.akvine.wild.bot.repositories.CardTypeRepository;
 import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
 
-/**
- * Против реальной (H2) БД: ловит расхождение между JPQL-текстом и аннотацией {@code @Modifying}, которое
- * компилятор и юнит-тесты на моках не видят - до этого теста ни один тест не вызывал ни один метод
- * {@link AdvertStatisticRepository} или {@link AdvertRepository}.
- */
+
 @Transactional
 class AdvertStatisticRepositoryTest extends BaseTest {
     @Autowired
@@ -57,7 +53,8 @@ class AdvertStatisticRepositoryTest extends BaseTest {
                 .setFirstName("Test")
                 .setBotType(BotType.TELEGRAM));
 
-        CardTypeEntity cardType = cardTypeRepository.save(new CardTypeEntity().setType("type-" + UUIDGenerator.uuidWithoutDashes()));
+        CardTypeEntity cardType =
+                cardTypeRepository.save(new CardTypeEntity().setType("type-" + UUIDGenerator.uuidWithoutDashes()));
 
         CardEntity card = cardRepository.save(new CardEntity()
                 .setUuid(UUIDGenerator.uuidWithoutDashes())
@@ -81,8 +78,10 @@ class AdvertStatisticRepositoryTest extends BaseTest {
                 .setCpm(100)
                 .setCard(card));
 
-        advertStatisticRepository.save(
-                new AdvertStatisticEntity().setAdvertEntity(advert).setClient(client).setActive(false));
+        advertStatisticRepository.save(new AdvertStatisticEntity()
+                .setAdvertEntity(advert)
+                .setClient(client)
+                .setActive(false));
 
         return advert;
     }
@@ -94,7 +93,8 @@ class AdvertStatisticRepositoryTest extends BaseTest {
         assertThatCode(() -> advertStatisticRepository.deleteByAdvertIds(List.of(advert.getId())))
                 .doesNotThrowAnyException();
 
-        assertThat(advertStatisticRepository.findByClientId(advert.getCard().getOwnerClient().getId()))
+        assertThat(advertStatisticRepository.findByClientId(
+                        advert.getCard().getOwnerClient().getId()))
                 .isEmpty();
     }
 
@@ -105,8 +105,8 @@ class AdvertStatisticRepositoryTest extends BaseTest {
 
         advertStatisticRepository.deleteByAdvertIds(List.of(remove.getId()));
 
-        assertThat(advertStatisticRepository
-                        .findByClientId(keep.getCard().getOwnerClient().getId()))
+        assertThat(advertStatisticRepository.findByClientId(
+                        keep.getCard().getOwnerClient().getId()))
                 .hasSize(1);
     }
 }

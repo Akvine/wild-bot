@@ -188,7 +188,7 @@ class TelegramMainFlowTest extends TelegramBaseTest {
                 .setFirstName("F")
                 .setBotType(BotType.TELEGRAM)
                 .setInWhitelist(true);
-        client.setDeleted(true);
+        client.markDeleted();
         clientRepository.save(client);
 
         BotApiMethod<?> apiMethod = sendText(chatId, "hello");

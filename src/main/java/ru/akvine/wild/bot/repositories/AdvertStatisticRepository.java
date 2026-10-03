@@ -17,7 +17,6 @@ public interface AdvertStatisticRepository extends JpaRepository<AdvertStatistic
             + "ase.deleted = false")
     List<AdvertStatisticEntity> findByClientId(@Param("id") Long clientId);
 
-
     @Query("from AdvertStatisticEntity ase join ase.advertEntity ae join ase.client c where " + "c.id = :clientId and "
             + "ae.id = :advertId and "
             + "ase.active = true and "
