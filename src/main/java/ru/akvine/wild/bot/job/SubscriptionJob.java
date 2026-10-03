@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.akvine.wild.bot.constants.MDCConstants;
 import ru.akvine.wild.bot.entities.SubscriptionEntity;
 import ru.akvine.wild.bot.enums.BotType;
+import ru.akvine.wild.bot.infrastructure.lock.SingleInstance;
 import ru.akvine.wild.bot.repositories.SubscriptionRepository;
 import ru.akvine.wild.bot.services.outbox.BotMessageOutbox;
 
@@ -26,6 +27,7 @@ public class SubscriptionJob {
     @Value("${client.subscription.notify.days.before}")
     private int notifyDaysBefore;
 
+    @SingleInstance
     @Transactional
     @Scheduled(cron = "${delete.expired.subscriptions.cron}")
     public void deleteExpiredSubscriptions() {
@@ -37,6 +39,7 @@ public class SubscriptionJob {
         logger.info("End delete expired subscriptions");
     }
 
+    @SingleInstance
     @Transactional
     @Scheduled(cron = "${notify.clients.expired.subscription.cron}")
     public void notifyClients() {

@@ -123,33 +123,38 @@ public class DataBaseLockProvider implements DistributedLockProvider {
 
     @Override
     public boolean tryLock(String lockId, Runnable job) {
-        return tryLock(lockId, job, 2, TimeUnit.MINUTES);
+        SLock lock = sLockProvider.getLock(lockId);
+        if (!lock.tryLock()) {
+            return false;
+        }
+        return runAndUnlock(lockId, lock, job);
     }
 
     @Override
     public boolean tryLock(String lockId, Runnable job, long timeout, TimeUnit timeUnit) {
         SLock lock = sLockProvider.getLock(lockId);
-        if (lock.isLocked()) {
-            return false;
-        }
-
         try {
-            if (lock.tryLock(timeout, timeUnit)) {
-                lock(
-                        lockId,
-                        () -> {
-                            job.run();
-                            return true;
-                        },
-                        timeout,
-                        timeUnit);
-                return true;
+            if (!lock.tryLock(timeout, timeUnit)) {
+                return false;
             }
-
-            return false;
         } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
             String errorMessage = String.format("Interrupted while waiting for lock with key: %s", lockId);
             throw new DistributedLockAcquireException(errorMessage);
+        }
+        return runAndUnlock(lockId, lock, job);
+    }
+
+    private boolean runAndUnlock(String lockId, SLock lock, Runnable job) {
+        try {
+            job.run();
+            return true;
+        } finally {
+            try {
+                lock.unlock();
+            } catch (Exception ex) {
+                logger.error("Error when performing unlock for lockId " + lockId, ex);
+            }
         }
     }
 

@@ -20,7 +20,7 @@ public class SubscriptionEntity extends BaseEntity {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subscriptionEntitySeq")
-    @SequenceGenerator(name = "subscriptionEntitySeq", sequenceName = "SEQ_SUBSCRIPTION_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(name = "subscriptionEntitySeq", sequenceName = "SEQ_SUBSCRIPTION_ENTITY", allocationSize = 1)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)

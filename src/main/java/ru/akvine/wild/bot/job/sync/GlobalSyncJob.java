@@ -5,6 +5,7 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import ru.akvine.wild.bot.constants.MDCConstants;
+import ru.akvine.wild.bot.infrastructure.lock.SingleInstance;
 
 @Slf4j
 public class GlobalSyncJob {
@@ -37,6 +38,7 @@ public class GlobalSyncJob {
         this.mdcChatId = mdcChatId;
     }
 
+    @SingleInstance
     @Scheduled(fixedDelayString = "${global.sync.cron.milliseconds}")
     public void globalSync() {
         MDC.put(MDCConstants.USERNAME, mdcName);

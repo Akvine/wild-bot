@@ -19,7 +19,7 @@ public class AdvertStatisticEntity extends SoftBaseEntity {
     @SequenceGenerator(
             name = "advertStatisticEntitySequence",
             sequenceName = "SEQ_ADVERT_STATISTIC_ENTITY",
-            allocationSize = 1000)
+            allocationSize = 1)
     private Long id;
 
     @Column(name = "VIEWS")

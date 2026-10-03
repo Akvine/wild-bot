@@ -15,7 +15,7 @@ public class CardEntity extends SoftBaseEntity {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cardEntitySeq")
-    @SequenceGenerator(name = "cardEntitySeq", sequenceName = "SEQ_CARD_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(name = "cardEntitySeq", sequenceName = "SEQ_CARD_ENTITY", allocationSize = 1)
     private Long id;
 
     @Column(name = "UUID", nullable = false)

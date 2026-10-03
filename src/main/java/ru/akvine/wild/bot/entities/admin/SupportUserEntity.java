@@ -21,7 +21,7 @@ public class SupportUserEntity extends BaseEntity implements UserDetails {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "supportUserEntitySeq")
-    @SequenceGenerator(name = "supportUserEntitySeq", sequenceName = "SEQ_SUPPORT_USER_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(name = "supportUserEntitySeq", sequenceName = "SEQ_SUPPORT_USER_ENTITY", allocationSize = 1)
     private Long id;
 
     @Column(name = "UUID", nullable = false)

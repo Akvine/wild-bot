@@ -12,6 +12,7 @@ import ru.akvine.wild.bot.entities.AdvertEntity;
 import ru.akvine.wild.bot.entities.CardEntity;
 import ru.akvine.wild.bot.enums.AdvertStatus;
 import ru.akvine.wild.bot.infrastructure.counter.CountersStorage;
+import ru.akvine.wild.bot.infrastructure.lock.SingleInstance;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.services.AdvertStatisticService;
 import ru.akvine.wild.bot.services.domain.ClientModel;
@@ -38,6 +39,7 @@ public class CheckRunningAdvertsJob {
     private final String chatId;
     private final String botType;
 
+    @SingleInstance
     @Scheduled(fixedDelayString = "${check.advert.cron.milliseconds}")
     public void checkRunningAdverts() {
         MDC.put(MDCConstants.USERNAME, name);

@@ -25,7 +25,6 @@ import ru.akvine.wild.bot.repositories.CardTypeRepository;
 import ru.akvine.wild.bot.repositories.ClientRepository;
 import ru.akvine.wild.bot.utils.UUIDGenerator;
 
-
 @Transactional
 class AdvertStatisticRepositoryTest extends BaseTest {
     @Autowired

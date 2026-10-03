@@ -19,7 +19,7 @@ public class AdvertEntity extends SoftBaseEntity {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "advertEntitySeq")
-    @SequenceGenerator(name = "advertEntitySeq", sequenceName = "SEQ_ADVERT_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(name = "advertEntitySeq", sequenceName = "SEQ_ADVERT_ENTITY", allocationSize = 1)
     private Long id;
 
     @Column(name = "UUID", nullable = false)

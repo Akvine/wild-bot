@@ -20,7 +20,7 @@ public class ClientStatesEntity extends BaseEntity {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clientStatesEntitySeq")
-    @SequenceGenerator(name = "clientStatesEntitySeq", sequenceName = "SEQ_CLIENT_STATES_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(name = "clientStatesEntitySeq", sequenceName = "SEQ_CLIENT_STATES_ENTITY", allocationSize = 1)
     private Long id;
 
     @Column(name = "IDENTIFIER", nullable = false, updatable = false)

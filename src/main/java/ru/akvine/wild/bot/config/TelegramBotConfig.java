@@ -22,6 +22,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.akvine.wild.bot.bot.filter.InitMessageFilter;
 import ru.akvine.wild.bot.exceptions.TelegramConfigurationException;
 import ru.akvine.wild.bot.facades.BotDtoConverterFacade;
+import ru.akvine.wild.bot.infrastructure.role.AppRole;
 import ru.akvine.wild.bot.telegram.bot.TelegramDevBot;
 import ru.akvine.wild.bot.telegram.bot.TelegramDummyBot;
 import ru.akvine.wild.bot.telegram.bot.TelegramProductionBot;
@@ -38,6 +39,9 @@ public class TelegramBotConfig {
 
     private static final String HTTPS_PROXY_PORT_PROPERTY_NAME = "https.proxyPort";
     private static final String HTTPS_PROXY_HOST_PROPERTY_NAME = "https.proxyHost";
+
+    @Value("${server.app.role:all}")
+    private String appRole;
 
     @Value("${telegram.bot.path}")
     private String botPath;
@@ -85,9 +89,12 @@ public class TelegramBotConfig {
                 new TelegramProductionBot(defaultBotOptions, botToken, startMessageFilter, convertersFacade);
         bot.setBotUsername(botUsername);
         bot.setBotPath(botPath);
-        setWebhook(botToken);
-        List<BotCommand> listCommands = initBotCommands();
-        bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
+        // worker только отправляет сообщения (outbox): вебхук и команды регистрирует процесс, принимающий трафик
+        if (AppRole.of(appRole).servesTraffic()) {
+            setWebhook(botToken);
+            List<BotCommand> listCommands = initBotCommands();
+            bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
+        }
         return bot;
     }
 
@@ -97,10 +104,13 @@ public class TelegramBotConfig {
             throws TelegramApiException {
         TelegramDevBot bot =
                 new TelegramDevBot(defaultBotOptions, botToken, botUsername, startMessageFilter, convertersFacade);
-        List<BotCommand> listCommands = initBotCommands();
-        bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        telegramBotsApi.registerBot(bot);
+        if (AppRole.of(appRole).servesTraffic()) {
+            // long polling у одного токена может читать только один процесс
+            List<BotCommand> listCommands = initBotCommands();
+            bot.execute(new SetMyCommands(listCommands, new BotCommandScopeDefault(), null));
+            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+            telegramBotsApi.registerBot(bot);
+        }
         return bot;
     }
 

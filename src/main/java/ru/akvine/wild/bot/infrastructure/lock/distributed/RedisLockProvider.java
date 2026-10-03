@@ -63,7 +63,7 @@ public class RedisLockProvider implements DistributedLockProvider {
 
     @Override
     public boolean tryLock(String lockId, Runnable job) {
-        return tryLock(lockId, job, 2, TimeUnit.MINUTES);
+        return tryLock(lockId, job, 0, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -71,18 +71,20 @@ public class RedisLockProvider implements DistributedLockProvider {
         RLock lock = redisson.getLock(lockId);
 
         try {
-            if (lock.tryLock(timeout, timeUnit)) {
-                return launchAndUnlock(lockId, lock, () -> {
-                    job.run();
-                    return null;
-                });
-            } else {
+            if (!lock.tryLock(timeout, timeUnit)) {
                 return false;
             }
         } catch (InterruptedException interruptedException) {
+            Thread.currentThread().interrupt();
             String errorMessage = String.format("Interrupted while waiting for lock with key: %s", lockId);
             throw new DistributedLockAcquireException(errorMessage);
         }
+
+        launchAndUnlock(lockId, lock, () -> {
+            job.run();
+            return true;
+        });
+        return true;
     }
 
     @Override

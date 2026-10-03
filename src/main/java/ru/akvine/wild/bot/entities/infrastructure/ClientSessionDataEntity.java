@@ -22,7 +22,7 @@ public class ClientSessionDataEntity extends BaseEntity {
     @SequenceGenerator(
             name = "clientSessionDataEntitySeq",
             sequenceName = "SEQ_CLIENT_SESSION_DATA_ENTITY",
-            allocationSize = 1000)
+            allocationSize = 1)
     private Long id;
 
     @Column(name = "CHAT_ID", nullable = false)

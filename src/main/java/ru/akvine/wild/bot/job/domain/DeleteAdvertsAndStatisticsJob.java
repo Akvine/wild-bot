@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import ru.akvine.wild.bot.constants.MDCConstants;
 import ru.akvine.wild.bot.entities.AdvertEntity;
+import ru.akvine.wild.bot.infrastructure.lock.SingleInstance;
 import ru.akvine.wild.bot.repositories.AdvertRepository;
 import ru.akvine.wild.bot.repositories.AdvertStatisticRepository;
 
@@ -26,6 +27,7 @@ public class DeleteAdvertsAndStatisticsJob {
     @Value("${advert.and.statistic.delete.job.after.days.expired}")
     private int afterDaysExpiredCount;
 
+    @SingleInstance
     @Scheduled(fixedDelayString = "${advert.and.statistic.delete.job.fixedDelay.milliseconds}")
     public void delete() {
         try {

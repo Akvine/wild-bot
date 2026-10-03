@@ -63,6 +63,7 @@ import ru.akvine.wild.bot.infrastructure.resilience.CircuitBreakerProperties;
 import ru.akvine.wild.bot.infrastructure.retry.DefaultRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.ExponentialRetryExecutor;
 import ru.akvine.wild.bot.infrastructure.retry.RetryExecutor;
+import ru.akvine.wild.bot.infrastructure.role.ConditionalOnJobs;
 import ru.akvine.wild.bot.infrastructure.session.*;
 import ru.akvine.wild.bot.infrastructure.state.StateStorage;
 import ru.akvine.wild.bot.infrastructure.state.StateStorageInDatabaseImpl;
@@ -491,6 +492,7 @@ public class InfrastructureBeansConfig {
      */
     @Bean
     @ConditionalOnProperty(name = "idempotency.store.implementation.type", havingValue = "database")
+    @ConditionalOnJobs
     public IdempotencyCleanupJob idempotencyCleanupJob(DatabaseIdempotencyStore databaseIdempotencyStore) {
         return new IdempotencyCleanupJob(databaseIdempotencyStore);
     }

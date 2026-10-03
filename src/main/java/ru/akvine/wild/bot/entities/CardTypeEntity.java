@@ -17,7 +17,7 @@ public class CardTypeEntity extends BaseEntity {
     @Id
     @Column(name = "ID", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cardTypeEntitySeq")
-    @SequenceGenerator(name = "cardTypeEntitySeq", sequenceName = "SEQ_CARD_TYPE_ENTITY", allocationSize = 1000)
+    @SequenceGenerator(name = "cardTypeEntitySeq", sequenceName = "SEQ_CARD_TYPE_ENTITY", allocationSize = 1)
     private Long id;
 
     @Column(name = "TYPE", nullable = false)

@@ -18,7 +18,7 @@ public class RegistrationActionEntity implements OneTimePasswordable {
     @SequenceGenerator(
             name = "registrationActionEntitySequence",
             sequenceName = "SEQ_REGISTRATION_ACTION_ENTITY",
-            allocationSize = 1000)
+            allocationSize = 1)
     private Long id;
 
     @Column(name = "LOGIN", nullable = false)

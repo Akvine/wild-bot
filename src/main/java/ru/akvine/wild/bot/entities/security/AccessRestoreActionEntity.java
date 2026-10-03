@@ -18,7 +18,7 @@ public class AccessRestoreActionEntity implements OneTimePasswordable {
     @SequenceGenerator(
             name = "accessRestoreEntitySequence",
             sequenceName = "SEQ_ACCESS_RESTORE_ACTION_ENTITY",
-            allocationSize = 1000)
+            allocationSize = 1)
     private Long id;
 
     @Column(name = "SESSION_ID", nullable = false)

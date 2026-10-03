@@ -12,6 +12,7 @@ import ru.akvine.wild.bot.infrastructure.outbox.OutboxProperties;
 import ru.akvine.wild.bot.infrastructure.outbox.OutboxRelay;
 import ru.akvine.wild.bot.infrastructure.outbox.OutboxStore;
 import ru.akvine.wild.bot.infrastructure.property.printers.PropertiesPrinter;
+import ru.akvine.wild.bot.infrastructure.role.ConditionalOnJobs;
 import ru.akvine.wild.bot.job.CheckRunningAdvertsJob;
 import ru.akvine.wild.bot.job.PrintPropertiesJob;
 import ru.akvine.wild.bot.job.SubscriptionJob;
@@ -34,6 +35,7 @@ public class ScheduledConfig {
 
     @Bean
     @ConditionalOnProperty(name = "global.sync.enabled", havingValue = "true")
+    @ConditionalOnJobs
     public GlobalSyncJob globalSyncJob(
             SyncCardTypeJob syncCardTypeJob, SyncCardJob syncCardJob, SyncAdvertJob syncAdvertJob) {
         return new GlobalSyncJob(
@@ -41,6 +43,7 @@ public class ScheduledConfig {
     }
 
     @Bean
+    @ConditionalOnJobs
     public CheckRunningAdvertsJob checkRunningAdvertsJob(
             AdvertRepository advertRepository,
             WildberriesIntegrationService wildberriesIntegrationService,
@@ -63,6 +66,7 @@ public class ScheduledConfig {
     }
 
     @Bean
+    @ConditionalOnJobs
     public SubscriptionJob subscriptionJob(
             BotMessageOutbox botMessageOutbox, SubscriptionRepository subscriptionRepository) {
         return new SubscriptionJob(
@@ -84,6 +88,7 @@ public class ScheduledConfig {
     }
 
     @Bean
+    @ConditionalOnJobs
     public DeleteAdvertsAndStatisticsJob deleteAdvertsAndStatisticsJob(
             AdvertStatisticRepository statisticRepository, AdvertRepository advertRepository) {
         return new DeleteAdvertsAndStatisticsJob(
@@ -100,6 +105,7 @@ public class ScheduledConfig {
      */
     @Bean
     @ConditionalOnProperty(name = "outbox.relay.enabled", havingValue = "true")
+    @ConditionalOnJobs
     public OutboxRelay outboxRelay(
             OutboxStore outboxStore, List<OutboxHandler> outboxHandlers, OutboxProperties outboxProperties) {
         return new OutboxRelay(outboxStore, outboxHandlers, outboxProperties);

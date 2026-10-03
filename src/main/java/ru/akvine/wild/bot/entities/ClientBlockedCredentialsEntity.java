@@ -19,7 +19,7 @@ public class ClientBlockedCredentialsEntity {
     @SequenceGenerator(
             name = "clientBlockedCredentialsEntitySequence",
             sequenceName = "SEQ_CLIENT_BLOCKED_CREDENTIALS_ENTITY",
-            allocationSize = 1000)
+            allocationSize = 1)
     private Long id;
 
     @Column(name = "CHAT_ID", nullable = false)

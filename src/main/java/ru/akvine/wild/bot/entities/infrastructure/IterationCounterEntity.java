@@ -20,7 +20,7 @@ public class IterationCounterEntity extends BaseEntity {
     @SequenceGenerator(
             name = "iterationCounterEntitySeq",
             sequenceName = "SEQ_ITERATION_COUNTER_ENTITY",
-            allocationSize = 1000)
+            allocationSize = 1)
     private Long id;
 
     @Column(name = "ADVERT_ID", nullable = false, unique = true)

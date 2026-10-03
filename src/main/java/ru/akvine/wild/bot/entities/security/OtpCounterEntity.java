@@ -15,10 +15,7 @@ public class OtpCounterEntity {
     @Id
     @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "otpCounterEntitySequence")
-    @SequenceGenerator(
-            name = "otpCounterEntitySequence",
-            sequenceName = "SEQ_OTP_COUNTER_ENTITY",
-            allocationSize = 1000)
+    @SequenceGenerator(name = "otpCounterEntitySequence", sequenceName = "SEQ_OTP_COUNTER_ENTITY", allocationSize = 1)
     private Long id;
 
     @Column(name = "LOGIN", nullable = false)
