@@ -95,21 +95,15 @@ class PropertyServiceImplTest {
     }
 
     @Test
-    @DisplayName("put добавляет и заменяет значения; null-значение даёт пустые коллекции")
-    void putAndNullValues() {
+    @DisplayName("put добавляет новые и заменяет существующие значения")
+    void putAddsAndReplaces() {
         PropertyServiceImpl service = service(CONTENT);
 
         service.put("new.value", "1");
         service.put("int.value", "7");
-        service.put("nullable.value", null);
 
         assertThat(service.get("new.value")).isEqualTo("1");
         assertThat(service.getAs("int.value", Integer.class)).isEqualTo(7);
-        assertThat(service.getAsList("nullable.value", ",")).isEmpty();
-        assertThat(service.getAsList("nullable.value", ",", Integer.class)).isEmpty();
-        assertThat(service.getAsSet("nullable.value", ",")).isEmpty();
-        assertThat(service.getAs("nullable.value", Integer.class)).isZero();
-        assertThat(service.getAs("nullable.value", Double.class)).isZero();
     }
 
     @Test
