@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: wild-bot
+    folder: wild-bot
+    type: file
+    disableDeletion: true
+    # панель правится в файле grafana/dashboards/wild-bot.json: изменения подхватываются без перезапуска
+    allowUiUpdates: false
+    updateIntervalSeconds: 30
+    options:
+      path: /etc/grafana/dashboards

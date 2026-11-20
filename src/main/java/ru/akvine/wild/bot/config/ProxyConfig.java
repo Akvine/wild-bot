@@ -2,6 +2,7 @@ package ru.akvine.wild.bot.config;
 
 import java.util.Collections;
 import java.util.List;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Primary;
 import ru.akvine.wild.bot.constants.ProxyConstants;
 import ru.akvine.wild.bot.enums.ProxyType;
 import ru.akvine.wild.bot.facades.proxy.WildberriesProxiesFacade;
+import ru.akvine.wild.bot.infrastructure.monitoring.micrometer.IntegrationMetrics;
 import ru.akvine.wild.bot.services.integration.wildberries.WildberriesIntegrationService;
 import ru.akvine.wild.bot.services.integration.wildberries.proxy.WildberriesIntegrationServiceProxy;
 
@@ -21,7 +23,8 @@ public class ProxyConfig {
     public WildberriesIntegrationService wildberriesIntegrationService(
             WildberriesProxiesFacade proxies,
             @Qualifier(ProxyConstants.ORIGIN_BEAN_NAME) WildberriesIntegrationService wildberriesIntegrationService,
-            @Value("${wildberries.proxies}") List<String> enabledProxyTypes) {
+            @Value("${wildberries.proxies}") List<String> enabledProxyTypes,
+            ObjectProvider<IntegrationMetrics> integrationMetrics) {
         Collections.reverse(enabledProxyTypes);
         WildberriesIntegrationService targetObject = wildberriesIntegrationService;
         for (String enabledProxyType : enabledProxyTypes) {
@@ -31,6 +34,10 @@ public class ProxyConfig {
             targetObject = proxy;
         }
 
-        return targetObject;
+        // замер снаружи всей цепочки: в него входит то же, что видит вызывающий код. Бина нет, если метрики выключены
+        IntegrationMetrics metrics = integrationMetrics.getIfAvailable();
+        return metrics == null
+                ? targetObject
+                : metrics.instrument(MetricsConfig.WILDBERRIES, WildberriesIntegrationService.class, targetObject);
     }
 }

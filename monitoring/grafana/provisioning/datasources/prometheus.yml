@@ -1,0 +1,14 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    # на этот uid ссылается панель из grafana/dashboards
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false
+    jsonData:
+      # равен scrape_interval в prometheus/prometheus.yml
+      timeInterval: 15s

@@ -41,6 +41,13 @@ public class CircuitBreakerInterceptorFactory {
     }
 
     /**
+     * @return реестр созданных breaker'ов: к нему привязываются метрики (см. {@code MetricsConfig})
+     */
+    public CircuitBreakerRegistry registry() {
+        return registry;
+    }
+
+    /**
      * @return состояние всех созданных breaker'ов: имя -> CLOSED / OPEN / HALF_OPEN и т.д.
      */
     public Map<String, CircuitBreaker.State> states() {

@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+
+scrape_configs:
+  - job_name: wild-bot
+    # server.servlet.context-path приложения + /actuator/prometheus
+    metrics_path: /wild-bot/actuator/prometheus
+    static_configs:
+      # host.docker.internal - компьютер, на котором запущен Docker; после двоеточия - server.port приложения:
+      # 8080 в профиле local (application-local.properties), 8106 без профиля (application.properties).
+      # Если процессов несколько (server.app.role=web и worker), перечислите их все:
+      #   - targets: ["host.docker.internal:8080", "host.docker.internal:8081"]
+      - targets: ["host.docker.internal:8080"]

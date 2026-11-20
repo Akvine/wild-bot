@@ -9,15 +9,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import ru.akvine.wild.bot.bot.filter.BotExceptionFilter;
 import ru.akvine.wild.bot.bot.filter.InitMessageFilter;
 import ru.akvine.wild.bot.bot.filter.MessageFilter;
 import ru.akvine.wild.bot.bot.filter.MessageHandlerFilter;
+import ru.akvine.wild.bot.bot.filter.MetricsFilter;
 import ru.akvine.wild.bot.facades.MessageFiltersFacade;
 
 @Configuration
 @RequiredArgsConstructor
 public class BotFilterConfig {
     private static final Logger log = LoggerFactory.getLogger(BotFilterConfig.class);
+
+    @Value("${" + MetricsConfig.ENABLED_PROPERTY + ":true}")
+    private boolean metricsEnabled;
 
     @Bean
     @Primary
@@ -32,6 +37,12 @@ public class BotFilterConfig {
                     "{message.filters.list} property doesn't contain required [{}] filter. Put required filter at the end of the list",
                     MessageHandlerFilter.class.getSimpleName());
             messageFilters.add(MessageHandlerFilter.class.getSimpleName());
+        }
+
+        if (metricsEnabled && !messageFilters.contains(MetricsFilter.class.getSimpleName())) {
+            // сразу после BotExceptionFilter: до фильтров перед ним исключения уже не доходят, а замеру они нужны
+            int position = messageFilters.indexOf(BotExceptionFilter.class.getSimpleName()) + 1;
+            messageFilters.add(position, MetricsFilter.class.getSimpleName());
         }
 
         int lastMessageFilterIndex = messageFilters.size() - 1;

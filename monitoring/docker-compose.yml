@@ -1,0 +1,55 @@
+# Prometheus и Grafana для wild-bot.
+#
+#   docker compose -f monitoring/docker-compose.yml up -d      запуск
+#   docker compose -f monitoring/docker-compose.yml down       остановка, накопленные данные остаются
+#
+# Grafana     http://localhost:3000   вход admin / admin, панель wild-bot открывается первой
+# Prometheus  http://localhost:9090   раздел Status -> Targets показывает, удаётся ли забрать метрики
+#
+# Само приложение здесь не запускается: Prometheus забирает метрики с того, что работает на этом компьютере
+# (из IDE или в контейнере с открытым портом). Адрес и порт приложения - в prometheus/prometheus.yml.
+name: wild-bot-monitoring
+
+services:
+  prometheus:
+    image: prom/prometheus:v3.11.0
+    container_name: wild-bot-prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      # сколько хранить историю метрик
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    extra_hosts:
+      # в Docker Desktop это имя есть и так; строка нужна, чтобы тот же файл работал в Linux
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:12.4.0
+    container_name: wild-bot-grafana
+    environment:
+      # для входа с другими данными задайте переменные окружения перед первым запуском
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/grafana/dashboards/wild-bot.json
+    volumes:
+      # источник данных и панель подключаются сами, вручную в Grafana ничего настраивать не нужно
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  prometheus-data:
+  grafana-data:
